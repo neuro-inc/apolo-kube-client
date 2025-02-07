@@ -1,6 +1,5 @@
 [project]
 name = "apolo-kube-client"
-version = "0.1.0"
 description = "Apolo internal client for kubernetes API"
 authors = [
     {name = "apolo.us"}
@@ -13,11 +12,22 @@ dependencies = [
     "yarl (>=1.10)",
     "multidict (>=6)",
 ]
+dynamic = ["version"]
 
+[tool.poetry]
+version = "0.0.0"
+
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.poetry.group.dev]
 optional = true

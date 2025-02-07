@@ -8,13 +8,13 @@ venv:
 	poetry lock
 	poetry install --with dev;
 
-.PHONY: build
-build: venv poetry-plugins
-
 .PHONY: poetry-plugins
 poetry-plugins:
 	poetry self add "poetry-dynamic-versioning[plugin]"; \
     poetry self add "poetry-plugin-export";
+
+.PHONY: build
+build: venv poetry-plugins
 
 .PHONY: setup
 setup: venv
