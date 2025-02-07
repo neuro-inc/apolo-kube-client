@@ -6,17 +6,12 @@ on:
     tags: [v*]
   pull_request:
     branches: [master]
-  pull_request_target:
-    branches: [master]
   schedule:
   - cron: 0 4 * * *
 jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
-    if: |
-      (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]') ||
-      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
     strategy:
       matrix:
         py_version: ['3.9', '3.10', '3.11', '3.12', '3.13']
