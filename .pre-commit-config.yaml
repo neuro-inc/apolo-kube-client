@@ -1,0 +1,66 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 'v4.4.0'
+  hooks:
+  - id: check-merge-conflict
+    exclude: "rst$"
+- repo: https://github.com/asottile/yesqa
+  rev: v1.4.0
+  hooks:
+  - id: yesqa
+# - repo: https://github.com/sondrelg/pep585-upgrade
+#   rev: v1.0.1
+#   hooks:
+#   - id: upgrade-type-hints
+#     args:
+#     - --futures=true
+- repo: https://github.com/Zac-HD/shed
+  rev: 2023.5.1
+  hooks:
+  - id: shed
+    args:
+    - --refactor
+    types_or:
+    - python
+    - markdown
+    - rst
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 'v4.4.0'
+  hooks:
+  - id: check-case-conflict
+  - id: check-json
+  - id: check-xml
+  - id: debug-statements
+  - id: check-added-large-files
+  - id: end-of-file-fixer
+  - id: requirements-txt-fixer
+  - id: trailing-whitespace
+  - id: check-symlinks
+  - id: debug-statements
+# Another entry is required to apply file-contents-sorter to another file
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: 'v4.4.0'
+  hooks:
+  - id: file-contents-sorter
+    files: |
+      docs/spelling_wordlist.txt|
+      .gitignore
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.6.24
+  hooks:
+  - id: actionlint-docker
+    args:
+    - -ignore
+    - 'SC2155:'
+    - -ignore
+    - 'SC2086:'
+    - -ignore
+    - 'SC1004:'
+- repo: https://github.com/sirosen/check-jsonschema
+  rev: 0.23.0
+  hooks:
+  - id: check-github-actions
+ci:
+  skip:
+  - actionlint-docker
+  - check-github-actions
