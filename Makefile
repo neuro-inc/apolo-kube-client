@@ -35,8 +35,3 @@ test_unit:
 
 .PHONY: test
 test: test_unit
-
-
-.PHONY: publish
-publish:
-	poetry build -f wheel --publish
