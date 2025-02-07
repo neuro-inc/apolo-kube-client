@@ -26,5 +26,9 @@ lint:
 	poetry run mypy apolo_kube_client tests
 
 
+.PHONY: test_unit
+test_unit:
+	poetry run pytest -vv --cov-config=pyproject.toml --cov-report xml:.coverage-unit.xml tests/unit
+
 .PHONY: test
-test: lint
+test: test_unit
