@@ -2,12 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     tags: [v*]
   pull_request:
-    branches: [master]
+    branches: [main]
   pull_request_target:
-    branches: [master]
+    branches: [main]
   schedule:
   - cron: 0 4 * * *
 jobs:
@@ -33,7 +33,9 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-py-${{ matrix.py_version }}-${{ hashFiles('poetry.lock') }}
+        key: ${{ runner.os }}-py-${{ matrix.py_version }}-${{ hashFiles('pyproject.toml') }}
+    - name: Install poetry
+      run: pip install poetry==2.0.1
     - name: Install dependencies
       run: make setup
     - name: Lint
@@ -54,25 +56,21 @@ jobs:
     name: Release client
     runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.ref, 'refs/tags/')
     steps:
     - name: Checkout commit
       uses: actions/checkout@v4
     - name: Install python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.12
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install "poetry==2.0.1"
-    - name: Make dist
-      run: |
-        python -m poetry build
     - name: PyPI upload
       env:
         PYPI_USERNAME: __token__
         PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        TWINE_NON_INTERACTIVE: 1
       run: |
         poetry config http-basic.pypi ${{ env.PYPI_USERNAME }} ${{ env.PYPI_PASSWORD }} &&
-        python -m poetry build --publish
+        python -m poetry build -f wheel --publish
