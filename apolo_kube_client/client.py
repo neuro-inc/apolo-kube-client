@@ -224,6 +224,7 @@ class KubeClient:
             await asyncio.sleep(self._token_update_interval_s)
 
     def _refresh_token_from_file(self) -> None:
+        """Reads token from the file and updates a token value"""
         if not self._token_path:
             return
         token = Path(self._token_path).read_text()
