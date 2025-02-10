@@ -135,7 +135,9 @@ class KubeClient:
 
     async def request(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
         assert self._client, "client is not initialized"
-        headers = (kwargs.pop("headers", {}) or {}).update(self._auth_headers)
+        headers = kwargs.pop("headers", {}) or {}
+        headers.update(self._auth_headers)  # populate auth (if exists)
+
         async with self._client.request(*args, headers=headers, **kwargs) as response:
             payload = await response.json()
             logger.debug("%s: k8s response payload: %s", self, payload)
