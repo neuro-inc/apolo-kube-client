@@ -16,7 +16,7 @@ class KubeConfig:
     auth_cert_key_path: Optional[str] = None
     token: Optional[str] = field(repr=False, default=None)
     token_path: Optional[str] = None
-    verify_ssl: Optional[bool] = True
+    verify_ssl: bool = True
     namespace: str = NAMESPACE_DEFAULT
     client_conn_timeout_s: int = 300
     client_read_timeout_s: int = 300
