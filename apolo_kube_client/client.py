@@ -86,7 +86,7 @@ class KubeClient:
     async def init(self) -> None:
         logger.info("%s: initializing", self)
         if self._token_path:
-            self._token = Path(self._token_path).read_text()
+            self._refresh_token_from_file()
             self._token_updater_task = asyncio.create_task(self._start_token_updater())
         connector = aiohttp.TCPConnector(
             limit=self._conn_pool_size, ssl=self._create_ssl_context()
