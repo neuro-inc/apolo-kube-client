@@ -1,7 +1,8 @@
 import asyncio
 import logging
 import ssl
-from contextlib import suppress
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager, suppress
 from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union, cast
@@ -9,6 +10,7 @@ from urllib.parse import urlsplit
 
 import aiohttp
 
+from apolo_kube_client.config import KubeConfig
 from apolo_kube_client.errors import (
     KubeClientException,
     KubeClientExpired,
@@ -43,6 +45,7 @@ class KubeClient:
         token: Optional[str] = None,
         token_path: Optional[str] = None,
         token_update_interval_s: int = 300,
+        verify_ssl: bool = True,
         conn_timeout_s: int = 300,
         read_timeout_s: int = 100,
         watch_timeout_s: int = 1800,
@@ -66,6 +69,7 @@ class KubeClient:
         self._token = token
         self._token_path = token_path
         self._token_update_interval_s = token_update_interval_s
+        self._verify_ssl = verify_ssl
 
         self._conn_timeout_s = conn_timeout_s
         self._read_timeout_s = read_timeout_s
@@ -138,7 +142,9 @@ class KubeClient:
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
 
-        async with self._client.request(*args, headers=headers, **kwargs) as response:
+        async with self._client.request(
+            *args, headers=headers, verify_ssl=self._verify_ssl, **kwargs
+        ) as response:
             payload = await response.json()
             logger.debug("%s: k8s response payload: %s", self, payload)
             self._raise_for_status(payload)
@@ -229,8 +235,39 @@ class KubeClient:
         """Reads token from the file and updates a token value"""
         if not self._token_path:
             return
-        token = Path(self._token_path).read_text()
+        token = Path(self._token_path).read_text().strip()
         if token == self._token:
             return
         self._token = token
         logger.info("%s: kube token was refreshed", self)
+
+
+@asynccontextmanager
+async def kube_client_from_config(
+    config: KubeConfig, trace_configs: Optional[list[aiohttp.TraceConfig]] = None
+) -> AsyncIterator[KubeClient]:
+    client = KubeClient(
+        base_url=config.endpoint_url,
+        namespace=config.namespace,
+        cert_authority_path=config.cert_authority_path,
+        cert_authority_data_pem=config.cert_authority_data_pem,
+        auth_type=config.auth_type,
+        auth_cert_path=config.auth_cert_path,
+        auth_cert_key_path=config.auth_cert_key_path,
+        token=config.token,
+        token_path=config.token_path,
+        verify_ssl=config.verify_ssl,
+        conn_timeout_s=config.client_conn_timeout_s,
+        read_timeout_s=config.client_read_timeout_s,
+        watch_timeout_s=config.client_watch_timeout_s,
+        conn_pool_size=config.client_conn_pool_size,
+        trace_configs=trace_configs,
+    )
+    try:
+        await client.init()
+        yield client
+    except Exception as e:
+        logger.exception("%s: unhandled error happened", client)
+        raise e
+    finally:
+        await client.close()
