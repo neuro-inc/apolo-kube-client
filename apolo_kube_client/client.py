@@ -45,7 +45,6 @@ class KubeClient:
         token: Optional[str] = None,
         token_path: Optional[str] = None,
         token_update_interval_s: int = 300,
-        verify_ssl: bool = True,
         conn_timeout_s: int = 300,
         read_timeout_s: int = 100,
         watch_timeout_s: int = 1800,
@@ -69,7 +68,6 @@ class KubeClient:
         self._token = token
         self._token_path = token_path
         self._token_update_interval_s = token_update_interval_s
-        self._verify_ssl = verify_ssl
 
         self._conn_timeout_s = conn_timeout_s
         self._read_timeout_s = read_timeout_s
@@ -142,9 +140,7 @@ class KubeClient:
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
 
-        async with self._client.request(
-            *args, headers=headers, verify_ssl=self._verify_ssl, **kwargs
-        ) as response:
+        async with self._client.request(*args, headers=headers, **kwargs) as response:
             payload = await response.json()
             logger.debug("%s: k8s response payload: %s", self, payload)
             self._raise_for_status(payload)
@@ -256,7 +252,6 @@ async def kube_client_from_config(
         auth_cert_key_path=config.auth_cert_key_path,
         token=config.token,
         token_path=config.token_path,
-        verify_ssl=config.verify_ssl,
         conn_timeout_s=config.client_conn_timeout_s,
         read_timeout_s=config.client_read_timeout_s,
         watch_timeout_s=config.client_watch_timeout_s,
