@@ -1,9 +1,14 @@
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Optional
 
-from apolo_kube_client.client import KubeClientAuthType
-
 NAMESPACE_DEFAULT = "default"
+
+
+class KubeClientAuthType(str, Enum):
+    NONE = "none"
+    TOKEN = "token"
+    CERTIFICATE = "certificate"
 
 
 @dataclass(frozen=True)

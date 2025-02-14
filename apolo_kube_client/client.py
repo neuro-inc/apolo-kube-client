@@ -3,14 +3,13 @@ import logging
 import ssl
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
-from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union, cast
 from urllib.parse import urlsplit
 
 import aiohttp
 
-from apolo_kube_client.config import KubeConfig
+from apolo_kube_client.config import KubeClientAuthType, KubeConfig
 from apolo_kube_client.errors import (
     KubeClientException,
     KubeClientExpired,
@@ -23,12 +22,6 @@ from apolo_kube_client.errors import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-class KubeClientAuthType(str, Enum):
-    NONE = "none"
-    TOKEN = "token"
-    CERTIFICATE = "certificate"
 
 
 class KubeClient:
