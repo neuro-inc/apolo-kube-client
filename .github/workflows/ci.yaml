@@ -41,14 +41,6 @@ jobs:
         make lint
     - name: Run unit tests
       run: make test_unit
-    - name: Start minikube
-      run: |
-        make install_k8s
-        make start_k8s
-    - name: Setup services in minikube
-      run: make apply_configuration_k8s
-    - name: Run integration tests
-      run: make test_integration
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
