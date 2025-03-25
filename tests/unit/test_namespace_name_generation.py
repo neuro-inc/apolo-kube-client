@@ -70,9 +70,9 @@ class TestGenerateNamespaceName:
             f"{KUBE_NAMESPACE_SEP}"
             # we expect that org name will have 13 first characters,
             # while project name will have 12
-            f"{string.ascii_lowercase[:13]}"
-            f"{KUBE_NAMESPACE_SEP}"
             f"{string.ascii_lowercase[:12]}"
+            f"{KUBE_NAMESPACE_SEP}"
+            f"{string.ascii_lowercase[:13]}"
             f"{KUBE_NAMESPACE_SEP}"
             f"{hexdigest_mock[:KUBE_NAMESPACE_HASH_LENGTH]}"
         )

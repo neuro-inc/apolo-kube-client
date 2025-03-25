@@ -40,7 +40,7 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
 
     len_reserved = (
         len(KUBE_NAMESPACE_PREFIX)
-        + (len(KUBE_NAMESPACE_SEP) * 2)
+        + (len(KUBE_NAMESPACE_SEP) * 3)
         + KUBE_NAMESPACE_HASH_LENGTH
     )
     len_free = KUBE_NAME_LENGTH_MAX - len_reserved
@@ -58,7 +58,7 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
     # between org and project, so that we'll truncate more chars from the
     # string which actually has more chars
     len_org, len_proj = len(org_name), len(project_name)
-    len_org_proj = len_org + len_proj + len(KUBE_NAMESPACE_SEP)
+    len_org_proj = len_org + len_proj
     exceeds = len_org_proj - len_free
 
     # ratio calculation. for proj can be derived via an org ratio
