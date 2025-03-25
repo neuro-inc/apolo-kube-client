@@ -33,5 +33,10 @@ lint: format
 test_unit:
 	poetry run pytest -vv --cov-config=pyproject.toml --cov-report xml:.coverage-unit.xml tests/unit
 
-.PHONY: test
-test: test_unit
+
+.PHONY: test_integration
+test_integration:
+	poetry run pytest -vv --cov-config=pyproject.toml --cov-report xml:.coverage-unit.xml tests/integration
+
+
+include k8s.mk

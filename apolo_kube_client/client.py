@@ -120,9 +120,13 @@ class KubeClient:
     def namespace(self) -> str:
         return self._namespace
 
+    @property
+    def namespaces_url(self) -> str:
+        return f"{self.api_v1_url}/namespaces"
+
     def generate_namespace_url(self, namespace_name: Optional[str] = None) -> str:
         namespace_name = namespace_name or self._namespace
-        return f"{self.api_v1_url}/namespaces/{namespace_name}"
+        return f"{self.namespaces_url}/{namespace_name}"
 
     @property
     def namespace_url(self) -> str:
