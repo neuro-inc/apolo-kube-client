@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from apolo_kube_client.namespace import (
+from apolo_kube_client.apolo import (
     KUBE_NAME_LENGTH_MAX,
     KUBE_NAMESPACE_HASH_LENGTH,
     KUBE_NAMESPACE_PREFIX,
@@ -20,7 +20,7 @@ class TestGenerateNamespaceName:
         hexdigest_mock = Mock()
         hexdigest_mock.hexdigest.return_value = hexdigest_value
 
-        with patch("apolo_kube_client.namespace.sha256", return_value=hexdigest_mock):
+        with patch("apolo_kube_client.apolo.sha256", return_value=hexdigest_mock):
             yield hexdigest_value
 
     @pytest.mark.parametrize(
