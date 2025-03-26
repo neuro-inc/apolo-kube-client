@@ -113,40 +113,53 @@ async def create_namespace(
 
     # now let's create a network policy, which will allow a namespace-only access
     network_policy_url = kube_client.generate_network_policy_url(namespace_name)
-    await kube_client.post(
-        network_policy_url,
-        json={
-            "apiVersion": "networking.k8s.io/v1",
-            "kind": "NetworkPolicy",
-            "metadata": {
-                "name": namespace_name,
-                "namespace": namespace_name,
+    try:
+        await kube_client.post(
+            network_policy_url,
+            json={
+                "apiVersion": "networking.k8s.io/v1",
+                "kind": "NetworkPolicy",
+                "metadata": {
+                    "name": namespace_name,
+                    "namespace": namespace_name,
+                },
+                "spec": {
+                    "podSelector": {},  # all PODs in the namespace
+                    "policyTypes": ["Ingress", "Egress"],
+                    "ingress": [
+                        {
+                            "from": [
+                                {
+                                    "namespaceSelector": {
+                                        "matchLabels": {
+                                            "namespace": namespace_name,
+                                        }
+                                    },
+                                    # allow traffic from all pods in this ns
+                                    "podSelector": {},
+                                }
+                            ]
+                        }
+                    ],
+                    "egress": [
+                        {
+                            "to": [
+                                {
+                                    "namespaceSelector": {
+                                        "matchLabels": {
+                                            "namespace": namespace_name,
+                                        }
+                                    },
+                                    # allow traffic to all pods in this ns
+                                    "podSelector": {},
+                                }
+                            ]
+                        }
+                    ],
+                },
             },
-            "spec": {
-                "podSelector": {},  # all PODs in the namespace
-                "policyTypes": ["Ingress", "Egress"],
-                "ingress": [
-                    {
-                        "from": [
-                            {
-                                # allow traffic from all pods in this ns
-                                "podSelector": {},
-                            }
-                        ]
-                    }
-                ],
-                "egress": [
-                    {
-                        "to": [
-                            {
-                                # allow traffic to all pods in this ns
-                                "podSelector": {},
-                            }
-                        ]
-                    }
-                ],
-            },
-        },
-    )
+        )
+    except ResourceExists:
+        pass
 
     return namespace

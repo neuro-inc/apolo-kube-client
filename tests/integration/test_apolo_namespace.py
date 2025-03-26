@@ -55,6 +55,13 @@ class TestApoloNamespace:
         assert spec["ingress"][0]["from"][0]["podSelector"] == {}
         assert spec["egress"][0]["to"][0]["podSelector"] == {}
 
+        assert spec["ingress"][0]["from"][0]["namespaceSelector"] == {
+            "matchLabels": {"namespace": namespace.name}
+        }
+        assert spec["egress"][0]["to"][0]["namespaceSelector"] == {
+            "matchLabels": {"namespace": namespace.name}
+        }
+
         # delete and ensure phase changed
         namespace_api = NamespaceApi(kube_client)
         response = await namespace_api.delete_namespace(namespace.name)
