@@ -120,13 +120,24 @@ class KubeClient:
     def namespace(self) -> str:
         return self._namespace
 
+    @property
+    def namespaces_url(self) -> str:
+        return f"{self.api_v1_url}/namespaces"
+
     def generate_namespace_url(self, namespace_name: Optional[str] = None) -> str:
         namespace_name = namespace_name or self._namespace
-        return f"{self.api_v1_url}/namespaces/{namespace_name}"
+        return f"{self.namespaces_url}/{namespace_name}"
 
     @property
     def namespace_url(self) -> str:
         return self.generate_namespace_url()
+
+    def generate_network_policy_url(self, namespace: str) -> str:
+        return (
+            f"{self._base_url}"
+            f"/apis/networking.k8s.io/v1/namespaces"
+            f"/{namespace}/networkpolicies"
+        )
 
     async def request(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
         assert self._client, "client is not initialized"
