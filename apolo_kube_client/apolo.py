@@ -25,6 +25,10 @@ def generate_hash(name: str) -> str:
     return sha256(name.encode("utf-8")).hexdigest()[:KUBE_NAMESPACE_HASH_LENGTH]
 
 
+def normalize_name(name: str) -> str:
+    return re.sub(RE_DASH_REPLACEABLE, DASH, name).lower().strip()
+
+
 def generate_namespace_name(org_name: str, project_name: str) -> str:
     """
     returns a Kubernetes resource name in the format
@@ -36,11 +40,6 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
     - if the names are long, we truncate them evenly,
       so at least some parts of both org and proj names will remain
     """
-
-    # normalize names, by replacing illegal characters with dashes, lower-casing, etc.
-    org_name = re.sub(RE_DASH_REPLACEABLE, DASH, org_name).lower().strip()
-    project_name = re.sub(RE_DASH_REPLACEABLE, DASH, project_name).lower().strip()
-
     hashable = f"{org_name}{KUBE_NAMESPACE_SEP}{project_name}"
     name_hash = generate_hash(hashable)
 
@@ -92,6 +91,10 @@ async def create_namespace(
     Creates a namespace based on a provided org and project names.
     Applies default labels and network policies.
     """
+    # normalize names, by replacing illegal characters with dashes, lower-casing, etc.
+    org_name = re.sub(RE_DASH_REPLACEABLE, DASH, org_name).lower().strip()
+    project_name = re.sub(RE_DASH_REPLACEABLE, DASH, project_name).lower().strip()
+
     namespace_name = generate_namespace_name(org_name, project_name)
     namespace_api = NamespaceApi(kube_client)
 
