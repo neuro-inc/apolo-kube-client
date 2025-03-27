@@ -5,6 +5,7 @@ from apolo_kube_client.apolo import (
     NAMESPACE_PROJECT_LABEL,
     create_namespace,
     generate_hash,
+    normalize_name,
 )
 from apolo_kube_client.client import KubeClient
 from apolo_kube_client.namespace import NamespaceApi
@@ -61,6 +62,35 @@ class TestApoloNamespace:
         assert spec["egress"][0]["to"][0]["namespaceSelector"] == {
             "matchLabels": {"namespace": namespace.name}
         }
+
+        # delete and ensure phase changed
+        namespace_api = NamespaceApi(kube_client)
+        response = await namespace_api.delete_namespace(namespace.name)
+        assert response["status"]["phase"] == "Terminating"
+
+    async def test__create_apolo_namespace__project_with_slashes(
+        self,
+        org_name: str,
+        kube_client: KubeClient,
+    ) -> None:
+        project_name = "some/project/name"
+        normalized_project_name = normalize_name(project_name)
+
+        namespace = await create_namespace(
+            kube_client,
+            org_name,
+            project_name,
+        )
+
+        # ensure a name was properly generated
+        org_project_hash = generate_hash(f"{org_name}--{normalized_project_name}")
+        assert namespace.name == f"platform--org--some-project-name--{org_project_hash}"
+
+        # ensure labels were set
+        assert namespace.labels_as_dict[NAMESPACE_ORG_LABEL] == org_name
+        assert (
+            namespace.labels_as_dict[NAMESPACE_PROJECT_LABEL] == normalized_project_name
+        )
 
         # delete and ensure phase changed
         namespace_api = NamespaceApi(kube_client)
