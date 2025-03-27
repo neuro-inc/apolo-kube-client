@@ -15,7 +15,7 @@ KUBE_NAMESPACE_SEP = DASH * 2
 KUBE_NAMESPACE_PREFIX = "platform"
 KUBE_NAMESPACE_HASH_LENGTH = 24
 NO_ORG = "NO_ORG"
-RE_DASH_REPLACEABLE = re.compile(r"[\s_:]+")
+RE_DASH_REPLACEABLE = re.compile(r"[\s_:/\\]+")
 
 NAMESPACE_ORG_LABEL = "platform.apolo.us/org"
 NAMESPACE_PROJECT_LABEL = "platform.apolo.us/project"

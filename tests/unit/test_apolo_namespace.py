@@ -29,6 +29,9 @@ class TestGenerateNamespaceName:
             ("NO_ORG", "PROJECT_NAME", "no-org--project-name"),
             ("NO org", "PROJECT  NaMe", "no-org--project-name"),
             ("no:org", "project___:name", "no-org--project-name"),
+            ("no\org", "project\\name", "no-org--project-name"),
+            ("no/org", "project/name", "no-org--project-name"),
+            ("no/org", "project/name/one", "no-org--project-name-one"),
         ],
     )
     def test__ensure_illegal_chars_normalized(
