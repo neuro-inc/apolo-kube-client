@@ -92,8 +92,8 @@ async def create_namespace(
     Applies default labels and network policies.
     """
     # normalize names, by replacing illegal characters with dashes, lower-casing, etc.
-    org_name = re.sub(RE_DASH_REPLACEABLE, DASH, org_name).lower().strip()
-    project_name = re.sub(RE_DASH_REPLACEABLE, DASH, project_name).lower().strip()
+    org_name = normalize_name(org_name)
+    project_name = normalize_name(project_name)
 
     namespace_name = generate_namespace_name(org_name, project_name)
     namespace_api = NamespaceApi(kube_client)
