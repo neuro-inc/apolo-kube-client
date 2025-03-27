@@ -40,6 +40,9 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
     - if the names are long, we truncate them evenly,
       so at least some parts of both org and proj names will remain
     """
+    org_name = normalize_name(org_name)
+    project_name = normalize_name(project_name)
+
     hashable = f"{org_name}{KUBE_NAMESPACE_SEP}{project_name}"
     name_hash = generate_hash(hashable)
 
