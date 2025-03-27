@@ -139,7 +139,12 @@ class KubeClient:
             f"/{namespace}/networkpolicies"
         )
 
-    async def request(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def request(
+        self,
+        *args: Any,
+        raise_for_status: bool = True,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
         assert self._client, "client is not initialized"
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
@@ -147,7 +152,8 @@ class KubeClient:
         async with self._client.request(*args, headers=headers, **kwargs) as response:
             payload = await response.json()
             logger.debug("%s: k8s response payload: %s", self, payload)
-            self._raise_for_status(payload)
+            if raise_for_status:
+                self._raise_for_status(payload)
             return cast(dict[str, Any], payload)
 
     async def get(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
