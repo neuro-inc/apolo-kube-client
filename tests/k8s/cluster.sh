@@ -11,24 +11,54 @@ function k8s::install_minikube {
     curl -Lo minikube https://storage.googleapis.com/minikube/releases/${minikube_version}/minikube-linux-amd64
     chmod +x minikube
     sudo mv minikube /usr/local/bin/
-    sudo -E minikube config set WantReportErrorPrompt false
-    sudo -E minikube config set WantNoneDriverWarning false
 }
 
 function k8s::start {
-    export KUBECONFIG=$HOME/.kube/config
-    mkdir -p $(dirname $KUBECONFIG)
-    touch $KUBECONFIG
+    # ----------------------------------------------------------------------------
+    # Bring up a local Minikube cluster with the “none” driver.
+    # Preconditions:
+    #   * minikube binary already installed (see k8s::install_minikube)
+    #   * Docker (or containerd) present on the host
+    # ----------------------------------------------------------------------------
 
-    export MINIKUBE_WANTUPDATENOTIFICATION=false
-    export MINIKUBE_WANTREPORTERRORPROMPT=false
-    export MINIKUBE_HOME=$HOME
-    export CHANGE_MINIKUBE_NONE_USER=true
+    # ----- Kubeconfig -----------------------------------------------------------
+    export KUBECONFIG="$HOME/.kube/config"
+    mkdir -p "$(dirname "$KUBECONFIG")"
+    touch "$KUBECONFIG"
 
+    # ----- Minikube env vars ----------------------------------------------------
+    export MINIKUBE_DISABLE_PROMPT=1          # suppress interactive prompts
+    export MINIKUBE_DISABLE_WARNING=1         # suppress non-driver warning
+    export MINIKUBE_HOME="$HOME"
+    export CHANGE_MINIKUBE_NONE_USER=true     # allow non-root kubectl usage
+
+    # ----- Kernel prerequisites for the none driver ----------------------------
+    echo "• Enabling br_netfilter and required sysctl flags …"
+    sudo modprobe br_netfilter
+    sudo sysctl -w \
+        net.bridge.bridge-nf-call-iptables=1 \
+        net.bridge.bridge-nf-call-ip6tables=1 \
+        net.ipv4.ip_forward=1
+
+    # ----- Disable swap (kubeadm requirement) -----------------------------------
+    echo "• Disabling swap …"
+    sudo swapoff -a
+
+    # ----- Optional utilities required by kubeadm pre-flight --------------------
+    if ! command -v socat >/dev/null 2>&1; then
+        echo "• Installing socat (kubeadm pre-flight dependency) …"
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq socat
+    fi
+
+    # ----- Start Minikube -------------------------------------------------------
+    echo "• Starting Minikube (driver=none) …"
     sudo -E minikube start \
-        --vm-driver=none \
+        --driver=none \
         --wait=all \
         --wait-timeout=5m
+
+    # ----- Configure kubectl context & label the node ---------------------------
     kubectl config use-context minikube
     kubectl get nodes -o name | xargs -I {} kubectl label {} --overwrite \
         platform.neuromation.io/nodepool=minikube
