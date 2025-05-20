@@ -56,11 +56,16 @@ class TestApoloNamespace:
         assert spec["ingress"][0]["from"][0]["podSelector"] == {}
         assert spec["egress"][0]["to"][0]["podSelector"] == {}
 
+        expected_labels = {
+            NAMESPACE_ORG_LABEL: org_name,
+            NAMESPACE_PROJECT_LABEL: project_name,
+        }
+
         assert spec["ingress"][0]["from"][0]["namespaceSelector"] == {
-            "matchLabels": {"namespace": namespace.name}
+            "matchLabels": expected_labels
         }
         assert spec["egress"][0]["to"][0]["namespaceSelector"] == {
-            "matchLabels": {"namespace": namespace.name}
+            "matchLabels": expected_labels
         }
 
         # delete and ensure phase changed
