@@ -130,17 +130,13 @@ async def create_namespace(
                     "namespace": namespace_name,
                 },
                 "spec": {
-                    "podSelector": {},  # all PODs in the namespace
+                    "podSelector": {},  # all POD's in the namespace
                     "policyTypes": ["Ingress", "Egress"],
                     "ingress": [
                         {
                             "from": [
                                 {
-                                    "namespaceSelector": {
-                                        "matchLabels": {
-                                            "namespace": namespace_name,
-                                        }
-                                    },
+                                    "namespaceSelector": {"matchLabels": labels},
                                     # allow traffic from all pods in this ns
                                     "podSelector": {},
                                 }
@@ -151,11 +147,7 @@ async def create_namespace(
                         {
                             "to": [
                                 {
-                                    "namespaceSelector": {
-                                        "matchLabels": {
-                                            "namespace": namespace_name,
-                                        }
-                                    },
+                                    "namespaceSelector": {"matchLabels": labels},
                                     # allow traffic to all pods in this ns
                                     "podSelector": {},
                                 }
