@@ -152,7 +152,36 @@ async def create_namespace(
                                     "podSelector": {},
                                 }
                             ]
-                        }
+                        },
+                        # allowing pods to connect to public networks only
+                        {
+                            "to": [
+                                {
+                                    "ipBlock": {
+                                        "cidr": "0.0.0.0/0",
+                                        "except": [
+                                            "10.0.0.0/8",
+                                            "172.16.0.0/12",
+                                            "192.168.0.0/16",
+                                        ],
+                                    }
+                                }
+                            ]
+                        },
+                        # allowing labeled pods to make DNS queries in our private
+                        # networks, because pods' /etc/resolv.conf files still
+                        # point to the internal DNS
+                        {
+                            "to": [
+                                {"ipBlock": {"cidr": "10.0.0.0/8"}},
+                                {"ipBlock": {"cidr": "172.16.0.0/12"}},
+                                {"ipBlock": {"cidr": "192.168.0.0/16"}},
+                            ],
+                            "ports": [
+                                {"port": 53, "protocol": "UDP"},
+                                {"port": 53, "protocol": "TCP"},
+                            ],
+                        },
                     ],
                 },
             },
