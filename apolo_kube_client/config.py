@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
+from yarl import URL
+
 NAMESPACE_DEFAULT = "default"
 
 
@@ -13,7 +15,7 @@ class KubeClientAuthType(str, Enum):
 
 @dataclass(frozen=True)
 class KubeConfig:
-    endpoint_url: str
+    endpoint_url: URL
     cert_authority_data_pem: Optional[str] = field(repr=False, default=None)
     cert_authority_path: Optional[str] = None
     auth_type: KubeClientAuthType = KubeClientAuthType.NONE

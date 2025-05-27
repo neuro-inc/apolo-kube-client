@@ -5,9 +5,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 from typing import Any, Optional, Union, cast
-from urllib.parse import urlsplit
 
 import aiohttp
+from kubernetes import client
+from yarl import URL
 
 from apolo_kube_client.config import KubeClientAuthType, KubeConfig
 from apolo_kube_client.errors import (
@@ -28,7 +29,7 @@ class KubeClient:
     def __init__(
         self,
         *,
-        base_url: str,
+        base_url: URL,
         namespace: str,
         cert_authority_path: Optional[str] = None,
         cert_authority_data_pem: Optional[str] = None,
@@ -71,10 +72,11 @@ class KubeClient:
         self._client: Optional[aiohttp.ClientSession] = None
         self._token_updater_task: Optional[asyncio.Task[None]] = None
 
+        # Initialize the Kubernetes API client
+        self.__api_client = client.ApiClient()
+
     def __str__(self) -> str:
         return self.__class__.__name__
-
-    __repr__ = __str__
 
     async def __aenter__(self) -> "KubeClient":
         await self.init()
@@ -88,6 +90,7 @@ class KubeClient:
         if self._token_path:
             self._refresh_token_from_file()
             self._token_updater_task = asyncio.create_task(self._start_token_updater())
+
         connector = aiohttp.TCPConnector(
             limit=self._conn_pool_size, ssl=self._create_ssl_context()
         )
@@ -113,31 +116,12 @@ class KubeClient:
         logger.info("%s: closed", self)
 
     @property
-    def api_v1_url(self) -> str:
-        return f"{self._base_url}/api/v1"
+    def base_url(self) -> URL:
+        return self._base_url
 
     @property
     def namespace(self) -> str:
         return self._namespace
-
-    @property
-    def namespaces_url(self) -> str:
-        return f"{self.api_v1_url}/namespaces"
-
-    def generate_namespace_url(self, namespace_name: Optional[str] = None) -> str:
-        namespace_name = namespace_name or self._namespace
-        return f"{self.namespaces_url}/{namespace_name}"
-
-    @property
-    def namespace_url(self) -> str:
-        return self.generate_namespace_url()
-
-    def generate_network_policy_url(self, namespace: str) -> str:
-        return (
-            f"{self._base_url}"
-            f"/apis/networking.k8s.io/v1/namespaces"
-            f"/{namespace}/networkpolicies"
-        )
 
     async def request(
         self,
@@ -203,7 +187,7 @@ class KubeClient:
 
     @property
     def _is_ssl(self) -> bool:
-        return urlsplit(self._base_url).scheme == "https"
+        return self.base_url.scheme == "https"
 
     def _create_ssl_context(self) -> Union[ssl.SSLContext, bool]:
         if not self._is_ssl:
@@ -221,6 +205,7 @@ class KubeClient:
     async def _start_token_updater(self) -> None:
         """
         A task which periodically reads from the `token_path` and refreshes the token
+        TODO wait according to the token expiration time
         """
         if not self._token_path:
             logger.info("%s: token path does not exist. updater won't be started", self)
@@ -247,12 +232,46 @@ class KubeClient:
         self._token = token
         logger.info("%s: kube token was refreshed", self)
 
+    def deserialize(self, payload: dict[str, Any], model: object) -> Any:
+        return self.__api_client._ApiClient__deserialize(payload, model)
+
+
+class BaseKubeAPIGroup:
+    def __init__(self, kube_client: KubeClient) -> None:
+        self._kube_client = kube_client
+
+    @property
+    def kube_client(self) -> KubeClient:
+        return self._kube_client
+
+
+class KubeAPIClient:
+    def __init__(
+        self, *, kube_client: KubeClient, **apis: dict[str, BaseKubeAPIGroup]
+    ) -> None:
+        self._kube_client = kube_client
+        self._apis = apis
+
+    def __getattr__(self, name):  # type: ignore
+        # Lazy initialize the client when accessed
+        if name in self._apis:
+            api_wrapper_client = self._apis[name](kube_client=self._kube_client)  # type: ignore
+            setattr(self, name, api_wrapper_client)
+            return api_wrapper_client
+        raise AttributeError(f"{self.__class__.__name__} has no attribute {name}")
+
+    @property
+    def kube_client(self) -> KubeClient:
+        return self._kube_client
+
 
 @asynccontextmanager
-async def kube_client_from_config(
-    config: KubeConfig, trace_configs: Optional[list[aiohttp.TraceConfig]] = None
-) -> AsyncIterator[KubeClient]:
-    client = KubeClient(
+async def create_kube_api_client(
+    config: KubeConfig,
+    trace_configs: Optional[list[aiohttp.TraceConfig]] = None,
+    **apis: dict[str, BaseKubeAPIGroup],
+) -> AsyncIterator[KubeAPIClient]:
+    kube_client = KubeClient(
         base_url=config.endpoint_url,
         namespace=config.namespace,
         cert_authority_path=config.cert_authority_path,
@@ -269,10 +288,11 @@ async def kube_client_from_config(
         trace_configs=trace_configs,
     )
     try:
-        await client.init()
-        yield client
+        await kube_client.init()
+        kube_api_client = KubeAPIClient(kube_client=kube_client, **apis)
+        yield kube_api_client
     except Exception as e:
-        logger.exception("%s: unhandled error happened", client)
+        logger.exception("%s: unhandled error happened", kube_client)
         raise e
     finally:
-        await client.close()
+        await kube_client.close()
