@@ -18,5 +18,5 @@ class BatchV1Api:
 
 class Job(NamespacedResource):
     query_path = "jobs"
-    response_type = V1Job
-    response_type_list = V1JobList
+    model = V1Job
+    list_model = V1JobList

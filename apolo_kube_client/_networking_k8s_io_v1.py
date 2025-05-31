@@ -18,5 +18,5 @@ class NetworkingK8SioV1Api:
 
 class NetworkPolicy(NamespacedResource):
     query_path = "networkpolicies"
-    response_type = V1NetworkPolicy
-    response_type_list = V1NetworkPolicyList
+    model = V1NetworkPolicy
+    list_model = V1NetworkPolicyList

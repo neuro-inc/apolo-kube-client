@@ -20,5 +20,5 @@ class CoreV1Api:
 
 class Namespace(NotNamespacedResource):
     query_path = "namespaces"
-    response_type = V1Namespace
-    response_type_list = V1NamespaceList
+    model = V1Namespace
+    list_model = V1NamespaceList
