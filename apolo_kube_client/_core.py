@@ -1,17 +1,16 @@
 import asyncio
 import logging
 import ssl
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager, suppress
+from contextlib import suppress
 from pathlib import Path
-from typing import Any, Optional, Union, cast
+from typing import Any, Optional, Union
 
 import aiohttp
 from kubernetes import client
 from yarl import URL
 
-from apolo_kube_client.config import KubeClientAuthType, KubeConfig
-from apolo_kube_client.errors import (
+from ._config import KubeClientAuthType
+from ._errors import (
     KubeClientException,
     KubeClientExpired,
     KubeClientUnauthorized,
@@ -25,7 +24,27 @@ from apolo_kube_client.errors import (
 logger = logging.getLogger(__name__)
 
 
-class KubeClient:
+class _RESTResponse:
+    """
+    This is our custom analogue of the `kubernetes.client.rest.RESTResponse` class
+    that is used for deserializing response data from the Kubernetes API.
+    Aiohttp Response instead of the urllib3 Response
+    """
+
+    def __init__(self, resp: aiohttp.ClientResponse, data: bytes):
+        self.response = resp
+        self.status = resp.status
+        self.reason = resp.reason
+        self.data = data
+
+
+class _KubeCore:
+    """
+    Transport provider for Kube API client.
+
+    Internal class.
+    """
+
     def __init__(
         self,
         *,
@@ -72,13 +91,14 @@ class KubeClient:
         self._client: Optional[aiohttp.ClientSession] = None
         self._token_updater_task: Optional[asyncio.Task[None]] = None
 
-        # Initialize the Kubernetes API client
-        self.__api_client = client.ApiClient()
+        # Initialize the 3d party Official Kubernetes API client,
+        # this is used only for deserialization and its models
+        self._api_client = client.ApiClient()
 
     def __str__(self) -> str:
         return self.__class__.__name__
 
-    async def __aenter__(self) -> "KubeClient":
+    async def __aenter__(self) -> "_KubeCore":
         await self.init()
         return self
 
@@ -127,8 +147,9 @@ class KubeClient:
         self,
         *args: Any,
         raise_for_status: bool = True,
+        response_type: Any = None,
         **kwargs: Any,
-    ) -> dict[str, Any]:
+    ) -> Any:
         assert self._client, "client is not initialized"
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
@@ -138,21 +159,24 @@ class KubeClient:
             logger.debug("%s: k8s response payload: %s", self, payload)
             if raise_for_status:
                 self._raise_for_status(payload)
-            return cast(dict[str, Any], payload)
+            if response_type:
+                rest_response = _RESTResponse(response, await response.read())
+                return self._api_client.deserialize(rest_response, response_type)
+            return payload
 
-    async def get(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def get(self, *args: Any, **kwargs: Any) -> Any:
         return await self.request("GET", *args, **kwargs)
 
-    async def post(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def post(self, *args: Any, **kwargs: Any) -> Any:
         return await self.request("POST", *args, **kwargs)
 
-    async def patch(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def patch(self, *args: Any, **kwargs: Any) -> Any:
         return await self.request("PATCH", *args, **kwargs)
 
-    async def put(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def put(self, *args: Any, **kwargs: Any) -> Any:
         return await self.request("PUT", *args, **kwargs)
 
-    async def delete(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+    async def delete(self, *args: Any, **kwargs: Any) -> Any:
         return await self.request("DELETE", *args, **kwargs)
 
     @property
@@ -231,68 +255,3 @@ class KubeClient:
             return
         self._token = token
         logger.info("%s: kube token was refreshed", self)
-
-    def deserialize(self, payload: dict[str, Any], model: object) -> Any:
-        return self.__api_client._ApiClient__deserialize(payload, model)
-
-
-class BaseKubeAPIGroup:
-    def __init__(self, kube_client: KubeClient) -> None:
-        self._kube_client = kube_client
-
-    @property
-    def kube_client(self) -> KubeClient:
-        return self._kube_client
-
-
-class KubeAPIClient:
-    def __init__(
-        self, *, kube_client: KubeClient, **apis: dict[str, BaseKubeAPIGroup]
-    ) -> None:
-        self._kube_client = kube_client
-        self._apis = apis
-
-    def __getattr__(self, name):  # type: ignore
-        # Lazy initialize the client when accessed
-        if name in self._apis:
-            api_wrapper_client = self._apis[name](kube_client=self._kube_client)  # type: ignore
-            setattr(self, name, api_wrapper_client)
-            return api_wrapper_client
-        raise AttributeError(f"{self.__class__.__name__} has no attribute {name}")
-
-    @property
-    def kube_client(self) -> KubeClient:
-        return self._kube_client
-
-
-@asynccontextmanager
-async def create_kube_api_client(
-    config: KubeConfig,
-    trace_configs: Optional[list[aiohttp.TraceConfig]] = None,
-    **apis: dict[str, BaseKubeAPIGroup],
-) -> AsyncIterator[KubeAPIClient]:
-    kube_client = KubeClient(
-        base_url=config.endpoint_url,
-        namespace=config.namespace,
-        cert_authority_path=config.cert_authority_path,
-        cert_authority_data_pem=config.cert_authority_data_pem,
-        auth_type=config.auth_type,
-        auth_cert_path=config.auth_cert_path,
-        auth_cert_key_path=config.auth_cert_key_path,
-        token=config.token,
-        token_path=config.token_path,
-        conn_timeout_s=config.client_conn_timeout_s,
-        read_timeout_s=config.client_read_timeout_s,
-        watch_timeout_s=config.client_watch_timeout_s,
-        conn_pool_size=config.client_conn_pool_size,
-        trace_configs=trace_configs,
-    )
-    try:
-        await kube_client.init()
-        kube_api_client = KubeAPIClient(kube_client=kube_client, **apis)
-        yield kube_api_client
-    except Exception as e:
-        logger.exception("%s: unhandled error happened", kube_client)
-        raise e
-    finally:
-        await kube_client.close()

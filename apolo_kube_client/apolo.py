@@ -7,8 +7,8 @@ from hashlib import sha256
 
 from kubernetes.client.models import V1Namespace, V1NetworkPolicy, V1ObjectMeta
 
-from apolo_kube_client import KubeAPIClient
-from apolo_kube_client.errors import ResourceExists
+from apolo_kube_client import KubeClient
+from apolo_kube_client._errors import ResourceExists
 
 KUBE_NAME_LENGTH_MAX = 63
 DASH = "-"
@@ -89,7 +89,7 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
 
 
 async def create_namespace(
-    kube_client: KubeAPIClient, org_name: str, project_name: str
+    kube_client: KubeClient, org_name: str, project_name: str
 ) -> V1Namespace:
     """
     Creates a namespace based on a provided org and project names.
@@ -112,14 +112,14 @@ async def create_namespace(
             metadata=V1ObjectMeta(name=namespace_name, labels=labels)
         )
         # let's try to create a namespace
-        namespace = await kube_client.core_v1.create_namespace(namespace=namespace)
+        namespace = await kube_client.core_v1.namespace.create(namespace)
     except ResourceExists:
         # of get, it if it doesn't exist
-        namespace = await kube_client.core_v1.get_namespace(name=namespace_name)
+        namespace = await kube_client.core_v1.namespace.get(name=namespace_name)
 
     # now let's create a network policy, which will allow a namespace-only access
     try:
-        await kube_client.networking_k8s_io_v1.create_network_policy(
+        await kube_client.networking_k8s_io_v1.network_policy.create(
             V1NetworkPolicy(
                 **{
                     "api_version": "networking.k8s.io/v1",
