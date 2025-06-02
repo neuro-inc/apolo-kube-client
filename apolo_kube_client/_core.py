@@ -229,7 +229,6 @@ class _KubeCore:
     async def _start_token_updater(self) -> None:
         """
         A task which periodically reads from the `token_path` and refreshes the token
-        TODO wait according to the token expiration time
         """
         if not self._token_path:
             logger.info("%s: token path does not exist. updater won't be started", self)

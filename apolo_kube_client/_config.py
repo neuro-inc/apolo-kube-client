@@ -1,7 +1,6 @@
-from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
+from pydantic import BaseModel, Field
 from yarl import URL
 
 NAMESPACE_DEFAULT = "default"
@@ -13,16 +12,15 @@ class KubeClientAuthType(str, Enum):
     CERTIFICATE = "certificate"
 
 
-@dataclass(frozen=True)
-class KubeConfig:
+class KubeConfig(BaseModel):
     endpoint_url: URL
-    cert_authority_data_pem: Optional[str] = field(repr=False, default=None)
-    cert_authority_path: Optional[str] = None
+    cert_authority_data_pem: str | None = Field(repr=False, default=None)
+    cert_authority_path: str | None = None
     auth_type: KubeClientAuthType = KubeClientAuthType.NONE
-    auth_cert_path: Optional[str] = None
-    auth_cert_key_path: Optional[str] = None
-    token: Optional[str] = field(repr=False, default=None)
-    token_path: Optional[str] = None
+    auth_cert_path: str | None = None
+    auth_cert_key_path: str | None = None
+    token: str | None = Field(repr=False, default=None)
+    token_path: str | None = None
     namespace: str = NAMESPACE_DEFAULT
     client_conn_timeout_s: int = 300
     client_read_timeout_s: int = 300

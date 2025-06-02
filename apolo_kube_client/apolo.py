@@ -112,7 +112,7 @@ async def create_namespace(
             metadata=V1ObjectMeta(name=namespace_name, labels=labels)
         )
         # let's try to create a namespace
-        namespace = await kube_client.core_v1.namespace.create(namespace)
+        namespace = await kube_client.core_v1.namespace.create(model=namespace)
     except ResourceExists:
         # of get, it if it doesn't exist
         namespace = await kube_client.core_v1.namespace.get(name=namespace_name)

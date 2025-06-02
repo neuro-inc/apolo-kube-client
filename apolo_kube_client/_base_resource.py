@@ -10,9 +10,9 @@ class BaseResource:
     Base class for Non Namespaced Kubernetes Resource.
     """
 
-    query_path = None
-    model = None
-    list_model = None
+    query_path: str | None = None
+    model: str | None = None
+    list_model: str | None = None
 
     def __init__(self, core: _KubeCore, group_api_query_path: str):
         if not self.query_path:
