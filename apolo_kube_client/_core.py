@@ -58,13 +58,10 @@ class _KubeCore:
         self._cert_authority_path = config.cert_authority_path
 
         if config.auth_type == KubeClientAuthType.TOKEN:
-            assert config.token or config.token_path, (
-                "token or token path must be provided"
-            )
+            assert config.token or config.token_path
         elif config.auth_type == KubeClientAuthType.CERTIFICATE:
-            assert config.auth_cert_path and config.auth_cert_key_path, (
-                "certs must be provided"
-            )
+            assert config.auth_cert_path
+            assert config.auth_cert_key_path
 
         self._auth_type = config.auth_type
         self._auth_cert_path = config.auth_cert_path
