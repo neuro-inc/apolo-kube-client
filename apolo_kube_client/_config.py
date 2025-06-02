@@ -21,6 +21,7 @@ class KubeConfig(BaseModel):
     auth_cert_key_path: str | None = None
     token: str | None = Field(repr=False, default=None)
     token_path: str | None = None
+    token_update_interval_s: int = 300
     namespace: str = NAMESPACE_DEFAULT
     client_conn_timeout_s: int = 300
     client_read_timeout_s: int = 300

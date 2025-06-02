@@ -1,6 +1,5 @@
-from ._client import KubeClient, create_kube_client
+from ._client import KubeClient
 
 __all__ = [
     "KubeClient",
-    "create_kube_client",
 ]

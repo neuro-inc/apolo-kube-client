@@ -7,7 +7,7 @@ from typing import Any, Optional
 
 import pytest
 
-from apolo_kube_client import KubeClient, create_kube_client
+from apolo_kube_client import KubeClient
 from apolo_kube_client._config import KubeClientAuthType, KubeConfig
 
 
@@ -68,5 +68,5 @@ async def kube_config(
 
 @pytest.fixture
 async def kube_client(kube_config: KubeConfig) -> AsyncIterator[KubeClient]:
-    async with create_kube_client(kube_config) as client:
+    async with KubeClient(config=kube_config) as client:
         yield client
