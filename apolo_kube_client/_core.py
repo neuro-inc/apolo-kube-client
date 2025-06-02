@@ -9,7 +9,7 @@ import aiohttp
 from kubernetes import client
 from yarl import URL
 
-from ._config import KubeClientAuthType
+from ._config import KubeClientAuthType, KubeConfig
 from ._errors import (
     KubeClientException,
     KubeClientExpired,
@@ -47,45 +47,36 @@ class _KubeCore:
 
     def __init__(
         self,
+        config: KubeConfig,
         *,
-        base_url: URL,
-        namespace: str,
-        cert_authority_path: Optional[str] = None,
-        cert_authority_data_pem: Optional[str] = None,
-        auth_type: KubeClientAuthType = KubeClientAuthType.CERTIFICATE,
-        auth_cert_path: Optional[str] = None,
-        auth_cert_key_path: Optional[str] = None,
-        token: Optional[str] = None,
-        token_path: Optional[str] = None,
-        token_update_interval_s: int = 300,
-        conn_timeout_s: int = 300,
-        read_timeout_s: int = 100,
-        watch_timeout_s: int = 1800,
-        conn_pool_size: int = 100,
         trace_configs: Optional[list[aiohttp.TraceConfig]] = None,
     ) -> None:
-        self._base_url = base_url
-        self._namespace = namespace
+        self._base_url = config.endpoint_url
+        self._namespace = config.namespace
 
-        self._cert_authority_data_pem = cert_authority_data_pem
-        self._cert_authority_path = cert_authority_path
+        self._cert_authority_data_pem = config.cert_authority_data_pem
+        self._cert_authority_path = config.cert_authority_path
 
-        if auth_type == KubeClientAuthType.TOKEN:
-            assert token or token_path, "token or token path must be provided"
-        elif auth_type == KubeClientAuthType.CERTIFICATE:
-            assert auth_cert_path and auth_cert_key_path, "certs must be provided"
+        if config.auth_type == KubeClientAuthType.TOKEN:
+            assert config.token or config.token_path, (
+                "token or token path must be provided"
+            )
+        elif config.auth_type == KubeClientAuthType.CERTIFICATE:
+            assert config.auth_cert_path and config.auth_cert_key_path, (
+                "certs must be provided"
+            )
 
-        self._auth_type = auth_type
-        self._auth_cert_path = auth_cert_path
-        self._auth_cert_key_path = auth_cert_key_path
-        self._token = token
-        self._token_path = token_path
-        self._token_update_interval_s = token_update_interval_s
+        self._auth_type = config.auth_type
+        self._auth_cert_path = config.auth_cert_path
+        self._auth_cert_key_path = config.auth_cert_key_path
+        self._token = config.token
+        self._token_path = config.token_path
+        self._token_update_interval_s = config.token_update_interval_s
 
-        self._conn_timeout_s = conn_timeout_s
-        self._read_timeout_s = read_timeout_s
-        self._watch_timeout_s = watch_timeout_s
-        self._conn_pool_size = conn_pool_size
+        self._conn_timeout_s = config.client_conn_timeout_s
+        self._read_timeout_s = config.client_read_timeout_s
+        self._watch_timeout_s = config.client_watch_timeout_s
+        self._conn_pool_size = config.client_conn_pool_size
         self._trace_configs = trace_configs
 
         self._client: Optional[aiohttp.ClientSession] = None
