@@ -40,7 +40,7 @@ class BaseResource:
         raise NotImplementedError
 
 
-class NotNamespacedResource(BaseResource):
+class ClusterScopedResource(BaseResource):
     def _build_url_list(self) -> URL:
         assert self.query_path, "query_path must be set"
         return self._core.base_url / self._group_api_query_path / self.query_path

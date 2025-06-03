@@ -2,7 +2,7 @@ from kubernetes.client.models import V1Namespace, V1NamespaceList
 
 from apolo_kube_client._core import _KubeCore
 
-from ._base_resource import NotNamespacedResource
+from ._base_resource import ClusterScopedResource
 
 
 class CoreV1Api:
@@ -18,7 +18,7 @@ class CoreV1Api:
         self.namespace = Namespace(core, self.group_api_query_path)
 
 
-class Namespace(NotNamespacedResource):
+class Namespace(ClusterScopedResource):
     query_path = "namespaces"
     model = V1Namespace
     list_model = V1NamespaceList
