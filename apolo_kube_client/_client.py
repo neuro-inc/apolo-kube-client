@@ -1,5 +1,7 @@
 import logging
-from typing import Any
+from typing import Any, Self
+
+from kubernetes.client import ApiClient
 
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
@@ -14,13 +16,17 @@ class KubeClient:
     def __init__(self, *, config: KubeConfig) -> None:
         self._core = _KubeCore(config)
 
-        self.core_v1 = CoreV1Api(self._core)
-        self.batch_v1 = BatchV1Api(self._core)
-        self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core)
+        # Initialize the 3d party Official Kubernetes API client,
+        # this is used only for deserialization raw responses for models
+        api_client = ApiClient()
 
-    async def __aenter__(self) -> "KubeClient":
-        async with self._core:
-            return self
+        self.core_v1 = CoreV1Api(self._core, api_client)
+        self.batch_v1 = BatchV1Api(self._core, api_client)
+        self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core, api_client)
+
+    async def __aenter__(self) -> Self:
+        await self._core.__aenter__()
+        return self
 
     async def __aexit__(self, *args: Any) -> None:
-        await self._core.close()
+        await self._core.__aexit__()

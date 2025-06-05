@@ -1,3 +1,4 @@
+from kubernetes.client import ApiClient
 from kubernetes.client.models import V1NetworkPolicy, V1NetworkPolicyList
 
 from ._base_resource import NamespacedResource
@@ -11,12 +12,10 @@ class NetworkingK8SioV1Api:
 
     group_api_query_path = "apis/networking.k8s.io/v1"
 
-    def __init__(self, core: _KubeCore) -> None:
+    def __init__(self, core: _KubeCore, api_client: ApiClient) -> None:
         self._core = core
-        self.network_policy = NetworkPolicy(core, self.group_api_query_path)
+        self.network_policy = NetworkPolicy(core, self.group_api_query_path, api_client)
 
 
-class NetworkPolicy(NamespacedResource):
+class NetworkPolicy(NamespacedResource[V1NetworkPolicy, V1NetworkPolicyList]):
     query_path = "networkpolicies"
-    model = V1NetworkPolicy
-    list_model = V1NetworkPolicyList

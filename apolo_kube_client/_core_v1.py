@@ -1,3 +1,4 @@
+from kubernetes.client import ApiClient
 from kubernetes.client.models import V1Namespace, V1NamespaceList
 
 from apolo_kube_client._core import _KubeCore
@@ -12,13 +13,10 @@ class CoreV1Api:
 
     group_api_query_path = "api/v1"
 
-    def __init__(self, core: _KubeCore) -> None:
+    def __init__(self, core: _KubeCore, api_client: ApiClient) -> None:
         self._core = core
+        self.namespace = Namespace(core, self.group_api_query_path, api_client)
 
-        self.namespace = Namespace(core, self.group_api_query_path)
 
-
-class Namespace(ClusterScopedResource):
+class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList]):
     query_path = "namespaces"
-    model = V1Namespace
-    list_model = V1NamespaceList

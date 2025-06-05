@@ -3,16 +3,14 @@ import logging
 import ssl
 from contextlib import suppress
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Self, cast
 
 import aiohttp
-from kubernetes import client
 from yarl import URL
 
 from ._config import KubeClientAuthType, KubeConfig
 from ._errors import (
     KubeClientException,
-    KubeClientExpired,
     KubeClientUnauthorized,
     ResourceBadRequest,
     ResourceExists,
@@ -22,20 +20,6 @@ from ._errors import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-class _RESTResponse:
-    """
-    This is our custom analogue of the `kubernetes.client.rest.RESTResponse` class
-    that is used for deserializing response data from the Kubernetes API.
-    Aiohttp Response instead of the urllib3 Response
-    """
-
-    def __init__(self, resp: aiohttp.ClientResponse, data: bytes):
-        self.response = resp
-        self.status = resp.status
-        self.reason = resp.reason
-        self.data = data
 
 
 class _KubeCore:
@@ -49,7 +33,7 @@ class _KubeCore:
         self,
         config: KubeConfig,
         *,
-        trace_configs: Optional[list[aiohttp.TraceConfig]] = None,
+        trace_configs: list[aiohttp.TraceConfig] | None = None,
     ) -> None:
         self._base_url = config.endpoint_url
         self._namespace = config.namespace
@@ -76,17 +60,13 @@ class _KubeCore:
         self._conn_pool_size = config.client_conn_pool_size
         self._trace_configs = trace_configs
 
-        self._client: Optional[aiohttp.ClientSession] = None
-        self._token_updater_task: Optional[asyncio.Task[None]] = None
-
-        # Initialize the 3d party Official Kubernetes API client,
-        # this is used only for deserialization and its models
-        self._api_client = client.ApiClient()
+        self._client: aiohttp.ClientSession | None = None
+        self._token_updater_task: asyncio.Task[None] | None = None
 
     def __str__(self) -> str:
         return self.__class__.__name__
 
-    async def __aenter__(self) -> "_KubeCore":
+    async def __aenter__(self) -> Self:
         await self.init()
         return self
 
@@ -109,6 +89,7 @@ class _KubeCore:
             connector=connector,
             timeout=timeout,
             trace_configs=self._trace_configs,
+            raise_for_status=self._raise_for_status,
         )
 
     async def close(self) -> None:
@@ -134,38 +115,35 @@ class _KubeCore:
     async def request(
         self,
         *args: Any,
-        raise_for_status: bool = True,
-        response_type: Any = None,
         **kwargs: Any,
-    ) -> Any:
+    ) -> aiohttp.ClientResponse:
         assert self._client, "client is not initialized"
+
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
 
         async with self._client.request(*args, headers=headers, **kwargs) as response:
-            payload = await response.json()
-            logger.debug("%s: k8s response payload: %s", self, payload)
-            if raise_for_status:
-                self._raise_for_status(payload)
-            if response_type:
-                rest_response = _RESTResponse(response, await response.read())
-                return self._api_client.deserialize(rest_response, response_type)
-            return payload
+            return response
 
-    async def get(self, *args: Any, **kwargs: Any) -> Any:
-        return await self.request("GET", *args, **kwargs)
+    async def get(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        resp = await self.request("GET", *args, **kwargs)
+        return cast(dict[str, Any], await resp.json())
 
-    async def post(self, *args: Any, **kwargs: Any) -> Any:
-        return await self.request("POST", *args, **kwargs)
+    async def post(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        resp = await self.request("POST", *args, **kwargs)
+        return cast(dict[str, Any], await resp.json())
 
-    async def patch(self, *args: Any, **kwargs: Any) -> Any:
-        return await self.request("PATCH", *args, **kwargs)
+    async def patch(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        resp = await self.request("PATCH", *args, **kwargs)
+        return cast(dict[str, Any], await resp.json())
 
-    async def put(self, *args: Any, **kwargs: Any) -> Any:
-        return await self.request("PUT", *args, **kwargs)
+    async def put(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        resp = await self.request("PUT", *args, **kwargs)
+        return cast(dict[str, Any], await resp.json())
 
-    async def delete(self, *args: Any, **kwargs: Any) -> Any:
-        return await self.request("DELETE", *args, **kwargs)
+    async def delete(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        resp = await self.request("DELETE", *args, **kwargs)
+        return cast(dict[str, Any], await resp.json())
 
     @property
     def _auth_headers(self) -> dict[str, Any]:
@@ -174,34 +152,32 @@ class _KubeCore:
         return {"Authorization": f"Bearer {self._token}"}
 
     @staticmethod
-    def _raise_for_status(payload: dict[str, Any]) -> None:
-        kind = payload.get("kind")
-        if kind == "Status":
-            if payload.get("status") == "Success":
-                return
-            code = payload.get("code")
-            reason = payload.get("reason")
-            if reason == "Expired":
-                raise KubeClientExpired(payload)
-            if code == 400:
-                raise ResourceBadRequest(payload)
-            if code == 401:
-                raise KubeClientUnauthorized(payload)
-            if code == 404:
-                raise ResourceNotFound(payload)
-            if code == 409:
-                raise ResourceExists(payload)
-            if code == 410:
-                raise ResourceGone(payload)
-            if code == 422:
-                raise ResourceInvalid(payload["message"])
-            raise KubeClientException(payload["message"])
+    async def _raise_for_status(response: aiohttp.ClientResponse) -> None:
+        if response.status >= 400:
+            payload = await response.json()
+            match response.status:
+                case 400:
+                    raise ResourceBadRequest(payload)
+                case 401:
+                    raise KubeClientUnauthorized(payload)
+                case 403:
+                    raise KubeClientException(payload)
+                case 404:
+                    raise ResourceNotFound(payload)
+                case 409:
+                    raise ResourceExists(payload)
+                case 410:
+                    raise ResourceGone(payload)
+                case 422:
+                    raise ResourceInvalid(payload)
+                case _:
+                    raise KubeClientException(payload)
 
     @property
     def _is_ssl(self) -> bool:
         return self.base_url.scheme == "https"
 
-    def _create_ssl_context(self) -> Union[ssl.SSLContext, bool]:
+    def _create_ssl_context(self) -> ssl.SSLContext | bool:
         if not self._is_ssl:
             return False
         ssl_context = ssl.create_default_context(
