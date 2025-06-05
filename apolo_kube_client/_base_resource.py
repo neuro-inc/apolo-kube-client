@@ -7,6 +7,14 @@ from yarl import URL
 from apolo_kube_client._core import _KubeCore
 
 
+class HasToDict(Protocol):
+    def to_dict(self) -> dict[str, Any]: ...
+
+
+ModelT = TypeVar("ModelT", bound=HasToDict)
+ListModelT = TypeVar("ListModelT", bound=HasToDict)
+
+
 class _RESTResponse:
     """
     This is our custom analogue of the `kubernetes.client.rest.RESTResponse` class
@@ -19,14 +27,6 @@ class _RESTResponse:
         self.status = resp.status
         self.reason = resp.reason
         self.data = data
-
-
-class HasToDict(Protocol):
-    def to_dict(self) -> dict[str, Any]: ...
-
-
-ModelT = TypeVar("ModelT", bound=HasToDict)
-ListModelT = TypeVar("ListModelT", bound=HasToDict)
 
 
 class BaseResource(Generic[ModelT, ListModelT]):
@@ -61,7 +61,7 @@ class BaseResource(Generic[ModelT, ListModelT]):
             return cast(type[ListModelT], get_args(self.__orig_class__)[1])
         if hasattr(self, "__orig_bases__"):
             return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
-        raise ValueError("Model class not found")
+        raise ValueError("ListModel class not found")
 
     @overload
     async def _deserialize(
