@@ -78,3 +78,7 @@ no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_return_any = true
+
+[[tool.mypy.overrides]]
+module = "kubernetes.client.*"
+ignore_missing_imports = true

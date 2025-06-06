@@ -114,21 +114,21 @@ class ClusterScopedResource(BaseResource[ModelT, ListModelT]):
         return self._build_url_list() / name
 
     async def get(self, name: str) -> ModelT:
-        resp = await self._core.request("GET", url=self._build_url(name))
+        resp = await self._core.request(method="GET", url=self._build_url(name))
         return await self._deserialize(resp, self._model_class)
 
     async def list(self) -> ListModelT:
-        resp = await self._core.request("GET", url=self._build_url_list())
+        resp = await self._core.request(method="GET", url=self._build_url_list())
         return await self._deserialize(resp, self._list_model_class)
 
     async def create(self, model: ModelT) -> ModelT:
         resp = await self._core.request(
-            "POST", url=self._build_url_list(), json=model.to_dict()
+            method="POST", url=self._build_url_list(), json=model.to_dict()
         )
         return await self._deserialize(resp, self._model_class)
 
     async def delete(self, name: str) -> ModelT:
-        resp = await self._core.request("DELETE", url=self._build_url(name))
+        resp = await self._core.request(method="DELETE", url=self._build_url(name))
         return await self._deserialize(resp, self._model_class)
 
 
@@ -151,19 +151,19 @@ class NamespacedResource(BaseResource[ModelT, ListModelT]):
 
     async def get(self, name: str, namespace: str | None = None) -> ModelT:
         resp = await self._core.request(
-            "GET", url=self._build_url(name, self._get_ns(namespace))
+            method="GET", url=self._build_url(name, self._get_ns(namespace))
         )
         return await self._deserialize(resp, self._model_class)
 
     async def list(self, namespace: str | None = None) -> ListModelT:
         resp = await self._core.request(
-            "GET", url=self._build_url_list(self._get_ns(namespace))
+            method="GET", url=self._build_url_list(self._get_ns(namespace))
         )
         return await self._deserialize(resp, self._list_model_class)
 
     async def create(self, model: ModelT, namespace: str | None = None) -> ModelT:
         resp = await self._core.request(
-            "POST",
+            method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
             json=model.to_dict(),
         )
@@ -171,6 +171,6 @@ class NamespacedResource(BaseResource[ModelT, ListModelT]):
 
     async def delete(self, name: str, namespace: str | None = None) -> ModelT:
         resp = await self._core.request(
-            "DELETE", url=self._build_url(name, self._get_ns(namespace))
+            method="DELETE", url=self._build_url(name, self._get_ns(namespace))
         )
         return await self._deserialize(resp, self._model_class)

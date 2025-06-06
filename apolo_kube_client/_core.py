@@ -3,6 +3,7 @@ import logging
 import ssl
 from contextlib import suppress
 from pathlib import Path
+from types import TracebackType
 from typing import Any, Self, cast
 
 import aiohttp
@@ -70,7 +71,12 @@ class _KubeCore:
         await self.init()
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         await self.close()
 
     async def init(self) -> None:
@@ -114,7 +120,10 @@ class _KubeCore:
 
     async def request(
         self,
-        *args: Any,
+        method: str,
+        url: URL | str,
+        params: dict[str, Any] | None = None,
+        json: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> aiohttp.ClientResponse:
         assert self._client, "client is not initialized"
@@ -122,7 +131,9 @@ class _KubeCore:
         headers = kwargs.pop("headers", {}) or {}
         headers.update(self._auth_headers)  # populate auth (if exists)
 
-        async with self._client.request(*args, headers=headers, **kwargs) as response:
+        async with self._client.request(
+            method=method, url=url, headers=headers, params=params, json=json, **kwargs
+        ) as response:
             return response
 
     async def get(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
@@ -203,8 +214,6 @@ class _KubeCore:
         while True:
             try:
                 self._refresh_token_from_file()
-            except asyncio.CancelledError:
-                raise
             except Exception as exc:
                 logger.exception("%s: failed to update kube token: %s", self, exc)
             await asyncio.sleep(self._token_update_interval_s)

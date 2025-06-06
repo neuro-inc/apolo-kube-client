@@ -1,5 +1,6 @@
 import logging
-from typing import Any, Self
+from types import TracebackType
+from typing import Self
 
 from kubernetes.client import ApiClient
 
@@ -28,5 +29,10 @@ class KubeClient:
         await self._core.__aenter__()
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
-        await self._core.__aexit__()
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        await self._core.__aexit__(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
