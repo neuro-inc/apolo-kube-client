@@ -154,7 +154,7 @@ class _KubeCore:
     @staticmethod
     async def _raise_for_status(response: aiohttp.ClientResponse) -> None:
         if response.status >= 400:
-            payload = await response.json()
+            payload = await response.text()
             match response.status:
                 case 400:
                     raise ResourceBadRequest(payload)
