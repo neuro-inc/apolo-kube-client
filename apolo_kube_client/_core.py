@@ -4,10 +4,10 @@ import ssl
 from contextlib import suppress
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Self, cast
+from typing import Self, cast
 
 import aiohttp
-from yarl import URL
+from yarl import URL, Query
 
 from ._config import KubeClientAuthType, KubeConfig
 from ._errors import (
@@ -19,6 +19,7 @@ from ._errors import (
     ResourceInvalid,
     ResourceNotFound,
 )
+from ._typedefs import JsonType
 
 logger = logging.getLogger(__name__)
 
@@ -122,42 +123,63 @@ class _KubeCore:
         self,
         method: str,
         url: URL | str,
-        params: dict[str, Any] | None = None,
-        json: dict[str, Any] | None = None,
-        **kwargs: Any,
+        params: Query = None,
+        json: JsonType | None = None,
     ) -> aiohttp.ClientResponse:
         assert self._client, "client is not initialized"
 
-        headers = kwargs.pop("headers", {}) or {}
-        headers.update(self._auth_headers)  # populate auth (if exists)
-
         async with self._client.request(
-            method=method, url=url, headers=headers, params=params, json=json, **kwargs
+            method=method, url=url, headers=self._auth_headers, params=params, json=json
         ) as response:
             return response
 
-    async def get(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
-        resp = await self.request("GET", *args, **kwargs)
-        return cast(dict[str, Any], await resp.json())
+    async def get(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        resp = await self.request(method="GET", url=url, params=params, json=json)
+        return cast(JsonType, await resp.json())
 
-    async def post(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
-        resp = await self.request("POST", *args, **kwargs)
-        return cast(dict[str, Any], await resp.json())
+    async def post(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        resp = await self.request("POST", url=url, params=params, json=json)
+        return cast(JsonType, await resp.json())
 
-    async def patch(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
-        resp = await self.request("PATCH", *args, **kwargs)
-        return cast(dict[str, Any], await resp.json())
+    async def patch(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        resp = await self.request("PATCH", url=url, params=params, json=json)
+        return cast(JsonType, await resp.json())
 
-    async def put(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
-        resp = await self.request("PUT", *args, **kwargs)
-        return cast(dict[str, Any], await resp.json())
+    async def put(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        resp = await self.request("PUT", url=url, params=params, json=json)
+        return cast(JsonType, await resp.json())
 
-    async def delete(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
-        resp = await self.request("DELETE", *args, **kwargs)
-        return cast(dict[str, Any], await resp.json())
+    async def delete(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        resp = await self.request("DELETE", url=url, params=params, json=json)
+        return cast(JsonType, await resp.json())
 
     @property
-    def _auth_headers(self) -> dict[str, Any]:
+    def _auth_headers(self) -> dict[str, str]:
         if self._auth_type != KubeClientAuthType.TOKEN or not self._token:
             return {}
         return {"Authorization": f"Bearer {self._token}"}

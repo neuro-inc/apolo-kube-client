@@ -1,4 +1,4 @@
-from typing import Any, Generic, Protocol, TypeVar, cast, get_args, overload
+from typing import Protocol, cast, get_args, overload
 
 import aiohttp
 from kubernetes.client import ApiClient, models as available_k8s_models
@@ -6,13 +6,11 @@ from yarl import URL
 
 from apolo_kube_client._core import _KubeCore
 
+from ._typedefs import JsonType
+
 
 class HasToDict(Protocol):
-    def to_dict(self) -> dict[str, Any]: ...
-
-
-ModelT = TypeVar("ModelT", bound=HasToDict)
-ListModelT = TypeVar("ListModelT", bound=HasToDict)
+    def to_dict(self) -> JsonType: ...
 
 
 class _RESTResponse:
@@ -29,7 +27,7 @@ class _RESTResponse:
         self.data = data
 
 
-class BaseResource(Generic[ModelT, ListModelT]):
+class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
     """
     Base class for Kubernetes resources
     Uses models from the official Kubernetes API client.
@@ -86,26 +84,22 @@ class BaseResource(Generic[ModelT, ListModelT]):
             self._api_client.deserialize(rest_response, response_type),
         )
 
-    def _build_url_list(self, *args: Any, **kwargs: Any) -> URL:
+    async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
-    def _build_url(self, *args: Any, **kwargs: Any) -> URL:
+    async def list(self) -> ListModelT:
         raise NotImplementedError
 
-    async def get(self, *args: Any, **kwargs: Any) -> ModelT:
+    async def create(self, model: ModelT) -> ModelT:
         raise NotImplementedError
 
-    async def list(self, *args: Any, **kwargs: Any) -> ListModelT:
-        raise NotImplementedError
-
-    async def create(self, *args: Any, **kwargs: Any) -> ModelT:
-        raise NotImplementedError
-
-    async def delete(self, *args: Any, **kwargs: Any) -> ModelT:
+    async def delete(self, name: str) -> ModelT:
         raise NotImplementedError
 
 
-class ClusterScopedResource(BaseResource[ModelT, ListModelT]):
+class ClusterScopedResource[ModelT: HasToDict, ListModelT: HasToDict](
+    BaseResource[ModelT, ListModelT]
+):
     def _build_url_list(self) -> URL:
         assert self.query_path, "query_path must be set"
         return self._core.base_url / self._group_api_query_path / self.query_path
@@ -132,7 +126,9 @@ class ClusterScopedResource(BaseResource[ModelT, ListModelT]):
         return await self._deserialize(resp, self._model_class)
 
 
-class NamespacedResource(BaseResource[ModelT, ListModelT]):
+class NamespacedResource[ModelT: HasToDict, ListModelT: HasToDict](
+    BaseResource[ModelT, ListModelT]
+):
     def _build_url_list(self, namespace: str) -> URL:
         assert self.query_path, "query_path must be set"
         return (
