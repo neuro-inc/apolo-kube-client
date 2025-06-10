@@ -1,7 +1,6 @@
 from enum import Enum
 
 from pydantic import BaseModel, Field
-from yarl import URL
 
 NAMESPACE_DEFAULT = "default"
 
@@ -13,7 +12,7 @@ class KubeClientAuthType(str, Enum):
 
 
 class KubeConfig(BaseModel):
-    endpoint_url: URL
+    endpoint_url: str
     cert_authority_data_pem: str | None = Field(repr=False, default=None)
     cert_authority_path: str | None = None
     auth_type: KubeClientAuthType = KubeClientAuthType.NONE

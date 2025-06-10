@@ -1,7 +1,8 @@
 import asyncio
 import logging
 import ssl
-from contextlib import suppress
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 from types import TracebackType
 from typing import Self, cast
@@ -37,7 +38,7 @@ class _KubeCore:
         *,
         trace_configs: list[aiohttp.TraceConfig] | None = None,
     ) -> None:
-        self._base_url = config.endpoint_url
+        self._base_url: URL = URL(config.endpoint_url)
         self._namespace = config.namespace
 
         self._cert_authority_data_pem = config.cert_authority_data_pem
@@ -89,6 +90,7 @@ class _KubeCore:
         connector = aiohttp.TCPConnector(
             limit=self._conn_pool_size, ssl=self._create_ssl_context()
         )
+
         timeout = aiohttp.ClientTimeout(
             connect=self._conn_timeout_s, total=self._read_timeout_s
         )
@@ -119,19 +121,20 @@ class _KubeCore:
     def namespace(self) -> str:
         return self._namespace
 
+    @asynccontextmanager
     async def request(
         self,
         method: str,
         url: URL | str,
         params: Query = None,
         json: JsonType | None = None,
-    ) -> aiohttp.ClientResponse:
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
         assert self._client, "client is not initialized"
-
-        async with self._client.request(
+        resp = await self._client.request(
             method=method, url=url, headers=self._auth_headers, params=params, json=json
-        ) as response:
-            return response
+        )
+        yield resp
+        resp.close()
 
     async def get(
         self,
@@ -139,8 +142,10 @@ class _KubeCore:
         params: Query = None,
         json: JsonType | None = None,
     ) -> JsonType:
-        resp = await self.request(method="GET", url=url, params=params, json=json)
-        return cast(JsonType, await resp.json())
+        async with self.request(
+            method="GET", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
 
     async def post(
         self,
@@ -148,8 +153,10 @@ class _KubeCore:
         params: Query = None,
         json: JsonType | None = None,
     ) -> JsonType:
-        resp = await self.request("POST", url=url, params=params, json=json)
-        return cast(JsonType, await resp.json())
+        async with self.request(
+            method="POST", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
 
     async def patch(
         self,
@@ -157,8 +164,10 @@ class _KubeCore:
         params: Query = None,
         json: JsonType | None = None,
     ) -> JsonType:
-        resp = await self.request("PATCH", url=url, params=params, json=json)
-        return cast(JsonType, await resp.json())
+        async with self.request(
+            method="PATCH", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
 
     async def put(
         self,
@@ -166,8 +175,10 @@ class _KubeCore:
         params: Query = None,
         json: JsonType | None = None,
     ) -> JsonType:
-        resp = await self.request("PUT", url=url, params=params, json=json)
-        return cast(JsonType, await resp.json())
+        async with self.request(
+            method="PUT", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
 
     async def delete(
         self,
@@ -175,8 +186,10 @@ class _KubeCore:
         params: Query = None,
         json: JsonType | None = None,
     ) -> JsonType:
-        resp = await self.request("DELETE", url=url, params=params, json=json)
-        return cast(JsonType, await resp.json())
+        async with self.request(
+            method="DELETE", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
 
     @property
     def _auth_headers(self) -> dict[str, str]:

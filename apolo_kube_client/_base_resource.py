@@ -1,4 +1,5 @@
-from typing import Protocol, cast, get_args, overload
+from types import TracebackType
+from typing import Protocol, Self, cast, get_args, overload
 
 import aiohttp
 from kubernetes.client import ApiClient, models as available_k8s_models
@@ -20,11 +21,22 @@ class _RESTResponse:
     Aiohttp Response instead of the urllib3 Response
     """
 
-    def __init__(self, resp: aiohttp.ClientResponse, data: bytes):
+    def __init__(self, resp: aiohttp.ClientResponse):
         self.response = resp
         self.status = resp.status
         self.reason = resp.reason
-        self.data = data
+
+    async def __aenter__(self) -> Self:
+        self.data = await self.response.read()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        pass
 
 
 class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
@@ -78,11 +90,12 @@ class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
     ) -> ModelT | ListModelT:
         if not hasattr(available_k8s_models, response_type.__name__):
             raise ValueError(f"Unsupported response type: {response_type}")
-        rest_response = _RESTResponse(response, await response.read())
-        return cast(
-            ModelT | ListModelT,
-            self._api_client.deserialize(rest_response, response_type),
-        )
+
+        async with _RESTResponse(response) as rest_response:
+            return cast(
+                ModelT | ListModelT,
+                self._api_client.deserialize(rest_response, response_type),
+            )
 
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
@@ -108,22 +121,24 @@ class ClusterScopedResource[ModelT: HasToDict, ListModelT: HasToDict](
         return self._build_url_list() / name
 
     async def get(self, name: str) -> ModelT:
-        resp = await self._core.request(method="GET", url=self._build_url(name))
-        return await self._deserialize(resp, self._model_class)
+        async with self._core.request(method="GET", url=self._build_url(name)) as resp:
+            return await self._deserialize(resp, self._model_class)
 
     async def list(self) -> ListModelT:
-        resp = await self._core.request(method="GET", url=self._build_url_list())
-        return await self._deserialize(resp, self._list_model_class)
+        async with self._core.request(method="GET", url=self._build_url_list()) as resp:
+            return await self._deserialize(resp, self._list_model_class)
 
     async def create(self, model: ModelT) -> ModelT:
-        resp = await self._core.request(
+        async with self._core.request(
             method="POST", url=self._build_url_list(), json=model.to_dict()
-        )
-        return await self._deserialize(resp, self._model_class)
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
 
     async def delete(self, name: str) -> ModelT:
-        resp = await self._core.request(method="DELETE", url=self._build_url(name))
-        return await self._deserialize(resp, self._model_class)
+        async with self._core.request(
+            method="DELETE", url=self._build_url(name)
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
 
 
 class NamespacedResource[ModelT: HasToDict, ListModelT: HasToDict](
@@ -146,27 +161,27 @@ class NamespacedResource[ModelT: HasToDict, ListModelT: HasToDict](
         return namespace or self._core.namespace
 
     async def get(self, name: str, namespace: str | None = None) -> ModelT:
-        resp = await self._core.request(
+        async with self._core.request(
             method="GET", url=self._build_url(name, self._get_ns(namespace))
-        )
-        return await self._deserialize(resp, self._model_class)
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
 
     async def list(self, namespace: str | None = None) -> ListModelT:
-        resp = await self._core.request(
+        async with self._core.request(
             method="GET", url=self._build_url_list(self._get_ns(namespace))
-        )
-        return await self._deserialize(resp, self._list_model_class)
+        ) as resp:
+            return await self._deserialize(resp, self._list_model_class)
 
     async def create(self, model: ModelT, namespace: str | None = None) -> ModelT:
-        resp = await self._core.request(
+        async with self._core.request(
             method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
             json=model.to_dict(),
-        )
-        return await self._deserialize(resp, self._model_class)
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
 
     async def delete(self, name: str, namespace: str | None = None) -> ModelT:
-        resp = await self._core.request(
+        async with self._core.request(
             method="DELETE", url=self._build_url(name, self._get_ns(namespace))
-        )
-        return await self._deserialize(resp, self._model_class)
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
