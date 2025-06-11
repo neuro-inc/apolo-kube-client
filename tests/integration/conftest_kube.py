@@ -75,7 +75,6 @@ async def kube_config(
 ) -> KubeConfig:
     cluster = kube_config_cluster_payload
     user = kube_config_user_payload
-    print(4444444444, cert_authority_data_pem)
     return KubeConfig(
         endpoint_url=cluster["server"],
         cert_authority_data_pem=cert_authority_data_pem,
@@ -88,6 +87,5 @@ async def kube_config(
 
 @pytest.fixture
 async def kube_client(kube_config: KubeConfig) -> AsyncIterator[KubeClient]:
-    print(3333333333, kube_config)
     async with KubeClient(config=kube_config) as client:
         yield client
