@@ -6,6 +6,7 @@ from kubernetes.client import ApiClient, models as available_k8s_models
 from yarl import URL
 
 from apolo_kube_client._core import _KubeCore
+from apolo_kube_client._typedefs import JsonType
 
 
 class _RESTResponse:
@@ -22,7 +23,6 @@ class _RESTResponse:
 
     async def __aenter__(self) -> Self:
         self.data = await self.response.read()
-        # print(666666666666, self.data)
         return self
 
     async def __aexit__(
@@ -105,6 +105,9 @@ class BaseResource[ModelT, ListModelT, DeleteModelT]:
                 self._api_client.deserialize(rest_response, response_type),
             )
 
+    def _build_post_json(self, model: ModelT) -> JsonType:
+        return cast(JsonType, self._api_client.sanitize_for_serialization(model))
+
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
@@ -144,7 +147,7 @@ class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
         async with self._core.request(
             method="POST",
             url=self._build_url_list(),
-            json=self._api_client.sanitize_for_serialization(model),
+            json=self._build_post_json(model),
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
@@ -194,7 +197,7 @@ class NamespacedResource[ModelT, ListModelT, DeleteModelT](
         async with self._core.request(
             method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
-            json=self._api_client.sanitize_for_serialization(model),
+            json=self._build_post_json(model),
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
