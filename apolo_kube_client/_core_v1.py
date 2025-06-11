@@ -18,5 +18,5 @@ class CoreV1Api:
         self.namespace = Namespace(core, self.group_api_query_path, api_client)
 
 
-class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList]):
+class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
     query_path = "namespaces"

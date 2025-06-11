@@ -5,7 +5,12 @@
 import re
 from hashlib import sha256
 
-from kubernetes.client.models import V1Namespace, V1NetworkPolicy, V1ObjectMeta
+from kubernetes.client.models import (
+    V1Namespace,
+    V1NetworkPolicy,
+    V1NetworkPolicySpec,
+    V1ObjectMeta,
+)
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client._errors import ResourceExists
@@ -109,7 +114,9 @@ async def create_namespace(
 
     try:
         namespace = V1Namespace(
-            metadata=V1ObjectMeta(name=namespace_name, labels=labels)
+            api_version="v1",
+            kind="Namespace",
+            metadata=V1ObjectMeta(name=namespace_name, labels=labels),
         )
         # let's try to create a namespace
         namespace = await kube_client.core_v1.namespace.create(model=namespace)
@@ -121,69 +128,64 @@ async def create_namespace(
     try:
         await kube_client.networking_k8s_io_v1.network_policy.create(
             V1NetworkPolicy(
-                **{
-                    "api_version": "networking.k8s.io/v1",
-                    "kind": "NetworkPolicy",
-                    "metadata": {
-                        "name": namespace_name,
-                        "namespace": namespace_name,
-                    },
-                    "spec": {
-                        "podSelector": {},  # all POD's in the namespace
-                        "policyTypes": ["Ingress", "Egress"],
-                        "ingress": [
-                            {
-                                "from": [
-                                    {
-                                        "namespaceSelector": {"matchLabels": labels},
-                                        # allow traffic from all pods in this ns
-                                        "podSelector": {},
+                api_version="networking.k8s.io/v1",
+                kind="NetworkPolicy",
+                metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
+                spec=V1NetworkPolicySpec(
+                    pod_selector={},  # all POD's in the namespace
+                    policy_types=["Ingress", "Egress"],
+                    ingress=[
+                        {
+                            "from": [
+                                {
+                                    "namespaceSelector": {"matchLabels": labels},
+                                    # allow traffic from all pods in this ns
+                                    "podSelector": {},
+                                }
+                            ]
+                        }
+                    ],
+                    egress=[
+                        {
+                            "to": [
+                                {
+                                    "namespaceSelector": {"matchLabels": labels},
+                                    # allow traffic to all pods in this ns
+                                    "podSelector": {},
+                                }
+                            ]
+                        },
+                        # allowing pods to connect to public networks only
+                        {
+                            "to": [
+                                {
+                                    "ipBlock": {
+                                        "cidr": "0.0.0.0/0",
+                                        "except": [
+                                            "10.0.0.0/8",
+                                            "172.16.0.0/12",
+                                            "192.168.0.0/16",
+                                        ],
                                     }
-                                ]
-                            }
-                        ],
-                        "egress": [
-                            {
-                                "to": [
-                                    {
-                                        "namespaceSelector": {"matchLabels": labels},
-                                        # allow traffic to all pods in this ns
-                                        "podSelector": {},
-                                    }
-                                ]
-                            },
-                            # allowing pods to connect to public networks only
-                            {
-                                "to": [
-                                    {
-                                        "ipBlock": {
-                                            "cidr": "0.0.0.0/0",
-                                            "except": [
-                                                "10.0.0.0/8",
-                                                "172.16.0.0/12",
-                                                "192.168.0.0/16",
-                                            ],
-                                        }
-                                    }
-                                ]
-                            },
-                            # allowing labeled pods to make DNS queries in our private
-                            # networks, because pods' /etc/resolv.conf files still
-                            # point to the internal DNS
-                            {
-                                "to": [
-                                    {"ipBlock": {"cidr": "10.0.0.0/8"}},
-                                    {"ipBlock": {"cidr": "172.16.0.0/12"}},
-                                    {"ipBlock": {"cidr": "192.168.0.0/16"}},
-                                ],
-                                "ports": [
-                                    {"port": 53, "protocol": "UDP"},
-                                    {"port": 53, "protocol": "TCP"},
-                                ],
-                            },
-                        ],
-                    },
-                }
+                                }
+                            ]
+                        },
+                        # allowing labeled pods to make DNS queries in our private
+                        # networks, because pods' /etc/resolv.conf files still
+                        # point to the internal DNS
+                        {
+                            "to": [
+                                {"ipBlock": {"cidr": "10.0.0.0/8"}},
+                                {"ipBlock": {"cidr": "172.16.0.0/12"}},
+                                {"ipBlock": {"cidr": "192.168.0.0/16"}},
+                            ],
+                            "ports": [
+                                {"port": 53, "protocol": "UDP"},
+                                {"port": 53, "protocol": "TCP"},
+                            ],
+                        },
+                    ],
+                ),
             ),
             namespace=namespace_name,
         )

@@ -17,5 +17,5 @@ class BatchV1Api:
         self.job = Job(core, self.group_api_query_path, api_client)
 
 
-class Job(NamespacedResource[V1Job, V1JobList]):
+class Job(NamespacedResource[V1Job, V1JobList, V1Job]):
     query_path = "jobs"

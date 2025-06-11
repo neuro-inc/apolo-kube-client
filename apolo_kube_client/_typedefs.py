@@ -9,7 +9,3 @@ NestedStrKeyDict = TypeAliasType(
     "NestedStrKeyDict",
     "dict[str, PrimitiveType] | dict[str, NestedStrKeyDict] | dict[str, list[PrimitiveType | NestedStrKeyDict]]",
 )
-NestedStrKeyDictValue = TypeAliasType(
-    "NestedStrKeyDictValue",
-    "PrimitiveType | NestedStrKeyDict | list[PrimitiveType | NestedStrKeyDict]",
-)

@@ -55,6 +55,7 @@ function k8s::start {
     echo "• Starting Minikube (driver=none) …"
     sudo -E minikube start \
         --driver=none \
+        --cni=calico \
         --wait=all \
         --wait-timeout=5m
 

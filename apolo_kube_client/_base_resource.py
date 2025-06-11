@@ -1,17 +1,11 @@
 from types import TracebackType
-from typing import Protocol, Self, cast, get_args, overload
+from typing import Self, cast, get_args, overload
 
 import aiohttp
 from kubernetes.client import ApiClient, models as available_k8s_models
 from yarl import URL
 
 from apolo_kube_client._core import _KubeCore
-
-from ._typedefs import JsonType
-
-
-class HasToDict(Protocol):
-    def to_dict(self) -> JsonType: ...
 
 
 class _RESTResponse:
@@ -28,6 +22,7 @@ class _RESTResponse:
 
     async def __aenter__(self) -> Self:
         self.data = await self.response.read()
+        # print(666666666666, self.data)
         return self
 
     async def __aexit__(
@@ -39,7 +34,7 @@ class _RESTResponse:
         pass
 
 
-class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
+class BaseResource[ModelT, ListModelT, DeleteModelT]:
     """
     Base class for Kubernetes resources
     Uses models from the official Kubernetes API client.
@@ -73,6 +68,14 @@ class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
             return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
         raise ValueError("ListModel class not found")
 
+    @property
+    def _delete_model_class(self) -> type[DeleteModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_class__)[2])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
+        raise ValueError("DeleteModel class not found")
+
     @overload
     async def _deserialize(
         self, response: aiohttp.ClientResponse, response_type: type[ModelT]
@@ -83,17 +86,22 @@ class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
         self, response: aiohttp.ClientResponse, response_type: type[ListModelT]
     ) -> ListModelT: ...
 
+    @overload
+    async def _deserialize(
+        self, response: aiohttp.ClientResponse, response_type: type[DeleteModelT]
+    ) -> DeleteModelT: ...
+
     async def _deserialize(
         self,
         response: aiohttp.ClientResponse,
-        response_type: type[ModelT] | type[ListModelT],
-    ) -> ModelT | ListModelT:
+        response_type: type[ModelT] | type[ListModelT] | type[DeleteModelT],
+    ) -> ModelT | ListModelT | DeleteModelT:
         if not hasattr(available_k8s_models, response_type.__name__):
             raise ValueError(f"Unsupported response type: {response_type}")
 
         async with _RESTResponse(response) as rest_response:
             return cast(
-                ModelT | ListModelT,
+                ModelT | ListModelT | DeleteModelT,
                 self._api_client.deserialize(rest_response, response_type),
             )
 
@@ -106,13 +114,17 @@ class BaseResource[ModelT: HasToDict, ListModelT: HasToDict]:
     async def create(self, model: ModelT) -> ModelT:
         raise NotImplementedError
 
-    async def delete(self, name: str) -> ModelT:
+    async def delete(self, name: str) -> DeleteModelT:
         raise NotImplementedError
 
 
-class ClusterScopedResource[ModelT: HasToDict, ListModelT: HasToDict](
-    BaseResource[ModelT, ListModelT]
+class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
+    BaseResource[ModelT, ListModelT, DeleteModelT]
 ):
+    """
+    Base class for Kubernetes resources that are not namespaced (cluster scoped).
+    """
+
     def _build_url_list(self) -> URL:
         assert self.query_path, "query_path must be set"
         return self._core.base_url / self._group_api_query_path / self.query_path
@@ -130,20 +142,26 @@ class ClusterScopedResource[ModelT: HasToDict, ListModelT: HasToDict](
 
     async def create(self, model: ModelT) -> ModelT:
         async with self._core.request(
-            method="POST", url=self._build_url_list(), json=model.to_dict()
+            method="POST",
+            url=self._build_url_list(),
+            json=self._api_client.sanitize_for_serialization(model),
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def delete(self, name: str) -> ModelT:
+    async def delete(self, name: str) -> DeleteModelT:
         async with self._core.request(
             method="DELETE", url=self._build_url(name)
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._deserialize(resp, self._delete_model_class)
 
 
-class NamespacedResource[ModelT: HasToDict, ListModelT: HasToDict](
-    BaseResource[ModelT, ListModelT]
+class NamespacedResource[ModelT, ListModelT, DeleteModelT](
+    BaseResource[ModelT, ListModelT, DeleteModelT]
 ):
+    """
+    Base class for Kubernetes resources that are namespaced.
+    """
+
     def _build_url_list(self, namespace: str) -> URL:
         assert self.query_path, "query_path must be set"
         return (
@@ -176,12 +194,12 @@ class NamespacedResource[ModelT: HasToDict, ListModelT: HasToDict](
         async with self._core.request(
             method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
-            json=model.to_dict(),
+            json=self._api_client.sanitize_for_serialization(model),
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def delete(self, name: str, namespace: str | None = None) -> ModelT:
+    async def delete(self, name: str, namespace: str | None = None) -> DeleteModelT:
         async with self._core.request(
             method="DELETE", url=self._build_url(name, self._get_ns(namespace))
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._deserialize(resp, self._delete_model_class)

@@ -121,76 +121,6 @@ class _KubeCore:
     def namespace(self) -> str:
         return self._namespace
 
-    @asynccontextmanager
-    async def request(
-        self,
-        method: str,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> AsyncIterator[aiohttp.ClientResponse]:
-        assert self._client, "client is not initialized"
-        resp = await self._client.request(
-            method=method, url=url, headers=self._auth_headers, params=params, json=json
-        )
-        yield resp
-        resp.close()
-
-    async def get(
-        self,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> JsonType:
-        async with self.request(
-            method="GET", url=url, params=params, json=json
-        ) as resp:
-            return cast(JsonType, await resp.json())
-
-    async def post(
-        self,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> JsonType:
-        async with self.request(
-            method="POST", url=url, params=params, json=json
-        ) as resp:
-            return cast(JsonType, await resp.json())
-
-    async def patch(
-        self,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> JsonType:
-        async with self.request(
-            method="PATCH", url=url, params=params, json=json
-        ) as resp:
-            return cast(JsonType, await resp.json())
-
-    async def put(
-        self,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> JsonType:
-        async with self.request(
-            method="PUT", url=url, params=params, json=json
-        ) as resp:
-            return cast(JsonType, await resp.json())
-
-    async def delete(
-        self,
-        url: URL | str,
-        params: Query = None,
-        json: JsonType | None = None,
-    ) -> JsonType:
-        async with self.request(
-            method="DELETE", url=url, params=params, json=json
-        ) as resp:
-            return cast(JsonType, await resp.json())
-
     @property
     def _auth_headers(self) -> dict[str, str]:
         if self._auth_type != KubeClientAuthType.TOKEN or not self._token:
@@ -262,3 +192,89 @@ class _KubeCore:
             return
         self._token = token
         logger.info("%s: kube token was refreshed", self)
+
+    @asynccontextmanager
+    async def request(
+        self,
+        method: str,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
+        """
+        Context manager.
+        Basic method for making requests to the Kube API.
+        Returns an aiohttp.ClientResponse object.
+        """
+        assert self._client, "client is not initialized"
+        logger.debug(
+            "making request to url=%s method=%s headers=%s params=%s json=%s",
+            url,
+            method,
+            self._auth_headers,
+            params,
+            json,
+        )
+        resp = await self._client.request(
+            method=method, url=url, headers=self._auth_headers, params=params, json=json
+        )
+        yield resp
+        resp.close()
+
+    #########################################
+    # Raw Kube API calls with JSON response #
+    #########################################
+    async def get(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        async with self.request(
+            method="GET", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
+
+    async def post(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        async with self.request(
+            method="POST", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
+
+    async def patch(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        async with self.request(
+            method="PATCH", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
+
+    async def put(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        async with self.request(
+            method="PUT", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
+
+    async def delete(
+        self,
+        url: URL | str,
+        params: Query = None,
+        json: JsonType | None = None,
+    ) -> JsonType:
+        async with self.request(
+            method="DELETE", url=url, params=params, json=json
+        ) as resp:
+            return cast(JsonType, await resp.json())
