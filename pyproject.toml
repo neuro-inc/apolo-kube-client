@@ -82,3 +82,7 @@ warn_return_any = true
 [[tool.mypy.overrides]]
 module = "kubernetes.client.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "cryptography.*"
+ignore_missing_imports = true
