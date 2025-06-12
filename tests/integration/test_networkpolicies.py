@@ -1,5 +1,9 @@
 from kubernetes.client.models import (
+    V1LabelSelector,
     V1NetworkPolicy,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyIngressRule,
+    V1NetworkPolicyPeer,
     V1NetworkPolicySpec,
     V1ObjectMeta,
 )
@@ -14,9 +18,25 @@ class TestNetworkPolicy:
             kind="NetworkPolicy",
             metadata=V1ObjectMeta(name="allow-all-ingress"),
             spec=V1NetworkPolicySpec(
-                pod_selector={},
-                ingress=[{"from": [{"podSelector": {}}]}],
-                egress=[{"to": [{"podSelector": {}}]}],
+                pod_selector=V1LabelSelector(match_labels={}),
+                ingress=[
+                    V1NetworkPolicyIngressRule(
+                        _from=[
+                            V1NetworkPolicyPeer(
+                                pod_selector=V1LabelSelector(match_labels={})
+                            )
+                        ],
+                    )
+                ],
+                egress=[
+                    V1NetworkPolicyEgressRule(
+                        to=[
+                            V1NetworkPolicyPeer(
+                                pod_selector=V1LabelSelector(match_labels={})
+                            )
+                        ],
+                    )
+                ],
                 policy_types=["Ingress", "Egress"],
             ),
         )

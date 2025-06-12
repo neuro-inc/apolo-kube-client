@@ -6,8 +6,14 @@ import re
 from hashlib import sha256
 
 from kubernetes.client.models import (
+    V1IPBlock,
+    V1LabelSelector,
     V1Namespace,
     V1NetworkPolicy,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyIngressRule,
+    V1NetworkPolicyPeer,
+    V1NetworkPolicyPort,
     V1NetworkPolicySpec,
     V1ObjectMeta,
 )
@@ -132,58 +138,68 @@ async def create_namespace(
                 kind="NetworkPolicy",
                 metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
                 spec=V1NetworkPolicySpec(
-                    pod_selector={},  # all POD's in the namespace
+                    pod_selector=V1LabelSelector(
+                        match_labels={}
+                    ),  # all POD's in the namespace
                     policy_types=["Ingress", "Egress"],
                     ingress=[
-                        {
-                            "from": [
-                                {
-                                    "namespaceSelector": {"matchLabels": labels},
-                                    # allow traffic from all pods in this ns
-                                    "podSelector": {},
-                                }
+                        V1NetworkPolicyIngressRule(
+                            _from=[
+                                V1NetworkPolicyPeer(
+                                    namespace_selector=V1LabelSelector(
+                                        match_labels=labels
+                                    ),
+                                    pod_selector=V1LabelSelector(match_labels={}),
+                                )
                             ]
-                        }
+                        )
                     ],
                     egress=[
-                        {
-                            "to": [
-                                {
-                                    "namespaceSelector": {"matchLabels": labels},
-                                    # allow traffic to all pods in this ns
-                                    "podSelector": {},
-                                }
+                        V1NetworkPolicyEgressRule(
+                            to=[
+                                V1NetworkPolicyPeer(
+                                    namespace_selector=V1LabelSelector(
+                                        match_labels=labels
+                                    ),
+                                    pod_selector=V1LabelSelector(match_labels={}),
+                                )
                             ]
-                        },
+                        ),
                         # allowing pods to connect to public networks only
-                        {
-                            "to": [
-                                {
-                                    "ipBlock": {
-                                        "cidr": "0.0.0.0/0",
-                                        "except": [
+                        V1NetworkPolicyEgressRule(
+                            to=[
+                                V1NetworkPolicyPeer(
+                                    ip_block=V1IPBlock(
+                                        cidr="0.0.0.0/0",
+                                        _except=[
                                             "10.0.0.0/8",
                                             "172.16.0.0/12",
                                             "192.168.0.0/16",
                                         ],
-                                    }
-                                }
+                                    )
+                                )
                             ]
-                        },
+                        ),
                         # allowing labeled pods to make DNS queries in our private
                         # networks, because pods' /etc/resolv.conf files still
                         # point to the internal DNS
-                        {
-                            "to": [
-                                {"ipBlock": {"cidr": "10.0.0.0/8"}},
-                                {"ipBlock": {"cidr": "172.16.0.0/12"}},
-                                {"ipBlock": {"cidr": "192.168.0.0/16"}},
+                        V1NetworkPolicyEgressRule(
+                            to=[
+                                V1NetworkPolicyPeer(
+                                    ip_block=V1IPBlock(cidr="10.0.0.0/8")
+                                ),
+                                V1NetworkPolicyPeer(
+                                    ip_block=V1IPBlock(cidr="172.16.0.0/12")
+                                ),
+                                V1NetworkPolicyPeer(
+                                    ip_block=V1IPBlock(cidr="192.168.0.0/16")
+                                ),
                             ],
-                            "ports": [
-                                {"port": 53, "protocol": "UDP"},
-                                {"port": 53, "protocol": "TCP"},
+                            ports=[
+                                V1NetworkPolicyPort(port=53, protocol="UDP"),
+                                V1NetworkPolicyPort(port=53, protocol="TCP"),
                             ],
-                        },
+                        ),
                     ],
                 ),
             ),
