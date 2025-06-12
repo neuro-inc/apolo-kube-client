@@ -5,9 +5,15 @@
 import re
 from hashlib import sha256
 
-from apolo_kube_client.client import KubeClient
-from apolo_kube_client.errors import ResourceExists
-from apolo_kube_client.namespace import Namespace, NamespaceApi
+from kubernetes.client.models import (
+    V1Namespace,
+    V1NetworkPolicy,
+    V1NetworkPolicySpec,
+    V1ObjectMeta,
+)
+
+from apolo_kube_client import KubeClient
+from apolo_kube_client._errors import ResourceExists
 
 KUBE_NAME_LENGTH_MAX = 63
 DASH = "-"
@@ -89,7 +95,7 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
 
 async def create_namespace(
     kube_client: KubeClient, org_name: str, project_name: str
-) -> Namespace:
+) -> V1Namespace:
     """
     Creates a namespace based on a provided org and project names.
     Applies default labels and network policies.
@@ -99,7 +105,6 @@ async def create_namespace(
     project_name = normalize_name(project_name)
 
     namespace_name = generate_namespace_name(org_name, project_name)
-    namespace_api = NamespaceApi(kube_client)
 
     # use default labels
     labels = {
@@ -108,31 +113,28 @@ async def create_namespace(
     }
 
     try:
-        # let's try to create a namespace
-        namespace = await namespace_api.create_namespace(
-            name=namespace_name,
-            labels=labels,
+        namespace = V1Namespace(
+            api_version="v1",
+            kind="Namespace",
+            metadata=V1ObjectMeta(name=namespace_name, labels=labels),
         )
+        # let's try to create a namespace
+        namespace = await kube_client.core_v1.namespace.create(model=namespace)
     except ResourceExists:
         # of get, it if it doesn't exist
-        namespace = await namespace_api.get_namespace(name=namespace_name)
+        namespace = await kube_client.core_v1.namespace.get(name=namespace_name)
 
     # now let's create a network policy, which will allow a namespace-only access
-    network_policy_url = kube_client.generate_network_policy_url(namespace_name)
     try:
-        await kube_client.post(
-            network_policy_url,
-            json={
-                "apiVersion": "networking.k8s.io/v1",
-                "kind": "NetworkPolicy",
-                "metadata": {
-                    "name": namespace_name,
-                    "namespace": namespace_name,
-                },
-                "spec": {
-                    "podSelector": {},  # all POD's in the namespace
-                    "policyTypes": ["Ingress", "Egress"],
-                    "ingress": [
+        await kube_client.networking_k8s_io_v1.network_policy.create(
+            V1NetworkPolicy(
+                api_version="networking.k8s.io/v1",
+                kind="NetworkPolicy",
+                metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
+                spec=V1NetworkPolicySpec(
+                    pod_selector={},  # all POD's in the namespace
+                    policy_types=["Ingress", "Egress"],
+                    ingress=[
                         {
                             "from": [
                                 # allow traffic within the same namespace
@@ -160,7 +162,7 @@ async def create_namespace(
                             ]
                         }
                     ],
-                    "egress": [
+                    egress=[
                         {
                             "to": [
                                 {
@@ -200,8 +202,9 @@ async def create_namespace(
                             ],
                         },
                     ],
-                },
-            },
+                ),
+            ),
+            namespace=namespace_name,
         )
     except ResourceExists:
         pass

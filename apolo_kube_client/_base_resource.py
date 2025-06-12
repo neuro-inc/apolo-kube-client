@@ -1,0 +1,208 @@
+from types import TracebackType
+from typing import Self, cast, get_args, overload
+
+import aiohttp
+from kubernetes.client import ApiClient, models as available_k8s_models
+from yarl import URL
+
+from apolo_kube_client._core import _KubeCore
+from apolo_kube_client._typedefs import JsonType
+
+
+class _RESTResponse:
+    """
+    This is our custom analogue of the `kubernetes.client.rest.RESTResponse` class
+    that is used for deserializing response data from the Kubernetes API.
+    Aiohttp Response instead of the urllib3 Response
+    """
+
+    def __init__(self, resp: aiohttp.ClientResponse):
+        self.response = resp
+        self.status = resp.status
+        self.reason = resp.reason
+
+    async def __aenter__(self) -> Self:
+        self.data = await self.response.read()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        pass
+
+
+class BaseResource[ModelT, ListModelT, DeleteModelT]:
+    """
+    Base class for Kubernetes resources
+    Uses models from the official Kubernetes API client.
+    """
+
+    query_path: str
+
+    def __init__(
+        self, core: _KubeCore, group_api_query_path: str, api_client: ApiClient
+    ):
+        if not self.query_path:
+            raise ValueError("resource api query_path must be set")
+
+        self._core: _KubeCore = core
+        self._group_api_query_path: str = group_api_query_path
+        self._api_client = api_client
+
+    @property
+    def _model_class(self) -> type[ModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[ModelT], get_args(self.__orig_class__)[0])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[ModelT], get_args(self.__orig_bases__[0])[0])
+        raise ValueError("Model class not found")
+
+    @property
+    def _list_model_class(self) -> type[ListModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[ListModelT], get_args(self.__orig_class__)[1])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
+        raise ValueError("ListModel class not found")
+
+    @property
+    def _delete_model_class(self) -> type[DeleteModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_class__)[2])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
+        raise ValueError("DeleteModel class not found")
+
+    @overload
+    async def _deserialize(
+        self, response: aiohttp.ClientResponse, response_type: type[ModelT]
+    ) -> ModelT: ...
+
+    @overload
+    async def _deserialize(
+        self, response: aiohttp.ClientResponse, response_type: type[ListModelT]
+    ) -> ListModelT: ...
+
+    @overload
+    async def _deserialize(
+        self, response: aiohttp.ClientResponse, response_type: type[DeleteModelT]
+    ) -> DeleteModelT: ...
+
+    async def _deserialize(
+        self,
+        response: aiohttp.ClientResponse,
+        response_type: type[ModelT] | type[ListModelT] | type[DeleteModelT],
+    ) -> ModelT | ListModelT | DeleteModelT:
+        if not hasattr(available_k8s_models, response_type.__name__):
+            raise ValueError(f"Unsupported response type: {response_type}")
+
+        async with _RESTResponse(response) as rest_response:
+            return cast(
+                ModelT | ListModelT | DeleteModelT,
+                self._api_client.deserialize(rest_response, response_type),
+            )
+
+    def _build_post_json(self, model: ModelT) -> JsonType:
+        return cast(JsonType, self._api_client.sanitize_for_serialization(model))
+
+    async def get(self, name: str) -> ModelT:
+        raise NotImplementedError
+
+    async def list(self) -> ListModelT:
+        raise NotImplementedError
+
+    async def create(self, model: ModelT) -> ModelT:
+        raise NotImplementedError
+
+    async def delete(self, name: str) -> DeleteModelT:
+        raise NotImplementedError
+
+
+class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
+    BaseResource[ModelT, ListModelT, DeleteModelT]
+):
+    """
+    Base class for Kubernetes resources that are not namespaced (cluster scoped).
+    """
+
+    def _build_url_list(self) -> URL:
+        assert self.query_path, "query_path must be set"
+        return self._core.base_url / self._group_api_query_path / self.query_path
+
+    def _build_url(self, name: str) -> URL:
+        return self._build_url_list() / name
+
+    async def get(self, name: str) -> ModelT:
+        async with self._core.request(method="GET", url=self._build_url(name)) as resp:
+            return await self._deserialize(resp, self._model_class)
+
+    async def list(self) -> ListModelT:
+        async with self._core.request(method="GET", url=self._build_url_list()) as resp:
+            return await self._deserialize(resp, self._list_model_class)
+
+    async def create(self, model: ModelT) -> ModelT:
+        async with self._core.request(
+            method="POST",
+            url=self._build_url_list(),
+            json=self._build_post_json(model),
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
+
+    async def delete(self, name: str) -> DeleteModelT:
+        async with self._core.request(
+            method="DELETE", url=self._build_url(name)
+        ) as resp:
+            return await self._deserialize(resp, self._delete_model_class)
+
+
+class NamespacedResource[ModelT, ListModelT, DeleteModelT](
+    BaseResource[ModelT, ListModelT, DeleteModelT]
+):
+    """
+    Base class for Kubernetes resources that are namespaced.
+    """
+
+    def _build_url_list(self, namespace: str) -> URL:
+        assert self.query_path, "query_path must be set"
+        return (
+            self._core.base_url
+            / self._group_api_query_path
+            / "namespaces"
+            / namespace
+            / self.query_path
+        )
+
+    def _build_url(self, name: str, namespace: str) -> URL:
+        return self._build_url_list(namespace) / name
+
+    def _get_ns(self, namespace: str | None = None) -> str:
+        return namespace or self._core.namespace
+
+    async def get(self, name: str, namespace: str | None = None) -> ModelT:
+        async with self._core.request(
+            method="GET", url=self._build_url(name, self._get_ns(namespace))
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
+
+    async def list(self, namespace: str | None = None) -> ListModelT:
+        async with self._core.request(
+            method="GET", url=self._build_url_list(self._get_ns(namespace))
+        ) as resp:
+            return await self._deserialize(resp, self._list_model_class)
+
+    async def create(self, model: ModelT, namespace: str | None = None) -> ModelT:
+        async with self._core.request(
+            method="POST",
+            url=self._build_url_list(self._get_ns(namespace)),
+            json=self._build_post_json(model),
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
+
+    async def delete(self, name: str, namespace: str | None = None) -> DeleteModelT:
+        async with self._core.request(
+            method="DELETE", url=self._build_url(name, self._get_ns(namespace))
+        ) as resp:
+            return await self._deserialize(resp, self._delete_model_class)
