@@ -135,11 +135,28 @@ async def create_namespace(
                     "ingress": [
                         {
                             "from": [
+                                # allow traffic within the same namespace
                                 {
                                     "namespaceSelector": {"matchLabels": labels},
-                                    # allow traffic from all pods in this ns
                                     "podSelector": {},
-                                }
+                                },
+                                # allow traffic from other non-apolo-project namespaces.
+                                # e.g., from the `platform` namespace, for example
+                                {
+                                    "namespaceSelector": {
+                                        "matchExpressions": [
+                                            {
+                                                "key": NAMESPACE_ORG_LABEL,
+                                                "operator": "DoesNotExist",
+                                            },
+                                            {
+                                                "key": NAMESPACE_PROJECT_LABEL,
+                                                "operator": "DoesNotExist",
+                                            },
+                                        ]
+                                    },
+                                    "podSelector": {},
+                                },
                             ]
                         }
                     ],
