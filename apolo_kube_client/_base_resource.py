@@ -203,6 +203,10 @@ class ClusterScopedResource[
     async def patch_json(
         self, name: str, patch_json_list: list[dict[str, str]]
     ) -> ModelT:
+        """
+        Patch a resource with a JSON patch.
+        RFC 6902 defines the JSON Patch format.
+        """
         async with self._core.request(
             method="PATCH",
             headers={"Content-Type": "application/json-patch+json"},
@@ -301,6 +305,10 @@ class NamespacedResource[
         patch_json_list: list[dict[str, str]],
         namespace: str | None = None,
     ) -> ModelT:
+        """
+        Patch a resource with a JSON patch.
+        RFC 6902 defines the JSON Patch format.
+        """
         async with self._core.request(
             method="PATCH",
             headers={"Content-Type": "application/json-patch+json"},

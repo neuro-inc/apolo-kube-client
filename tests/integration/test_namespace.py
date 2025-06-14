@@ -85,6 +85,7 @@ class TestNamespace:
         ) = await kube_client.core_v1.namespace.create_or_update(model=namespace)
         assert namespace_get_or_create.metadata.name == "test-get-or-create-ns-new"
         assert created is True
+        # Clean up the created namespace
         await kube_client.core_v1.namespace.delete(name=namespace.metadata.name)
 
     async def test_create_or_update(
@@ -113,6 +114,7 @@ class TestNamespace:
         assert (
             namespace_create_or_update.metadata.name == "test-create-or-updated-ns-new"
         )
+        # Clean up the created namespace
         await kube_client.core_v1.namespace.delete(name=namespace.metadata.name)
 
     async def test_patch_json(
