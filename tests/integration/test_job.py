@@ -37,7 +37,7 @@ class TestJob:
         assert job_get.metadata.name == job.metadata.name
 
         # test listing network policies
-        job_list = await kube_client.batch_v1.job.list()
+        job_list = await kube_client.batch_v1.job.get_list()
         job_names = {j.metadata.name for j in job_list.items}
         assert len(job_list.items) > 0
         assert job.metadata.name in job_names

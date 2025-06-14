@@ -54,7 +54,7 @@ class TestNetworkPolicy:
         assert np_get.metadata.name == np.metadata.name
 
         # test listing network policies
-        np_list = await kube_client.networking_k8s_io_v1.network_policy.list()
+        np_list = await kube_client.networking_k8s_io_v1.network_policy.get_list()
         np_names = {n.metadata.name for n in np_list.items}
         assert len(np_list.items) > 0
         assert np.metadata.name in np_names

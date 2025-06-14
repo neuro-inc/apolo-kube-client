@@ -1,12 +1,21 @@
 from types import TracebackType
-from typing import Self, cast, get_args, overload
+from typing import Protocol, Self, cast, get_args, overload
 
 import aiohttp
 from kubernetes.client import ApiClient, models as available_k8s_models
 from yarl import URL
 
 from apolo_kube_client._core import _KubeCore
+from apolo_kube_client._errors import ResourceNotFound
 from apolo_kube_client._typedefs import JsonType
+
+
+class MetadataModel(Protocol):
+    name: str
+
+
+class KubeResourceModel(Protocol):
+    metadata: MetadataModel
 
 
 class _RESTResponse:
@@ -34,7 +43,11 @@ class _RESTResponse:
         pass
 
 
-class BaseResource[ModelT, ListModelT, DeleteModelT]:
+class BaseResource[
+    ModelT: KubeResourceModel,
+    ListModelT: KubeResourceModel,
+    DeleteModelT: KubeResourceModel,
+]:
     """
     Base class for Kubernetes resources
     Uses models from the official Kubernetes API client.
@@ -111,7 +124,7 @@ class BaseResource[ModelT, ListModelT, DeleteModelT]:
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
-    async def list(self) -> ListModelT:
+    async def get_list(self) -> ListModelT:
         raise NotImplementedError
 
     async def create(self, model: ModelT) -> ModelT:
@@ -121,9 +134,11 @@ class BaseResource[ModelT, ListModelT, DeleteModelT]:
         raise NotImplementedError
 
 
-class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
-    BaseResource[ModelT, ListModelT, DeleteModelT]
-):
+class ClusterScopedResource[
+    ModelT: KubeResourceModel,
+    ListModelT: KubeResourceModel,
+    DeleteModelT: KubeResourceModel,
+](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are not namespaced (cluster scoped).
     """
@@ -139,7 +154,7 @@ class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
         async with self._core.request(method="GET", url=self._build_url(name)) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def list(self) -> ListModelT:
+    async def get_list(self) -> ListModelT:
         async with self._core.request(method="GET", url=self._build_url_list()) as resp:
             return await self._deserialize(resp, self._list_model_class)
 
@@ -157,10 +172,51 @@ class ClusterScopedResource[ModelT, ListModelT, DeleteModelT](
         ) as resp:
             return await self._deserialize(resp, self._delete_model_class)
 
+    async def get_or_create(self, model: ModelT) -> tuple[bool, ModelT]:
+        """
+        Get a resource by name, or create it if it does not exist.
+        Returns a tuple (created, model).
+        """
+        try:
+            return False, await self.get(name=model.metadata.name)
+        except ResourceNotFound:
+            return True, await self.create(model)
 
-class NamespacedResource[ModelT, ListModelT, DeleteModelT](
-    BaseResource[ModelT, ListModelT, DeleteModelT]
-):
+    async def create_or_update(self, model: ModelT) -> tuple[bool, ModelT]:
+        """
+        Create or update a resource.
+        If the resource exists, it will be updated.
+        Returns a tuple (created, model).
+        """
+        try:
+            await self.get(name=model.metadata.name)
+            async with self._core.request(
+                method="PATCH",
+                headers={"Content-Type": "application/strategic-merge-patch+json"},
+                url=self._build_url(model.metadata.name),
+                json=self._build_post_json(model),
+            ) as resp:
+                return False, await self._deserialize(resp, self._model_class)
+        except ResourceNotFound:
+            return True, await self.create(model)
+
+    async def patch_json(
+        self, name: str, patch_json_list: list[dict[str, str]]
+    ) -> ModelT:
+        async with self._core.request(
+            method="PATCH",
+            headers={"Content-Type": "application/json-patch+json"},
+            url=self._build_url(name),
+            json=cast(JsonType, patch_json_list),
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)
+
+
+class NamespacedResource[
+    ModelT: KubeResourceModel,
+    ListModelT: KubeResourceModel,
+    DeleteModelT: KubeResourceModel,
+](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are namespaced.
     """
@@ -187,7 +243,7 @@ class NamespacedResource[ModelT, ListModelT, DeleteModelT](
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def list(self, namespace: str | None = None) -> ListModelT:
+    async def get_list(self, namespace: str | None = None) -> ListModelT:
         async with self._core.request(
             method="GET", url=self._build_url_list(self._get_ns(namespace))
         ) as resp:
@@ -206,3 +262,49 @@ class NamespacedResource[ModelT, ListModelT, DeleteModelT](
             method="DELETE", url=self._build_url(name, self._get_ns(namespace))
         ) as resp:
             return await self._deserialize(resp, self._delete_model_class)
+
+    async def get_or_create(
+        self, model: ModelT, namespace: str | None = None
+    ) -> tuple[bool, ModelT]:
+        """
+        Get a resource by name, or create it if it does not exist.
+        Returns a tuple (created, model).
+        """
+        try:
+            return False, await self.get(name=model.metadata.name, namespace=namespace)
+        except ResourceNotFound:
+            return True, await self.create(model, namespace=namespace)
+
+    async def create_or_update(
+        self, model: ModelT, namespace: str | None = None
+    ) -> tuple[bool, ModelT]:
+        """
+        Create or update a resource.
+        If the resource exists, it will be updated.
+        Returns a tuple (created, model).
+        """
+        try:
+            await self.get(name=model.metadata.name, namespace=namespace)
+            async with self._core.request(
+                method="PATCH",
+                headers={"Content-Type": "application/strategic-merge-patch+json"},
+                url=self._build_url(model.metadata.name, self._get_ns(namespace)),
+                json=self._build_post_json(model),
+            ) as resp:
+                return False, await self._deserialize(resp, self._model_class)
+        except ResourceNotFound:
+            return True, await self.create(model, namespace=namespace)
+
+    async def patch_json(
+        self,
+        name: str,
+        patch_json_list: list[dict[str, str]],
+        namespace: str | None = None,
+    ) -> ModelT:
+        async with self._core.request(
+            method="PATCH",
+            headers={"Content-Type": "application/json-patch+json"},
+            url=self._build_url(name, self._get_ns(namespace)),
+            json=cast(JsonType, patch_json_list),
+        ) as resp:
+            return await self._deserialize(resp, self._model_class)

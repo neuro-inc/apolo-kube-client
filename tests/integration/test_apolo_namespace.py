@@ -33,7 +33,10 @@ class TestApoloNamespace:
 
         # ensure a name was properly generated
         org_project_hash = generate_hash(f"{org_name}--{project_name}")
-        assert namespace.metadata.name == f"platform--org--project--{org_project_hash}"
+        assert (
+            namespace.metadata.name
+            == f"platform--{org_name}--{project_name}--{org_project_hash}"
+        )
 
         # ensure labels were set
         assert namespace.metadata.labels[NAMESPACE_ORG_LABEL] == org_name
@@ -72,6 +75,56 @@ class TestApoloNamespace:
         assert (
             np.spec.egress[0].to[0].namespace_selector.match_labels == expected_labels
         )
+        assert len(np.spec.ingress) == 1
+        assert len(np.spec.ingress[0]._from) == 2
+        assert len(np.spec.egress[0].to) == 1
+        assert len(np.spec.egress) == 3
+
+        # delete and ensure phase changed
+        namespace_delete = await kube_client.core_v1.namespace.delete(
+            name=namespace.metadata.name
+        )
+        assert namespace_delete.status.phase == "Terminating"
+
+    async def test__already_created_apolo_namespace(
+        self,
+        org_name: str,
+        kube_client: KubeClient,
+    ) -> None:
+        project_name = "proj-already-created"
+        await create_namespace(
+            kube_client,
+            org_name,
+            project_name,
+        )
+        # namespace was already created and should not raise when called again
+        namespace = await create_namespace(
+            kube_client,
+            org_name,
+            project_name,
+        )
+
+        # ensure a name was properly generated
+        org_project_hash = generate_hash(f"{org_name}--{project_name}")
+        assert (
+            namespace.metadata.name
+            == f"platform--{org_name}--{project_name}--{org_project_hash}"
+        )
+
+        # ensure labels were set
+        assert namespace.metadata.labels[NAMESPACE_ORG_LABEL] == org_name
+        assert namespace.metadata.labels[NAMESPACE_PROJECT_LABEL] == project_name
+
+        # ensure a NetworkPolicy for this namespace were created
+        np = await kube_client.networking_k8s_io_v1.network_policy.get(
+            name=namespace.metadata.name, namespace=namespace.metadata.name
+        )
+        assert np.metadata.name == namespace.metadata.name
+        assert np.metadata.namespace == namespace.metadata.name
+        assert len(np.spec.ingress) == 1
+        assert len(np.spec.ingress[0]._from) == 2
+        assert len(np.spec.egress[0].to) == 1
+        assert len(np.spec.egress) == 3
 
         # delete and ensure phase changed
         namespace_delete = await kube_client.core_v1.namespace.delete(

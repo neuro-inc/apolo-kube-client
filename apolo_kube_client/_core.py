@@ -122,6 +122,12 @@ class _KubeCore:
         return self._namespace
 
     @property
+    def _base_headers(self) -> dict[str, str]:
+        headers = {"Accept": "application/json"}
+        headers.update(self._auth_headers)
+        return headers
+
+    @property
     def _auth_headers(self) -> dict[str, str]:
         if self._auth_type != KubeClientAuthType.TOKEN or not self._token:
             return {}
@@ -198,6 +204,7 @@ class _KubeCore:
         self,
         method: str,
         url: URL | str,
+        headers: dict[str, str] | None = None,
         params: Query = None,
         json: JsonType | None = None,
     ) -> AsyncIterator[aiohttp.ClientResponse]:
@@ -207,16 +214,18 @@ class _KubeCore:
         Returns an aiohttp.ClientResponse object.
         """
         assert self._client, "client is not initialized"
+        headers = headers or {}
+        headers.update(self._base_headers)
         logger.debug(
             "making request to url=%s method=%s headers=%s params=%s json=%s",
             url,
             method,
-            self._auth_headers,
+            headers,
             params,
             json,
         )
         resp = await self._client.request(
-            method=method, url=url, headers=self._auth_headers, params=params, json=json
+            method=method, url=url, headers=headers, params=params, json=json
         )
         yield resp
         resp.close()
