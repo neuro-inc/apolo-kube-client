@@ -5,9 +5,20 @@
 import re
 from hashlib import sha256
 
-from apolo_kube_client.client import KubeClient
-from apolo_kube_client.errors import ResourceExists
-from apolo_kube_client.namespace import Namespace, NamespaceApi
+from kubernetes.client.models import (
+    V1IPBlock,
+    V1LabelSelector,
+    V1Namespace,
+    V1NetworkPolicy,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyIngressRule,
+    V1NetworkPolicyPeer,
+    V1NetworkPolicyPort,
+    V1NetworkPolicySpec,
+    V1ObjectMeta,
+)
+
+from apolo_kube_client import KubeClient
 
 KUBE_NAME_LENGTH_MAX = 63
 DASH = "-"
@@ -89,7 +100,7 @@ def generate_namespace_name(org_name: str, project_name: str) -> str:
 
 async def create_namespace(
     kube_client: KubeClient, org_name: str, project_name: str
-) -> Namespace:
+) -> V1Namespace:
     """
     Creates a namespace based on a provided org and project names.
     Applies default labels and network policies.
@@ -99,7 +110,6 @@ async def create_namespace(
     project_name = normalize_name(project_name)
 
     namespace_name = generate_namespace_name(org_name, project_name)
-    namespace_api = NamespaceApi(kube_client)
 
     # use default labels
     labels = {
@@ -107,103 +117,93 @@ async def create_namespace(
         NAMESPACE_PROJECT_LABEL: project_name,
     }
 
-    try:
-        # let's try to create a namespace
-        namespace = await namespace_api.create_namespace(
-            name=namespace_name,
-            labels=labels,
-        )
-    except ResourceExists:
-        # of get, it if it doesn't exist
-        namespace = await namespace_api.get_namespace(name=namespace_name)
+    namespace = V1Namespace(
+        api_version="v1",
+        kind="Namespace",
+        metadata=V1ObjectMeta(name=namespace_name, labels=labels),
+    )
+    _, namespace = await kube_client.core_v1.namespace.get_or_create(model=namespace)
 
     # now let's create a network policy, which will allow a namespace-only access
-    network_policy_url = kube_client.generate_network_policy_url(namespace_name)
-    try:
-        await kube_client.post(
-            network_policy_url,
-            json={
-                "apiVersion": "networking.k8s.io/v1",
-                "kind": "NetworkPolicy",
-                "metadata": {
-                    "name": namespace_name,
-                    "namespace": namespace_name,
-                },
-                "spec": {
-                    "podSelector": {},  # all POD's in the namespace
-                    "policyTypes": ["Ingress", "Egress"],
-                    "ingress": [
-                        {
-                            "from": [
-                                # allow traffic within the same namespace
-                                {
-                                    "namespaceSelector": {"matchLabels": labels},
-                                    "podSelector": {},
-                                },
-                                # allow traffic from other non-apolo-project namespaces.
-                                # e.g., from the `platform` namespace, for example
-                                {
-                                    "namespaceSelector": {
-                                        "matchExpressions": [
-                                            {
-                                                "key": NAMESPACE_ORG_LABEL,
-                                                "operator": "DoesNotExist",
-                                            },
-                                            {
-                                                "key": NAMESPACE_PROJECT_LABEL,
-                                                "operator": "DoesNotExist",
-                                            },
-                                        ]
+    # update if it already exists
+    network_policy = V1NetworkPolicy(
+        api_version="networking.k8s.io/v1",
+        kind="NetworkPolicy",
+        metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
+        spec=V1NetworkPolicySpec(
+            pod_selector=V1LabelSelector(match_labels={}),  # all POD's in the namespace
+            policy_types=["Ingress", "Egress"],
+            ingress=[
+                V1NetworkPolicyIngressRule(
+                    _from=[
+                        # allow traffic within the same namespace
+                        V1NetworkPolicyPeer(
+                            namespace_selector=V1LabelSelector(match_labels=labels),
+                            pod_selector=V1LabelSelector(match_labels={}),
+                        ),
+                        # allow traffic from other non-apolo-project namespaces.
+                        # e.g., from the `platform` namespace, for example
+                        V1NetworkPolicyPeer(
+                            namespace_selector=V1LabelSelector(
+                                match_expressions=[
+                                    {
+                                        "key": NAMESPACE_ORG_LABEL,
+                                        "operator": "DoesNotExist",
                                     },
-                                    "podSelector": {},
-                                },
-                            ]
-                        }
+                                    {
+                                        "key": NAMESPACE_PROJECT_LABEL,
+                                        "operator": "DoesNotExist",
+                                    },
+                                ]
+                            ),
+                            pod_selector=V1LabelSelector(match_labels={}),
+                        ),
+                    ]
+                )
+            ],
+            egress=[
+                V1NetworkPolicyEgressRule(
+                    to=[
+                        V1NetworkPolicyPeer(
+                            namespace_selector=V1LabelSelector(match_labels=labels),
+                            pod_selector=V1LabelSelector(match_labels={}),
+                        )
+                    ]
+                ),
+                # allowing pods to connect to public networks only
+                V1NetworkPolicyEgressRule(
+                    to=[
+                        V1NetworkPolicyPeer(
+                            ip_block=V1IPBlock(
+                                cidr="0.0.0.0/0",
+                                _except=[
+                                    "10.0.0.0/8",
+                                    "172.16.0.0/12",
+                                    "192.168.0.0/16",
+                                ],
+                            )
+                        )
+                    ]
+                ),
+                # allowing labeled pods to make DNS queries in our private
+                # networks, because pods' /etc/resolv.conf files still
+                # point to the internal DNS
+                V1NetworkPolicyEgressRule(
+                    to=[
+                        V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="10.0.0.0/8")),
+                        V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="172.16.0.0/12")),
+                        V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="192.168.0.0/16")),
                     ],
-                    "egress": [
-                        {
-                            "to": [
-                                {
-                                    "namespaceSelector": {"matchLabels": labels},
-                                    # allow traffic to all pods in this ns
-                                    "podSelector": {},
-                                }
-                            ]
-                        },
-                        # allowing pods to connect to public networks only
-                        {
-                            "to": [
-                                {
-                                    "ipBlock": {
-                                        "cidr": "0.0.0.0/0",
-                                        "except": [
-                                            "10.0.0.0/8",
-                                            "172.16.0.0/12",
-                                            "192.168.0.0/16",
-                                        ],
-                                    }
-                                }
-                            ]
-                        },
-                        # allowing labeled pods to make DNS queries in our private
-                        # networks, because pods' /etc/resolv.conf files still
-                        # point to the internal DNS
-                        {
-                            "to": [
-                                {"ipBlock": {"cidr": "10.0.0.0/8"}},
-                                {"ipBlock": {"cidr": "172.16.0.0/12"}},
-                                {"ipBlock": {"cidr": "192.168.0.0/16"}},
-                            ],
-                            "ports": [
-                                {"port": 53, "protocol": "UDP"},
-                                {"port": 53, "protocol": "TCP"},
-                            ],
-                        },
+                    ports=[
+                        V1NetworkPolicyPort(port=53, protocol="UDP"),
+                        V1NetworkPolicyPort(port=53, protocol="TCP"),
                     ],
-                },
-            },
-        )
-    except ResourceExists:
-        pass
-
+                ),
+            ],
+        ),
+    )
+    await kube_client.networking_k8s_io_v1.network_policy.create_or_update(
+        model=network_policy,
+        namespace=namespace_name,
+    )
     return namespace
