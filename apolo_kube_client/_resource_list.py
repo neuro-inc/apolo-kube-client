@@ -35,6 +35,8 @@ class ResourceListApi:
         resource_list = await self.get_list(resource_list_path)
         resource: V1APIResource
         for resource in resource_list.resources:
-            if resource.kind == kind and resource.singular_name:
+            if (
+                resource.kind == kind and "/" not in resource.name
+            ):  # Ensure it's not a subresource
                 return resource
         return None
