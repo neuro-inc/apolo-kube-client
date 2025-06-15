@@ -18,7 +18,8 @@ class TestResourceList:
         )
         assert resource is not None
         assert resource.kind == "Job"
-        assert resource.singular_name == "job"
+        assert resource.name == "jobs"
+        assert resource.namespaced is True
 
         # Test with a non-existent kind
         non_existent_resource = await kube_client.resource_list.find_resource_by_kind(
