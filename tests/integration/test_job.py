@@ -26,21 +26,21 @@ class TestJob:
             ),
         )
 
-        # test creating a network policy
+        # test creating the job
         job_create = await kube_client.batch_v1.job.create(
             model=job, namespace="default"
         )
         assert job_create.metadata.name == job.metadata.name
 
-        # test getting the network policy
+        # test getting the job
         job_get = await kube_client.batch_v1.job.get(name=job.metadata.name)
         assert job_get.metadata.name == job.metadata.name
 
-        # test listing network policies
+        # test getting all jobs and ensuring the newly created job is there
         job_list = await kube_client.batch_v1.job.get_list()
         job_names = {j.metadata.name for j in job_list.items}
         assert len(job_list.items) > 0
         assert job.metadata.name in job_names
 
-        # test deleting the network policy
+        # test deleting the job
         await kube_client.batch_v1.job.delete(name=job.metadata.name)

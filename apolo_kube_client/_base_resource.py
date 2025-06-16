@@ -1,13 +1,13 @@
-from types import TracebackType
-from typing import Protocol, Self, cast, get_args, overload
+from typing import Protocol, cast, get_args, overload
 
 import aiohttp
 from kubernetes.client import ApiClient, models as available_k8s_models
 from yarl import URL
 
-from apolo_kube_client._core import _KubeCore
-from apolo_kube_client._errors import ResourceNotFound
-from apolo_kube_client._typedefs import JsonType
+from ._core import _KubeCore
+from ._errors import ResourceNotFound
+from ._rest_response import _RESTResponse
+from ._typedefs import JsonType
 
 
 class MetadataModel(Protocol):
@@ -16,31 +16,6 @@ class MetadataModel(Protocol):
 
 class KubeResourceModel(Protocol):
     metadata: MetadataModel
-
-
-class _RESTResponse:
-    """
-    This is our custom analogue of the `kubernetes.client.rest.RESTResponse` class
-    that is used for deserializing response data from the Kubernetes API.
-    Aiohttp Response instead of the urllib3 Response
-    """
-
-    def __init__(self, resp: aiohttp.ClientResponse):
-        self.response = resp
-        self.status = resp.status
-        self.reason = resp.reason
-
-    async def __aenter__(self) -> Self:
-        self.data = await self.response.read()
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: TracebackType | None,
-    ) -> None:
-        pass
 
 
 class BaseResource[

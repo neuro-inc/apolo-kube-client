@@ -118,6 +118,7 @@ async def test_create_kube_client_token_auth(
 
 
 async def test_deserialize_kube_client(kube_client: KubeClient) -> None:
+    # test deserialization of a core_v1.namespace
     mock_resp = AsyncMock(spec=aiohttp.ClientResponse)
     mock_resp.status = 200
     mock_resp.reason = "OK"
@@ -125,7 +126,16 @@ async def test_deserialize_kube_client(kube_client: KubeClient) -> None:
         b'{"kind":"Namespace","apiVersion":"v1","metadata":{"name":"test-ns"}}'
     )
     namespace = await kube_client.core_v1.namespace._deserialize(mock_resp, V1Namespace)
+    assert isinstance(namespace, V1Namespace)
+    assert namespace.metadata.name == "test-ns"
 
+    # test dict to model deserialization
+    resource_dict = {
+        "kind": "Namespace",
+        "apiVersion": "v1",
+        "metadata": {"name": "test-ns"},
+    }
+    namespace = kube_client.resource_dict_to_model(resource_dict, V1Namespace)
     assert isinstance(namespace, V1Namespace)
     assert namespace.metadata.name == "test-ns"
 
@@ -136,3 +146,10 @@ async def test_kube_client_build_post_json(kube_client: KubeClient) -> None:
     )
     post_json = kube_client.core_v1.namespace._build_post_json(namespace)
     assert post_json.keys() == {"apiVersion", "kind", "metadata"}  # type: ignore
+
+
+async def test_escape_json_pointer(kube_client: KubeClient):
+    # Test escaping of JSON pointers
+    pointer = "/metadata/annotations~"
+    escaped_pointer = kube_client.escape_json_pointer(pointer)
+    assert escaped_pointer == "~1metadata~1annotations~0"

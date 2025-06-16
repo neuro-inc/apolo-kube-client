@@ -3,8 +3,8 @@ from typing import cast
 from kubernetes.client import ApiClient
 from kubernetes.client.models import V1APIResource, V1APIResourceList
 
-from apolo_kube_client._base_resource import _RESTResponse
-from apolo_kube_client._core import _KubeCore
+from ._core import _KubeCore
+from ._rest_response import _RESTResponse
 
 
 class ResourceListApi:
