@@ -17,6 +17,7 @@ from apolo_kube_client._batch_v1 import BatchV1Api, Job
 from apolo_kube_client._core import _KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
+from apolo_kube_client._typedefs import NestedStrKeyDict
 
 
 def generate_certs(cn: str) -> tuple[str, str]:
@@ -130,11 +131,12 @@ async def test_deserialize_kube_client(kube_client: KubeClient) -> None:
     assert namespace.metadata.name == "test-ns"
 
     # test dict to model deserialization
-    resource_dict = {
+    resource_dict: NestedStrKeyDict = {
         "kind": "Namespace",
         "apiVersion": "v1",
         "metadata": {"name": "test-ns"},
     }
+
     namespace = kube_client.resource_dict_to_model(resource_dict, V1Namespace)
     assert isinstance(namespace, V1Namespace)
     assert namespace.metadata.name == "test-ns"
@@ -148,7 +150,7 @@ async def test_kube_client_build_post_json(kube_client: KubeClient) -> None:
     assert post_json.keys() == {"apiVersion", "kind", "metadata"}  # type: ignore
 
 
-async def test_escape_json_pointer(kube_client: KubeClient):
+async def test_escape_json_pointer(kube_client: KubeClient) -> None:
     # Test escaping of JSON pointers
     pointer = "/metadata/annotations~"
     escaped_pointer = kube_client.escape_json_pointer(pointer)

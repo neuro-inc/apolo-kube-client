@@ -4,7 +4,7 @@ from typing import Self
 
 import aiohttp
 
-from ._typedefs import JsonType
+from ._typedefs import NestedStrKeyDict
 
 
 class _RESTResponse:
@@ -38,5 +38,5 @@ class _SimplifiedRestResponse:
     in official Kubernetes client, but only for dict-like objects.
     """
 
-    def __init__(self, data: JsonType):
+    def __init__(self, data: NestedStrKeyDict):
         self.data: bytes = json.dumps(data).encode()

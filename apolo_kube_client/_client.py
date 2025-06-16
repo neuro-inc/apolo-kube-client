@@ -11,7 +11,7 @@ from ._core_v1 import CoreV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
 from ._rest_response import _SimplifiedRestResponse
-from ._typedefs import JsonType
+from ._typedefs import NestedStrKeyDict
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class KubeClient:
 
     def resource_dict_to_model(
         self,
-        resource_dict: JsonType,
+        resource_dict: NestedStrKeyDict,
         response_type: ResourceModel,
     ) -> ResourceModel:
         """
