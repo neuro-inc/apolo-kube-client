@@ -1,47 +1,66 @@
 import json
 import subprocess
-import typing
 from collections.abc import AsyncIterator
 from pathlib import Path
-from typing import Any, Optional
+from typing import TypedDict, cast
 
 import pytest
 
-from apolo_kube_client.client import KubeClient
-from apolo_kube_client.config import KubeClientAuthType, KubeConfig
+from apolo_kube_client import KubeClient, KubeClientAuthType, KubeConfig
+from apolo_kube_client._typedefs import NestedStrKeyDict
+
+# TODO: add analogue kubectl wait for the resource to be ready
+
+KubeClusterPayload = TypedDict(
+    "KubeClusterPayload", {"server": str, "certificate-authority": str}
+)
+
+KubeUserPayload = TypedDict(
+    "KubeUserPayload", {"client-certificate": str, "client-key": str}
+)
+
+
+class KubeConfigPayload(TypedDict):
+    clusters: list[NestedStrKeyDict]
+    users: list[NestedStrKeyDict]
+    contexts: list[NestedStrKeyDict]
+    current_context: str
 
 
 @pytest.fixture(scope="session")
-def kube_config_payload() -> dict[str, Any]:
+def kube_config_payload() -> KubeConfigPayload:
     result = subprocess.run(
         ["kubectl", "config", "view", "-o", "json"], stdout=subprocess.PIPE
     )
     payload_str = result.stdout.decode().rstrip()
-    payload = json.loads(payload_str)
-    return typing.cast(dict[str, Any], payload)
+    return cast(KubeConfigPayload, json.loads(payload_str))
 
 
 @pytest.fixture(scope="session")
-def kube_config_cluster_payload(kube_config_payload: dict[str, Any]) -> Any:
+def kube_config_cluster_payload(
+    kube_config_payload: KubeConfigPayload,
+) -> KubeClusterPayload:
     cluster_name = "minikube"
     clusters = {
         cluster["name"]: cluster["cluster"]
         for cluster in kube_config_payload["clusters"]
     }
-    return clusters[cluster_name]
+    return cast(KubeClusterPayload, clusters[cluster_name])
 
 
 @pytest.fixture(scope="session")
-def kube_config_user_payload(kube_config_payload: dict[str, Any]) -> Any:
+def kube_config_user_payload(
+    kube_config_payload: KubeConfigPayload,
+) -> KubeUserPayload:
     user_name = "minikube"
     users = {user["name"]: user["user"] for user in kube_config_payload["users"]}
-    return users[user_name]
+    return cast(KubeUserPayload, users[user_name])
 
 
 @pytest.fixture(scope="session")
 def cert_authority_data_pem(
-    kube_config_cluster_payload: dict[str, Any],
-) -> Optional[str]:
+    kube_config_cluster_payload: KubeClusterPayload,
+) -> str | None:
     ca_path = kube_config_cluster_payload["certificate-authority"]
     if ca_path:
         return Path(ca_path).read_text()
@@ -50,9 +69,9 @@ def cert_authority_data_pem(
 
 @pytest.fixture
 async def kube_config(
-    kube_config_cluster_payload: dict[str, Any],
-    kube_config_user_payload: dict[str, Any],
-    cert_authority_data_pem: Optional[str],
+    kube_config_cluster_payload: KubeClusterPayload,
+    kube_config_user_payload: KubeUserPayload,
+    cert_authority_data_pem: str | None,
 ) -> KubeConfig:
     cluster = kube_config_cluster_payload
     user = kube_config_user_payload
@@ -68,18 +87,5 @@ async def kube_config(
 
 @pytest.fixture
 async def kube_client(kube_config: KubeConfig) -> AsyncIterator[KubeClient]:
-    async with KubeClient(
-        base_url=kube_config.endpoint_url,
-        auth_type=kube_config.auth_type,
-        cert_authority_data_pem=kube_config.cert_authority_data_pem,
-        cert_authority_path=None,
-        auth_cert_path=kube_config.auth_cert_path,
-        auth_cert_key_path=kube_config.auth_cert_key_path,
-        token_path=kube_config.token_path,
-        token=kube_config.token,
-        namespace=kube_config.namespace,
-        conn_timeout_s=kube_config.client_conn_timeout_s,
-        read_timeout_s=kube_config.client_read_timeout_s,
-        conn_pool_size=kube_config.client_conn_pool_size,
-    ) as client:
+    async with KubeClient(config=kube_config) as client:
         yield client
