@@ -12,6 +12,7 @@ from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
 from ._rest_response import _SimplifiedRestResponse
 from ._typedefs import NestedStrKeyDict
+from ._utils import escape_json_pointer
 
 logger = logging.getLogger(__name__)
 
@@ -46,11 +47,7 @@ class KubeClient:
 
     @staticmethod
     def escape_json_pointer(path: str) -> str:
-        """
-        Escapes ~ and / in a JSON Pointer path according to RFC 6901.
-        Replaces ~ with ~0 and / with ~1.
-        """
-        return path.replace("~", "~0").replace("/", "~1")
+        return escape_json_pointer(path)
 
     def resource_dict_to_model(
         self,
