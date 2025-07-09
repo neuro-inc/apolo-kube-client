@@ -68,7 +68,7 @@ class TestApoloNamespace:
             np.spec.egress[0].to[0].namespace_selector.match_labels == expected_labels
         )
         assert len(np.spec.egress[0].to) == 1
-        assert len(np.spec.egress) == 3
+        assert len(np.spec.egress) == 4
 
         # delete and ensure phase changed
         namespace_delete = await kube_client.core_v1.namespace.delete(
@@ -112,7 +112,7 @@ class TestApoloNamespace:
         assert np.metadata.name == namespace.metadata.name
         assert np.metadata.namespace == namespace.metadata.name
         assert len(np.spec.egress[0].to) == 1
-        assert len(np.spec.egress) == 3
+        assert len(np.spec.egress) == 4
 
         # delete and ensure phase changed
         namespace_delete = await kube_client.core_v1.namespace.delete(
