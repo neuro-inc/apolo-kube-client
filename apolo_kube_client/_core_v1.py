@@ -58,15 +58,20 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         encode: bool = True,
         namespace: str | None = None,
     ) -> V1Secret:
+        secret = await self.get(name=name, namespace=self._get_ns(namespace))
+        patch_json_list = []
+        if secret.data is None:
+            patch_json_list.append({"op": "add", "path": "/data", "value": {}})
+        patch_json_list.append(
+            {
+                "op": "add",
+                "path": f"/data/{escape_json_pointer(key)}",
+                "value": base64_encode(value) if encode else value,
+            }
+        )
         return await self.patch_json(
             name=name,
-            patch_json_list=[
-                {
-                    "op": "add",
-                    "path": f"/data/{escape_json_pointer(key)}",
-                    "value": base64_encode(value) if encode else value,
-                }
-            ],
+            patch_json_list=patch_json_list,
             namespace=self._get_ns(namespace),
         )
 
