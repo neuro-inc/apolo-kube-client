@@ -1,3 +1,4 @@
+from collections.abc import Collection
 from typing import Protocol, cast, get_args, overload
 
 import aiohttp
@@ -300,7 +301,7 @@ class NamespacedResource[
     async def patch_json(
         self,
         name: str,
-        patch_json_list: list[dict[str, str]],
+        patch_json_list: list[dict[str, str | Collection[str]]],
         namespace: str | None = None,
     ) -> ModelT:
         """
