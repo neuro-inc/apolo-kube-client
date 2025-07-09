@@ -51,9 +51,8 @@ class TestApoloNamespace:
         assert metadata["name"] == namespace.name
         assert metadata["namespace"] == namespace.name
 
-        assert spec["policyTypes"] == ["Ingress", "Egress"]
+        assert spec["policyTypes"] == ["Egress"]
         assert spec["podSelector"] == {}
-        assert spec["ingress"][0]["from"][0]["podSelector"] == {}
         assert spec["egress"][0]["to"][0]["podSelector"] == {}
 
         expected_labels = {
@@ -61,9 +60,6 @@ class TestApoloNamespace:
             NAMESPACE_PROJECT_LABEL: project_name,
         }
 
-        assert spec["ingress"][0]["from"][0]["namespaceSelector"] == {
-            "matchLabels": expected_labels
-        }
         assert spec["egress"][0]["to"][0]["namespaceSelector"] == {
             "matchLabels": expected_labels
         }
