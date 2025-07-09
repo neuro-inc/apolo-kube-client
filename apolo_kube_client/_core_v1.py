@@ -6,6 +6,7 @@ from kubernetes.client.models import (
     V1NodeList,
     V1Pod,
     V1PodList,
+    V1Status,
 )
 
 from apolo_kube_client._core import _KubeCore
@@ -27,7 +28,7 @@ class CoreV1Api:
         self.node = Node(core, self.group_api_query_path, api_client)
 
 
-class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
+class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Status]):
     query_path = "namespaces"
 
 
@@ -35,5 +36,5 @@ class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "pods"
 
 
-class Node(ClusterScopedResource[V1Node, V1NodeList, V1Node]):
+class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
     query_path = "nodes"
