@@ -131,35 +131,7 @@ async def create_namespace(
                 },
                 "spec": {
                     "podSelector": {},  # all POD's in the namespace
-                    "policyTypes": ["Ingress", "Egress"],
-                    "ingress": [
-                        {
-                            "from": [
-                                # allow traffic within the same namespace
-                                {
-                                    "namespaceSelector": {"matchLabels": labels},
-                                    "podSelector": {},
-                                },
-                                # allow traffic from other non-apolo-project namespaces.
-                                # e.g., from the `platform` namespace, for example
-                                {
-                                    "namespaceSelector": {
-                                        "matchExpressions": [
-                                            {
-                                                "key": NAMESPACE_ORG_LABEL,
-                                                "operator": "DoesNotExist",
-                                            },
-                                            {
-                                                "key": NAMESPACE_PROJECT_LABEL,
-                                                "operator": "DoesNotExist",
-                                            },
-                                        ]
-                                    },
-                                    "podSelector": {},
-                                },
-                            ]
-                        }
-                    ],
+                    "policyTypes": ["Egress"],
                     "egress": [
                         {
                             "to": [
@@ -197,6 +169,20 @@ async def create_namespace(
                             "ports": [
                                 {"port": 53, "protocol": "UDP"},
                                 {"port": 53, "protocol": "TCP"},
+                            ],
+                        },
+                        # allowing traffic to ingress controller
+                        {
+                            "to": [
+                                {
+                                    "namespaceSelector": {},
+                                    # allow traffic to all pods in this ns
+                                    "podSelector": {
+                                        "matchLabels": {
+                                            "platform.apolo.us/component": "ingress-gateway"
+                                        }
+                                    },
+                                }
                             ],
                         },
                     ],
