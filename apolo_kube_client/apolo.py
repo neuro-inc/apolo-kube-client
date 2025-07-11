@@ -124,7 +124,7 @@ async def create_namespace(
     )
     _, namespace = await kube_client.core_v1.namespace.get_or_create(model=namespace)
 
-    kubernetes_api_eps = await kube_client.discovery_k8s_io_v1.endpoint_slice.get(
+    k8s_api_eps = await kube_client.discovery_k8s_io_v1.endpoint_slice.get(
         "kubernetes", "default"
     )
 
@@ -190,12 +190,12 @@ async def create_namespace(
                 V1NetworkPolicyEgressRule(
                     to=[
                         V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr=f"{address}/32"))
-                        for endpoint in kubernetes_api_eps.endpoints
+                        for endpoint in k8s_api_eps.endpoints
                         for address in endpoint.addresses
                     ],
                     ports=[
                         V1NetworkPolicyPort(port=int(port.port), protocol="TCP")
-                        for port in kubernetes_api_eps.ports
+                        for port in k8s_api_eps.ports
                     ],
                 ),
             ],
