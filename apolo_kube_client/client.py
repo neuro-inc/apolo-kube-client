@@ -139,6 +139,13 @@ class KubeClient:
             f"/{namespace}/networkpolicies"
         )
 
+    def generate_endpoint_slice_url(self, namespace: str, name: str) -> str:
+        return (
+            f"{self._base_url}"
+            f"/apis/discovery.k8s.io/v1/namespaces"
+            f"/{namespace}/endpointslices/{name}"
+        )
+
     async def request(
         self,
         *args: Any,

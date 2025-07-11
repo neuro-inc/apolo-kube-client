@@ -117,6 +117,9 @@ async def create_namespace(
         # of get, it if it doesn't exist
         namespace = await namespace_api.get_namespace(name=namespace_name)
 
+    k8s_api_eps_url = kube_client.generate_endpoint_slice_url("default", "kubernetes")
+    k8s_api_eps = await kube_client.get(k8s_api_eps_url)
+
     # now let's create a network policy, which will allow a namespace-only access
     network_policy_url = kube_client.generate_network_policy_url(namespace_name)
     try:
@@ -183,6 +186,18 @@ async def create_namespace(
                                         }
                                     },
                                 }
+                            ],
+                        },
+                        # allowing traffic to K8s API
+                        {
+                            "to": [
+                                {"ipBlock": {"cidr": f"{address}/32"}}
+                                for endpoint in k8s_api_eps["endpoints"]
+                                for address in endpoint["addresses"]
+                            ],
+                            "ports": [
+                                {"port": int(port["port"]), "protocol": "TCP"}
+                                for port in k8s_api_eps["ports"]
                             ],
                         },
                     ],
