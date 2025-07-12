@@ -34,7 +34,7 @@ class CoreV1Api:
         self.secret = Secret(core, self.group_api_query_path, api_client)
 
 
-class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
+class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Status]):
     query_path = "namespaces"
 
 
