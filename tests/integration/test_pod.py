@@ -13,7 +13,9 @@ class TestPod:
         pod = V1Pod(
             api_version="v1",
             kind="Pod",
-            metadata=V1ObjectMeta(name="test-hello-world-pod"),
+            metadata=V1ObjectMeta(
+                name="test-hello-world-pod", labels={"app": "hello-world"}
+            ),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
                 restart_policy="Never",
@@ -35,6 +37,18 @@ class TestPod:
         pod_names = {p.metadata.name for p in pod_list.items}
         assert len(pod_list.items) > 0
         assert pod.metadata.name in pod_names
+
+        # test getting pods with label selector
+        pod_list_with_existing_label_selector = await kube_client.core_v1.pod.get_list(
+            label_selector={"app": "hello-world"}
+        )
+        assert len(pod_list_with_existing_label_selector.items) == 1
+        pod_list_with_not_existing_label_selector = (
+            await kube_client.core_v1.pod.get_list(
+                label_selector={"app": "hello-world2"}
+            )
+        )
+        assert len(pod_list_with_not_existing_label_selector.items) == 0
 
         # test deleting the pod
         await kube_client.core_v1.pod.delete(name=pod.metadata.name)

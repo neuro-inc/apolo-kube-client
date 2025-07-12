@@ -1,3 +1,4 @@
+from collections.abc import Collection
 from typing import Protocol, cast, get_args, overload
 
 import aiohttp
@@ -96,6 +97,19 @@ class BaseResource[
     def _build_post_json(self, model: ModelT) -> JsonType:
         return cast(JsonType, self._api_client.sanitize_for_serialization(model))
 
+    def _build_label_selector_param(
+        self, label_selector: dict[str, str] | None
+    ) -> dict[str, str]:
+        return (
+            {
+                "labelSelector": ",".join(
+                    [f"{key}={value}" for key, value in label_selector.items()]
+                )
+            }
+            if label_selector
+            else {}
+        )
+
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
@@ -129,8 +143,13 @@ class ClusterScopedResource[
         async with self._core.request(method="GET", url=self._build_url(name)) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def get_list(self) -> ListModelT:
-        async with self._core.request(method="GET", url=self._build_url_list()) as resp:
+    async def get_list(
+        self, label_selector: dict[str, str] | None = None
+    ) -> ListModelT:
+        params = self._build_label_selector_param(label_selector)
+        async with self._core.request(
+            method="GET", url=self._build_url_list(), params=params
+        ) as resp:
             return await self._deserialize(resp, self._list_model_class)
 
     async def create(self, model: ModelT) -> ModelT:
@@ -222,9 +241,14 @@ class NamespacedResource[
         ) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def get_list(self, namespace: str | None = None) -> ListModelT:
+    async def get_list(
+        self, label_selector: dict[str, str] | None = None, namespace: str | None = None
+    ) -> ListModelT:
+        params = self._build_label_selector_param(label_selector)
         async with self._core.request(
-            method="GET", url=self._build_url_list(self._get_ns(namespace))
+            method="GET",
+            url=self._build_url_list(self._get_ns(namespace)),
+            params=params,
         ) as resp:
             return await self._deserialize(resp, self._list_model_class)
 
@@ -277,7 +301,7 @@ class NamespacedResource[
     async def patch_json(
         self,
         name: str,
-        patch_json_list: list[dict[str, str]],
+        patch_json_list: list[dict[str, str | Collection[str]]],
         namespace: str | None = None,
     ) -> ModelT:
         """
