@@ -1,14 +1,9 @@
 from collections.abc import AsyncIterator
-from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import AsyncMock
 
 import aiohttp
 import pytest
-from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.x509 import CertificateBuilder, NameOID, random_serial_number
 from kubernetes.client import V1Namespace
 from yarl import URL
 
@@ -18,38 +13,7 @@ from apolo_kube_client._core import _KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
 from apolo_kube_client._typedefs import NestedStrKeyDict
-
-
-def generate_certs(cn: str) -> tuple[str, str]:
-    """
-    Generates a self-signed certificate and private key for testing purposes.
-    This function is a placeholder and does not perform any actual operations.
-    """
-    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-    pem_key = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption(),
-    )
-
-    # Generate self-signed certificate
-    subject = issuer = x509.Name(
-        [
-            x509.NameAttribute(NameOID.COMMON_NAME, cn),
-        ]
-    )
-    cert = (
-        CertificateBuilder()
-        .subject_name(subject)
-        .issuer_name(issuer)
-        .public_key(private_key.public_key())
-        .serial_number(random_serial_number())
-        .not_valid_before(datetime.now(UTC))
-        .not_valid_after(datetime.now(UTC) + timedelta(days=365))
-        .sign(private_key, algorithm=hashes.SHA256())
-    )
-    pem_cert = cert.public_bytes(serialization.Encoding.PEM)
-    return pem_key.decode(), pem_cert.decode()
+from apolo_kube_client._utils import generate_certs
 
 
 @pytest.fixture
