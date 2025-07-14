@@ -135,14 +135,14 @@ async def create_namespace(
         kind="NetworkPolicy",
         metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
         spec=V1NetworkPolicySpec(
-            pod_selector=V1LabelSelector(match_labels={}),  # all POD's in the namespace
+            pod_selector=V1LabelSelector(),  # all POD's in the namespace
             policy_types=["Egress"],
             egress=[
                 V1NetworkPolicyEgressRule(
                     to=[
                         V1NetworkPolicyPeer(
                             namespace_selector=V1LabelSelector(match_labels=labels),
-                            pod_selector=V1LabelSelector(match_labels={}),
+                            pod_selector=V1LabelSelector(),
                         )
                     ]
                 ),
@@ -179,7 +179,7 @@ async def create_namespace(
                 V1NetworkPolicyEgressRule(
                     to=[
                         V1NetworkPolicyPeer(
-                            namespace_selector=V1LabelSelector(match_labels={}),
+                            namespace_selector=V1LabelSelector(),
                             pod_selector=V1LabelSelector(
                                 match_labels={COMPONENT_LABEL: "ingress-gateway"}
                             ),

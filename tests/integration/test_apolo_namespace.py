@@ -1,7 +1,17 @@
+from unittest import mock
+
 import pytest
+from kubernetes.client.models import (
+    V1IPBlock,
+    V1LabelSelector,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyPeer,
+    V1NetworkPolicyPort,
+)
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client.apolo import (
+    COMPONENT_LABEL,
     NAMESPACE_ORG_LABEL,
     NAMESPACE_PROJECT_LABEL,
     create_namespace,
@@ -50,25 +60,61 @@ class TestApoloNamespace:
         assert np.metadata.namespace == namespace.metadata.name
 
         assert np.spec.policy_types == ["Egress"]
-        assert np.spec.pod_selector.to_dict() == {
-            "match_expressions": None,
-            "match_labels": None,
-        }
-        assert np.spec.egress[0].to[0].pod_selector.to_dict() == {
-            "match_expressions": None,
-            "match_labels": None,
-        }
 
-        expected_labels = {
-            NAMESPACE_ORG_LABEL: org_name,
-            NAMESPACE_PROJECT_LABEL: project_name,
-        }
-
-        assert (
-            np.spec.egress[0].to[0].namespace_selector.match_labels == expected_labels
-        )
-        assert len(np.spec.egress[0].to) == 1
-        assert len(np.spec.egress) == 5
+        assert np.spec.egress == [
+            V1NetworkPolicyEgressRule(
+                to=[
+                    V1NetworkPolicyPeer(
+                        namespace_selector=V1LabelSelector(
+                            match_labels={
+                                NAMESPACE_ORG_LABEL: org_name,
+                                NAMESPACE_PROJECT_LABEL: project_name,
+                            }
+                        ),
+                        pod_selector=V1LabelSelector(),
+                    )
+                ]
+            ),
+            V1NetworkPolicyEgressRule(
+                to=[
+                    V1NetworkPolicyPeer(
+                        ip_block=V1IPBlock(
+                            cidr="0.0.0.0/0",
+                            _except=[
+                                "10.0.0.0/8",
+                                "172.16.0.0/12",
+                                "192.168.0.0/16",
+                            ],
+                        )
+                    )
+                ]
+            ),
+            V1NetworkPolicyEgressRule(
+                to=[
+                    V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="10.0.0.0/8")),
+                    V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="172.16.0.0/12")),
+                    V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr="192.168.0.0/16")),
+                ],
+                ports=[
+                    V1NetworkPolicyPort(port=53, protocol="UDP"),
+                    V1NetworkPolicyPort(port=53, protocol="TCP"),
+                ],
+            ),
+            V1NetworkPolicyEgressRule(
+                to=[
+                    V1NetworkPolicyPeer(
+                        namespace_selector=V1LabelSelector(),
+                        pod_selector=V1LabelSelector(
+                            match_labels={COMPONENT_LABEL: "ingress-gateway"}
+                        ),
+                    )
+                ],
+            ),
+            V1NetworkPolicyEgressRule(
+                to=[V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr=mock.ANY))],
+                ports=[V1NetworkPolicyPort(port=mock.ANY, protocol="TCP")],
+            ),
+        ]
 
         # delete and ensure phase changed
         namespace_delete = await kube_client.core_v1.namespace.delete(
@@ -106,13 +152,9 @@ class TestApoloNamespace:
         assert namespace.metadata.labels[NAMESPACE_PROJECT_LABEL] == project_name
 
         # ensure a NetworkPolicy for this namespace were created
-        np = await kube_client.networking_k8s_io_v1.network_policy.get(
+        await kube_client.networking_k8s_io_v1.network_policy.get(
             name=namespace.metadata.name, namespace=namespace.metadata.name
         )
-        assert np.metadata.name == namespace.metadata.name
-        assert np.metadata.namespace == namespace.metadata.name
-        assert len(np.spec.egress[0].to) == 1
-        assert len(np.spec.egress) == 5
 
         # delete and ensure phase changed
         namespace_delete = await kube_client.core_v1.namespace.delete(
