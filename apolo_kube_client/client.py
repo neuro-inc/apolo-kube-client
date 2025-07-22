@@ -12,7 +12,6 @@ import aiohttp
 from apolo_kube_client.config import KubeClientAuthType, KubeConfig
 from apolo_kube_client.errors import (
     KubeClientException,
-    KubeClientExpired,
     KubeClientUnauthorized,
     ResourceBadRequest,
     ResourceExists,
@@ -191,9 +190,6 @@ class KubeClient:
             if payload.get("status") == "Success":
                 return
             code = payload.get("code")
-            reason = payload.get("reason")
-            if reason == "Expired":
-                raise KubeClientExpired(payload)
             if code == 400:
                 raise ResourceBadRequest(payload)
             if code == 401:
