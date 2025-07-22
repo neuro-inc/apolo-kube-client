@@ -24,7 +24,3 @@ class ResourceGone(KubeClientException):
 
 class KubeClientUnauthorized(KubeClientException):
     pass
-
-
-class KubeClientExpired(KubeClientException):
-    pass
