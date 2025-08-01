@@ -40,13 +40,11 @@ class TestPod:
 
         # test getting pods with label selector
         pod_list_with_existing_label_selector = await kube_client.core_v1.pod.get_list(
-            label_selector={"app": "hello-world"}
+            label_selector="app=hello-world"
         )
         assert len(pod_list_with_existing_label_selector.items) == 1
         pod_list_with_not_existing_label_selector = (
-            await kube_client.core_v1.pod.get_list(
-                label_selector={"app": "hello-world2"}
-            )
+            await kube_client.core_v1.pod.get_list(label_selector="app=hello-world2")
         )
         assert len(pod_list_with_not_existing_label_selector.items) == 0
 

@@ -97,19 +97,6 @@ class BaseResource[
     def _build_post_json(self, model: ModelT) -> JsonType:
         return cast(JsonType, self._api_client.sanitize_for_serialization(model))
 
-    def _build_label_selector_param(
-        self, label_selector: dict[str, str] | None
-    ) -> dict[str, str]:
-        return (
-            {
-                "labelSelector": ",".join(
-                    [f"{key}={value}" for key, value in label_selector.items()]
-                )
-            }
-            if label_selector
-            else {}
-        )
-
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
@@ -143,10 +130,8 @@ class ClusterScopedResource[
         async with self._core.request(method="GET", url=self._build_url(name)) as resp:
             return await self._deserialize(resp, self._model_class)
 
-    async def get_list(
-        self, label_selector: dict[str, str] | None = None
-    ) -> ListModelT:
-        params = self._build_label_selector_param(label_selector)
+    async def get_list(self, label_selector: str | None = None) -> ListModelT:
+        params = {"labelSelector": label_selector} if label_selector else None
         async with self._core.request(
             method="GET", url=self._build_url_list(), params=params
         ) as resp:
@@ -242,9 +227,9 @@ class NamespacedResource[
             return await self._deserialize(resp, self._model_class)
 
     async def get_list(
-        self, label_selector: dict[str, str] | None = None, namespace: str | None = None
+        self, label_selector: str | None = None, namespace: str | None = None
     ) -> ListModelT:
-        params = self._build_label_selector_param(label_selector)
+        params = {"labelSelector": label_selector} if label_selector else None
         async with self._core.request(
             method="GET",
             url=self._build_url_list(self._get_ns(namespace)),
