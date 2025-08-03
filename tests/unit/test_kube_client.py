@@ -1,5 +1,6 @@
 from collections.abc import AsyncIterator
 from pathlib import Path
+from typing import Callable
 from unittest.mock import AsyncMock
 
 import aiohttp
@@ -13,11 +14,12 @@ from apolo_kube_client._core import _KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
 from apolo_kube_client._typedefs import NestedStrKeyDict
-from apolo_kube_client._utils import generate_certs
 
 
 @pytest.fixture
-def kube_config_cert_auth(tmp_path: Path) -> KubeConfig:
+def kube_config_cert_auth(
+    tmp_path: Path, generate_certs: Callable[[str], tuple[str, str]]
+) -> KubeConfig:
     _, ca_cert = generate_certs("k8s-test-ca")
     auth_key, auth_cert = generate_certs("k8s-test-user")
     auth_cert_path = tmp_path / "auth_cert.pem"

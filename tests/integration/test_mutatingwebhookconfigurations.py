@@ -1,3 +1,5 @@
+from typing import Callable
+
 from kubernetes.client.models import (
     AdmissionregistrationV1ServiceReference,
     AdmissionregistrationV1WebhookClientConfig,
@@ -10,11 +12,13 @@ from kubernetes.client.models import (
 )
 
 from apolo_kube_client import KubeClient
-from apolo_kube_client._utils import base64_encode, generate_certs
+from apolo_kube_client._utils import base64_encode
 
 
 class TestMutatingWebhookConfigurations:
-    async def test_crud(self, kube_client: KubeClient) -> None:
+    async def test_crud(
+        self, kube_client: KubeClient, generate_certs: Callable[[str], tuple[str, str]]
+    ) -> None:
         service_name = "test-service"
         _, ca_cert = generate_certs("k8s-test-ca")
         client_config = AdmissionregistrationV1WebhookClientConfig(
