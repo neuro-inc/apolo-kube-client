@@ -3,7 +3,6 @@ from ._config import KubeConfig
 from ._core import KubeClientAuthType
 from ._errors import (
     KubeClientException,
-    KubeClientExpired,
     KubeClientUnauthorized,
     ResourceBadRequest,
     ResourceExists,
@@ -23,5 +22,4 @@ __all__ = [
     "ResourceGone",
     "KubeClientException",
     "KubeClientUnauthorized",
-    "KubeClientExpired",
 ]
