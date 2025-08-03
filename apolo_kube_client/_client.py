@@ -13,7 +13,6 @@ from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
 from ._rest_response import _SimplifiedRestResponse
 from ._typedefs import NestedStrKeyDict
-from ._utils import escape_json_pointer
 
 logger = logging.getLogger(__name__)
 
@@ -46,10 +45,6 @@ class KubeClient:
         exc_tb: TracebackType | None,
     ) -> None:
         await self._core.__aexit__(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
-
-    @staticmethod
-    def escape_json_pointer(path: str) -> str:
-        return escape_json_pointer(path)
 
     def resource_dict_to_model(
         self,
