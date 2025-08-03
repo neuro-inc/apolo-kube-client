@@ -11,7 +11,6 @@ from kubernetes.client.models import (
     V1Namespace,
     V1NetworkPolicy,
     V1NetworkPolicyEgressRule,
-    V1NetworkPolicyIngressRule,
     V1NetworkPolicyPeer,
     V1NetworkPolicyPort,
     V1NetworkPolicySpec,
@@ -30,6 +29,7 @@ RE_DASH_REPLACEABLE = re.compile(r"[\s_:/\\]+")
 
 NAMESPACE_ORG_LABEL = "platform.apolo.us/org"
 NAMESPACE_PROJECT_LABEL = "platform.apolo.us/project"
+COMPONENT_LABEL = "platform.apolo.us/component"
 
 
 def generate_hash(name: str) -> str:
@@ -124,6 +124,10 @@ async def create_namespace(
     )
     _, namespace = await kube_client.core_v1.namespace.get_or_create(model=namespace)
 
+    k8s_api_eps = await kube_client.discovery_k8s_io_v1.endpoint_slice.get(
+        "kubernetes", "default"
+    )
+
     # now let's create a network policy, which will allow a namespace-only access
     # update if it already exists
     network_policy = V1NetworkPolicy(
@@ -131,42 +135,14 @@ async def create_namespace(
         kind="NetworkPolicy",
         metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
         spec=V1NetworkPolicySpec(
-            pod_selector=V1LabelSelector(match_labels={}),  # all POD's in the namespace
-            policy_types=["Ingress", "Egress"],
-            ingress=[
-                V1NetworkPolicyIngressRule(
-                    _from=[
-                        # allow traffic within the same namespace
-                        V1NetworkPolicyPeer(
-                            namespace_selector=V1LabelSelector(match_labels=labels),
-                            pod_selector=V1LabelSelector(match_labels={}),
-                        ),
-                        # allow traffic from other non-apolo-project namespaces.
-                        # e.g., from the `platform` namespace, for example
-                        V1NetworkPolicyPeer(
-                            namespace_selector=V1LabelSelector(
-                                match_expressions=[
-                                    {
-                                        "key": NAMESPACE_ORG_LABEL,
-                                        "operator": "DoesNotExist",
-                                    },
-                                    {
-                                        "key": NAMESPACE_PROJECT_LABEL,
-                                        "operator": "DoesNotExist",
-                                    },
-                                ]
-                            ),
-                            pod_selector=V1LabelSelector(match_labels={}),
-                        ),
-                    ]
-                )
-            ],
+            pod_selector=V1LabelSelector(),  # all POD's in the namespace
+            policy_types=["Egress"],
             egress=[
                 V1NetworkPolicyEgressRule(
                     to=[
                         V1NetworkPolicyPeer(
                             namespace_selector=V1LabelSelector(match_labels=labels),
-                            pod_selector=V1LabelSelector(match_labels={}),
+                            pod_selector=V1LabelSelector(),
                         )
                     ]
                 ),
@@ -197,6 +173,29 @@ async def create_namespace(
                     ports=[
                         V1NetworkPolicyPort(port=53, protocol="UDP"),
                         V1NetworkPolicyPort(port=53, protocol="TCP"),
+                    ],
+                ),
+                # allowing traffic to ingress gateway
+                V1NetworkPolicyEgressRule(
+                    to=[
+                        V1NetworkPolicyPeer(
+                            namespace_selector=V1LabelSelector(),
+                            pod_selector=V1LabelSelector(
+                                match_labels={COMPONENT_LABEL: "ingress-gateway"}
+                            ),
+                        )
+                    ],
+                ),
+                # allowing traffic to K8s API
+                V1NetworkPolicyEgressRule(
+                    to=[
+                        V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr=f"{address}/32"))
+                        for endpoint in k8s_api_eps.endpoints
+                        for address in endpoint.addresses
+                    ],
+                    ports=[
+                        V1NetworkPolicyPort(port=int(port.port), protocol="TCP")
+                        for port in k8s_api_eps.ports
                     ],
                 ),
             ],

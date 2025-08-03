@@ -8,6 +8,7 @@ from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
 from ._core import _KubeCore
 from ._core_v1 import CoreV1Api
+from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
 from ._rest_response import _SimplifiedRestResponse
@@ -32,6 +33,7 @@ class KubeClient:
         self.core_v1 = CoreV1Api(self._core, self._api_client)
         self.batch_v1 = BatchV1Api(self._core, self._api_client)
         self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core, self._api_client)
+        self.discovery_k8s_io_v1 = DiscoveryK8sIoV1Api(self._core, self._api_client)
 
     async def __aenter__(self) -> Self:
         await self._core.__aenter__()
