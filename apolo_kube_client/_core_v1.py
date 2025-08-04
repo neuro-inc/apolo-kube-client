@@ -55,8 +55,8 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         key: str,
         value: str,
         *,
+        namespace: str,
         encode: bool = True,
-        namespace: str | None = None,
     ) -> V1Secret:
         secret = await self.get(name=name, namespace=self._get_ns(namespace))
         patch_json_list = []
@@ -75,9 +75,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
             namespace=self._get_ns(namespace),
         )
 
-    async def delete_key(
-        self, name: str, key: str, *, namespace: str | None = None
-    ) -> V1Secret:
+    async def delete_key(self, name: str, key: str, *, namespace: str) -> V1Secret:
         return await self.patch_json(
             name=name,
             patch_json_list=[

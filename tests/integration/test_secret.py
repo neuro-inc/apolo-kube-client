@@ -71,7 +71,10 @@ class TestSecret:
         kube_client: KubeClient,
     ) -> None:
         secret_with_new_key = await kube_client.core_v1.secret.add_key(
-            name=secret.metadata.name, key="password", value="password"
+            name=secret.metadata.name,
+            key="password",
+            value="password",
+            namespace="default",
         )
 
         assert secret_with_new_key.data["password"] == base64_encode("password")
@@ -79,5 +82,6 @@ class TestSecret:
         secret_without_new_key = await kube_client.core_v1.secret.delete_key(
             name=secret.metadata.name,
             key="password",
+            namespace="default",
         )
         assert secret_without_new_key.data.get("password") is None

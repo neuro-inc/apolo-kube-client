@@ -10,6 +10,7 @@ from ._errors import (
     ResourceInvalid,
     ResourceNotFound,
 )
+from ._utils import escape_json_pointer
 
 __all__ = [
     "KubeClient",
@@ -22,4 +23,5 @@ __all__ = [
     "ResourceGone",
     "KubeClientException",
     "KubeClientUnauthorized",
+    "escape_json_pointer",
 ]
