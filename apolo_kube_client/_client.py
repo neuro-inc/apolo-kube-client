@@ -4,6 +4,7 @@ from typing import Self, TypeVar, cast
 
 from kubernetes.client import ApiClient
 
+from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
 from ._core import _KubeCore
@@ -32,6 +33,9 @@ class KubeClient:
         self.core_v1 = CoreV1Api(self._core, self._api_client)
         self.batch_v1 = BatchV1Api(self._core, self._api_client)
         self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core, self._api_client)
+        self.admission_registration_k8s_io_v1 = AdmissionRegistrationK8SioV1Api(
+            self._core, self._api_client
+        )
         self.discovery_k8s_io_v1 = DiscoveryK8sIoV1Api(self._core, self._api_client)
 
     async def __aenter__(self) -> Self:
@@ -45,6 +49,13 @@ class KubeClient:
         exc_tb: TracebackType | None,
     ) -> None:
         await self._core.__aexit__(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
+
+    @property
+    def namespace(self) -> str:
+        """
+        Returns the current namespace of the Kubernetes client.
+        """
+        return self._core.namespace
 
     def resource_dict_to_model(
         self,

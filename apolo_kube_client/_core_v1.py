@@ -38,7 +38,7 @@ class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]
     query_path = "namespaces"
 
 
-class Node(ClusterScopedResource[V1Node, V1NodeList, V1Node]):
+class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
     query_path = "nodes"
 
 
