@@ -14,6 +14,7 @@ from apolo_kube_client._core import _KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
 from apolo_kube_client._typedefs import NestedStrKeyDict
+from apolo_kube_client._utils import escape_json_pointer
 
 
 @pytest.fixture
@@ -119,5 +120,5 @@ async def test_kube_client_build_post_json(kube_client: KubeClient) -> None:
 async def test_escape_json_pointer(kube_client: KubeClient) -> None:
     # Test escaping of JSON pointers
     pointer = "/metadata/annotations~"
-    escaped_pointer = kube_client.escape_json_pointer(pointer)
+    escaped_pointer = escape_json_pointer(pointer)
     assert escaped_pointer == "~1metadata~1annotations~0"
