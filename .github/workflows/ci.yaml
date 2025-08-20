@@ -17,7 +17,7 @@ jobs:
         py_version: ['3.12', '3.13']
     steps:
     - name: Checkout commit
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: Install python
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install python
@@ -86,6 +86,29 @@ jobs:
         run: |
           echo "All checks have passed"
 
+  approve:
+    name: Approve bot PR
+    runs-on: ubuntu-latest
+    if: endsWith(github.actor, '[bot]')
+    needs: check
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: metadata
+      id: metadata
+      if: github.actor == 'dependabot[bot]'
+      uses: dependabot/fetch-metadata@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Enable auto-merge for bot PRs
+      run: gh pr merge --auto --squash --delete-branch "$PR_URL"
+      env:
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy:
     name: Release client
     runs-on: ubuntu-latest
@@ -96,7 +119,7 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing & sigstore
     steps:
     - name: Checkout commit
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Install python
       uses: actions/setup-python@v5
       with:
