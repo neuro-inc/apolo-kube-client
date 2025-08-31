@@ -1,4 +1,3 @@
-from kubernetes.client import ApiClient
 from kubernetes.client.models import (
     V1Namespace,
     V1NamespaceList,
@@ -11,9 +10,8 @@ from kubernetes.client.models import (
     V1Status,
 )
 
-from apolo_kube_client._core import _KubeCore
-
 from ._base_resource import ClusterScopedResource, NamespacedResource
+from ._core import _KubeCore
 from ._utils import base64_encode, escape_json_pointer
 
 
@@ -24,14 +22,14 @@ class CoreV1Api:
 
     group_api_query_path = "api/v1"
 
-    def __init__(self, core: _KubeCore, api_client: ApiClient) -> None:
+    def __init__(self, core: _KubeCore) -> None:
         self._core = core
         # cluster scoped resources
-        self.namespace = Namespace(core, self.group_api_query_path, api_client)
-        self.node = Node(core, self.group_api_query_path, api_client)
+        self.namespace = Namespace(core, self.group_api_query_path)
+        self.node = Node(core, self.group_api_query_path)
         # namespaced resources
-        self.pod = Pod(core, self.group_api_query_path, api_client)
-        self.secret = Secret(core, self.group_api_query_path, api_client)
+        self.pod = Pod(core, self.group_api_query_path)
+        self.secret = Secret(core, self.group_api_query_path)
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):

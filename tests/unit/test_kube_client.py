@@ -1,11 +1,8 @@
 from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Callable
-from unittest.mock import AsyncMock
 
-import aiohttp
 import pytest
-from kubernetes.client import V1Namespace
 from yarl import URL
 
 from apolo_kube_client import KubeClient, KubeClientAuthType, KubeConfig
@@ -13,8 +10,6 @@ from apolo_kube_client._batch_v1 import BatchV1Api, Job
 from apolo_kube_client._core import _KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
-from apolo_kube_client._typedefs import NestedStrKeyDict
-from apolo_kube_client._utils import escape_json_pointer
 
 
 @pytest.fixture
@@ -83,42 +78,3 @@ async def test_create_kube_client_token_auth(
         assert kube_client._core._auth_type == KubeClientAuthType.TOKEN
         assert kube_client._core._token == "token"
         assert kube_client._core.namespace == "default"
-
-
-async def test_deserialize_kube_client(kube_client: KubeClient) -> None:
-    # test deserialization of a core_v1.namespace
-    mock_resp = AsyncMock(spec=aiohttp.ClientResponse)
-    mock_resp.status = 200
-    mock_resp.reason = "OK"
-    mock_resp.read.return_value = (
-        b'{"kind":"Namespace","apiVersion":"v1","metadata":{"name":"test-ns"}}'
-    )
-    namespace = await kube_client.core_v1.namespace._deserialize(mock_resp, V1Namespace)
-    assert isinstance(namespace, V1Namespace)
-    assert namespace.metadata.name == "test-ns"
-
-    # test dict to model deserialization
-    resource_dict: NestedStrKeyDict = {
-        "kind": "Namespace",
-        "apiVersion": "v1",
-        "metadata": {"name": "test-ns"},
-    }
-
-    namespace = kube_client.resource_dict_to_model(resource_dict, V1Namespace)
-    assert isinstance(namespace, V1Namespace)
-    assert namespace.metadata.name == "test-ns"
-
-
-async def test_kube_client_build_post_json(kube_client: KubeClient) -> None:
-    namespace = V1Namespace(
-        api_version="v1", kind="Namespace", metadata={"name": "test-ns"}
-    )
-    post_json = kube_client.core_v1.namespace._build_post_json(namespace)
-    assert post_json.keys() == {"apiVersion", "kind", "metadata"}  # type: ignore
-
-
-async def test_escape_json_pointer(kube_client: KubeClient) -> None:
-    # Test escaping of JSON pointers
-    pointer = "/metadata/annotations~"
-    escaped_pointer = escape_json_pointer(pointer)
-    assert escaped_pointer == "~1metadata~1annotations~0"

@@ -1,14 +1,15 @@
-from collections.abc import Collection
-from typing import Protocol, cast, get_args, overload
+import functools
+from collections.abc import AsyncIterator, Collection
+from contextlib import asynccontextmanager
+from typing import Protocol, cast, get_args
 
 import aiohttp
-from kubernetes.client import ApiClient, models as available_k8s_models
 from yarl import URL
 
 from ._core import _KubeCore
 from ._errors import ResourceNotFound
-from ._rest_response import _RESTResponse
 from ._typedefs import JsonType
+from ._watch import Watch
 
 
 class MetadataModel(Protocol):
@@ -31,15 +32,12 @@ class BaseResource[
 
     query_path: str
 
-    def __init__(
-        self, core: _KubeCore, group_api_query_path: str, api_client: ApiClient
-    ):
+    def __init__(self, core: _KubeCore, group_api_query_path: str):
         if not self.query_path:
             raise ValueError("resource api query_path must be set")
 
         self._core: _KubeCore = core
         self._group_api_query_path: str = group_api_query_path
-        self._api_client = api_client
 
     @property
     def _model_class(self) -> type[ModelT]:
@@ -65,42 +63,13 @@ class BaseResource[
             return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
         raise ValueError("DeleteModel class not found")
 
-    @overload
-    async def _deserialize(
-        self, response: aiohttp.ClientResponse, response_type: type[ModelT]
-    ) -> ModelT: ...
-
-    @overload
-    async def _deserialize(
-        self, response: aiohttp.ClientResponse, response_type: type[ListModelT]
-    ) -> ListModelT: ...
-
-    @overload
-    async def _deserialize(
-        self, response: aiohttp.ClientResponse, response_type: type[DeleteModelT]
-    ) -> DeleteModelT: ...
-
-    async def _deserialize(
-        self,
-        response: aiohttp.ClientResponse,
-        response_type: type[ModelT] | type[ListModelT] | type[DeleteModelT],
-    ) -> ModelT | ListModelT | DeleteModelT:
-        if not hasattr(available_k8s_models, response_type.__name__):
-            raise ValueError(f"Unsupported response type: {response_type}")
-
-        async with _RESTResponse(response) as rest_response:
-            return cast(
-                ModelT | ListModelT | DeleteModelT,
-                self._api_client.deserialize(rest_response, response_type),
-            )
-
-    def _build_post_json(self, model: ModelT) -> JsonType:
-        return cast(JsonType, self._api_client.sanitize_for_serialization(model))
-
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
 
     async def get_list(self) -> ListModelT:
+        raise NotImplementedError
+
+    def watch(self) -> Watch[ModelT]:
         raise NotImplementedError
 
     async def create(self, model: ModelT) -> ModelT:
@@ -128,28 +97,68 @@ class ClusterScopedResource[
 
     async def get(self, name: str) -> ModelT:
         async with self._core.request(method="GET", url=self._build_url(name)) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)
 
     async def get_list(self, label_selector: str | None = None) -> ListModelT:
         params = {"labelSelector": label_selector} if label_selector else None
         async with self._core.request(
             method="GET", url=self._build_url_list(), params=params
         ) as resp:
-            return await self._deserialize(resp, self._list_model_class)
+            return await self._core.deserialize_response(resp, self._list_model_class)
+
+    @asynccontextmanager
+    async def _get_watch(
+        self,
+        label_selector: str | None = None,
+        resource_version: str | None = None,
+        allow_watch_bookmarks: bool = False,
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
+        params = {
+            "watch": "1",
+            "allowWatchBookmarks": str(allow_watch_bookmarks).lower(),
+        }
+        if resource_version:
+            params["resourceVersion"] = resource_version
+        if label_selector:
+            params["labelSelector"] = label_selector
+        async with self._core.request(
+            method="GET",
+            url=self._build_url_list(),
+            params=params,
+        ) as resp:
+            yield resp
+
+    def watch(
+        self,
+        label_selector: str | None = None,
+        resource_version: str | None = None,
+        allow_watch_bookmarks: bool = False,
+    ) -> Watch[ModelT]:
+        return Watch(
+            resource_version=resource_version,
+            get_response=functools.partial(
+                self._get_watch,
+                label_selector=label_selector,
+                allow_watch_bookmarks=allow_watch_bookmarks,
+            ),
+            deserialize=functools.partial(
+                self._core.deserialize, klass=self._model_class
+            ),
+        )
 
     async def create(self, model: ModelT) -> ModelT:
         async with self._core.request(
             method="POST",
             url=self._build_url_list(),
-            json=self._build_post_json(model),
+            json=self._core.serialize(model),
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)
 
     async def delete(self, name: str) -> DeleteModelT:
         async with self._core.request(
             method="DELETE", url=self._build_url(name)
         ) as resp:
-            return await self._deserialize(resp, self._delete_model_class)
+            return await self._core.deserialize_response(resp, self._delete_model_class)
 
     async def get_or_create(self, model: ModelT) -> tuple[bool, ModelT]:
         """
@@ -173,9 +182,11 @@ class ClusterScopedResource[
                 method="PATCH",
                 headers={"Content-Type": "application/strategic-merge-patch+json"},
                 url=self._build_url(model.metadata.name),
-                json=self._build_post_json(model),
+                json=self._core.serialize(model),
             ) as resp:
-                return False, await self._deserialize(resp, self._model_class)
+                return False, await self._core.deserialize_response(
+                    resp, self._model_class
+                )
         except ResourceNotFound:
             return True, await self.create(model)
 
@@ -192,7 +203,7 @@ class ClusterScopedResource[
             url=self._build_url(name),
             json=cast(JsonType, patch_json_list),
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)
 
 
 class NamespacedResource[
@@ -224,7 +235,7 @@ class NamespacedResource[
         async with self._core.request(
             method="GET", url=self._build_url(name, self._get_ns(namespace))
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)
 
     async def get_list(
         self, label_selector: str | None = None, namespace: str | None = None
@@ -235,21 +246,64 @@ class NamespacedResource[
             url=self._build_url_list(self._get_ns(namespace)),
             params=params,
         ) as resp:
-            return await self._deserialize(resp, self._list_model_class)
+            return await self._core.deserialize_response(resp, self._list_model_class)
+
+    @asynccontextmanager
+    async def _get_watch(
+        self,
+        label_selector: str | None = None,
+        namespace: str | None = None,
+        resource_version: str | None = None,
+        allow_watch_bookmarks: bool = False,
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
+        params = {
+            "watch": "1",
+            "allowWatchBookmarks": str(allow_watch_bookmarks).lower(),
+        }
+        if resource_version:
+            params["resourceVersion"] = resource_version
+        if label_selector:
+            params["labelSelector"] = label_selector
+        async with self._core.request(
+            method="GET",
+            url=self._build_url_list(self._get_ns(namespace)),
+            params=params,
+        ) as resp:
+            yield resp
+
+    def watch(
+        self,
+        label_selector: str | None = None,
+        namespace: str | None = None,
+        resource_version: str | None = None,
+        allow_watch_bookmarks: bool = False,
+    ) -> Watch[ModelT]:
+        return Watch(
+            resource_version=resource_version,
+            get_response=functools.partial(
+                self._get_watch,
+                label_selector=label_selector,
+                namespace=namespace,
+                allow_watch_bookmarks=allow_watch_bookmarks,
+            ),
+            deserialize=functools.partial(
+                self._core.deserialize, klass=self._model_class
+            ),
+        )
 
     async def create(self, model: ModelT, namespace: str | None = None) -> ModelT:
         async with self._core.request(
             method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
-            json=self._build_post_json(model),
+            json=self._core.serialize(model),
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)
 
     async def delete(self, name: str, namespace: str | None = None) -> DeleteModelT:
         async with self._core.request(
             method="DELETE", url=self._build_url(name, self._get_ns(namespace))
         ) as resp:
-            return await self._deserialize(resp, self._delete_model_class)
+            return await self._core.deserialize_response(resp, self._delete_model_class)
 
     async def get_or_create(
         self, model: ModelT, namespace: str | None = None
@@ -277,9 +331,11 @@ class NamespacedResource[
                 method="PATCH",
                 headers={"Content-Type": "application/strategic-merge-patch+json"},
                 url=self._build_url(model.metadata.name, self._get_ns(namespace)),
-                json=self._build_post_json(model),
+                json=self._core.serialize(model),
             ) as resp:
-                return False, await self._deserialize(resp, self._model_class)
+                return False, await self._core.deserialize_response(
+                    resp, self._model_class
+                )
         except ResourceNotFound:
             return True, await self.create(model, namespace=namespace)
 
@@ -299,4 +355,4 @@ class NamespacedResource[
             url=self._build_url(name, self._get_ns(namespace)),
             json=cast(JsonType, patch_json_list),
         ) as resp:
-            return await self._deserialize(resp, self._model_class)
+            return await self._core.deserialize_response(resp, self._model_class)

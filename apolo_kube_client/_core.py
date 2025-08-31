@@ -1,13 +1,17 @@
 import asyncio
+import json
 import logging
 import ssl
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
+from dataclasses import dataclass
 from pathlib import Path
 from types import TracebackType
-from typing import Self, cast
+from typing import Self, TypeVar, cast
 
 import aiohttp
+import kubernetes
+from kubernetes.client import ApiClient
 from yarl import URL, Query
 
 from ._config import KubeClientAuthType, KubeConfig
@@ -23,6 +27,24 @@ from ._errors import (
 from ._typedefs import JsonType
 
 logger = logging.getLogger(__name__)
+
+
+_ERROR_CODES_MAPPING = {
+    400: ResourceBadRequest,
+    401: KubeClientUnauthorized,
+    403: KubeClientException,
+    404: ResourceNotFound,
+    409: ResourceExists,
+    410: ResourceGone,
+    422: ResourceInvalid,
+}
+
+ModelT = TypeVar("ModelT")
+
+
+@dataclass
+class _KubeResponse:
+    data: bytes
 
 
 class _KubeCore:
@@ -65,6 +87,10 @@ class _KubeCore:
 
         self._client: aiohttp.ClientSession | None = None
         self._token_updater_task: asyncio.Task[None] | None = None
+
+        # Initialize the 3d party Official Kubernetes API client,
+        # this is used only for deserialization raw responses for models
+        self._api_client = ApiClient()
 
     def __str__(self) -> str:
         return self.__class__.__name__
@@ -137,23 +163,8 @@ class _KubeCore:
     async def _raise_for_status(response: aiohttp.ClientResponse) -> None:
         if response.status >= 400:
             payload = await response.text()
-            match response.status:
-                case 400:
-                    raise ResourceBadRequest(payload)
-                case 401:
-                    raise KubeClientUnauthorized(payload)
-                case 403:
-                    raise KubeClientException(payload)
-                case 404:
-                    raise ResourceNotFound(payload)
-                case 409:
-                    raise ResourceExists(payload)
-                case 410:
-                    raise ResourceGone(payload)
-                case 422:
-                    raise ResourceInvalid(payload)
-                case _:
-                    raise KubeClientException(payload)
+            exc_cls = _ERROR_CODES_MAPPING.get(response.status, KubeClientException)
+            raise exc_cls(payload)
 
     @property
     def _is_ssl(self) -> bool:
@@ -198,6 +209,24 @@ class _KubeCore:
             return
         self._token = token
         logger.info("%s: kube token was refreshed", self)
+
+    def serialize(self, obj: ModelT) -> JsonType:
+        return cast(JsonType, self._api_client.sanitize_for_serialization(obj))
+
+    def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
+        kube_response = _KubeResponse(data=json.dumps(data).encode("utf-8"))
+        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
+
+    async def deserialize_response(
+        self,
+        response: aiohttp.ClientResponse,
+        klass: type[ModelT],
+    ) -> ModelT:
+        if not hasattr(kubernetes.client.models, klass.__name__):
+            raise ValueError(f"Unsupported response type: {klass}")
+        data = await response.read()
+        kube_response = _KubeResponse(data=data)
+        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
 
     @asynccontextmanager
     async def request(

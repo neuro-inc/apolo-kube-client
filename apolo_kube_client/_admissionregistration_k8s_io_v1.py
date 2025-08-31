@@ -1,4 +1,3 @@
-from kubernetes.client import ApiClient
 from kubernetes.client.models import (
     V1MutatingWebhookConfiguration,
     V1MutatingWebhookConfigurationList,
@@ -16,10 +15,10 @@ class AdmissionRegistrationK8SioV1Api:
 
     group_api_query_path = "apis/admissionregistration.k8s.io/v1"
 
-    def __init__(self, core: _KubeCore, api_client: ApiClient) -> None:
+    def __init__(self, core: _KubeCore) -> None:
         self._core = core
         self.mutating_webhook_configuration = MutatingWebhookConfiguration(
-            core, self.group_api_query_path, api_client
+            core, self.group_api_query_path
         )
 
 
