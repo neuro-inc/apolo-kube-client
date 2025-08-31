@@ -1,5 +1,5 @@
 import functools
-from collections.abc import AsyncIterator, Collection, Mapping
+from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
 from typing import Protocol, cast, get_args
 
@@ -17,9 +17,6 @@ class MetadataModel(Protocol):
 
 
 class KubeResourceModel(Protocol):
-    openapi_types: Mapping[str, type | str]
-    attribute_map: Mapping[str, str]
-
     metadata: MetadataModel
 
 
