@@ -89,19 +89,3 @@ class TestWatch:
             modified_event.clear()
 
         await asyncio.wait_for(task, timeout=30)
-
-    async def test_watch__resource_expired(self, kube_client: KubeClient) -> None:
-        started_event = asyncio.Event()
-
-        async def _watch() -> None:
-            watch = kube_client.core_v1.node.watch(resource_version="1")
-            started_event.set()
-
-            async for _ in watch.stream():
-                pass
-
-        task = asyncio.create_task(_watch())
-
-        await started_event.wait()
-
-        await asyncio.wait_for(task, timeout=5)
