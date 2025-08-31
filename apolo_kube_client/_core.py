@@ -213,6 +213,10 @@ class _KubeCore:
     def serialize(self, obj: ModelT) -> JsonType:
         return cast(JsonType, self._api_client.sanitize_for_serialization(obj))
 
+    def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
+        kube_response = _KubeResponse(data=json.dumps(data).encode("utf-8"))
+        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
+
     async def deserialize_response(
         self,
         response: aiohttp.ClientResponse,
@@ -222,10 +226,6 @@ class _KubeCore:
             raise ValueError(f"Unsupported response type: {klass}")
         data = await response.read()
         kube_response = _KubeResponse(data=data)
-        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
-
-    def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
-        kube_response = _KubeResponse(data=json.dumps(data).encode("utf-8"))
         return cast(ModelT, self._api_client.deserialize(kube_response, klass))
 
     @asynccontextmanager
