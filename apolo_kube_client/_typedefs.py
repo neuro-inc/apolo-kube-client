@@ -1,6 +1,6 @@
 from typing import TypeAlias
 
-PrimitiveType: TypeAlias = int | float | str | bool | None
+PrimitiveType: TypeAlias = int | float | str | bytes | bool | None
 type JsonType = "PrimitiveType | list[JsonType] | dict[str, JsonType]"
 
 type NestedStrKeyDict = dict[
