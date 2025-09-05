@@ -22,6 +22,12 @@ class TestPod:
             ),
         )
 
+        # test getting all pods in all namespaces
+        pod_list = await kube_client.core_v1.pod.get_list(all_namespaces=True)
+        pod_namespaces = {p.metadata.namespace for p in pod_list.items}
+        assert len(pod_list.items) > 0
+        assert "kube-system" in pod_namespaces
+
         # test creating the pod
         pod_create = await kube_client.core_v1.pod.create(
             model=pod, namespace="default"

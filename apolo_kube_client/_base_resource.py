@@ -215,15 +215,12 @@ class NamespacedResource[
     Base class for Kubernetes resources that are namespaced.
     """
 
-    def _build_url_list(self, namespace: str) -> URL:
+    def _build_url_list(self, namespace: str | None) -> URL:
         assert self.query_path, "query_path must be set"
-        return (
-            self._core.base_url
-            / self._group_api_query_path
-            / "namespaces"
-            / namespace
-            / self.query_path
-        )
+        base_url = self._core.base_url / self._group_api_query_path
+        if not namespace:
+            return base_url / self.query_path
+        return base_url / "namespaces" / namespace / self.query_path
 
     def _build_url(self, name: str, namespace: str) -> URL:
         return self._build_url_list(namespace) / name
@@ -238,12 +235,17 @@ class NamespacedResource[
             return await self._core.deserialize_response(resp, self._model_class)
 
     async def get_list(
-        self, label_selector: str | None = None, namespace: str | None = None
+        self,
+        label_selector: str | None = None,
+        namespace: str | None = None,
+        all_namespaces: bool = False,
     ) -> ListModelT:
         params = {"labelSelector": label_selector} if label_selector else None
         async with self._core.request(
             method="GET",
-            url=self._build_url_list(self._get_ns(namespace)),
+            url=self._build_url_list(
+                None if all_namespaces else self._get_ns(namespace)
+            ),
             params=params,
         ) as resp:
             return await self._core.deserialize_response(resp, self._list_model_class)
@@ -253,6 +255,7 @@ class NamespacedResource[
         self,
         label_selector: str | None = None,
         namespace: str | None = None,
+        all_namespaces: bool = False,
         resource_version: str | None = None,
         allow_watch_bookmarks: bool = False,
     ) -> AsyncIterator[aiohttp.ClientResponse]:
@@ -266,7 +269,9 @@ class NamespacedResource[
             params["labelSelector"] = label_selector
         async with self._core.request(
             method="GET",
-            url=self._build_url_list(self._get_ns(namespace)),
+            url=self._build_url_list(
+                None if all_namespaces else self._get_ns(namespace)
+            ),
             params=params,
         ) as resp:
             yield resp
