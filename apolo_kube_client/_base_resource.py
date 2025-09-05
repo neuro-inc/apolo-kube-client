@@ -279,6 +279,7 @@ class NamespacedResource[
     def watch(
         self,
         label_selector: str | None = None,
+        all_namespaces: bool = False,
         namespace: str | None = None,
         resource_version: str | None = None,
         allow_watch_bookmarks: bool = False,
@@ -288,6 +289,7 @@ class NamespacedResource[
             get_response=functools.partial(
                 self._get_watch,
                 label_selector=label_selector,
+                all_namespaces=all_namespaces,
                 namespace=namespace,
                 allow_watch_bookmarks=allow_watch_bookmarks,
             ),
