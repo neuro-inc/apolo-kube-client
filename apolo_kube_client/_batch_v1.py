@@ -1,4 +1,3 @@
-from kubernetes.client import ApiClient
 from kubernetes.client.models import V1Job, V1JobList
 
 from ._base_resource import NamespacedResource
@@ -12,9 +11,9 @@ class BatchV1Api:
 
     group_api_query_path = "apis/batch/v1"
 
-    def __init__(self, core: _KubeCore, api_client: ApiClient) -> None:
+    def __init__(self, core: _KubeCore) -> None:
         self._core = core
-        self.job = Job(core, self.group_api_query_path, api_client)
+        self.job = Job(core, self.group_api_query_path)
 
 
 class Job(NamespacedResource[V1Job, V1JobList, V1Job]):

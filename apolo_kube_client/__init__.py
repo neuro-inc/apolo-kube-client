@@ -11,6 +11,7 @@ from ._errors import (
     ResourceNotFound,
 )
 from ._utils import escape_json_pointer
+from ._watch import Watch, WatchEvent
 
 __all__ = [
     "KubeClient",
@@ -23,5 +24,7 @@ __all__ = [
     "ResourceGone",
     "KubeClientException",
     "KubeClientUnauthorized",
+    "Watch",
+    "WatchEvent",
     "escape_json_pointer",
 ]
