@@ -253,11 +253,10 @@ class _KubeCore:
             params,
             json,
         )
-        resp = await self._client.request(
+        async with self._client.request(
             method=method, url=url, headers=headers, params=params, json=json
-        )
-        yield resp
-        resp.close()
+        ) as resp:
+            yield resp
 
     #########################################
     # Raw Kube API calls with JSON response #

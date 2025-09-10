@@ -1,7 +1,7 @@
 import json
 import logging
-from collections.abc import AsyncIterator, Callable, Mapping
-from contextlib import AbstractAsyncContextManager
+from collections.abc import AsyncGenerator, Callable, Mapping
+from contextlib import AbstractAsyncContextManager, aclosing
 from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import TYPE_CHECKING, Any, Literal, NoReturn, Protocol
@@ -50,7 +50,7 @@ class Watch[ModelT: KubeResourceModel]:
         self._get_response = get_response
         self._deserialize = deserialize
 
-    async def stream(self) -> AsyncIterator[WatchEvent[ModelT]]:
+    async def stream(self) -> AsyncGenerator[WatchEvent[ModelT]]:
         # Initially True to avoid sending two requests at the start
         # if resource_version has already expired.
         is_retry_after_410 = True
@@ -62,15 +62,18 @@ class Watch[ModelT: KubeResourceModel]:
                 ) as response:
                     await self._raise_for_status(response)
 
-                    async for event in self._stream_from_response(response):
-                        is_retry_after_410 = False
+                    async with aclosing(
+                        self._stream_from_response(response)
+                    ) as event_stream:
+                        async for event in event_stream:
+                            is_retry_after_410 = False
 
-                        match event:
-                            case BookmarkEvent():
-                                self._resource_version = event.resource_version
-                                continue
-                            case _:
-                                yield event
+                            match event:
+                                case BookmarkEvent():
+                                    self._resource_version = event.resource_version
+                                    continue
+                                case _:
+                                    yield event
             except TimeoutError:
                 pass
             except ResourceGone:
@@ -80,7 +83,7 @@ class Watch[ModelT: KubeResourceModel]:
 
     async def _stream_from_response(
         self, response: aiohttp.ClientResponse
-    ) -> AsyncIterator[WatchEvent[ModelT] | BookmarkEvent]:
+    ) -> AsyncGenerator[WatchEvent[ModelT] | BookmarkEvent]:
         async for line in response.content:
             if not line or line.isspace():
                 continue
