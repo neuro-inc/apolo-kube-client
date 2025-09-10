@@ -71,6 +71,8 @@ class Watch[ModelT: KubeResourceModel]:
                                 continue
                             case _:
                                 yield event
+            except TimeoutError:
+                pass
             except ResourceGone:
                 if is_retry_after_410:
                     break
