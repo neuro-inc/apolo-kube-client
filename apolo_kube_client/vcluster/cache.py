@@ -8,7 +8,7 @@ K = TypeVar("K")
 V = TypeVar("V")
 
 
-class AsyncLRUCache(Generic[K, V]):
+class AsyncLRUCache[K, V]:
     def __init__(
         self,
         maxsize: int,
