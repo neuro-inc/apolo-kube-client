@@ -128,7 +128,7 @@ class KubeClientSelector:
         Resolution order:
         1. vcluster cache hit: lease and return.
         2. default client cache hit: return shared default client.
-        33. fetch secret:
+        3. fetch secret:
            - found: build vcluster client, cache, lease, return.
            - not found: return shared default client.
 
