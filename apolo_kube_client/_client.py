@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class KubeClient:
     def __init__(self, *, config: KubeConfig) -> None:
+        self._config = config
         self._core = _KubeCore(config)
 
         self.resource_list = ResourceListApi(self._core)
@@ -44,4 +45,9 @@ class KubeClient:
         """
         Returns the current namespace of the Kubernetes client.
         """
-        return self._core.namespace
+        return self._core.resolve_namespace()
+
+    @property
+    def config(self) -> KubeConfig:
+        """Return a copy of the configuration used to instantiate the client."""
+        return self._config.model_copy()

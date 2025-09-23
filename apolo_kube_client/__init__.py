@@ -11,6 +11,7 @@ from ._errors import (
 )
 from ._utils import escape_json_pointer
 from ._watch import Watch, WatchEvent
+from .vcluster.selector import KubeClientSelector
 
 __all__ = [
     "KubeClient",
@@ -26,4 +27,5 @@ __all__ = [
     "Watch",
     "WatchEvent",
     "escape_json_pointer",
+    "KubeClientSelector",
 ]

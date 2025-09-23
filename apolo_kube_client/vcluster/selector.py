@@ -1,0 +1,226 @@
+from __future__ import annotations
+
+import asyncio
+import logging
+from collections import defaultdict
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from dataclasses import dataclass
+from types import TracebackType
+from typing import Self
+
+from cachetools import LRUCache
+from kubernetes.client.models import V1Secret
+
+from apolo_kube_client._client import KubeClient
+from apolo_kube_client._errors import ResourceNotFound
+from apolo_kube_client.apolo import generate_namespace_name
+from apolo_kube_client.vcluster.cache import AsyncLRUCache
+from apolo_kube_client.vcluster.client_factory import (
+    ClientWrapper,
+    VclusterClientFactory,
+)
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class VclusterEntry:
+    wrapper: ClientWrapper
+    leases: int = 0  # active context leases
+
+
+class KubeClientSelector:
+    """
+
+    Example usage:
+
+    >>> async def main():
+    >>>     kube_client = KubeClient(config=KubeConfig(...))
+    >>>
+    >>>     async with KubeClientSelector(
+    >>>         default_client=kube_client
+    >>>     ) as selector:
+    >>>         async with selector.get_client(org_name=..., project_name=...) as k8s:
+    >>>             namespaces = await k8s.core_v1.namespace.get_list()
+    """
+
+    DEFAULT_VCLUSTER_CACHE_SIZE: int = 32
+    DEFAULT_REAL_CLUSTER_CACHE_SIZE: int = 1024
+
+    _VCLUSTER_SECRET_PREFIX = "vcluster-"  # todo: figure this out later
+
+    def __init__(
+        self,
+        *,
+        default_client: KubeClient,
+        vcluster_cache_size: int = DEFAULT_VCLUSTER_CACHE_SIZE,
+        real_cluster_cache_size: int = DEFAULT_REAL_CLUSTER_CACHE_SIZE,
+    ) -> None:
+        self._default_client = default_client
+        self._vcluster_client_factory = VclusterClientFactory(
+            default_config=default_client.config
+        )
+        self._locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
+
+        # cache of a "default" client.
+        # if we are confident that a particular org+project uses a default kube
+        # client - there is no need to fetch a vcluster secret.
+        self._default_cache: LRUCache[str, bool] = LRUCache(
+            maxsize=real_cluster_cache_size
+        )
+
+        self._vcluster_cache = AsyncLRUCache[str, VclusterEntry](
+            maxsize=vcluster_cache_size,
+            on_evict=self._on_vcluster_evict,
+        )
+        # zombies are possible if LRU cache is already overwhelmed,
+        # but request that uses a zombie kube client is not yet finished
+        self._vcluster_zombies: dict[str, VclusterEntry] = {}
+        self._closing = False
+
+    async def __aenter__(self) -> Self:
+        logger.info(f"{self}: initializing...")
+        await self._default_client.__aenter__()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException],
+        exc_val: BaseException,
+        exc_tb: TracebackType,
+    ) -> bool:
+        await self.aclose()
+        return exc_type is not None
+
+    def __str__(self) -> str:
+        return self.__class__.__name__
+
+    __repr__ = __str__
+
+    async def aclose(self) -> None:
+        logger.info(f"{self}: closing...")
+        if self._closing:
+            return
+        self._closing = True
+
+        logger.info(f"{self}: evicting all vcluster cached entries")
+        await self._vcluster_cache.close()
+
+        logger.info(f"{self}: closing zombies")
+        for key, entry in list(self._vcluster_zombies.items()):
+            await self._close_vcluster_entry(entry)
+            self._vcluster_zombies.pop(key, None)
+
+        # Close the shared default client last
+        logger.info(f"{self}: closing default client")
+        await self._default_client.__aexit__(None, None, None)
+
+    @asynccontextmanager
+    async def get_client(
+        self,
+        *,
+        org_name: str,
+        project_name: str,
+    ) -> AsyncIterator[KubeClient]:
+        """
+        Client acquisition entry-point.
+        Resolution order:
+        1. vcluster cache hit: lease and return.
+        2. default client cache hit: return shared default client.
+        33. fetch secret:
+           - found: build vcluster client, cache, lease, return.
+           - not found: return shared default client.
+
+        Resolution happens under the per-project lock to avoid fetching
+        vcluster secret multiple times.
+        A client is yielded without the lock, so concurrent usage is possible.
+        """
+        if self._closing:
+            raise RuntimeError(f"{self}: can't acquire. already closing...")
+
+        namespace = cache_key = generate_namespace_name(org_name, project_name)
+
+        entry: VclusterEntry | None = None
+        client: KubeClient
+
+        async with self._locks[cache_key]:
+            cached = self._vcluster_cache.get(cache_key)
+            if cached is not None:
+                logger.info(f"{self}: found a cached vcluster client")
+                cached.leases += 1
+                entry = cached
+                client = cached.wrapper.client
+            elif self._is_default_client(cache_key):
+                logger.info(f"{self}: found a cached default client")
+                client = self._default_client
+            else:
+                # Try to fetch secret
+                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}{namespace}"
+                secret = await self._fetch_vcluster_secret(
+                    secret_name=secret_name,
+                    namespace=namespace,
+                )
+                if not secret:
+                    # no secret -> remember as default-backed
+                    logger.info(f"{self}: default client will be used")
+                    self._default_cache[cache_key] = True
+                    client = self._default_client
+                else:
+                    logger.info(f"{self}: vcluster client will be used")
+                    wrapper = await self._vcluster_client_factory.from_secret(secret)
+                    entry = VclusterEntry(wrapper=wrapper, leases=1)
+                    await self._vcluster_cache.set(cache_key, entry)
+                    client = wrapper.client
+
+        try:
+            yield client
+        finally:
+            if client is not self._default_client and entry:
+                await self._release_vcluster_lease(cache_key, entry)
+
+    async def _release_vcluster_lease(self, key: str, entry: VclusterEntry) -> None:
+        entry.leases -= 1
+        if entry.leases <= 0 and key in self._vcluster_zombies:
+            await self._close_vcluster_entry(entry)
+            self._vcluster_zombies.pop(key, None)
+
+    def _is_default_client(self, namespace: str) -> bool:
+        try:
+            # For cachetools.LRUCache, __contains__ doesn't update recency.
+            # A safe way to 'touch' on read is to try __getitem__.
+            _ = self._default_cache[namespace]
+            return True
+        except KeyError:
+            return False
+
+    async def _fetch_vcluster_secret(
+        self,
+        *,
+        secret_name: str,
+        namespace: str,
+    ) -> V1Secret | None:
+        try:
+            return await self._default_client.core_v1.secret.get(
+                name=secret_name, namespace=namespace
+            )
+        except ResourceNotFound:
+            return None
+
+    async def _on_vcluster_evict(self, key: str, entry: VclusterEntry) -> None:
+        if entry.leases <= 0:
+            # close immediately
+            await self._close_vcluster_entry(entry)
+        else:
+            # some concurrent request is still using it. let's mark as zombie
+            self._vcluster_zombies[key] = entry
+
+    @staticmethod
+    async def _close_vcluster_entry(entry: VclusterEntry) -> None:
+        try:
+            await entry.wrapper.client.__aexit__(None, None, None)
+        finally:
+            try:
+                entry.wrapper.cleanup()
+            except Exception:
+                logger.exception("unable to cleanup an entry")

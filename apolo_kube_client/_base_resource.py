@@ -226,7 +226,7 @@ class NamespacedResource[
         return self._build_url_list(namespace) / name
 
     def _get_ns(self, namespace: str | None = None) -> str:
-        return namespace or self._core.namespace
+        return self._core.resolve_namespace(namespace)
 
     async def get(self, name: str, namespace: str | None = None) -> ModelT:
         async with self._core.request(
