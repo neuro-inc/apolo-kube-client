@@ -131,7 +131,7 @@ async def test_lru_eviction_closes_old_clients(
         closed_paths.append(path)
 
     monkeypatch.setattr(
-        "apolo_kube_client.vcluster.client_factory.shutil.rmtree", fake_rmtree
+        "apolo_kube_client._vcluster._client_factory.shutil.rmtree", fake_rmtree
     )
 
     async with KubeClientSelector(

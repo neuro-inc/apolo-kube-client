@@ -10,8 +10,8 @@ from ._errors import (
     ResourceNotFound,
 )
 from ._utils import escape_json_pointer
+from ._vcluster import KubeClientSelector
 from ._watch import Watch, WatchEvent
-from .vcluster.selector import KubeClientSelector
 
 __all__ = [
     "KubeClient",

@@ -1,6 +1,6 @@
 from unittest.mock import AsyncMock
 
-from apolo_kube_client.vcluster.cache import AsyncLRUCache
+from apolo_kube_client._vcluster._cache import AsyncLRUCache
 
 
 async def test_async_lru_evicts_in_lru_order_and_awaits_hook() -> None:

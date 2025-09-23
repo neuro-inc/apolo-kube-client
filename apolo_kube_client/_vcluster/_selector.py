@@ -14,12 +14,12 @@ from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._errors import ResourceNotFound
-from apolo_kube_client.apolo import generate_namespace_name
-from apolo_kube_client.vcluster.cache import AsyncLRUCache
-from apolo_kube_client.vcluster.client_factory import (
+from apolo_kube_client._vcluster._cache import AsyncLRUCache
+from apolo_kube_client._vcluster._client_factory import (
     ClientWrapper,
     VclusterClientFactory,
 )
+from apolo_kube_client.apolo import generate_namespace_name
 
 logger = logging.getLogger(__name__)
 
@@ -176,10 +176,13 @@ class KubeClientSelector:
         try:
             yield client
         finally:
-            if client is not self._default_client and entry:
-                await self._release_vcluster_lease(cache_key, entry)
+            await self._release_vcluster_lease(cache_key, entry)
 
-    async def _release_vcluster_lease(self, key: str, entry: VclusterEntry) -> None:
+    async def _release_vcluster_lease(
+        self, key: str, entry: VclusterEntry | None
+    ) -> None:
+        if not entry:
+            return None
         entry.leases -= 1
         if entry.leases <= 0 and key in self._vcluster_zombies:
             await self._close_vcluster_entry(entry)
