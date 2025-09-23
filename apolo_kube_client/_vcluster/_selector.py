@@ -93,11 +93,6 @@ class KubeClientSelector:
         await self.aclose()
         return exc_type is not None
 
-    def __str__(self) -> str:
-        return self.__class__.__name__
-
-    __repr__ = __str__
-
     async def aclose(self) -> None:
         logger.info(f"{self}: closing...")
         if self._closing:
