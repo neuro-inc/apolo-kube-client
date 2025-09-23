@@ -10,26 +10,10 @@ from kubernetes.client.models import (
     V1Status,
 )
 
+from ._attr import _Attr
 from ._base_resource import ClusterScopedResource, NamespacedResource
 from ._core import _KubeCore
 from ._utils import base64_encode, escape_json_pointer
-
-
-class CoreV1Api:
-    """
-    Core v1 API wrapper for Kubernetes.
-    """
-
-    group_api_query_path = "api/v1"
-
-    def __init__(self, core: _KubeCore) -> None:
-        self._core = core
-        # cluster scoped resources
-        self.namespace = Namespace(core, self.group_api_query_path)
-        self.node = Node(core, self.group_api_query_path)
-        # namespaced resources
-        self.pod = Pod(core, self.group_api_query_path)
-        self.secret = Secret(core, self.group_api_query_path)
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
@@ -81,3 +65,20 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
             ],
             namespace=self._get_ns(namespace),
         )
+
+
+class CoreV1Api:
+    """
+    Core v1 API wrapper for Kubernetes.
+    """
+
+    group_api_query_path = "api/v1"
+    # cluster scoped resources
+    namespace = _Attr(Namespace, group_api_query_path)
+    node = _Attr(Node, group_api_query_path)
+    # namespaced resources
+    pod = _Attr(Pod, group_api_query_path)
+    secret = _Attr(Secret, group_api_query_path)
+
+    def __init__(self, core: _KubeCore) -> None:
+        self._core = core
