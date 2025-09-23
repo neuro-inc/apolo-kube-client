@@ -26,7 +26,7 @@ class _Attr[T]:
         if inst is not None:
             name = self._name
             assert name is not None
-            ret = self._cls(inst._core, *self._args)
+            ret = self._cls(inst._core, *self._args)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
         else:
