@@ -21,7 +21,7 @@ class AsyncLRUCache[K, V]:
     def __len__(self) -> int:
         return len(self._data)
 
-    def get(self, key: K) -> Optional[V]:
+    def get(self, key: K) -> V | None:
         if key not in self._data:
             return None
         v = self._data.pop(key)
