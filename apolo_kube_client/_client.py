@@ -3,6 +3,7 @@ from types import TracebackType
 from typing import Self
 
 from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
+from ._attr import _Attr
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
 from ._core import _KubeCore
@@ -15,17 +16,15 @@ logger = logging.getLogger(__name__)
 
 
 class KubeClient:
+    resource_list = _Attr(ResourceListApi)
+    core_v1 = _Attr(CoreV1Api)
+    batch_v1 = _Attr(BatchV1Api)
+    networking_k8s_io_v1 = _Attr(NetworkingK8SioV1Api)
+    admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
+    discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
+
     def __init__(self, *, config: KubeConfig) -> None:
         self._core = _KubeCore(config)
-
-        self.resource_list = ResourceListApi(self._core)
-        self.core_v1 = CoreV1Api(self._core)
-        self.batch_v1 = BatchV1Api(self._core)
-        self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core)
-        self.admission_registration_k8s_io_v1 = AdmissionRegistrationK8SioV1Api(
-            self._core
-        )
-        self.discovery_k8s_io_v1 = DiscoveryK8sIoV1Api(self._core)
 
     async def __aenter__(self) -> Self:
         await self._core.__aenter__()
