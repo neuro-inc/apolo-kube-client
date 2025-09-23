@@ -1,37 +1,36 @@
-from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
-from ._batch_v1 import BatchV1Api
-from .._config import KubeConfig
-from .._core import _KubeCore
-from ._core_v1 import CoreV1Api
-from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
-from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
-from ._resource_list import ResourceListApi
-from ..apolo import generate_namespace_name
+from types import TracebackType
+from typing import Self
 
+from .._attr import _Attr
+from .._core import _KubeCore
+from ..apolo import generate_namespace_name
+from ._batch_v1 import PrBatchV1Api
+from ._core_v1 import PrCoreV1Api
+from ._discovery_k8s_io_v1 import PrDiscoveryK8sIoV1Api
+from ._networking_k8s_io_v1 import PrNetworkingK8SioV1Api
 
 
 class PrKubeClient:
-    def __init__(self, *, config: KubeConfig
-                         *,
+    core_v1 = _Attr(PrCoreV1Api)
+    batch_v1 = _Attr(PrBatchV1Api)
+    networking_k8s_io_v1 = _Attr(PrNetworkingK8SioV1Api)
+    discovery_k8s_io_v1 = _Attr(PrDiscoveryK8sIoV1Api)
+
+    # TODO: after combining with Selector API the signature will be changed somehow
+    def __init__(
+        self,
+        core: _KubeCore,
+        *,
         is_vcluster: bool,
         org_name: str,
         project_name: str,
-) -> None:
-        self._core = _KubeCore(config)
+    ) -> None:
+        self._core = core
 
         if is_vcluster:
-            namespace = "default"
+            self._namespace = "default"
         else:
-            namespace = generate_namespace_name(org_name, project_name)
-
-        self.resource_list = ResourceListApi(self._core, namespace)
-        self.core_v1 = CoreV1Api(self._core, namespace)
-        self.batch_v1 = BatchV1Api(self._core, namespace)
-        self.networking_k8s_io_v1 = NetworkingK8SioV1Api(self._core, namespace)
-        self.admission_registration_k8s_io_v1 = AdmissionRegistrationK8SioV1Api(
-            self._core, namespace
-        )
-        self.discovery_k8s_io_v1 = DiscoveryK8sIoV1Api(self._core, namespace)
+            self._namespace = generate_namespace_name(org_name, project_name)
 
     async def __aenter__(self) -> Self:
         await self._core.__aenter__()
