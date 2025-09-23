@@ -1,6 +1,5 @@
 from ._client import KubeClient
-from ._config import KubeConfig
-from ._core import KubeClientAuthType
+from ._config import KubeClientAuthType, KubeConfig
 from ._errors import (
     KubeClientException,
     KubeClientUnauthorized,
