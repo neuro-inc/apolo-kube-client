@@ -22,16 +22,18 @@ class AsyncLRUCache[K, V]:
         return len(self._data)
 
     def get(self, key: K) -> V | None:
-        if key not in self._data:
+        try:
+            v = self._data[key]
+        except KeyError:
             return None
-        v = self._data.pop(key)
-        self._data[key] = v  # move to MRU
+        # Move key to MRU
+        self._data.move_to_end(key, last=True)
         return v
 
     async def set(self, key: K, value: V) -> None:
-        if key in self._data:
-            self._data.pop(key)
+        # Insert/update and move to MRU
         self._data[key] = value
+        self._data.move_to_end(key, last=True)
         while len(self._data) > self._maxsize:
             old_key, old_val = self._data.popitem(last=False)  # LRU
             await self._on_evict(old_key, old_val)
