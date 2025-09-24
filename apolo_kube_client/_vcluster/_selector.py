@@ -16,7 +16,6 @@ from apolo_kube_client._client import KubeClient
 from apolo_kube_client._errors import ResourceNotFound
 from apolo_kube_client._vcluster._cache import AsyncLRUCache
 from apolo_kube_client._vcluster._client_factory import (
-    ClientWrapper,
     VclusterClientFactory,
 )
 from apolo_kube_client.apolo import generate_namespace_name
@@ -26,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class VclusterEntry:
-    wrapper: ClientWrapper
+    client: KubeClient
     leases: int = 0  # active context leases
 
 
@@ -104,7 +103,7 @@ class KubeClientSelector:
 
         logger.info(f"{self}: closing zombies")
         for key, entry in list(self._vcluster_zombies.items()):
-            await self._close_vcluster_entry(entry)
+            await self._vcluster_client_factory.close(client=entry.client)
             self._vcluster_zombies.pop(key, None)
 
         # Close the shared default client last
@@ -145,7 +144,7 @@ class KubeClientSelector:
                 logger.info(f"{self}: found a cached vcluster client")
                 cached.leases += 1
                 entry = cached
-                client = cached.wrapper.client
+                client = cached.client
             elif self._is_default_client(cache_key):
                 logger.info(f"{self}: found a cached default client")
                 client = self._default_client
@@ -163,10 +162,9 @@ class KubeClientSelector:
                     client = self._default_client
                 else:
                     logger.info(f"{self}: vcluster client will be used")
-                    wrapper = await self._vcluster_client_factory.from_secret(secret)
-                    entry = VclusterEntry(wrapper=wrapper, leases=1)
+                    client = await self._vcluster_client_factory.from_secret(secret)
+                    entry = VclusterEntry(client=client, leases=1)
                     await self._vcluster_cache.set(cache_key, entry)
-                    client = wrapper.client
 
         try:
             yield client
@@ -180,8 +178,8 @@ class KubeClientSelector:
             return None
         entry.leases -= 1
         if entry.leases <= 0 and key in self._vcluster_zombies:
-            await self._close_vcluster_entry(entry)
             self._vcluster_zombies.pop(key, None)
+            await self._vcluster_client_factory.close(client=entry.client)
 
     def _is_default_client(self, namespace: str) -> bool:
         try:
@@ -208,17 +206,7 @@ class KubeClientSelector:
     async def _on_vcluster_evict(self, key: str, entry: VclusterEntry) -> None:
         if entry.leases <= 0:
             # close immediately
-            await self._close_vcluster_entry(entry)
+            await self._vcluster_client_factory.close(client=entry.client)
         else:
             # some concurrent request is still using it. let's mark as zombie
             self._vcluster_zombies[key] = entry
-
-    @staticmethod
-    async def _close_vcluster_entry(entry: VclusterEntry) -> None:
-        try:
-            await entry.wrapper.client.__aexit__(None, None, None)
-        finally:
-            try:
-                entry.wrapper.cleanup()
-            except Exception:
-                logger.exception("unable to cleanup an entry")

@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+import logging
 import shutil
 import tempfile
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 import yaml
 from kubernetes.client.models import V1Secret
@@ -13,18 +12,14 @@ from apolo_kube_client._client import KubeClient
 from apolo_kube_client._config import NAMESPACE_DEFAULT, KubeClientAuthType, KubeConfig
 from apolo_kube_client._utils import base64_decode
 
-
-@dataclass
-class ClientWrapper:
-    client: KubeClient
-    cleanup: Callable[[], None]
+logger = logging.getLogger(__name__)
 
 
 class VclusterClientFactory:
     def __init__(self, default_config: KubeConfig) -> None:
         self._default_config = default_config
 
-    async def from_secret(self, secret: V1Secret) -> ClientWrapper:
+    async def from_secret(self, secret: V1Secret) -> KubeClient:
         raw_kubeconfig = base64_decode(secret.data["config"])
         yaml_kubeconfig = yaml.safe_load(raw_kubeconfig)
 
@@ -38,10 +33,6 @@ class VclusterClientFactory:
         key_path = temp_dir / "client.key"
         cert_path.write_text(cert_pem)
         key_path.write_text(key_pem)
-
-        def cleanup() -> None:
-            """Remove cert dir on a cleanup"""
-            shutil.rmtree(temp_dir, ignore_errors=True)
 
         kube_config = KubeConfig(
             endpoint_url=endpoint_url,
@@ -60,4 +51,17 @@ class VclusterClientFactory:
 
         client = KubeClient(config=kube_config)
         await client.__aenter__()
-        return ClientWrapper(client=client, cleanup=cleanup)
+        return client
+
+    async def close(self, client: KubeClient) -> None:
+        try:
+            await client.__aexit__(None, None, None)
+        except Exception:
+            logger.exception("unable to cleanup the client")
+        if not client.config.auth_cert_path:
+            return
+        try:
+            cert_dir = Path(client.config.auth_cert_path).parent
+            shutil.rmtree(cert_dir, ignore_errors=True)
+        except Exception:
+            logger.exception("unable to remove cert temp dir")
