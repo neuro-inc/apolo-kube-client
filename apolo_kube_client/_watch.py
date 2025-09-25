@@ -8,11 +8,11 @@ from typing import TYPE_CHECKING, Any, Literal, NoReturn, Protocol
 
 import aiohttp
 
-from ._core import _ERROR_CODES_MAPPING
 from ._errors import (
     KubeClientException,
     ResourceGone,
 )
+from ._transport import ERROR_CODES_MAPPING
 from ._typedefs import JsonType
 
 if TYPE_CHECKING:
@@ -113,9 +113,9 @@ class Watch[ModelT: KubeResourceModel]:
         if response.ok:
             return None
         payload = await response.text()
-        exc_cls = _ERROR_CODES_MAPPING.get(response.status, KubeClientException)
+        exc_cls = ERROR_CODES_MAPPING.get(response.status, KubeClientException)
         raise exc_cls(payload)
 
     def _raise_for_error_event(self, payload: Mapping[str, Any]) -> NoReturn:
-        exc_cls = _ERROR_CODES_MAPPING.get(payload["code"], KubeClientException)
+        exc_cls = ERROR_CODES_MAPPING.get(payload["code"], KubeClientException)
         raise exc_cls(payload)

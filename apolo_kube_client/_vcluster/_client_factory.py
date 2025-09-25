@@ -10,14 +10,21 @@ from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._config import KubeClientAuthType, KubeConfig
+from apolo_kube_client._transport import KubeTransport
 from apolo_kube_client._utils import base64_decode
 
 logger = logging.getLogger(__name__)
 
 
 class VclusterClientFactory:
-    def __init__(self, default_config: KubeConfig) -> None:
+    def __init__(
+        self,
+        default_config: KubeConfig,
+        transport: KubeTransport,
+    ) -> None:
         self._default_config = default_config
+        self._transport = transport
+        self._temp_dirs: dict[int, Path] = {}
 
     async def from_secret(self, secret: V1Secret) -> KubeClient:
         raw_kubeconfig = base64_decode(secret.data["config"])
@@ -46,9 +53,10 @@ class VclusterClientFactory:
             client_conn_pool_size=self._default_config.client_conn_pool_size,
             token_update_interval_s=self._default_config.token_update_interval_s,
         )
-
-        client = KubeClient(config=kube_config)
+        client = KubeClient(config=kube_config, transport=self._transport)
         await client.__aenter__()
+        # Track temp dir for later cleanup
+        self._temp_dirs[id(client)] = temp_dir
         return client
 
     async def close(self, client: KubeClient) -> None:
@@ -56,10 +64,10 @@ class VclusterClientFactory:
             await client.__aexit__(None, None, None)
         except Exception:
             logger.exception("unable to cleanup the client")
-        if not client.config.auth_cert_path:
+        temp_dir = self._temp_dirs.pop(id(client), None)
+        if temp_dir is None:
             return
         try:
-            cert_dir = Path(client.config.auth_cert_path).parent
-            shutil.rmtree(cert_dir, ignore_errors=True)
+            shutil.rmtree(temp_dir, ignore_errors=True)
         except Exception:
             logger.exception("unable to remove cert temp dir")

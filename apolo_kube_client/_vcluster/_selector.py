@@ -13,7 +13,9 @@ from cachetools import LRUCache
 from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
+from apolo_kube_client._config import KubeConfig
 from apolo_kube_client._errors import ResourceNotFound
+from apolo_kube_client._transport import KubeTransport
 from apolo_kube_client._vcluster._cache import AsyncLRUCache
 from apolo_kube_client._vcluster._client_factory import (
     VclusterClientFactory,
@@ -36,10 +38,10 @@ class KubeClientSelector:
     Example usage:
 
     >>> async def main():
-    >>>     kube_client = KubeClient(config=KubeConfig(...))
+    >>>     kube_config = KubeConfig(...)
     >>>
     >>>     async with KubeClientSelector(
-    >>>         default_client=kube_client
+    >>>         config=kube_config
     >>>     ) as selector:
     >>>         async with selector.get_client(org_name=..., project_name=...) as k8s:
     >>>             namespaces = await k8s.core_v1.namespace.get_list()
@@ -48,18 +50,28 @@ class KubeClientSelector:
     DEFAULT_VCLUSTER_CACHE_SIZE: int = 32
     DEFAULT_REAL_CLUSTER_CACHE_SIZE: int = 1024
 
-    _VCLUSTER_SECRET_PREFIX = "vcluster-"  # todo: figure this out later
+    _VCLUSTER_SECRET_PREFIX = "vc"
 
     def __init__(
         self,
         *,
-        default_client: KubeClient,
+        config: KubeConfig,
         vcluster_cache_size: int = DEFAULT_VCLUSTER_CACHE_SIZE,
         real_cluster_cache_size: int = DEFAULT_REAL_CLUSTER_CACHE_SIZE,
     ) -> None:
-        self._default_client = default_client
+        self._config = config
+        # we pre-create a dedicated kube transport,
+        # since we already know that we'll work in a multi-cluster mode
+        self._transport = KubeTransport(
+            conn_pool_size=config.client_conn_pool_size,
+            conn_timeout_s=config.client_conn_timeout_s,
+            read_timeout_s=config.client_read_timeout_s,
+        )
+        # create a default client that'll be used to access to a real kube cluster
+        self._default_client = KubeClient(config=config, transport=self._transport)
         self._vcluster_client_factory = VclusterClientFactory(
-            default_config=default_client.config
+            default_config=config,
+            transport=self._transport,
         )
         self._locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
 
@@ -81,6 +93,7 @@ class KubeClientSelector:
 
     async def __aenter__(self) -> Self:
         logger.info(f"{self}: initializing...")
+        await self._transport.__aenter__()
         await self._default_client.__aenter__()
         return self
 
@@ -106,9 +119,11 @@ class KubeClientSelector:
             await self._vcluster_client_factory.close(client=entry.client)
             self._vcluster_zombies.pop(key, None)
 
-        # Close the shared default client last
+        # Close the shared default client, and a common transport
         logger.info(f"{self}: closing default client")
         await self._default_client.__aexit__(None, None, None)
+        logger.info(f"{self}: closing transport")
+        await self._transport.__aexit__(None, None, None)
 
     @asynccontextmanager
     async def get_client(
@@ -151,7 +166,7 @@ class KubeClientSelector:
                 client = self._default_client
             else:
                 # Try to fetch secret
-                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}{namespace}"
+                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}-{namespace}"
                 secret = await self._fetch_vcluster_secret(
                     secret_name=secret_name,
                     namespace=namespace,
