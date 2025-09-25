@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 import yaml
+from aiohttp import ClientSession
 from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
@@ -16,8 +17,13 @@ logger = logging.getLogger(__name__)
 
 
 class VclusterClientFactory:
-    def __init__(self, default_config: KubeConfig) -> None:
+    def __init__(
+        self,
+        default_config: KubeConfig,
+        http: ClientSession,
+    ) -> None:
         self._default_config = default_config
+        self._http = http
 
     async def from_secret(self, secret: V1Secret) -> KubeClient:
         raw_kubeconfig = base64_decode(secret.data["config"])
@@ -48,8 +54,7 @@ class VclusterClientFactory:
             client_conn_pool_size=self._default_config.client_conn_pool_size,
             token_update_interval_s=self._default_config.token_update_interval_s,
         )
-
-        client = KubeClient(config=kube_config)
+        client = KubeClient(config=kube_config, http=self._http)
         await client.__aenter__()
         return client
 

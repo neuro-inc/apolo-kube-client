@@ -2,6 +2,8 @@ import logging
 from types import TracebackType
 from typing import Self
 
+from aiohttp import ClientSession
+
 from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
 from ._attr import _Attr
 from ._batch_v1 import BatchV1Api
@@ -23,9 +25,14 @@ class KubeClient:
     admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
     discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
 
-    def __init__(self, *, config: KubeConfig) -> None:
+    def __init__(
+        self,
+        *,
+        config: KubeConfig,
+        http: ClientSession | None = None,
+    ) -> None:
         self._config = config
-        self._core = _KubeCore(config)
+        self._core = _KubeCore(config, http=http)
 
     async def __aenter__(self) -> Self:
         await self._core.__aenter__()
@@ -50,3 +57,7 @@ class KubeClient:
     def config(self) -> KubeConfig:
         """Return a copy of the configuration used to instantiate the client."""
         return self._config.model_copy()
+
+    @property
+    def http(self) -> ClientSession:
+        return self._core.http

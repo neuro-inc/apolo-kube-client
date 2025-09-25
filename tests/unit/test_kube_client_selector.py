@@ -1,6 +1,6 @@
 import asyncio
 import base64
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
 from unittest.mock import AsyncMock
 
 import pytest
@@ -12,37 +12,7 @@ from apolo_kube_client._config import NAMESPACE_DEFAULT
 from apolo_kube_client._errors import ResourceNotFound
 
 
-@pytest.fixture
-def default_kube_config() -> KubeConfig:
-    return KubeConfig(endpoint_url="http://localhost", namespace=NAMESPACE_DEFAULT)
-
-
-@pytest.fixture
-def default_client(default_kube_config: KubeConfig) -> KubeClient:
-    return KubeClient(config=default_kube_config)
-
-
-@pytest.fixture
-def patch_secret_with_kubeconfig(
-    default_client: KubeClient,
-) -> str:
-    server_name = "kube"
-    secret = _build_vcluster_secret(server=server_name)
-    default_client.core_v1.secret.get = AsyncMock(return_value=secret)  # type: ignore[method-assign]
-    return server_name
-
-
-@pytest.fixture
-def secret_raises_not_found(
-    default_client: KubeClient,
-) -> Iterator[None]:
-    orig = default_client.core_v1.secret.get
-    default_client.core_v1.secret.get = AsyncMock(side_effect=ResourceNotFound())  # type: ignore[method-assign]
-    yield
-    default_client.core_v1.secret.get = orig  # type: ignore[method-assign]
-
-
-def _build_vcluster_secret(server: str) -> V1Secret:
+def build_vcluster_secret(server: str) -> V1Secret:
     ca_pem = "dummy-ca"
     cert_pem = "dummy-cert"
     key_pem = "dummy-key"
@@ -83,6 +53,37 @@ def _build_vcluster_secret(server: str) -> V1Secret:
     return V1Secret(metadata=V1ObjectMeta(name="vc-secret"), data=secret_data)
 
 
+@pytest.fixture
+def default_kube_config() -> KubeConfig:
+    return KubeConfig(endpoint_url="http://localhost", namespace=NAMESPACE_DEFAULT)
+
+
+@pytest.fixture
+async def default_client(default_kube_config: KubeConfig) -> AsyncIterator[KubeClient]:
+    async with KubeClient(config=default_kube_config) as client:
+        yield client
+
+
+@pytest.fixture
+def patch_secret_with_kubeconfig(
+    default_client: KubeClient,
+) -> str:
+    server_name = "kube"
+    secret = build_vcluster_secret(server=server_name)
+    default_client.core_v1.secret.get = AsyncMock(return_value=secret)  # type: ignore[method-assign]
+    return server_name
+
+
+@pytest.fixture
+def secret_raises_not_found(
+    default_client: KubeClient,
+) -> Iterator[None]:
+    orig = default_client.core_v1.secret.get
+    default_client.core_v1.secret.get = AsyncMock(side_effect=ResourceNotFound())  # type: ignore[method-assign]
+    yield
+    default_client.core_v1.secret.get = orig  # type: ignore[method-assign]
+
+
 async def test_returns_default_client_when_secret_missing(
     default_client: KubeClient,
     secret_raises_not_found: None,
@@ -119,8 +120,8 @@ async def test_lru_eviction_closes_old_clients(
     vcluster_cache_size=1: first namespace is evicted when second is inserted (no active lease).
     Evicted client's __aexit__ and cleanup() should be called immediately.
     """
-    secret_one = _build_vcluster_secret(server="first")
-    secret_two = _build_vcluster_secret(server="second")
+    secret_one = build_vcluster_secret(server="first")
+    secret_two = build_vcluster_secret(server="second")
     default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         side_effect=[secret_one, secret_two, secret_one]
     )

@@ -54,9 +54,6 @@ async def test_create_kube_client(kube_client: KubeClient) -> None:
     assert isinstance(kube_client._core, _KubeCore)
     assert kube_client._core.base_url == URL("https://k8s-test.com")
     assert kube_client._core._auth_type == KubeClientAuthType.CERTIFICATE
-    assert kube_client._core._cert_authority_data_pem
-    assert kube_client._core._auth_cert_path
-    assert kube_client._core._auth_cert_key_path
     assert kube_client._core.namespace == "default"
 
     assert isinstance(kube_client.core_v1, CoreV1Api)

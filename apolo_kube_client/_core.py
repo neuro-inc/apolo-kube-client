@@ -6,11 +6,13 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
 from dataclasses import dataclass
 from pathlib import Path
+from ssl import SSLContext
 from types import TracebackType
 from typing import Self, TypeVar, cast
 
 import aiohttp
 import kubernetes
+from aiohttp import ClientSession
 from kubernetes.client import ApiClient
 from yarl import URL, Query
 
@@ -58,14 +60,12 @@ class _KubeCore:
         self,
         config: KubeConfig,
         *,
+        http: ClientSession | None = None,
         trace_configs: list[aiohttp.TraceConfig] | None = None,
     ) -> None:
         self._base_url: URL = URL(config.endpoint_url)
         self._namespace = config.namespace
         self._forced_namespace = config.forced_namespace
-
-        self._cert_authority_data_pem = config.cert_authority_data_pem
-        self._cert_authority_path = config.cert_authority_path
 
         if config.auth_type == KubeClientAuthType.TOKEN:
             assert config.token or config.token_path
@@ -74,11 +74,10 @@ class _KubeCore:
             assert config.auth_cert_key_path
 
         self._auth_type = config.auth_type
-        self._auth_cert_path = config.auth_cert_path
-        self._auth_cert_key_path = config.auth_cert_key_path
         self._token = config.token
         self._token_path = config.token_path
         self._token_update_interval_s = config.token_update_interval_s
+        self._ssl_context = self._create_ssl_context(config)
 
         self._conn_timeout_s = config.client_conn_timeout_s
         self._read_timeout_s = config.client_read_timeout_s
@@ -86,7 +85,8 @@ class _KubeCore:
         self._conn_pool_size = config.client_conn_pool_size
         self._trace_configs = trace_configs
 
-        self._client: aiohttp.ClientSession | None = None
+        self._client: aiohttp.ClientSession | None = http
+        self._http_supplied = http is not None
         self._token_updater_task: asyncio.Task[None] | None = None
 
         # Initialize the 3d party Official Kubernetes API client,
@@ -108,15 +108,22 @@ class _KubeCore:
     ) -> None:
         await self.close()
 
+    @property
+    def http(self) -> ClientSession:
+        assert self._client, "KubeClient must be initialized *prior* to getting `http`"
+        return self._client
+
     async def init(self) -> None:
         logger.info("%s: initializing", self)
         if self._token_path:
             self._refresh_token_from_file()
             self._token_updater_task = asyncio.create_task(self._start_token_updater())
 
-        connector = aiohttp.TCPConnector(
-            limit=self._conn_pool_size, ssl=self._create_ssl_context()
-        )
+        if self._http_supplied:
+            # http client was provided, no need to instantiate our own
+            return
+
+        connector = aiohttp.TCPConnector(limit=self._conn_pool_size)
 
         timeout = aiohttp.ClientTimeout(
             connect=self._conn_timeout_s, total=self._read_timeout_s
@@ -130,7 +137,7 @@ class _KubeCore:
 
     async def close(self) -> None:
         logger.info("%s: closing", self)
-        if self._client:
+        if self._client and not self._http_supplied:
             await self._client.close()
             self._client = None
         if self._token_updater_task:
@@ -170,20 +177,17 @@ class _KubeCore:
             exc_cls = _ERROR_CODES_MAPPING.get(response.status, KubeClientException)
             raise exc_cls(payload)
 
-    @property
-    def _is_ssl(self) -> bool:
-        return self.base_url.scheme == "https"
-
-    def _create_ssl_context(self) -> ssl.SSLContext | bool:
-        if not self._is_ssl:
+    def _create_ssl_context(self, config: KubeConfig) -> SSLContext | bool:
+        if self.base_url.scheme != "https":
             return False
         ssl_context = ssl.create_default_context(
-            cafile=self._cert_authority_path, cadata=self._cert_authority_data_pem
+            cafile=config.cert_authority_path,
+            cadata=config.cert_authority_data_pem,
         )
-        if self._auth_type == KubeClientAuthType.CERTIFICATE:
+        if config.auth_type == KubeClientAuthType.CERTIFICATE:
             ssl_context.load_cert_chain(
-                self._auth_cert_path,  # type: ignore
-                self._auth_cert_key_path,
+                config.auth_cert_path,  # type: ignore
+                config.auth_cert_key_path,
             )
         return ssl_context
 
@@ -258,7 +262,12 @@ class _KubeCore:
             json,
         )
         async with self._client.request(
-            method=method, url=url, headers=headers, params=params, json=json
+            method=method,
+            url=url,
+            headers=headers,
+            params=params,
+            json=json,
+            ssl=self._ssl_context,
         ) as resp:
             yield resp
 

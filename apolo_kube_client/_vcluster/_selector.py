@@ -47,7 +47,7 @@ class KubeClientSelector:
     DEFAULT_VCLUSTER_CACHE_SIZE: int = 32
     DEFAULT_REAL_CLUSTER_CACHE_SIZE: int = 1024
 
-    _VCLUSTER_SECRET_PREFIX = "vcluster-"  # todo: figure this out later
+    _VCLUSTER_SECRET_PREFIX = "vc"
 
     def __init__(
         self,
@@ -58,7 +58,8 @@ class KubeClientSelector:
     ) -> None:
         self._default_client = default_client
         self._vcluster_client_factory = VclusterClientFactory(
-            default_config=default_client.config
+            default_config=default_client.config,
+            http=default_client.http,
         )
         self._locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
 
@@ -150,7 +151,7 @@ class KubeClientSelector:
                 client = self._default_client
             else:
                 # Try to fetch secret
-                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}{namespace}"
+                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}-{namespace}"
                 secret = await self._fetch_vcluster_secret(
                     secret_name=secret_name,
                     namespace=namespace,
