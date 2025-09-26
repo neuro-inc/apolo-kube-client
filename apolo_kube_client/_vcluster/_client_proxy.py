@@ -6,28 +6,28 @@ from .._client import KubeClient
 from .._core_v1 import CoreV1Api
 from .._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from .._networking_k8s_io_v1 import NetworkingK8SioV1Api
-from ._virt_attr import attr
-from ._virt_base_resource import Base
-from ._virt_batch_v1 import VirtBatchV1Api
-from ._virt_core_v1 import VirtCoreV1Api
-from ._virt_discovery_k8s_io_v1 import VirtDiscoveryK8sIoV1Api
-from ._virt_networking_k8s_io_v1 import VirtNetworkingK8SioV1Api
+from ._attr_proxy import attr
+from ._batch_v1_proxy import BatchV1ApiProxy
+from ._core_v1_proxy import CoreV1ApiProxy
+from ._discovery_k8s_io_v1_proxy import DiscoveryK8sIoV1ApiProxy
+from ._networking_k8s_io_v1_proxy import NetworkingK8SioV1ApiProxy
+from ._resource_proxy import Base
 
 
 class KubeClientProxy(Base[KubeClient]):
-    @attr(VirtCoreV1Api)
+    @attr(CoreV1ApiProxy)
     def core_v1(self) -> CoreV1Api:
         return self._origin.core_v1
 
-    @attr(VirtBatchV1Api)
+    @attr(BatchV1ApiProxy)
     def batch_v1(self) -> BatchV1Api:
         return self._origin.batch_v1
 
-    @attr(VirtNetworkingK8SioV1Api)
+    @attr(NetworkingK8SioV1ApiProxy)
     def networking_k8s_io_v1(self) -> NetworkingK8SioV1Api:
         return self._origin.networking_k8s_io_v1
 
-    @attr(VirtDiscoveryK8sIoV1Api)
+    @attr(DiscoveryK8sIoV1ApiProxy)
     def discovery_k8s_io_v1(self) -> DiscoveryK8sIoV1Api:
         return self._origin.discovery_k8s_io_v1
 

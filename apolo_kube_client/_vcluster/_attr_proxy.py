@@ -1,12 +1,12 @@
 from collections.abc import Callable
 from typing import Any, overload
 
-from ._virt_base_resource import Base
+from ._resource_proxy import Base
 
 type FuncT[SelfT, OriginT] = Callable[[SelfT], OriginT]
 
 
-class _Attr[SelfT, AttrT, OriginT]:
+class _AttrProxy[SelfT, AttrT, OriginT]:
     def __init__(self, cls: type[AttrT], func: FuncT[SelfT, OriginT]) -> None:
         self._cls = cls
         self._func = func
@@ -38,14 +38,14 @@ class _Attr[SelfT, AttrT, OriginT]:
 
 
 type InnerT[SelfT, AttrT, OriginT] = Callable[
-    [FuncT[SelfT, OriginT]], _Attr[SelfT, AttrT, OriginT]
+    [FuncT[SelfT, OriginT]], _AttrProxy[SelfT, AttrT, OriginT]
 ]
 
 
 def attr[AttrT, SelfT: Base[Any], OriginT](
     cls: type[AttrT],
 ) -> InnerT[SelfT, AttrT, OriginT]:
-    def inner(func: FuncT[SelfT, OriginT]) -> _Attr[SelfT, AttrT, OriginT]:
-        return _Attr(cls, func)
+    def inner(func: FuncT[SelfT, OriginT]) -> _AttrProxy[SelfT, AttrT, OriginT]:
+        return _AttrProxy(cls, func)
 
     return inner

@@ -15,7 +15,7 @@ class Base[OriginT]:
         self._namespace = namespace  # 'default' for vcluster projects
 
 
-class VirtualResource[
+class NamespacedResourceProxy[
     ModelT: KubeResourceModel,
     ListModelT: KubeResourceModel,
     DeleteModelT: KubeResourceModel,
