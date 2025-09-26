@@ -5,7 +5,7 @@ from kubernetes.client.models import (
 
 from .._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api, EndpointSlice
 from ._attr_proxy import attr
-from ._resource_proxy import Base, NamespacedResourceProxy
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
 
 class EndpointSliceProxy(
@@ -16,7 +16,7 @@ class EndpointSliceProxy(
     pass
 
 
-class DiscoveryK8sIoV1ApiProxy(Base[DiscoveryK8sIoV1Api]):
+class DiscoveryK8sIoV1ApiProxy(BaseProxy[DiscoveryK8sIoV1Api]):
     """
     discovery.k8s.io/v1 API wrapper for Kubernetes.
     """

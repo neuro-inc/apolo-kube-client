@@ -8,7 +8,7 @@ from kubernetes.client.models import (
 
 from .._core_v1 import CoreV1Api, Pod, Secret
 from ._attr_proxy import attr
-from ._resource_proxy import Base, NamespacedResourceProxy
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
 
 class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
@@ -36,7 +36,7 @@ class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secr
         )
 
 
-class CoreV1ApiProxy(Base[CoreV1Api]):
+class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
     """

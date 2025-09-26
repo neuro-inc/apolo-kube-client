@@ -1,4 +1,4 @@
-from typing import Protocol, overload
+from typing import Protocol, Self, overload
 
 from ._core import _KubeCore
 
@@ -9,25 +9,25 @@ class _HasCore(Protocol):
 
 class _Attr[T]:
     def __init__[Args](self, cls: type[T], *args: Args) -> None:
-        self._cls = cls
+        self.cls = cls
         self._args = args
-        self._name: str | None = None
+        self.name: str | None = None
 
     def __set_name__(self, owner: _HasCore, name: str) -> None:
-        self._name = name
+        self.name = name
 
     @overload
     def __get__(self, inst: _HasCore, owner: type[_HasCore] | None = None) -> T: ...
     @overload
-    def __get__(self, inst: None, owner: type[_HasCore] | None = None) -> type[T]: ...
+    def __get__(self, inst: None, owner: type[_HasCore] | None = None) -> Self: ...
     def __get__(
         self, inst: _HasCore | None, owner: type[_HasCore] | None = None
-    ) -> T | type[T]:
+    ) -> T | Self:
         if inst is not None:
-            name = self._name
+            name = self.name
             assert name is not None
-            ret = self._cls(inst._core, *self._args)  # type: ignore[call-arg]
+            ret = self.cls(inst._core, *self._args)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
         else:
-            return self._cls
+            return self

@@ -12,6 +12,11 @@ from ._typedefs import JsonType
 from ._watch import Watch
 
 
+class Base:
+    def __init__(self, core: _KubeCore) -> None:
+        self._core = core
+
+
 class MetadataModel(Protocol):
     name: str
 

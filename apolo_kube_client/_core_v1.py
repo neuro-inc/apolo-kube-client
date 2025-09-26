@@ -11,8 +11,7 @@ from kubernetes.client.models import (
 )
 
 from ._attr import _Attr
-from ._base_resource import ClusterScopedResource, NamespacedResource
-from ._core import _KubeCore
+from ._base_resource import Base, ClusterScopedResource, NamespacedResource
 from ._utils import base64_encode, escape_json_pointer
 
 
@@ -67,7 +66,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         )
 
 
-class CoreV1Api:
+class CoreV1Api(Base):
     """
     Core v1 API wrapper for Kubernetes.
     """
@@ -79,6 +78,3 @@ class CoreV1Api:
     # namespaced resources
     pod = _Attr(Pod, group_api_query_path)
     secret = _Attr(Secret, group_api_query_path)
-
-    def __init__(self, core: _KubeCore) -> None:
-        self._core = core

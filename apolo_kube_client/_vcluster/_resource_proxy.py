@@ -5,7 +5,7 @@ from .._base_resource import KubeResourceModel, NamespacedResource
 from .._watch import Watch
 
 
-class Base[OriginT]:
+class BaseProxy[OriginT]:
     def __init__(
         self,
         origin: OriginT,
@@ -21,7 +21,7 @@ class NamespacedResourceProxy[
     DeleteModelT: KubeResourceModel,
     OriginT,
 ](
-    Base[OriginT],
+    BaseProxy[OriginT],
 ):
     async def get(self, name: str) -> ModelT:
         origin = cast(

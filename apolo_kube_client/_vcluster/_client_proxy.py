@@ -11,10 +11,10 @@ from ._batch_v1_proxy import BatchV1ApiProxy
 from ._core_v1_proxy import CoreV1ApiProxy
 from ._discovery_k8s_io_v1_proxy import DiscoveryK8sIoV1ApiProxy
 from ._networking_k8s_io_v1_proxy import NetworkingK8SioV1ApiProxy
-from ._resource_proxy import Base
+from ._resource_proxy import BaseProxy
 
 
-class KubeClientProxy(Base[KubeClient]):
+class KubeClientProxy(BaseProxy[KubeClient]):
     @attr(CoreV1ApiProxy)
     def core_v1(self) -> CoreV1Api:
         return self._origin.core_v1
