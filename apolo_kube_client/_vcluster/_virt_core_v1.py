@@ -7,15 +7,15 @@ from kubernetes.client.models import (
 )
 
 from .._core_v1 import CoreV1Api, Pod, Secret
-from ._attr import attr
-from ._base_resource import Base, VirtualResource
+from ._virt_attr import attr
+from ._virt_base_resource import Base, VirtualResource
 
 
-class VPod(VirtualResource[V1Pod, V1PodList, V1Pod, Pod]):
+class VirtPod(VirtualResource[V1Pod, V1PodList, V1Pod, Pod]):
     pass
 
 
-class VSecret(VirtualResource[V1Secret, V1SecretList, V1Status, Secret]):
+class VirtSecret(VirtualResource[V1Secret, V1SecretList, V1Status, Secret]):
     async def add_key(
         self,
         name: str,
@@ -36,18 +36,18 @@ class VSecret(VirtualResource[V1Secret, V1SecretList, V1Status, Secret]):
         )
 
 
-class VCoreV1Api(Base[CoreV1Api]):
+class VirtCoreV1Api(Base[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
     """
 
     # cluster scoped resources
     # namespaced resources
-    @attr(VPod)
+    @attr(VirtPod)
     def pod(self) -> Pod:
         return self._origin.pod
 
-    @attr(VSecret)
+    @attr(VirtSecret)
     def secret(self) -> Secret:
         return self._origin.secret
 

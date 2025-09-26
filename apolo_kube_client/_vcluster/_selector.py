@@ -15,10 +15,10 @@ from kubernetes.client.models import V1Secret
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._errors import ResourceNotFound
 from apolo_kube_client._vcluster._cache import AsyncLRUCache
-from apolo_kube_client._vcluster._client import VKubeClient
 from apolo_kube_client._vcluster._client_factory import (
     VclusterClientFactory,
 )
+from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
 from apolo_kube_client.apolo import generate_namespace_name
 
 logger = logging.getLogger(__name__)
@@ -116,7 +116,7 @@ class KubeClientSelector:
         *,
         org_name: str,
         project_name: str,
-    ) -> AsyncIterator[VKubeClient]:
+    ) -> AsyncIterator[KubeClientProxy]:
         """
         Client acquisition entry-point.
         Resolution order:
@@ -169,7 +169,7 @@ class KubeClientSelector:
                     namespace = "default"
 
         try:
-            yield VKubeClient(client, namespace)
+            yield KubeClientProxy(client, namespace)
         finally:
             await self._release_vcluster_lease(cache_key, entry)
 

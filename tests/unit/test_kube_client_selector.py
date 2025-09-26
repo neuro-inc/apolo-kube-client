@@ -91,7 +91,6 @@ async def test_returns_default_client_when_secret_missing(
         async with selector.get_client(org_name="org", project_name="proj") as client:
             assert client._namespace == "platform--org--proj--405d80a888a4045e4dd515b6"
             assert default_client is client._origin
-            assert client._origin.core_v1.secret._get_ns("override") == "override"
 
 
 async def test_returns_vcluster_client_when_secret_present(
@@ -106,11 +105,6 @@ async def test_returns_vcluster_client_when_secret_present(
     try:
         async with selector.get_client(org_name=org, project_name=project) as client:
             assert client._namespace == "default"
-            assert client._origin.namespace == NAMESPACE_DEFAULT
-            assert client._origin.core_v1.secret._get_ns(None) == NAMESPACE_DEFAULT
-            assert (
-                client._origin.core_v1.secret._get_ns("override") == NAMESPACE_DEFAULT
-            )
     finally:
         await selector.aclose()
     assert default_client.core_v1.secret.get.await_count == 1  # type: ignore[attr-defined]

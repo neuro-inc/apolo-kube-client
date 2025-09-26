@@ -62,7 +62,6 @@ class _KubeCore:
     ) -> None:
         self._base_url: URL = URL(config.endpoint_url)
         self._namespace = config.namespace
-        self._forced_namespace = config.forced_namespace
 
         self._cert_authority_data_pem = config.cert_authority_data_pem
         self._cert_authority_path = config.cert_authority_path
@@ -149,7 +148,7 @@ class _KubeCore:
         return self._namespace
 
     def resolve_namespace(self, namespace: str | None = None) -> str:
-        return self._forced_namespace or namespace or self._namespace
+        return namespace or self._namespace
 
     @property
     def _base_headers(self) -> dict[str, str]:

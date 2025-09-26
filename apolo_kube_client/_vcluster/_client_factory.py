@@ -9,7 +9,7 @@ import yaml
 from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
-from apolo_kube_client._config import NAMESPACE_DEFAULT, KubeClientAuthType, KubeConfig
+from apolo_kube_client._config import KubeClientAuthType, KubeConfig
 from apolo_kube_client._utils import base64_decode
 
 logger = logging.getLogger(__name__)
@@ -40,8 +40,6 @@ class VclusterClientFactory:
             auth_type=KubeClientAuthType.CERTIFICATE,
             auth_cert_path=str(cert_path),
             auth_cert_key_path=str(key_path),
-            namespace=NAMESPACE_DEFAULT,
-            forced_namespace=NAMESPACE_DEFAULT,
             client_conn_timeout_s=self._default_config.client_conn_timeout_s,
             client_read_timeout_s=self._default_config.client_read_timeout_s,
             client_watch_timeout_s=self._default_config.client_watch_timeout_s,
