@@ -15,6 +15,7 @@ from kubernetes.client.models import V1Secret
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._errors import ResourceNotFound
 from apolo_kube_client._vcluster._cache import AsyncLRUCache
+from apolo_kube_client._vcluster._client import VKubeClient
 from apolo_kube_client._vcluster._client_factory import (
     VclusterClientFactory,
 )
@@ -88,9 +89,8 @@ class KubeClientSelector:
         exc_type: type[BaseException],
         exc_val: BaseException,
         exc_tb: TracebackType,
-    ) -> bool:
+    ) -> None:
         await self.aclose()
-        return exc_type is not None
 
     async def aclose(self) -> None:
         logger.info(f"{self}: closing...")
@@ -116,7 +116,7 @@ class KubeClientSelector:
         *,
         org_name: str,
         project_name: str,
-    ) -> AsyncIterator[KubeClient]:
+    ) -> AsyncIterator[VKubeClient]:
         """
         Client acquisition entry-point.
         Resolution order:
@@ -145,6 +145,7 @@ class KubeClientSelector:
                 cached.leases += 1
                 entry = cached
                 client = cached.client
+                namespace = "default"
             elif self._is_default_client(cache_key):
                 logger.info(f"{self}: found a cached default client")
                 client = self._default_client
@@ -165,9 +166,10 @@ class KubeClientSelector:
                     client = await self._vcluster_client_factory.from_secret(secret)
                     entry = VclusterEntry(client=client, leases=1)
                     await self._vcluster_cache.set(cache_key, entry)
+                    namespace = "default"
 
         try:
-            yield client
+            yield VKubeClient(client, namespace)
         finally:
             await self._release_vcluster_lease(cache_key, entry)
 

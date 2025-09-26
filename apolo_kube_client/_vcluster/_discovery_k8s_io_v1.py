@@ -5,22 +5,22 @@ from kubernetes.client.models import (
 
 from .._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api, EndpointSlice
 from ._attr import attr
-from ._base_resource import Base, ProjectResource
+from ._base_resource import Base, VirtualResource
 
 
-class PrEndpointSlice(
-    ProjectResource[
+class VEndpointSlice(
+    VirtualResource[
         V1EndpointSlice, V1EndpointSliceList, V1EndpointSlice, EndpointSlice
     ]
 ):
     pass
 
 
-class PrDiscoveryK8sIoV1Api(Base[DiscoveryK8sIoV1Api]):
+class VDiscoveryK8sIoV1Api(Base[DiscoveryK8sIoV1Api]):
     """
     discovery.k8s.io/v1 API wrapper for Kubernetes.
     """
 
-    @attr(PrEndpointSlice)
+    @attr(VEndpointSlice)
     def endpoint_slice(self) -> EndpointSlice:
         return self._origin.endpoint_slice

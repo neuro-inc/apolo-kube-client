@@ -8,14 +8,14 @@ from kubernetes.client.models import (
 
 from .._core_v1 import CoreV1Api, Pod, Secret
 from ._attr import attr
-from ._base_resource import Base, ProjectResource
+from ._base_resource import Base, VirtualResource
 
 
-class PrPod(ProjectResource[V1Pod, V1PodList, V1Pod, Pod]):
+class VPod(VirtualResource[V1Pod, V1PodList, V1Pod, Pod]):
     pass
 
 
-class PrSecret(ProjectResource[V1Secret, V1SecretList, V1Status, Secret]):
+class VSecret(VirtualResource[V1Secret, V1SecretList, V1Status, Secret]):
     async def add_key(
         self,
         name: str,
@@ -36,18 +36,18 @@ class PrSecret(ProjectResource[V1Secret, V1SecretList, V1Status, Secret]):
         )
 
 
-class PrCoreV1Api(Base[CoreV1Api]):
+class VCoreV1Api(Base[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
     """
 
     # cluster scoped resources
     # namespaced resources
-    @attr(PrPod)
+    @attr(VPod)
     def pod(self) -> Pod:
         return self._origin.pod
 
-    @attr(PrSecret)
+    @attr(VSecret)
     def secret(self) -> Secret:
         return self._origin.secret
 

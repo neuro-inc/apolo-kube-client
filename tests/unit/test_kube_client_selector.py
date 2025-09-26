@@ -89,8 +89,9 @@ async def test_returns_default_client_when_secret_missing(
 ) -> None:
     async with KubeClientSelector(default_client=default_client) as selector:
         async with selector.get_client(org_name="org", project_name="proj") as client:
-            assert default_client is client
-            assert client.core_v1.secret._get_ns("override") == "override"
+            assert client._namespace == "platform--org--proj--405d80a888a4045e4dd515b6"
+            assert default_client is client._origin
+            assert client._origin.core_v1.secret._get_ns("override") == "override"
 
 
 async def test_returns_vcluster_client_when_secret_present(
@@ -104,9 +105,12 @@ async def test_returns_vcluster_client_when_secret_present(
 
     try:
         async with selector.get_client(org_name=org, project_name=project) as client:
-            assert client.namespace == NAMESPACE_DEFAULT
-            assert client.core_v1.secret._get_ns(None) == NAMESPACE_DEFAULT
-            assert client.core_v1.secret._get_ns("override") == NAMESPACE_DEFAULT
+            assert client._namespace == "default"
+            assert client._origin.namespace == NAMESPACE_DEFAULT
+            assert client._origin.core_v1.secret._get_ns(None) == NAMESPACE_DEFAULT
+            assert (
+                client._origin.core_v1.secret._get_ns("override") == NAMESPACE_DEFAULT
+            )
     finally:
         await selector.aclose()
     assert default_client.core_v1.secret.get.await_count == 1  # type: ignore[attr-defined]
@@ -170,8 +174,8 @@ async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
 
         async def hold_a() -> None:
             async with selector.get_client(org_name="oA", project_name="pA") as c_a:
-                assert c_a is not default_client
-                assert c_a.config.endpoint_url == patch_secret_with_kubeconfig
+                assert c_a._origin is not default_client
+                assert c_a._origin.config.endpoint_url == patch_secret_with_kubeconfig
                 ctx_entered.set()
                 await ctx_release.wait()
 
@@ -180,8 +184,8 @@ async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
 
         # Now insert B while A is leased; A becomes zombie
         async with selector.get_client(org_name="oB", project_name="pB") as c_b:
-            assert c_b is not default_client
-            assert c_b.config.endpoint_url == patch_secret_with_kubeconfig
+            assert c_b._origin is not default_client
+            assert c_b._origin.config.endpoint_url == patch_secret_with_kubeconfig
 
         # should not be closed yet
         assert len(selector._vcluster_zombies) == 1
@@ -208,7 +212,7 @@ async def test_concurrent_same_namespace_builds_once(
 
         async def worker() -> None:
             async with selector.get_client(org_name="o1", project_name="p1") as c:
-                assert c.config.endpoint_url == patch_secret_with_kubeconfig
+                assert c._origin.config.endpoint_url == patch_secret_with_kubeconfig
 
         await asyncio.gather(*(worker() for _ in range(10)))
 
