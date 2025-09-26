@@ -6,10 +6,9 @@ from kubernetes.client.models import (
     V1Status,
 )
 
-from .._attr import _Attr
-from .._core import _KubeCore
 from .._core_v1 import CoreV1Api, Pod, Secret
-from ._base import ProjectResource
+from ._attr import attr
+from ._base_resource import Base, ProjectResource
 
 
 class PrPod(ProjectResource[V1Pod, V1PodList, V1Pod, Pod]):
@@ -37,23 +36,22 @@ class PrSecret(ProjectResource[V1Secret, V1SecretList, V1Status, Secret]):
         )
 
 
-class PrCoreV1Api:
+class PrCoreV1Api(Base[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
     """
 
-    group_api_query_path = CoreV1Api.group_api_query_path
-
     # cluster scoped resources
     # namespaced resources
-    pod = _Attr(PrPod, group_api_query_path)
-    secret = _Attr(PrSecret, group_api_query_path)
+    @attr(PrPod)
+    def pod(self) -> Pod:
+        return self._origin.pod
+
+    @attr(PrSecret)
+    def secret(self) -> Secret:
+        return self._origin.secret
 
     # ASvetlov: CoreV1Api has cluster-scoped networking_k8s_io_v1 and discovery_k8s_io_v1
     # Not sure if we should expose these attrs in project-scoped client.
     # Most likely it doesn't make any sense.
     # Anyway, we could add them later.
-
-    def __init__(self, core: _KubeCore, namespace: str) -> None:
-        self._core = core
-        self._namespace = namespace
