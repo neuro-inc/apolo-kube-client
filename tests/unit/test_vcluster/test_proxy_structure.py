@@ -21,9 +21,17 @@ def check_proxy(proxy: type, origin: type) -> None:
     for name in proxy_names:
         orig_attr = getattr(origin, name)
         proxy_attr = getattr(proxy, name)
+        assert proxy_attr.cls.__name__ == orig_attr.cls.__name__ + "Proxy"
 
-        assert issubclass(proxy_attr.cls, (BaseProxy, NamespacedResourceProxy))
-        assert issubclass(orig_attr.cls, (Base, NamespacedResource))
+        if issubclass(proxy_attr.cls, NamespacedResourceProxy):
+            assert issubclass(proxy_attr.cls, NamespacedResourceProxy)
+            assert issubclass(orig_attr.cls, NamespacedResource)
+            func = proxy_attr.func
+            assert func.__annotations__["return"] is orig_attr.cls
+        else:
+            assert issubclass(proxy_attr.cls, BaseProxy)
+            assert issubclass(orig_attr.cls, Base)
+            check_proxy(proxy_attr.cls, orig_attr.cls)
 
 
 def test_compliance() -> None:
