@@ -3,6 +3,10 @@ from kubernetes.client.models import (
     V1NamespaceList,
     V1Node,
     V1NodeList,
+    V1PersistentVolume,
+    V1PersistentVolumeClaim,
+    V1PersistentVolumeClaimList,
+    V1PersistentVolumeList,
     V1Pod,
     V1PodList,
     V1Secret,
@@ -66,6 +70,22 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         )
 
 
+class PersistentVolume(
+    ClusterScopedResource[
+        V1PersistentVolume, V1PersistentVolumeList, V1PersistentVolume
+    ]
+):
+    query_path = "persistentvolumes"
+
+
+class PersistentVolumeClaim(
+    NamespacedResource[
+        V1PersistentVolumeClaim, V1PersistentVolumeClaimList, V1PersistentVolumeClaim
+    ]
+):
+    query_path = "persistentvolumeclaims"
+
+
 class CoreV1Api(Base):
     """
     Core v1 API wrapper for Kubernetes.
@@ -75,6 +95,8 @@ class CoreV1Api(Base):
     # cluster scoped resources
     namespace = _Attr(Namespace, group_api_query_path)
     node = _Attr(Node, group_api_query_path)
+    persistent_volume = _Attr(PersistentVolume, group_api_query_path)
     # namespaced resources
     pod = _Attr(Pod, group_api_query_path)
     secret = _Attr(Secret, group_api_query_path)
+    persistent_volume_claim = _Attr(PersistentVolumeClaim, group_api_query_path)

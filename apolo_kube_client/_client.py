@@ -11,6 +11,7 @@ from ._core_v1 import CoreV1Api
 from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
+from ._storage_k8s_io_v1 import StorageK8SioV1Api
 from ._transport import KubeTransport
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ class KubeClient:
     networking_k8s_io_v1 = _Attr(NetworkingK8SioV1Api)
     admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
     discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
+    storage_k8s_io_v1 = _Attr(StorageK8SioV1Api)
 
     def __init__(
         self,
