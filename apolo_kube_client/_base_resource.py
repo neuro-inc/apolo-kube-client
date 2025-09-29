@@ -1,7 +1,7 @@
 import functools
 from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
-from typing import Protocol, cast, get_args
+from typing import ClassVar, Protocol, cast, get_args
 
 import aiohttp
 from yarl import URL
@@ -10,6 +10,11 @@ from ._core import _KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
+
+
+class Base:
+    def __init__(self, core: _KubeCore) -> None:
+        self._core = core
 
 
 class MetadataModel(Protocol):
@@ -30,7 +35,7 @@ class BaseResource[
     Uses models from the official Kubernetes API client.
     """
 
-    query_path: str
+    query_path: ClassVar[str]
 
     def __init__(self, core: _KubeCore, group_api_query_path: str):
         if not self.query_path:

@@ -26,4 +26,3 @@ class KubeConfig(BaseModel):
     client_read_timeout_s: int = 300
     client_watch_timeout_s: int = 1800
     client_conn_pool_size: int = 100
-    forced_namespace: str | None = None
