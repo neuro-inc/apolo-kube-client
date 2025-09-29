@@ -11,6 +11,7 @@ from ._core_v1 import CoreV1Api
 from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._resource_list import ResourceListApi
+from ._transport import KubeTransport
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +24,26 @@ class KubeClient:
     admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
     discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
 
-    def __init__(self, *, config: KubeConfig) -> None:
+    def __init__(
+        self,
+        *,
+        config: KubeConfig,
+        transport: KubeTransport | None = None,
+    ) -> None:
         self._config = config
-        self._core = _KubeCore(config)
+        self._owns_transport = transport is None
+        if transport is None:
+            transport = KubeTransport(
+                conn_pool_size=config.client_conn_pool_size,
+                conn_timeout_s=config.client_conn_timeout_s,
+                read_timeout_s=config.client_read_timeout_s,
+            )
+        self._transport = transport
+        self._core = _KubeCore(config, transport=transport)
 
     async def __aenter__(self) -> Self:
+        if self._owns_transport:
+            await self._transport.__aenter__()
         await self._core.__aenter__()
         return self
 
@@ -38,6 +54,10 @@ class KubeClient:
         exc_tb: TracebackType | None,
     ) -> None:
         await self._core.__aexit__(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
+        if self._owns_transport:
+            await self._transport.__aexit__(
+                exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb
+            )
 
     @property
     def namespace(self) -> str:
@@ -45,8 +65,3 @@ class KubeClient:
         Returns the current namespace of the Kubernetes client.
         """
         return self._core.resolve_namespace()
-
-    @property
-    def config(self) -> KubeConfig:
-        """Return a copy of the configuration used to instantiate the client."""
-        return self._config.model_copy()

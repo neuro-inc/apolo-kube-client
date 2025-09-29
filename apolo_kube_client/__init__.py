@@ -9,6 +9,7 @@ from ._errors import (
     ResourceInvalid,
     ResourceNotFound,
 )
+from ._transport import KubeTransport
 from ._utils import escape_json_pointer
 from ._vcluster import KubeClientProxy, KubeClientSelector
 from ._watch import Watch, WatchEvent
@@ -16,6 +17,7 @@ from ._watch import Watch, WatchEvent
 __all__ = [
     "KubeClient",
     "KubeConfig",
+    "KubeTransport",
     "KubeClientAuthType",
     "ResourceNotFound",
     "ResourceExists",
