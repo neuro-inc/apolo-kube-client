@@ -64,6 +64,7 @@ def patch_secret_with_kubeconfig() -> str:
 
 async def test_returns_default_client_when_secret_missing(
     default_kube_config: KubeConfig,
+    create_namespace_mock: AsyncMock,
 ) -> None:
     selector = KubeClientSelector(config=default_kube_config)
     selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
