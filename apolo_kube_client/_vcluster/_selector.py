@@ -26,6 +26,14 @@ from apolo_kube_client.apolo import generate_namespace_name
 logger = logging.getLogger(__name__)
 
 
+class KubeClientSelectorError(Exception):
+    """Base selector error"""
+
+
+class CloseInProgressError(KubeClientSelectorError):
+    """Raised when selector is closing"""
+
+
 @dataclass
 class VclusterEntry:
     client: KubeClient
@@ -99,9 +107,9 @@ class KubeClientSelector:
 
     async def __aexit__(
         self,
-        exc_type: type[BaseException],
-        exc_val: BaseException,
-        exc_tb: TracebackType,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         await self.aclose()
 
@@ -146,7 +154,7 @@ class KubeClientSelector:
         A client is yielded without the lock, so concurrent usage is possible.
         """
         if self._closing:
-            raise RuntimeError(f"{self}: can't acquire. already closing...")
+            raise CloseInProgressError()
 
         namespace = cache_key = generate_namespace_name(org_name, project_name)
 
@@ -187,6 +195,13 @@ class KubeClientSelector:
             yield KubeClientProxy(client, namespace)
         finally:
             await self._release_vcluster_lease(cache_key, entry)
+
+    @property
+    def raw_default_client(self) -> KubeClient:
+        """Returns a non-proxied version of a default kube client"""
+        if self._closing:
+            raise CloseInProgressError()
+        return self._default_client
 
     async def _release_vcluster_lease(
         self, key: str, entry: VclusterEntry | None
