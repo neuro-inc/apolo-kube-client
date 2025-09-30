@@ -21,9 +21,17 @@ from apolo_kube_client._vcluster._client_factory import (
     VclusterClientFactory,
 )
 from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
-from apolo_kube_client.apolo import generate_namespace_name
+from apolo_kube_client.apolo import create_namespace, generate_namespace_name
 
 logger = logging.getLogger(__name__)
+
+
+class KubeClientSelectorError(Exception):
+    """Base selector error"""
+
+
+class CloseInProgressError(KubeClientSelectorError):
+    """Raised when selector is closing"""
 
 
 @dataclass
@@ -99,9 +107,9 @@ class KubeClientSelector:
 
     async def __aexit__(
         self,
-        exc_type: type[BaseException],
-        exc_val: BaseException,
-        exc_tb: TracebackType,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         await self.aclose()
 
@@ -136,7 +144,7 @@ class KubeClientSelector:
         Client acquisition entry-point.
         Resolution order:
         1. vcluster cache hit: lease and return.
-        2. default client cache hit: return shared default client.
+        2. default client cache hit: return shared client.
         3. fetch secret:
            - found: build vcluster client, cache, lease, return.
            - not found: return shared default client.
@@ -144,9 +152,12 @@ class KubeClientSelector:
         Resolution happens under the per-project lock to avoid fetching
         vcluster secret multiple times.
         A client is yielded without the lock, so concurrent usage is possible.
+
+        If client was resolved to a default one, a selector wil automatically
+        create a namespace under the hood.
         """
         if self._closing:
-            raise RuntimeError(f"{self}: can't acquire. already closing...")
+            raise CloseInProgressError()
 
         namespace = cache_key = generate_namespace_name(org_name, project_name)
 
@@ -156,13 +167,13 @@ class KubeClientSelector:
         async with self._locks[cache_key]:
             cached = self._vcluster_cache.get(cache_key)
             if cached is not None:
-                logger.info(f"{self}: found a cached vcluster client")
+                logger.info(f"{self}: vcluster cache hit: lease and return")
                 cached.leases += 1
                 entry = cached
                 client = cached.client
                 namespace = "default"
             elif self._is_default_client(cache_key):
-                logger.info(f"{self}: found a cached default client")
+                logger.info(f"{self}: default client cache hit: return default client")
                 client = self._default_client
             else:
                 # Try to fetch secret
@@ -171,17 +182,23 @@ class KubeClientSelector:
                     secret_name=secret_name,
                     namespace=namespace,
                 )
-                if not secret:
-                    # no secret -> remember as default-backed
-                    logger.info(f"{self}: default client will be used")
-                    self._default_cache[cache_key] = True
-                    client = self._default_client
-                else:
-                    logger.info(f"{self}: vcluster client will be used")
+                if secret:
+                    logger.info(
+                        f"{self}: secret found: "
+                        f"build vcluster client, cache, lease, return"
+                    )
                     client = await self._vcluster_client_factory.from_secret(secret)
                     entry = VclusterEntry(client=client, leases=1)
                     await self._vcluster_cache.set(cache_key, entry)
                     namespace = "default"
+                else:
+                    logger.info(
+                        f"{self}: secret not found: return shared default client"
+                    )
+                    self._default_cache[cache_key] = True
+                    client = self._default_client
+                    # ensure namespace is in place
+                    await create_namespace(client, org_name, project_name)
 
         try:
             yield KubeClientProxy(client, namespace)

@@ -17,7 +17,6 @@ class _FakeResponse:
         return {}
 
 
-@pytest.mark.asyncio
 async def test_plain_clients_share_http_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -47,8 +46,7 @@ async def test_plain_clients_share_http_session(
     assert len(captured_ssl) == 2
 
 
-@pytest.mark.asyncio
-async def test_selector_uses_shared_session() -> None:
+async def test_selector_uses_shared_session(create_namespace_mock: AsyncMock) -> None:
     selector = KubeClientSelector(
         config=KubeConfig(endpoint_url="http://default.local")
     )
