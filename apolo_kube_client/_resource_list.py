@@ -16,7 +16,7 @@ class ResourceListApi:
             method="GET", url=self._core.base_url / resource_list_path
         ) as response:
             data = await response.json()
-            return self._core.deserialize(data, V1APIResourceList)
+            return self._core.deserialize_response(data, V1APIResourceList)
 
     async def find_resource_by_kind(
         self, kind: str, resource_list_path: str

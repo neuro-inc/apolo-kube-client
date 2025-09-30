@@ -10,6 +10,7 @@ from ._core import _KubeCore
 from ._core_v1 import CoreV1Api
 from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
+from ._neuromation_io_v1 import NeuromationioV1API
 from ._resource_list import ResourceListApi
 from ._storage_k8s_io_v1 import StorageK8SioV1Api
 from ._transport import KubeTransport
@@ -25,6 +26,7 @@ class KubeClient:
     admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
     discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
     storage_k8s_io_v1 = _Attr(StorageK8SioV1Api)
+    neuromation_io_v1 = _Attr(NeuromationioV1API)
 
     def __init__(
         self,
