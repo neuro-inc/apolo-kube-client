@@ -1,4 +1,6 @@
 from kubernetes.client.models import (
+    V1PersistentVolumeClaim,
+    V1PersistentVolumeClaimList,
     V1Pod,
     V1PodList,
     V1Secret,
@@ -6,7 +8,7 @@ from kubernetes.client.models import (
     V1Status,
 )
 
-from .._core_v1 import CoreV1Api, Pod, Secret
+from .._core_v1 import CoreV1Api, PersistentVolumeClaim, Pod, Secret
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
@@ -36,6 +38,17 @@ class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secr
         )
 
 
+class PersistentVolumeClaimProxy(
+    NamespacedResourceProxy[
+        V1PersistentVolumeClaim,
+        V1PersistentVolumeClaimList,
+        V1PersistentVolumeClaim,
+        PersistentVolumeClaim,
+    ]
+):
+    pass
+
+
 class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
@@ -50,6 +63,10 @@ class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     @attr(SecretProxy)
     def secret(self) -> Secret:
         return self._origin.secret
+
+    @attr(PersistentVolumeClaimProxy)
+    def persistent_volume_claim(self) -> PersistentVolumeClaim:
+        return self._origin.persistent_volume_claim
 
     # ASvetlov: CoreV1Api has cluster-scoped networking_k8s_io_v1 and discovery_k8s_io_v1
     # Not sure if we should expose these attrs in project-scoped client.
