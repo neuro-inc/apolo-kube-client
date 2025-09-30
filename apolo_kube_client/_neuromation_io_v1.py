@@ -5,7 +5,7 @@ from ._base_resource import Base, NamespacedResource
 from ._crd_models import V1DiskNamingCRD, V1DiskNamingCRDList
 
 
-class DiskNamingCRD(NamespacedResource[V1DiskNamingCRD, V1DiskNamingCRDList, V1Status]):
+class DiskNamingCRD(NamespacedResource[V1DiskNamingCRD, V1DiskNamingCRDList, V1Status]):  # type: ignore
     query_path = "disknamings"
 
 

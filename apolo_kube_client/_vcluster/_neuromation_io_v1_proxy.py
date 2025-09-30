@@ -8,7 +8,7 @@ from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
 class DiskNamingCRDProxy(
     NamespacedResourceProxy[
-        V1DiskNamingCRD, V1DiskNamingCRDList, V1Status, DiskNamingCRD
+        V1DiskNamingCRD, V1DiskNamingCRDList, V1Status, DiskNamingCRD  # type: ignore
     ]
 ):
     pass

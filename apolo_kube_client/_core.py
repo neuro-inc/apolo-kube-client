@@ -176,7 +176,7 @@ class _KubeCore:
     def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
         if issubclass(klass, BaseModel):
             # for crd resources we use pydantic models
-            return klass.model_validate(data)
+            return cast(ModelT, klass.model_validate(data))
         kube_response = _KubeResponse(data=json.dumps(data).encode("utf-8"))
         return cast(ModelT, self._api_client.deserialize(kube_response, klass))
 
@@ -188,7 +188,7 @@ class _KubeCore:
         if issubclass(klass, BaseModel):
             # for crd resources we use pydantic models
             data = await response.json()
-            return klass.model_validate(data)
+            return cast(ModelT, klass.model_validate(data))
         if not hasattr(kubernetes.client.models, klass.__name__):
             raise ValueError(f"Unsupported response type: {klass}")
         data = await response.read()
