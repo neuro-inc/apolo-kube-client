@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from kubernetes.client import (
     V1CustomResourceColumnDefinition,
@@ -10,7 +12,7 @@ from kubernetes.client import (
     V1ObjectMeta,
 )
 
-from apolo_kube_client import KubeClient
+from apolo_kube_client import KubeClient, ResourceNotFound
 
 
 @pytest.fixture
@@ -78,3 +80,7 @@ class TestCRD:
 
         # test deleting the crd
         await kube_client.extensions_k8s_io_v1.crd.delete(name=crd.metadata.name)
+        await asyncio.sleep(1)
+
+        with pytest.raises(ResourceNotFound):
+            await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)
