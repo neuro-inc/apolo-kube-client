@@ -3,6 +3,7 @@ from types import TracebackType
 from typing import Self
 
 from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
+from ._apiextensions_k8s_io_v1 import ExtensionsK8sV1Api
 from ._attr import _Attr
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
@@ -27,6 +28,7 @@ class KubeClient:
     discovery_k8s_io_v1 = _Attr(DiscoveryK8sIoV1Api)
     storage_k8s_io_v1 = _Attr(StorageK8SioV1Api)
     neuromation_io_v1 = _Attr(NeuromationioV1API)
+    extensions_k8s_io_v1 = _Attr(ExtensionsK8sV1Api)
 
     def __init__(
         self,
