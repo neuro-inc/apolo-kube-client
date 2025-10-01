@@ -12,7 +12,7 @@ class StorageClass(
 
 class StorageK8SioV1Api(Base):
     """
-    NetworkK8sIo v1 API wrapper for Kubernetes.
+    StorageK8Sio v1 API wrapper for Kubernetes.
     """
 
     group_api_query_path = "apis/storage.k8s.io/v1"

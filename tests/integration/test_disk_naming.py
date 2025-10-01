@@ -1,4 +1,5 @@
 import asyncio
+from collections.abc import AsyncGenerator
 
 import pytest
 from kubernetes.client import (
@@ -12,12 +13,17 @@ from kubernetes.client import (
     V1ObjectMeta,
 )
 
-from apolo_kube_client import KubeClient, ResourceNotFound
+from apolo_kube_client import KubeClient
+from apolo_kube_client._crd_models import (
+    V1DiskNamingCRD,
+    V1DiskNamingCRDMetadata,
+    V1DiskNamingCRDSpec,
+)
 
 
 @pytest.fixture
-def crd() -> V1CustomResourceDefinition:
-    return V1CustomResourceDefinition(
+async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[None]:
+    dn_crd = V1CustomResourceDefinition(
         api_version="apiextensions.k8s.io/v1",
         kind="CustomResourceDefinition",
         metadata=V1ObjectMeta(name="disknamings.neuromation.io"),
@@ -59,28 +65,42 @@ def crd() -> V1CustomResourceDefinition:
         ),
     )
 
+    await kube_client.extensions_k8s_io_v1.crd.create(model=dn_crd)
+    await asyncio.sleep(1)
+    yield
+    await kube_client.extensions_k8s_io_v1.crd.delete(name=dn_crd.metadata.name)
 
-class TestCRD:
-    async def test_crd_namespaced_crud(
-        self, crd: V1CustomResourceDefinition, kube_client: KubeClient
-    ) -> None:
-        # test creating the crd
-        crd_create = await kube_client.extensions_k8s_io_v1.crd.create(model=crd)
-        assert crd_create.metadata.name == crd.metadata.name
 
-        # test getting the crd
-        crd_get = await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)
-        assert crd_get.metadata.name == crd.metadata.name
+class TestDiskNaming:
+    @pytest.mark.usefixtures("install_disk_naming_crd")
+    async def test_crud(self, kube_client: KubeClient) -> None:
+        dn = V1DiskNamingCRD(
+            apiVersion="neuromation.io/v1",
+            kind="DiskNaming",
+            metadata=V1DiskNamingCRDMetadata(
+                name="disknaming-test", namespace="default"
+            ),
+            spec=V1DiskNamingCRDSpec(disk_id="disk-12345"),
+        )
 
-        # test getting all crds and ensuring the newly created crd is there
-        crd_list = await kube_client.extensions_k8s_io_v1.crd.get_list()
-        crd_names = {c.metadata.name for c in crd_list.items}
-        assert len(crd_list.items) > 0
-        assert crd.metadata.name in crd_names
+        # test creating the dn
+        dn_create = await kube_client.neuromation_io_v1.disk_naming.create(model=dn)
+        assert dn_create.metadata.name == dn.metadata.name
 
-        # test deleting the crd
-        await kube_client.extensions_k8s_io_v1.crd.delete(name=crd.metadata.name)
-        await asyncio.sleep(1)
+        # test getting the dn
+        dn_get = await kube_client.neuromation_io_v1.disk_naming.get(
+            name=dn.metadata.name
+        )
+        assert dn_get.metadata.name == dn.metadata.name
 
-        with pytest.raises(ResourceNotFound):
-            await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)
+        # test getting all dns and ensuring the newly created dn is there
+        dn_list = await kube_client.neuromation_io_v1.disk_naming.get_list()
+        dn_names = {d.metadata.name for d in dn_list.items}
+        assert len(dn_list.items) > 0
+        assert dn.metadata.name in dn_names
+
+        # test deleting the dn
+        dn_status = await kube_client.neuromation_io_v1.disk_naming.delete(
+            name=dn.metadata.name
+        )
+        assert dn_status.status == "Success"
