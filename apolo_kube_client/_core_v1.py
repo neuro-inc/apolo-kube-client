@@ -11,6 +11,8 @@ from kubernetes.client.models import (
     V1PodList,
     V1Secret,
     V1SecretList,
+    V1Service,
+    V1ServiceList,
     V1Status,
 )
 
@@ -86,6 +88,10 @@ class PersistentVolumeClaim(
     query_path = "persistentvolumeclaims"
 
 
+class Service(NamespacedResource[V1Service, V1ServiceList, V1Service]):
+    query_path = "services"
+
+
 class CoreV1Api(Base):
     """
     Core v1 API wrapper for Kubernetes.
@@ -100,3 +106,4 @@ class CoreV1Api(Base):
     pod = _Attr(Pod, group_api_query_path)
     secret = _Attr(Secret, group_api_query_path)
     persistent_volume_claim = _Attr(PersistentVolumeClaim, group_api_query_path)
+    service = _Attr(Service, group_api_query_path)
