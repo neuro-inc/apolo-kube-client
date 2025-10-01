@@ -75,8 +75,8 @@ class KubeClientSelector:
             conn_timeout_s=config.client_conn_timeout_s,
             read_timeout_s=config.client_read_timeout_s,
         )
-        # create a default client that'll be used to access to a real kube cluster
-        self._default_client = KubeClient(config=config, transport=self._transport)
+        # create a host client that'll be used to access to a host kube cluster
+        self._host_client = KubeClient(config=config, transport=self._transport)
         self._vcluster_client_factory = VclusterClientFactory(
             default_config=config,
             transport=self._transport,
@@ -84,9 +84,9 @@ class KubeClientSelector:
         self._locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
 
         # cache of a "default" client.
-        # if we are confident that a particular org+project uses a default kube
+        # if we are confident that a particular org+project uses a host kube
         # client - there is no need to fetch a vcluster secret.
-        self._default_cache: LRUCache[str, bool] = LRUCache(
+        self._host_cache: LRUCache[str, bool] = LRUCache(
             maxsize=real_cluster_cache_size
         )
 
@@ -102,7 +102,7 @@ class KubeClientSelector:
     async def __aenter__(self) -> Self:
         logger.info(f"{self}: initializing...")
         await self._transport.__aenter__()
-        await self._default_client.__aenter__()
+        await self._host_client.__aenter__()
         return self
 
     async def __aexit__(
@@ -129,9 +129,14 @@ class KubeClientSelector:
 
         # Close the shared default client, and a common transport
         logger.info(f"{self}: closing default client")
-        await self._default_client.__aexit__(None, None, None)
+        await self._host_client.__aexit__(None, None, None)
         logger.info(f"{self}: closing transport")
         await self._transport.__aexit__(None, None, None)
+
+    @property
+    def host_client(self) -> KubeClient:
+        """Return a kube client instance connected to the host kubernetes"""
+        return self._host_client
 
     @asynccontextmanager
     async def get_client(
@@ -144,16 +149,16 @@ class KubeClientSelector:
         Client acquisition entry-point.
         Resolution order:
         1. vcluster cache hit: lease and return.
-        2. default client cache hit: return shared client.
+        2. host client cache hit: return shared client.
         3. fetch secret:
            - found: build vcluster client, cache, lease, return.
-           - not found: return shared default client.
+           - not found: return shared host client.
 
         Resolution happens under the per-project lock to avoid fetching
         vcluster secret multiple times.
         A client is yielded without the lock, so concurrent usage is possible.
 
-        If client was resolved to a default one, a selector wil automatically
+        If client was resolved to a host one, a selector wil automatically
         create a namespace under the hood.
         """
         if self._closing:
@@ -172,9 +177,9 @@ class KubeClientSelector:
                 entry = cached
                 client = cached.client
                 namespace = "default"
-            elif self._is_default_client(cache_key):
-                logger.info(f"{self}: default client cache hit: return default client")
-                client = self._default_client
+            elif self._is_host_client(cache_key):
+                logger.info(f"{self}: host client cache hit: return host client")
+                client = self._host_client
             else:
                 # Try to fetch secret
                 secret_name = f"{self._VCLUSTER_SECRET_PREFIX}-{namespace}"
@@ -192,11 +197,9 @@ class KubeClientSelector:
                     await self._vcluster_cache.set(cache_key, entry)
                     namespace = "default"
                 else:
-                    logger.info(
-                        f"{self}: secret not found: return shared default client"
-                    )
-                    self._default_cache[cache_key] = True
-                    client = self._default_client
+                    logger.info(f"{self}: secret not found: return shared host client")
+                    self._host_cache[cache_key] = True
+                    client = self._host_client
                     # ensure namespace is in place
                     await create_namespace(client, org_name, project_name)
 
@@ -215,11 +218,11 @@ class KubeClientSelector:
             self._vcluster_zombies.pop(key, None)
             await self._vcluster_client_factory.close(client=entry.client)
 
-    def _is_default_client(self, namespace: str) -> bool:
+    def _is_host_client(self, namespace: str) -> bool:
         try:
             # For cachetools.LRUCache, __contains__ doesn't update recency.
             # A safe way to 'touch' on read is to try __getitem__.
-            _ = self._default_cache[namespace]
+            _ = self._host_cache[namespace]
             return True
         except KeyError:
             return False
@@ -231,7 +234,7 @@ class KubeClientSelector:
         namespace: str,
     ) -> V1Secret | None:
         try:
-            return await self._default_client.core_v1.secret.get(
+            return await self._host_client.core_v1.secret.get(
                 name=secret_name, namespace=namespace
             )
         except ResourceNotFound:

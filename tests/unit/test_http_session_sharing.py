@@ -52,7 +52,7 @@ async def test_selector_uses_shared_session(create_namespace_mock: AsyncMock) ->
     )
 
     secret = build_vcluster_secret(server="http://k1.local")
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         side_effect=[ResourceNotFound(), secret]
     )
 

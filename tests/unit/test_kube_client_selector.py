@@ -62,17 +62,17 @@ def patch_secret_with_kubeconfig() -> str:
     return "kube"
 
 
-async def test_returns_default_client_when_secret_missing(
+async def test_returns_host_client_when_secret_missing(
     default_kube_config: KubeConfig,
     create_namespace_mock: AsyncMock,
 ) -> None:
     selector = KubeClientSelector(config=default_kube_config)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         side_effect=ResourceNotFound()
     )
     async with selector:
         async with selector.get_client(org_name="org", project_name="proj") as client:
-            assert client._origin is selector._default_client
+            assert client._origin is selector._host_client
             assert client._namespace == "platform--org--proj--405d80a888a4045e4dd515b6"
 
 
@@ -86,7 +86,7 @@ async def test_returns_vcluster_client_when_secret_present(
     # Patch secret for selector's default client and check
     secret = build_vcluster_secret(server=patch_secret_with_kubeconfig)
     selector = KubeClientSelector(config=default_kube_config)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         return_value=secret
     )
     async with selector:
@@ -94,7 +94,7 @@ async def test_returns_vcluster_client_when_secret_present(
             assert client._namespace == "default"
             assert client.core_v1.secret._origin._get_ns(None) == NAMESPACE_DEFAULT
             assert client.core_v1.secret._origin._get_ns("override") == "override"
-    assert selector._default_client.core_v1.secret.get.await_count == 1
+    assert selector._host_client.core_v1.secret.get.await_count == 1
 
 
 async def test_lru_eviction_closes_old_clients(
@@ -108,7 +108,7 @@ async def test_lru_eviction_closes_old_clients(
     secret_one = build_vcluster_secret(server="first")
     secret_two = build_vcluster_secret(server="second")
     selector = KubeClientSelector(config=default_kube_config, vcluster_cache_size=1)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         side_effect=[secret_one, secret_two, secret_one]
     )
 
@@ -134,7 +134,7 @@ async def test_lru_eviction_closes_old_clients(
 
         async with selector.get_client(org_name="org", project_name="first"):
             pass
-        assert selector._default_client.core_v1.secret.get.await_count == 3
+        assert selector._host_client.core_v1.secret.get.await_count == 3
 
 
 async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
@@ -148,7 +148,7 @@ async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
 
     selector = KubeClientSelector(config=default_kube_config, vcluster_cache_size=1)
     secret = build_vcluster_secret(server=patch_secret_with_kubeconfig)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         return_value=secret
     )
 
@@ -159,7 +159,7 @@ async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
 
         async def hold_a() -> None:
             async with selector.get_client(org_name="oA", project_name="pA") as c_a:
-                assert c_a._origin is not selector._default_client
+                assert c_a._origin is not selector._host_client
                 assert str(c_a._origin._core.base_url) == patch_secret_with_kubeconfig
                 ctx_entered.set()
                 await ctx_release.wait()
@@ -169,7 +169,7 @@ async def test_eviction_while_leased_uses_zombie_then_closes_on_release(
 
         # Now insert B while A is leased; A becomes zombie
         async with selector.get_client(org_name="oB", project_name="pB") as c_b:
-            assert c_b._origin is not selector._default_client
+            assert c_b._origin is not selector._host_client
             assert str(c_b._origin._core.base_url) == patch_secret_with_kubeconfig
 
         # should not be closed yet
@@ -193,7 +193,7 @@ async def test_concurrent_same_namespace_builds_once(
     """
     selector = KubeClientSelector(config=default_kube_config, vcluster_cache_size=32)
     secret = build_vcluster_secret(server=patch_secret_with_kubeconfig)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         return_value=secret
     )
 
@@ -218,7 +218,7 @@ async def test_aclose_waits_for_leases_then_closes(
     """
     selector = KubeClientSelector(config=default_kube_config)
     secret = build_vcluster_secret(server=patch_secret_with_kubeconfig)
-    selector._default_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
+    selector._host_client.core_v1.secret.get = AsyncMock(  # type: ignore[method-assign]
         return_value=secret
     )
 
