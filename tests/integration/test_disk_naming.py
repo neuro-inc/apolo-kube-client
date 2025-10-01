@@ -1,3 +1,18 @@
+import asyncio
+from collections.abc import AsyncGenerator
+
+import pytest
+from kubernetes.client import (
+    V1CustomResourceColumnDefinition,
+    V1CustomResourceDefinition,
+    V1CustomResourceDefinitionNames,
+    V1CustomResourceDefinitionSpec,
+    V1CustomResourceDefinitionVersion,
+    V1CustomResourceValidation,
+    V1JSONSchemaProps,
+    V1ObjectMeta,
+)
+
 from apolo_kube_client import KubeClient
 from apolo_kube_client._crd_models import (
     V1DiskNamingCRD,
@@ -6,7 +21,58 @@ from apolo_kube_client._crd_models import (
 )
 
 
+@pytest.fixture
+async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[None]:
+    dn_crd = V1CustomResourceDefinition(
+        api_version="apiextensions.k8s.io/v1",
+        kind="CustomResourceDefinition",
+        metadata=V1ObjectMeta(name="disknamings.neuromation.io"),
+        spec=V1CustomResourceDefinitionSpec(
+            group="neuromation.io",
+            versions=[
+                V1CustomResourceDefinitionVersion(
+                    name="v1",
+                    served=True,
+                    storage=True,
+                    schema=V1CustomResourceValidation(
+                        open_apiv3_schema=V1JSONSchemaProps(
+                            type="object",
+                            properties={
+                                "spec": V1JSONSchemaProps(
+                                    type="object",
+                                    properties={
+                                        "disk_id": V1JSONSchemaProps(type="string")
+                                    },
+                                )
+                            },
+                        )
+                    ),
+                    additional_printer_columns=[
+                        V1CustomResourceColumnDefinition(
+                            name="DiskNaming", type="string", json_path=".spec.disk_id"
+                        )
+                    ],
+                )
+            ],
+            scope="Namespaced",
+            names=V1CustomResourceDefinitionNames(
+                kind="DiskNaming",
+                list_kind="DiskNamingsList",
+                plural="disknamings",
+                singular="disknaming",
+                short_names=[],
+            ),
+        ),
+    )
+
+    await kube_client.extensions_k8s_io_v1.crd.create(model=dn_crd)
+    await asyncio.sleep(1)
+    yield
+    await kube_client.extensions_k8s_io_v1.crd.delete(name=dn_crd.metadata.name)
+
+
 class TestDiskNaming:
+    @pytest.mark.usefixtures("install_disk_naming_crd")
     async def test_crud(self, kube_client: KubeClient) -> None:
         dn = V1DiskNamingCRD(
             apiVersion="neuromation.io/v1",
