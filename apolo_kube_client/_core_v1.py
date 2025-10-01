@@ -1,4 +1,6 @@
 from kubernetes.client.models import (
+    V1Endpoint,
+    V1EndpointList,
     V1Namespace,
     V1NamespaceList,
     V1Node,
@@ -92,6 +94,10 @@ class Service(NamespacedResource[V1Service, V1ServiceList, V1Service]):
     query_path = "services"
 
 
+class Endpoint(NamespacedResource[V1Endpoint, V1EndpointList, V1Endpoint]):
+    query_path = "endpoints"
+
+
 class CoreV1Api(Base):
     """
     Core v1 API wrapper for Kubernetes.
@@ -107,3 +113,4 @@ class CoreV1Api(Base):
     secret = _Attr(Secret, group_api_query_path)
     persistent_volume_claim = _Attr(PersistentVolumeClaim, group_api_query_path)
     service = _Attr(Service, group_api_query_path)
+    endpoint = _Attr(Endpoint, group_api_query_path)
