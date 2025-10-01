@@ -1,6 +1,6 @@
 from kubernetes.client.models import (
-    V1Endpoint,
-    V1EndpointList,
+    V1Endpoints,
+    V1EndpointsList,
     V1PersistentVolumeClaim,
     V1PersistentVolumeClaimList,
     V1Pod,
@@ -66,9 +66,9 @@ class ServiceProxy(
 
 class EndpointProxy(
     NamespacedResourceProxy[
-        V1Endpoint,
-        V1EndpointList,
-        V1Endpoint,
+        V1Endpoints,
+        V1EndpointsList,
+        V1Endpoints,
         Endpoint,
     ]
 ):

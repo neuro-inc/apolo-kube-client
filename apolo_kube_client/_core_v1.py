@@ -1,6 +1,6 @@
 from kubernetes.client.models import (
-    V1Endpoint,
-    V1EndpointList,
+    V1Endpoints,
+    V1EndpointsList,
     V1Namespace,
     V1NamespaceList,
     V1Node,
@@ -94,7 +94,7 @@ class Service(NamespacedResource[V1Service, V1ServiceList, V1Service]):
     query_path = "services"
 
 
-class Endpoint(NamespacedResource[V1Endpoint, V1EndpointList, V1Endpoint]):
+class Endpoint(NamespacedResource[V1Endpoints, V1EndpointsList, V1Endpoints]):
     query_path = "endpoints"
 
 
