@@ -1,5 +1,11 @@
 from ._client import KubeClient
 from ._config import KubeClientAuthType, KubeConfig
+from ._crd_models import (
+    V1DiskNamingCRD,
+    V1DiskNamingCRDList,
+    V1DiskNamingCRDMetadata,
+    V1DiskNamingCRDSpec,
+)
 from ._errors import (
     KubeClientException,
     KubeClientUnauthorized,
@@ -31,4 +37,8 @@ __all__ = [
     "escape_json_pointer",
     "KubeClientSelector",
     "KubeClientProxy",
+    "V1DiskNamingCRD",
+    "V1DiskNamingCRDList",
+    "V1DiskNamingCRDSpec",
+    "V1DiskNamingCRDMetadata",
 ]
