@@ -35,5 +35,5 @@ class NetworkingK8SioV1ApiProxy(BaseProxy[NetworkingK8SioV1Api]):
         return self._origin.network_policy
 
     @attr(IngressProxy)
-    def ingress(self) -> IngressProxy:
+    def ingress(self) -> Ingress:
         return self._origin.ingress
