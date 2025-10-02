@@ -159,9 +159,11 @@ class ClusterScopedResource[
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
 
-    async def delete(self, name: str) -> DeleteModelT:
+    async def delete(
+        self, name: str, *, payload: JsonType | None = None
+    ) -> DeleteModelT:
         async with self._core.request(
-            method="DELETE", url=self._build_url(name)
+            method="DELETE", url=self._build_url(name), json=payload
         ) as resp:
             return await self._core.deserialize_response(resp, self._delete_model_class)
 
@@ -311,9 +313,17 @@ class NamespacedResource[
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
 
-    async def delete(self, name: str, namespace: str | None = None) -> DeleteModelT:
+    async def delete(
+        self,
+        name: str,
+        namespace: str | None = None,
+        *,
+        payload: JsonType | None = None,
+    ) -> DeleteModelT:
         async with self._core.request(
-            method="DELETE", url=self._build_url(name, self._get_ns(namespace))
+            method="DELETE",
+            url=self._build_url(name, self._get_ns(namespace)),
+            json=payload,
         ) as resp:
             return await self._core.deserialize_response(resp, self._delete_model_class)
 
