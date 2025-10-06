@@ -2,6 +2,7 @@ from collections.abc import Collection
 from typing import cast
 
 from .._base_resource import KubeResourceModel, NamespacedResource
+from .._typedefs import JsonType
 from .._watch import Watch
 
 
@@ -62,11 +63,18 @@ class NamespacedResourceProxy[
         )
         return await origin.create(model=model, namespace=self._namespace)
 
-    async def delete(self, name: str) -> DeleteModelT:
+    async def delete(
+        self,
+        name: str,
+        *,
+        payload: JsonType | None = None,
+    ) -> DeleteModelT:
         origin = cast(
             NamespacedResource[ModelT, ListModelT, DeleteModelT], self._origin
         )
-        return await origin.delete(name=name, namespace=self._namespace)
+        return await origin.delete(
+            name=name, namespace=self._namespace, payload=payload
+        )
 
     async def get_or_create(self, model: ModelT) -> tuple[bool, ModelT]:
         origin = cast(
