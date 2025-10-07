@@ -1,4 +1,6 @@
 from kubernetes.client.models import (
+    CoreV1Event,
+    CoreV1EventList,
     V1Endpoints,
     V1EndpointsList,
     V1Namespace,
@@ -98,6 +100,10 @@ class Endpoint(NamespacedResource[V1Endpoints, V1EndpointsList, V1Endpoints]):
     query_path = "endpoints"
 
 
+class Event(NamespacedResource[CoreV1Event, CoreV1EventList, CoreV1Event]):
+    query_path = "events"
+
+
 class CoreV1Api(Base):
     """
     Core v1 API wrapper for Kubernetes.
@@ -114,3 +120,4 @@ class CoreV1Api(Base):
     persistent_volume_claim = _Attr(PersistentVolumeClaim, group_api_query_path)
     service = _Attr(Service, group_api_query_path)
     endpoint = _Attr(Endpoint, group_api_query_path)
+    event = _Attr(Event, group_api_query_path)

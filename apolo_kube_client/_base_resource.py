@@ -244,10 +244,15 @@ class NamespacedResource[
     async def get_list(
         self,
         label_selector: str | None = None,
+        field_selector: str | None = None,
         namespace: str | None = None,
         all_namespaces: bool = False,
     ) -> ListModelT:
-        params = {"labelSelector": label_selector} if label_selector else None
+        params = {}
+        if label_selector:
+            params["labelSelector"] = label_selector
+        if field_selector:
+            params["fieldSelector"] = field_selector
         async with self._core.request(
             method="GET",
             url=self._build_url_list(

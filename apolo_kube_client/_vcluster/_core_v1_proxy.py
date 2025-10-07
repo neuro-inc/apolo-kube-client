@@ -1,4 +1,6 @@
 from kubernetes.client.models import (
+    CoreV1Event,
+    CoreV1EventList,
     V1Endpoints,
     V1EndpointsList,
     V1PersistentVolumeClaim,
@@ -12,7 +14,15 @@ from kubernetes.client.models import (
     V1Status,
 )
 
-from .._core_v1 import CoreV1Api, Endpoint, PersistentVolumeClaim, Pod, Secret, Service
+from .._core_v1 import (
+    CoreV1Api,
+    Endpoint,
+    Event,
+    PersistentVolumeClaim,
+    Pod,
+    Secret,
+    Service,
+)
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
@@ -64,6 +74,17 @@ class ServiceProxy(
     pass
 
 
+class EventProxy(
+    NamespacedResourceProxy[
+        CoreV1Event,
+        CoreV1EventList,
+        CoreV1Event,
+        Event,
+    ]
+):
+    pass
+
+
 class EndpointProxy(
     NamespacedResourceProxy[
         V1Endpoints,
@@ -101,6 +122,10 @@ class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     @attr(EndpointProxy)
     def endpoint(self) -> Endpoint:
         return self._origin.endpoint
+
+    @attr(EventProxy)
+    def event(self) -> Event:
+        return self._origin.event
 
     # ASvetlov: CoreV1Api has cluster-scoped networking_k8s_io_v1 and discovery_k8s_io_v1
     # Not sure if we should expose these attrs in project-scoped client.
