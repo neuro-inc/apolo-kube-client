@@ -4,6 +4,7 @@ from typing import Self
 
 from ._admissionregistration_k8s_io_v1 import AdmissionRegistrationK8SioV1Api
 from ._apiextensions_k8s_io_v1 import ExtensionsK8sV1Api
+from ._apps_v1 import AppsV1Api
 from ._attr import _Attr
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
@@ -22,6 +23,7 @@ logger = logging.getLogger(__name__)
 class KubeClient:
     resource_list = _Attr(ResourceListApi)
     core_v1 = _Attr(CoreV1Api)
+    apps_v1 = _Attr(AppsV1Api)
     batch_v1 = _Attr(BatchV1Api)
     networking_k8s_io_v1 = _Attr(NetworkingK8SioV1Api)
     admission_registration_k8s_io_v1 = _Attr(AdmissionRegistrationK8SioV1Api)
