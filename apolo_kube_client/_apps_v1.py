@@ -15,4 +15,4 @@ class AppsV1Api(Base):
 
     group_api_query_path = "apis/apps/v1"
 
-    statefulsets = _Attr(StatefulSet, group_api_query_path)
+    statefulset = _Attr(StatefulSet, group_api_query_path)

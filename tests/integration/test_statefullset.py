@@ -35,25 +35,25 @@ class TestStatefulSet:
         )
 
         # test creating the statefulset
-        statefulset_create = await kube_client.apps_v1.statefulsets.create(
+        statefulset_create = await kube_client.apps_v1.statefulset.create(
             model=statefulset, namespace="default"
         )
         assert statefulset_create.metadata.name == statefulset.metadata.name
 
         # test getting the statefulset
-        statefulset_get = await kube_client.apps_v1.statefulsets.get(
+        statefulset_get = await kube_client.apps_v1.statefulset.get(
             name=statefulset.metadata.name
         )
         assert statefulset_get.metadata.name == statefulset.metadata.name
 
         # test getting all statefulsets and ensuring the newly created statefulset is there
-        statefulset_list = await kube_client.apps_v1.statefulsets.get_list()
+        statefulset_list = await kube_client.apps_v1.statefulset.get_list()
         statefulset_names = {p.metadata.name for p in statefulset_list.items}
         assert len(statefulset_list.items) > 0
         assert statefulset.metadata.name in statefulset_names
 
         # test deleting the statefulset
-        ss_status = await kube_client.apps_v1.statefulsets.delete(
+        ss_status = await kube_client.apps_v1.statefulset.delete(
             name=statefulset.metadata.name
         )
         assert ss_status.status == "Success"
