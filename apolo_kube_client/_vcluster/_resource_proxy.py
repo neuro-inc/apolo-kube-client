@@ -33,12 +33,15 @@ class NamespacedResourceProxy[
     async def get_list(
         self,
         label_selector: str | None = None,
+        field_selector: str | None = None,
     ) -> ListModelT:
         origin = cast(
             NamespacedResource[ModelT, ListModelT, DeleteModelT], self._origin
         )
         return await origin.get_list(
-            label_selector=label_selector, namespace=self._namespace
+            label_selector=label_selector,
+            field_selector=field_selector,
+            namespace=self._namespace,
         )
 
     def watch(
