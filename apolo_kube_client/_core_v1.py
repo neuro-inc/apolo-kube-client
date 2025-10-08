@@ -22,6 +22,7 @@ from kubernetes.client.models import (
 
 from ._attr import _Attr
 from ._base_resource import Base, ClusterScopedResource, NamespacedResource
+from ._typedefs import JsonType
 from ._utils import base64_encode, escape_json_pointer
 
 
@@ -31,6 +32,11 @@ class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]
 
 class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
     query_path = "nodes"
+
+    async def get_stats_summary(self, name: str) -> JsonType:
+        return await self._core.get(
+            url=self._build_url(name) / "proxy" / "stats" / "summary",
+        )
 
 
 class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
