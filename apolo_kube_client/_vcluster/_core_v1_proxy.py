@@ -78,7 +78,7 @@ class EventProxy(
     NamespacedResourceProxy[
         CoreV1Event,
         CoreV1EventList,
-        CoreV1Event,
+        V1Status,
         Event,
     ]
 ):
