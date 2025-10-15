@@ -1,0 +1,13 @@
+from pydantic import BaseModel, Field
+
+
+class V1ResourcePolicyRule(BaseModel):
+    api_groups: list[str] | None = Field(None, alias="apiGroups")
+
+    cluster_scope: bool | None = Field(None, alias="clusterScope")
+
+    namespaces: list[str] | None = Field(None, alias="namespaces")
+
+    resources: list[str] | None = Field(None, alias="resources")
+
+    verbs: list[str] | None = Field(None, alias="verbs")

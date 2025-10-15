@@ -1,0 +1,20 @@
+from pydantic import BaseModel, Field
+
+from .v1_pod_failure_policy_on_exit_codes_requirement import (
+    V1PodFailurePolicyOnExitCodesRequirement,
+)
+from .v1_pod_failure_policy_on_pod_conditions_pattern import (
+    V1PodFailurePolicyOnPodConditionsPattern,
+)
+
+
+class V1PodFailurePolicyRule(BaseModel):
+    action: str | None = Field(None, alias="action")
+
+    on_exit_codes: V1PodFailurePolicyOnExitCodesRequirement | None = Field(
+        None, alias="onExitCodes"
+    )
+
+    on_pod_conditions: list[V1PodFailurePolicyOnPodConditionsPattern] | None = Field(
+        None, alias="onPodConditions"
+    )
