@@ -5,6 +5,14 @@ from ._crd_models import (
     V1DiskNamingCRDList,
     V1DiskNamingCRDMetadata,
     V1DiskNamingCRDSpec,
+    V1PersistentBucketCredentialCRD,
+    V1PersistentBucketCredentialCRDList,
+    V1PersistentBucketCredentialCRDMetadata,
+    V1PersistentBucketCredentialCRDSpec,
+    V1UserBucketCRD,
+    V1UserBucketCRDList,
+    V1UserBucketCRDMetadata,
+    V1UserBucketCRDSpec,
 )
 from ._errors import (
     KubeClientException,
@@ -41,4 +49,12 @@ __all__ = [
     "V1DiskNamingCRDList",
     "V1DiskNamingCRDSpec",
     "V1DiskNamingCRDMetadata",
+    "V1UserBucketCRD",
+    "V1UserBucketCRDList",
+    "V1UserBucketCRDSpec",
+    "V1UserBucketCRDMetadata",
+    "V1PersistentBucketCredentialCRD",
+    "V1PersistentBucketCredentialCRDList",
+    "V1PersistentBucketCredentialCRDSpec",
+    "V1PersistentBucketCredentialCRDMetadata",
 ]
