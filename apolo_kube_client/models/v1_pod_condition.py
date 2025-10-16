@@ -1,21 +1,27 @@
 from __future__ import annotations
-
-from datetime import datetime
-
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 __all__ = ("V1PodCondition",)
 
 
 class V1PodCondition(BaseModel):
-    last_probe_time: datetime | None = Field(None, alias="lastProbeTime")
+    last_probe_time: datetime | None = Field(
+        default_factory=lambda: None, alias="lastProbeTime"
+    )
 
-    last_transition_time: datetime | None = Field(None, alias="lastTransitionTime")
+    last_transition_time: datetime | None = Field(
+        default_factory=lambda: None, alias="lastTransitionTime"
+    )
 
-    message: str | None = Field(None, alias="message")
+    message: str | None = Field(default_factory=lambda: None, alias="message")
 
-    reason: str | None = Field(None, alias="reason")
+    observed_generation: int | None = Field(
+        default_factory=lambda: None, alias="observedGeneration"
+    )
 
-    status: str | None = Field(None, alias="status")
+    reason: str | None = Field(default_factory=lambda: None, alias="reason")
 
-    type: str | None = Field(None, alias="type")
+    status: str | None = Field(default_factory=lambda: None, alias="status")
+
+    type: str | None = Field(default_factory=lambda: None, alias="type")

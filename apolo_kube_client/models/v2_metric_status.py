@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v2_container_resource_metric_status import V2ContainerResourceMetricStatus
 from .v2_external_metric_status import V2ExternalMetricStatus
 from .v2_object_metric_status import V2ObjectMetricStatus
@@ -12,16 +10,25 @@ __all__ = ("V2MetricStatus",)
 
 
 class V2MetricStatus(BaseModel):
-    container_resource: V2ContainerResourceMetricStatus | None = Field(
-        None, alias="containerResource"
+    container_resource: V2ContainerResourceMetricStatus = Field(
+        default_factory=lambda: V2ContainerResourceMetricStatus(),
+        alias="containerResource",
     )
 
-    external: V2ExternalMetricStatus | None = Field(None, alias="external")
+    external: V2ExternalMetricStatus = Field(
+        default_factory=lambda: V2ExternalMetricStatus(), alias="external"
+    )
 
-    object: V2ObjectMetricStatus | None = Field(None, alias="object")
+    object: V2ObjectMetricStatus = Field(
+        default_factory=lambda: V2ObjectMetricStatus(), alias="object"
+    )
 
-    pods: V2PodsMetricStatus | None = Field(None, alias="pods")
+    pods: V2PodsMetricStatus = Field(
+        default_factory=lambda: V2PodsMetricStatus(), alias="pods"
+    )
 
-    resource: V2ResourceMetricStatus | None = Field(None, alias="resource")
+    resource: V2ResourceMetricStatus = Field(
+        default_factory=lambda: V2ResourceMetricStatus(), alias="resource"
+    )
 
-    type: str | None = Field(None, alias="type")
+    type: str | None = Field(default_factory=lambda: None, alias="type")

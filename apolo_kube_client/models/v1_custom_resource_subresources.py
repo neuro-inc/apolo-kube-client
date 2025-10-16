@@ -1,15 +1,14 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
-from apolo_kube_client._typedefs import JsonType
-
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
+from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1CustomResourceSubresources",)
 
 
 class V1CustomResourceSubresources(BaseModel):
-    scale: V1CustomResourceSubresourceScale | None = Field(None, alias="scale")
+    scale: V1CustomResourceSubresourceScale = Field(
+        default_factory=lambda: V1CustomResourceSubresourceScale(), alias="scale"
+    )
 
-    status: JsonType | None = Field(None, alias="status")
+    status: JsonType = Field(default_factory=lambda: {}, alias="status")

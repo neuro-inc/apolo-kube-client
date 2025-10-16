@@ -1,15 +1,15 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
-from .v1_resource_claim import V1ResourceClaim
+from .core_v1_resource_claim import CoreV1ResourceClaim
 
 __all__ = ("V1ResourceRequirements",)
 
 
 class V1ResourceRequirements(BaseModel):
-    claims: list[V1ResourceClaim] | None = Field(None, alias="claims")
+    claims: list[CoreV1ResourceClaim] = Field(
+        default_factory=lambda: [], alias="claims"
+    )
 
-    limits: dict[str, str] | None = Field(None, alias="limits")
+    limits: dict[str, str] = Field(default_factory=lambda: {}, alias="limits")
 
-    requests: dict[str, str] | None = Field(None, alias="requests")
+    requests: dict[str, str] = Field(default_factory=lambda: {}, alias="requests")

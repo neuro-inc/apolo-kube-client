@@ -1,22 +1,23 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
-from apolo_kube_client._typedefs import JsonType
-
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha1_storage_version_status import V1alpha1StorageVersionStatus
+from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1alpha1StorageVersion",)
 
 
 class V1alpha1StorageVersion(BaseModel):
-    api_version: str | None = Field(None, alias="apiVersion")
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    metadata: V1ObjectMeta | None = Field(None, alias="metadata")
+    metadata: V1ObjectMeta = Field(
+        default_factory=lambda: V1ObjectMeta(), alias="metadata"
+    )
 
-    spec: JsonType | None = Field(None, alias="spec")
+    spec: JsonType = Field(default_factory=lambda: {}, alias="spec")
 
-    status: V1alpha1StorageVersionStatus | None = Field(None, alias="status")
+    status: V1alpha1StorageVersionStatus = Field(
+        default_factory=lambda: V1alpha1StorageVersionStatus(), alias="status"
+    )

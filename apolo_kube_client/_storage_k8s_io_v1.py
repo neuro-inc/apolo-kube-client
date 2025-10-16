@@ -1,7 +1,6 @@
-from kubernetes.client.models import V1StorageClass, V1StorageClassList
-
 from ._attr import _Attr
 from ._base_resource import Base, ClusterScopedResource
+from .models import V1StorageClass, V1StorageClassList
 
 
 class StorageClass(

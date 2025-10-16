@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
 
@@ -9,26 +7,28 @@ __all__ = ("V1PersistentVolumeClaimStatus",)
 
 
 class V1PersistentVolumeClaimStatus(BaseModel):
-    access_modes: list[str] | None = Field(None, alias="accessModes")
+    access_modes: list[str] = Field(default_factory=lambda: [], alias="accessModes")
 
-    allocated_resource_statuses: dict[str, str] | None = Field(
-        None, alias="allocatedResourceStatuses"
+    allocated_resource_statuses: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="allocatedResourceStatuses"
     )
 
-    allocated_resources: dict[str, str] | None = Field(None, alias="allocatedResources")
+    allocated_resources: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="allocatedResources"
+    )
 
-    capacity: dict[str, str] | None = Field(None, alias="capacity")
+    capacity: dict[str, str] = Field(default_factory=lambda: {}, alias="capacity")
 
-    conditions: list[V1PersistentVolumeClaimCondition] | None = Field(
-        None, alias="conditions"
+    conditions: list[V1PersistentVolumeClaimCondition] = Field(
+        default_factory=lambda: [], alias="conditions"
     )
 
     current_volume_attributes_class_name: str | None = Field(
-        None, alias="currentVolumeAttributesClassName"
+        default_factory=lambda: None, alias="currentVolumeAttributesClassName"
     )
 
-    modify_volume_status: V1ModifyVolumeStatus | None = Field(
-        None, alias="modifyVolumeStatus"
+    modify_volume_status: V1ModifyVolumeStatus = Field(
+        default_factory=lambda: V1ModifyVolumeStatus(), alias="modifyVolumeStatus"
     )
 
-    phase: str | None = Field(None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None, alias="phase")

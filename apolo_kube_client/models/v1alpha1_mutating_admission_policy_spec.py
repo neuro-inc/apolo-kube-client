@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1alpha1_match_condition import V1alpha1MatchCondition
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_mutation import V1alpha1Mutation
@@ -12,20 +10,30 @@ __all__ = ("V1alpha1MutatingAdmissionPolicySpec",)
 
 
 class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
-    failure_policy: str | None = Field(None, alias="failurePolicy")
-
-    match_conditions: list[V1alpha1MatchCondition] | None = Field(
-        None, alias="matchConditions"
+    failure_policy: str | None = Field(
+        default_factory=lambda: None, alias="failurePolicy"
     )
 
-    match_constraints: V1alpha1MatchResources | None = Field(
-        None, alias="matchConstraints"
+    match_conditions: list[V1alpha1MatchCondition] = Field(
+        default_factory=lambda: [], alias="matchConditions"
     )
 
-    mutations: list[V1alpha1Mutation] | None = Field(None, alias="mutations")
+    match_constraints: V1alpha1MatchResources = Field(
+        default_factory=lambda: V1alpha1MatchResources(), alias="matchConstraints"
+    )
 
-    param_kind: V1alpha1ParamKind | None = Field(None, alias="paramKind")
+    mutations: list[V1alpha1Mutation] = Field(
+        default_factory=lambda: [], alias="mutations"
+    )
 
-    reinvocation_policy: str | None = Field(None, alias="reinvocationPolicy")
+    param_kind: V1alpha1ParamKind = Field(
+        default_factory=lambda: V1alpha1ParamKind(), alias="paramKind"
+    )
 
-    variables: list[V1alpha1Variable] | None = Field(None, alias="variables")
+    reinvocation_policy: str | None = Field(
+        default_factory=lambda: None, alias="reinvocationPolicy"
+    )
+
+    variables: list[V1alpha1Variable] = Field(
+        default_factory=lambda: [], alias="variables"
+    )

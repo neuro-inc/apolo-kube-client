@@ -12,7 +12,6 @@ dependencies = [
     "yarl (>=1.20)",
     "multidict (>=6)",
     "pydantic (>=2.11.5,<3.0.0)",
-    "kubernetes (>=32.0.1,<33.0.0)",
     "cachetools (>=5.3.3)",
 ]
 dynamic = ["version"]
@@ -45,6 +44,7 @@ pytest-cov = "^6.0.0"
 cryptography = "^45.0.4"
 types-pyyaml = "^6.0.12.20250915"
 types-cachetools = "^6.2.0.20250827"
+kubernetes = "^34.1.0"
 
 [tool.black]
 exclude = '''

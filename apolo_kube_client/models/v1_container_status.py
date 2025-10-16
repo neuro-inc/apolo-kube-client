@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_container_state import V1ContainerState
 from .v1_container_user import V1ContainerUser
 from .v1_resource_requirements import V1ResourceRequirements
@@ -12,32 +10,48 @@ __all__ = ("V1ContainerStatus",)
 
 
 class V1ContainerStatus(BaseModel):
-    allocated_resources: dict[str, str] | None = Field(None, alias="allocatedResources")
-
-    allocated_resources_status: list[V1ResourceStatus] | None = Field(
-        None, alias="allocatedResourcesStatus"
+    allocated_resources: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="allocatedResources"
     )
 
-    container_id: str | None = Field(None, alias="containerID")
+    allocated_resources_status: list[V1ResourceStatus] = Field(
+        default_factory=lambda: [], alias="allocatedResourcesStatus"
+    )
 
-    image: str | None = Field(None, alias="image")
+    container_id: str | None = Field(default_factory=lambda: None, alias="containerID")
 
-    image_id: str | None = Field(None, alias="imageID")
+    image: str | None = Field(default_factory=lambda: None, alias="image")
 
-    last_state: V1ContainerState | None = Field(None, alias="lastState")
+    image_id: str | None = Field(default_factory=lambda: None, alias="imageID")
 
-    name: str | None = Field(None, alias="name")
+    last_state: V1ContainerState = Field(
+        default_factory=lambda: V1ContainerState(), alias="lastState"
+    )
 
-    ready: bool | None = Field(None, alias="ready")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    resources: V1ResourceRequirements | None = Field(None, alias="resources")
+    ready: bool | None = Field(default_factory=lambda: None, alias="ready")
 
-    restart_count: int | None = Field(None, alias="restartCount")
+    resources: V1ResourceRequirements = Field(
+        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+    )
 
-    started: bool | None = Field(None, alias="started")
+    restart_count: int | None = Field(
+        default_factory=lambda: None, alias="restartCount"
+    )
 
-    state: V1ContainerState | None = Field(None, alias="state")
+    started: bool | None = Field(default_factory=lambda: None, alias="started")
 
-    user: V1ContainerUser | None = Field(None, alias="user")
+    state: V1ContainerState = Field(
+        default_factory=lambda: V1ContainerState(), alias="state"
+    )
 
-    volume_mounts: list[V1VolumeMountStatus] | None = Field(None, alias="volumeMounts")
+    stop_signal: str | None = Field(default_factory=lambda: None, alias="stopSignal")
+
+    user: V1ContainerUser = Field(
+        default_factory=lambda: V1ContainerUser(), alias="user"
+    )
+
+    volume_mounts: list[V1VolumeMountStatus] = Field(
+        default_factory=lambda: [], alias="volumeMounts"
+    )

@@ -1,36 +1,42 @@
 from __future__ import annotations
-
-from datetime import datetime
-
 from pydantic import BaseModel, Field
-
 from .v1_job_condition import V1JobCondition
 from .v1_uncounted_terminated_pods import V1UncountedTerminatedPods
+from datetime import datetime
 
 __all__ = ("V1JobStatus",)
 
 
 class V1JobStatus(BaseModel):
-    active: int | None = Field(None, alias="active")
+    active: int | None = Field(default_factory=lambda: None, alias="active")
 
-    completed_indexes: str | None = Field(None, alias="completedIndexes")
+    completed_indexes: str | None = Field(
+        default_factory=lambda: None, alias="completedIndexes"
+    )
 
-    completion_time: datetime | None = Field(None, alias="completionTime")
+    completion_time: datetime | None = Field(
+        default_factory=lambda: None, alias="completionTime"
+    )
 
-    conditions: list[V1JobCondition] | None = Field(None, alias="conditions")
+    conditions: list[V1JobCondition] = Field(
+        default_factory=lambda: [], alias="conditions"
+    )
 
-    failed: int | None = Field(None, alias="failed")
+    failed: int | None = Field(default_factory=lambda: None, alias="failed")
 
-    failed_indexes: str | None = Field(None, alias="failedIndexes")
+    failed_indexes: str | None = Field(
+        default_factory=lambda: None, alias="failedIndexes"
+    )
 
-    ready: int | None = Field(None, alias="ready")
+    ready: int | None = Field(default_factory=lambda: None, alias="ready")
 
-    start_time: datetime | None = Field(None, alias="startTime")
+    start_time: datetime | None = Field(default_factory=lambda: None, alias="startTime")
 
-    succeeded: int | None = Field(None, alias="succeeded")
+    succeeded: int | None = Field(default_factory=lambda: None, alias="succeeded")
 
-    terminating: int | None = Field(None, alias="terminating")
+    terminating: int | None = Field(default_factory=lambda: None, alias="terminating")
 
-    uncounted_terminated_pods: V1UncountedTerminatedPods | None = Field(
-        None, alias="uncountedTerminatedPods"
+    uncounted_terminated_pods: V1UncountedTerminatedPods = Field(
+        default_factory=lambda: V1UncountedTerminatedPods(),
+        alias="uncountedTerminatedPods",
     )

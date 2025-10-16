@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
@@ -11,26 +9,30 @@ __all__ = ("V1CustomResourceDefinitionVersion",)
 
 
 class V1CustomResourceDefinitionVersion(BaseModel):
-    additional_printer_columns: list[V1CustomResourceColumnDefinition] | None = Field(
-        None, alias="additionalPrinterColumns"
+    additional_printer_columns: list[V1CustomResourceColumnDefinition] = Field(
+        default_factory=lambda: [], alias="additionalPrinterColumns"
     )
 
-    deprecated: bool | None = Field(None, alias="deprecated")
+    deprecated: bool | None = Field(default_factory=lambda: None, alias="deprecated")
 
-    deprecation_warning: str | None = Field(None, alias="deprecationWarning")
-
-    name: str | None = Field(None, alias="name")
-
-    _schema: V1CustomResourceValidation | None = Field(None, alias="schema")
-
-    selectable_fields: list[V1SelectableField] | None = Field(
-        None, alias="selectableFields"
+    deprecation_warning: str | None = Field(
+        default_factory=lambda: None, alias="deprecationWarning"
     )
 
-    served: bool | None = Field(None, alias="served")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    storage: bool | None = Field(None, alias="storage")
+    schema_: V1CustomResourceValidation = Field(
+        default_factory=lambda: V1CustomResourceValidation(), alias="schema"
+    )
 
-    subresources: V1CustomResourceSubresources | None = Field(
-        None, alias="subresources"
+    selectable_fields: list[V1SelectableField] = Field(
+        default_factory=lambda: [], alias="selectableFields"
+    )
+
+    served: bool | None = Field(default_factory=lambda: None, alias="served")
+
+    storage: bool | None = Field(default_factory=lambda: None, alias="storage")
+
+    subresources: V1CustomResourceSubresources = Field(
+        default_factory=lambda: V1CustomResourceSubresources(), alias="subresources"
     )

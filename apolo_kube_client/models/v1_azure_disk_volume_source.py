@@ -1,19 +1,19 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("V1AzureDiskVolumeSource",)
 
 
 class V1AzureDiskVolumeSource(BaseModel):
-    caching_mode: str | None = Field(None, alias="cachingMode")
+    caching_mode: str | None = Field(default_factory=lambda: None, alias="cachingMode")
 
-    disk_name: str | None = Field(None, alias="diskName")
+    disk_name: str | None = Field(default_factory=lambda: None, alias="diskName")
 
-    disk_uri: str | None = Field(None, alias="diskURI")
+    disk_uri: str | None = Field(default_factory=lambda: None, alias="diskURI")
 
-    fs_type: str | None = Field(None, alias="fsType")
+    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    read_only: bool | None = Field(None, alias="readOnly")
+    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")

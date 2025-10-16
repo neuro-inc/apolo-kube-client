@@ -1,17 +1,21 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_node_config_source import V1NodeConfigSource
 
 __all__ = ("V1NodeConfigStatus",)
 
 
 class V1NodeConfigStatus(BaseModel):
-    active: V1NodeConfigSource | None = Field(None, alias="active")
+    active: V1NodeConfigSource = Field(
+        default_factory=lambda: V1NodeConfigSource(), alias="active"
+    )
 
-    assigned: V1NodeConfigSource | None = Field(None, alias="assigned")
+    assigned: V1NodeConfigSource = Field(
+        default_factory=lambda: V1NodeConfigSource(), alias="assigned"
+    )
 
-    error: str | None = Field(None, alias="error")
+    error: str | None = Field(default_factory=lambda: None, alias="error")
 
-    last_known_good: V1NodeConfigSource | None = Field(None, alias="lastKnownGood")
+    last_known_good: V1NodeConfigSource = Field(
+        default_factory=lambda: V1NodeConfigSource(), alias="lastKnownGood"
+    )

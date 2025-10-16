@@ -1,15 +1,19 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("V2MetricTarget",)
 
 
 class V2MetricTarget(BaseModel):
-    average_utilization: int | None = Field(None, alias="averageUtilization")
+    average_utilization: int | None = Field(
+        default_factory=lambda: None, alias="averageUtilization"
+    )
 
-    average_value: str | None = Field(None, alias="averageValue")
+    average_value: str | None = Field(
+        default_factory=lambda: None, alias="averageValue"
+    )
 
-    type: str | None = Field(None, alias="type")
+    type: str | None = Field(default_factory=lambda: None, alias="type")
 
-    value: str | None = Field(None, alias="value")
+    value: str | None = Field(default_factory=lambda: None, alias="value")

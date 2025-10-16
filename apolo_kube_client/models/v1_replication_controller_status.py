@@ -1,23 +1,29 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_replication_controller_condition import V1ReplicationControllerCondition
 
 __all__ = ("V1ReplicationControllerStatus",)
 
 
 class V1ReplicationControllerStatus(BaseModel):
-    available_replicas: int | None = Field(None, alias="availableReplicas")
-
-    conditions: list[V1ReplicationControllerCondition] | None = Field(
-        None, alias="conditions"
+    available_replicas: int | None = Field(
+        default_factory=lambda: None, alias="availableReplicas"
     )
 
-    fully_labeled_replicas: int | None = Field(None, alias="fullyLabeledReplicas")
+    conditions: list[V1ReplicationControllerCondition] = Field(
+        default_factory=lambda: [], alias="conditions"
+    )
 
-    observed_generation: int | None = Field(None, alias="observedGeneration")
+    fully_labeled_replicas: int | None = Field(
+        default_factory=lambda: None, alias="fullyLabeledReplicas"
+    )
 
-    ready_replicas: int | None = Field(None, alias="readyReplicas")
+    observed_generation: int | None = Field(
+        default_factory=lambda: None, alias="observedGeneration"
+    )
 
-    replicas: int | None = Field(None, alias="replicas")
+    ready_replicas: int | None = Field(
+        default_factory=lambda: None, alias="readyReplicas"
+    )
+
+    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")

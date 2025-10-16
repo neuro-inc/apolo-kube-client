@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .events_v1_event import EventsV1Event
 from .v1_list_meta import V1ListMeta
 
@@ -9,10 +7,10 @@ __all__ = ("EventsV1EventList",)
 
 
 class EventsV1EventList(BaseModel):
-    api_version: str | None = Field(None, alias="apiVersion")
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    items: list[EventsV1Event] | None = Field(None, alias="items")
+    items: list[EventsV1Event] = Field(default_factory=lambda: [], alias="items")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    metadata: V1ListMeta | None = Field(None, alias="metadata")
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta(), alias="metadata")

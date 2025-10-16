@@ -1,21 +1,21 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_secret_reference import V1SecretReference
 
 __all__ = ("V1CephFSPersistentVolumeSource",)
 
 
 class V1CephFSPersistentVolumeSource(BaseModel):
-    monitors: list[str] | None = Field(None, alias="monitors")
+    monitors: list[str] = Field(default_factory=lambda: [], alias="monitors")
 
-    path: str | None = Field(None, alias="path")
+    path: str | None = Field(default_factory=lambda: None, alias="path")
 
-    read_only: bool | None = Field(None, alias="readOnly")
+    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 
-    secret_file: str | None = Field(None, alias="secretFile")
+    secret_file: str | None = Field(default_factory=lambda: None, alias="secretFile")
 
-    secret_ref: V1SecretReference | None = Field(None, alias="secretRef")
+    secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="secretRef"
+    )
 
-    user: str | None = Field(None, alias="user")
+    user: str | None = Field(default_factory=lambda: None, alias="user")

@@ -1,13 +1,13 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("V1ScopedResourceSelectorRequirement",)
 
 
 class V1ScopedResourceSelectorRequirement(BaseModel):
-    operator: str | None = Field(None, alias="operator")
+    operator: str | None = Field(default_factory=lambda: None, alias="operator")
 
-    scope_name: str | None = Field(None, alias="scopeName")
+    scope_name: str | None = Field(default_factory=lambda: None, alias="scopeName")
 
-    values: list[str] | None = Field(None, alias="values")
+    values: list[str] = Field(default_factory=lambda: [], alias="values")

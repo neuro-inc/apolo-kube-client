@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_capabilities import V1Capabilities
 from .v1_se_linux_options import V1SELinuxOptions
@@ -13,29 +11,42 @@ __all__ = ("V1SecurityContext",)
 
 class V1SecurityContext(BaseModel):
     allow_privilege_escalation: bool | None = Field(
-        None, alias="allowPrivilegeEscalation"
+        default_factory=lambda: None, alias="allowPrivilegeEscalation"
     )
 
-    app_armor_profile: V1AppArmorProfile | None = Field(None, alias="appArmorProfile")
+    app_armor_profile: V1AppArmorProfile = Field(
+        default_factory=lambda: V1AppArmorProfile(), alias="appArmorProfile"
+    )
 
-    capabilities: V1Capabilities | None = Field(None, alias="capabilities")
+    capabilities: V1Capabilities = Field(
+        default_factory=lambda: V1Capabilities(), alias="capabilities"
+    )
 
-    privileged: bool | None = Field(None, alias="privileged")
+    privileged: bool | None = Field(default_factory=lambda: None, alias="privileged")
 
-    proc_mount: str | None = Field(None, alias="procMount")
+    proc_mount: str | None = Field(default_factory=lambda: None, alias="procMount")
 
-    read_only_root_filesystem: bool | None = Field(None, alias="readOnlyRootFilesystem")
+    read_only_root_filesystem: bool | None = Field(
+        default_factory=lambda: None, alias="readOnlyRootFilesystem"
+    )
 
-    run_as_group: int | None = Field(None, alias="runAsGroup")
+    run_as_group: int | None = Field(default_factory=lambda: None, alias="runAsGroup")
 
-    run_as_non_root: bool | None = Field(None, alias="runAsNonRoot")
+    run_as_non_root: bool | None = Field(
+        default_factory=lambda: None, alias="runAsNonRoot"
+    )
 
-    run_as_user: int | None = Field(None, alias="runAsUser")
+    run_as_user: int | None = Field(default_factory=lambda: None, alias="runAsUser")
 
-    se_linux_options: V1SELinuxOptions | None = Field(None, alias="seLinuxOptions")
+    se_linux_options: V1SELinuxOptions = Field(
+        default_factory=lambda: V1SELinuxOptions(), alias="seLinuxOptions"
+    )
 
-    seccomp_profile: V1SeccompProfile | None = Field(None, alias="seccompProfile")
+    seccomp_profile: V1SeccompProfile = Field(
+        default_factory=lambda: V1SeccompProfile(), alias="seccompProfile"
+    )
 
-    windows_options: V1WindowsSecurityContextOptions | None = Field(
-        None, alias="windowsOptions"
+    windows_options: V1WindowsSecurityContextOptions = Field(
+        default_factory=lambda: V1WindowsSecurityContextOptions(),
+        alias="windowsOptions",
     )

@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .admissionregistration_v1_webhook_client_config import (
     AdmissionregistrationV1WebhookClientConfig,
 )
@@ -13,30 +11,39 @@ __all__ = ("V1ValidatingWebhook",)
 
 
 class V1ValidatingWebhook(BaseModel):
-    admission_review_versions: list[str] | None = Field(
-        None, alias="admissionReviewVersions"
+    admission_review_versions: list[str] = Field(
+        default_factory=lambda: [], alias="admissionReviewVersions"
     )
 
-    client_config: AdmissionregistrationV1WebhookClientConfig | None = Field(
-        None, alias="clientConfig"
+    client_config: AdmissionregistrationV1WebhookClientConfig = Field(
+        default_factory=lambda: AdmissionregistrationV1WebhookClientConfig(),
+        alias="clientConfig",
     )
 
-    failure_policy: str | None = Field(None, alias="failurePolicy")
-
-    match_conditions: list[V1MatchCondition] | None = Field(
-        None, alias="matchConditions"
+    failure_policy: str | None = Field(
+        default_factory=lambda: None, alias="failurePolicy"
     )
 
-    match_policy: str | None = Field(None, alias="matchPolicy")
+    match_conditions: list[V1MatchCondition] = Field(
+        default_factory=lambda: [], alias="matchConditions"
+    )
 
-    name: str | None = Field(None, alias="name")
+    match_policy: str | None = Field(default_factory=lambda: None, alias="matchPolicy")
 
-    namespace_selector: V1LabelSelector | None = Field(None, alias="namespaceSelector")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    object_selector: V1LabelSelector | None = Field(None, alias="objectSelector")
+    namespace_selector: V1LabelSelector = Field(
+        default_factory=lambda: V1LabelSelector(), alias="namespaceSelector"
+    )
 
-    rules: list[V1RuleWithOperations] | None = Field(None, alias="rules")
+    object_selector: V1LabelSelector = Field(
+        default_factory=lambda: V1LabelSelector(), alias="objectSelector"
+    )
 
-    side_effects: str | None = Field(None, alias="sideEffects")
+    rules: list[V1RuleWithOperations] = Field(default_factory=lambda: [], alias="rules")
 
-    timeout_seconds: int | None = Field(None, alias="timeoutSeconds")
+    side_effects: str | None = Field(default_factory=lambda: None, alias="sideEffects")
+
+    timeout_seconds: int | None = Field(
+        default_factory=lambda: None, alias="timeoutSeconds"
+    )

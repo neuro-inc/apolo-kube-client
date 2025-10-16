@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_affinity import V1Affinity
 from .v1_container import V1Container
 from .v1_ephemeral_container import V1EphemeralContainer
@@ -22,98 +20,140 @@ __all__ = ("V1PodSpec",)
 
 
 class V1PodSpec(BaseModel):
-    active_deadline_seconds: int | None = Field(None, alias="activeDeadlineSeconds")
+    active_deadline_seconds: int | None = Field(
+        default_factory=lambda: None, alias="activeDeadlineSeconds"
+    )
 
-    affinity: V1Affinity | None = Field(None, alias="affinity")
+    affinity: V1Affinity = Field(default_factory=lambda: V1Affinity(), alias="affinity")
 
     automount_service_account_token: bool | None = Field(
-        None, alias="automountServiceAccountToken"
+        default_factory=lambda: None, alias="automountServiceAccountToken"
     )
 
-    containers: list[V1Container] | None = Field(None, alias="containers")
-
-    dns_config: V1PodDNSConfig | None = Field(None, alias="dnsConfig")
-
-    dns_policy: str | None = Field(None, alias="dnsPolicy")
-
-    enable_service_links: bool | None = Field(None, alias="enableServiceLinks")
-
-    ephemeral_containers: list[V1EphemeralContainer] | None = Field(
-        None, alias="ephemeralContainers"
+    containers: list[V1Container] = Field(
+        default_factory=lambda: [], alias="containers"
     )
 
-    host_aliases: list[V1HostAlias] | None = Field(None, alias="hostAliases")
-
-    host_ipc: bool | None = Field(None, alias="hostIPC")
-
-    host_network: bool | None = Field(None, alias="hostNetwork")
-
-    host_pid: bool | None = Field(None, alias="hostPID")
-
-    host_users: bool | None = Field(None, alias="hostUsers")
-
-    hostname: str | None = Field(None, alias="hostname")
-
-    image_pull_secrets: list[V1LocalObjectReference] | None = Field(
-        None, alias="imagePullSecrets"
+    dns_config: V1PodDNSConfig = Field(
+        default_factory=lambda: V1PodDNSConfig(), alias="dnsConfig"
     )
 
-    init_containers: list[V1Container] | None = Field(None, alias="initContainers")
+    dns_policy: str | None = Field(default_factory=lambda: None, alias="dnsPolicy")
 
-    node_name: str | None = Field(None, alias="nodeName")
-
-    node_selector: dict[str, str] | None = Field(None, alias="nodeSelector")
-
-    os: V1PodOS | None = Field(None, alias="os")
-
-    overhead: dict[str, str] | None = Field(None, alias="overhead")
-
-    preemption_policy: str | None = Field(None, alias="preemptionPolicy")
-
-    priority: int | None = Field(None, alias="priority")
-
-    priority_class_name: str | None = Field(None, alias="priorityClassName")
-
-    readiness_gates: list[V1PodReadinessGate] | None = Field(
-        None, alias="readinessGates"
+    enable_service_links: bool | None = Field(
+        default_factory=lambda: None, alias="enableServiceLinks"
     )
 
-    resource_claims: list[V1PodResourceClaim] | None = Field(
-        None, alias="resourceClaims"
+    ephemeral_containers: list[V1EphemeralContainer] = Field(
+        default_factory=lambda: [], alias="ephemeralContainers"
     )
 
-    resources: V1ResourceRequirements | None = Field(None, alias="resources")
-
-    restart_policy: str | None = Field(None, alias="restartPolicy")
-
-    runtime_class_name: str | None = Field(None, alias="runtimeClassName")
-
-    scheduler_name: str | None = Field(None, alias="schedulerName")
-
-    scheduling_gates: list[V1PodSchedulingGate] | None = Field(
-        None, alias="schedulingGates"
+    host_aliases: list[V1HostAlias] = Field(
+        default_factory=lambda: [], alias="hostAliases"
     )
 
-    security_context: V1PodSecurityContext | None = Field(None, alias="securityContext")
+    host_ipc: bool | None = Field(default_factory=lambda: None, alias="hostIPC")
 
-    service_account: str | None = Field(None, alias="serviceAccount")
+    host_network: bool | None = Field(default_factory=lambda: None, alias="hostNetwork")
 
-    service_account_name: str | None = Field(None, alias="serviceAccountName")
+    host_pid: bool | None = Field(default_factory=lambda: None, alias="hostPID")
 
-    set_hostname_as_fqdn: bool | None = Field(None, alias="setHostnameAsFQDN")
+    host_users: bool | None = Field(default_factory=lambda: None, alias="hostUsers")
 
-    share_process_namespace: bool | None = Field(None, alias="shareProcessNamespace")
+    hostname: str | None = Field(default_factory=lambda: None, alias="hostname")
 
-    subdomain: str | None = Field(None, alias="subdomain")
+    hostname_override: str | None = Field(
+        default_factory=lambda: None, alias="hostnameOverride"
+    )
+
+    image_pull_secrets: list[V1LocalObjectReference] = Field(
+        default_factory=lambda: [], alias="imagePullSecrets"
+    )
+
+    init_containers: list[V1Container] = Field(
+        default_factory=lambda: [], alias="initContainers"
+    )
+
+    node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
+
+    node_selector: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="nodeSelector"
+    )
+
+    os: V1PodOS = Field(default_factory=lambda: V1PodOS(), alias="os")
+
+    overhead: dict[str, str] = Field(default_factory=lambda: {}, alias="overhead")
+
+    preemption_policy: str | None = Field(
+        default_factory=lambda: None, alias="preemptionPolicy"
+    )
+
+    priority: int | None = Field(default_factory=lambda: None, alias="priority")
+
+    priority_class_name: str | None = Field(
+        default_factory=lambda: None, alias="priorityClassName"
+    )
+
+    readiness_gates: list[V1PodReadinessGate] = Field(
+        default_factory=lambda: [], alias="readinessGates"
+    )
+
+    resource_claims: list[V1PodResourceClaim] = Field(
+        default_factory=lambda: [], alias="resourceClaims"
+    )
+
+    resources: V1ResourceRequirements = Field(
+        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+    )
+
+    restart_policy: str | None = Field(
+        default_factory=lambda: None, alias="restartPolicy"
+    )
+
+    runtime_class_name: str | None = Field(
+        default_factory=lambda: None, alias="runtimeClassName"
+    )
+
+    scheduler_name: str | None = Field(
+        default_factory=lambda: None, alias="schedulerName"
+    )
+
+    scheduling_gates: list[V1PodSchedulingGate] = Field(
+        default_factory=lambda: [], alias="schedulingGates"
+    )
+
+    security_context: V1PodSecurityContext = Field(
+        default_factory=lambda: V1PodSecurityContext(), alias="securityContext"
+    )
+
+    service_account: str | None = Field(
+        default_factory=lambda: None, alias="serviceAccount"
+    )
+
+    service_account_name: str | None = Field(
+        default_factory=lambda: None, alias="serviceAccountName"
+    )
+
+    set_hostname_as_fqdn: bool | None = Field(
+        default_factory=lambda: None, alias="setHostnameAsFQDN"
+    )
+
+    share_process_namespace: bool | None = Field(
+        default_factory=lambda: None, alias="shareProcessNamespace"
+    )
+
+    subdomain: str | None = Field(default_factory=lambda: None, alias="subdomain")
 
     termination_grace_period_seconds: int | None = Field(
-        None, alias="terminationGracePeriodSeconds"
+        default_factory=lambda: None, alias="terminationGracePeriodSeconds"
     )
 
-    tolerations: list[V1Toleration] | None = Field(None, alias="tolerations")
-
-    topology_spread_constraints: list[V1TopologySpreadConstraint] | None = Field(
-        None, alias="topologySpreadConstraints"
+    tolerations: list[V1Toleration] = Field(
+        default_factory=lambda: [], alias="tolerations"
     )
 
-    volumes: list[V1Volume] | None = Field(None, alias="volumes")
+    topology_spread_constraints: list[V1TopologySpreadConstraint] = Field(
+        default_factory=lambda: [], alias="topologySpreadConstraints"
+    )
+
+    volumes: list[V1Volume] = Field(default_factory=lambda: [], alias="volumes")

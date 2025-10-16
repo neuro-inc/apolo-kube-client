@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1beta1_device_allocation_configuration import (
     V1beta1DeviceAllocationConfiguration,
 )
@@ -13,10 +11,10 @@ __all__ = ("V1beta1DeviceAllocationResult",)
 
 
 class V1beta1DeviceAllocationResult(BaseModel):
-    config: list[V1beta1DeviceAllocationConfiguration] | None = Field(
-        None, alias="config"
+    config: list[V1beta1DeviceAllocationConfiguration] = Field(
+        default_factory=lambda: [], alias="config"
     )
 
-    results: list[V1beta1DeviceRequestAllocationResult] | None = Field(
-        None, alias="results"
+    results: list[V1beta1DeviceRequestAllocationResult] = Field(
+        default_factory=lambda: [], alias="results"
     )

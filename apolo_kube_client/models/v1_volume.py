@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_volume_source import V1AzureFileVolumeSource
@@ -39,74 +37,127 @@ __all__ = ("V1Volume",)
 
 
 class V1Volume(BaseModel):
-    aws_elastic_block_store: V1AWSElasticBlockStoreVolumeSource | None = Field(
-        None, alias="awsElasticBlockStore"
+    aws_elastic_block_store: V1AWSElasticBlockStoreVolumeSource = Field(
+        default_factory=lambda: V1AWSElasticBlockStoreVolumeSource(),
+        alias="awsElasticBlockStore",
     )
 
-    azure_disk: V1AzureDiskVolumeSource | None = Field(None, alias="azureDisk")
-
-    azure_file: V1AzureFileVolumeSource | None = Field(None, alias="azureFile")
-
-    cephfs: V1CephFSVolumeSource | None = Field(None, alias="cephfs")
-
-    cinder: V1CinderVolumeSource | None = Field(None, alias="cinder")
-
-    config_map: V1ConfigMapVolumeSource | None = Field(None, alias="configMap")
-
-    csi: V1CSIVolumeSource | None = Field(None, alias="csi")
-
-    downward_api: V1DownwardAPIVolumeSource | None = Field(None, alias="downwardAPI")
-
-    empty_dir: V1EmptyDirVolumeSource | None = Field(None, alias="emptyDir")
-
-    ephemeral: V1EphemeralVolumeSource | None = Field(None, alias="ephemeral")
-
-    fc: V1FCVolumeSource | None = Field(None, alias="fc")
-
-    flex_volume: V1FlexVolumeSource | None = Field(None, alias="flexVolume")
-
-    flocker: V1FlockerVolumeSource | None = Field(None, alias="flocker")
-
-    gce_persistent_disk: V1GCEPersistentDiskVolumeSource | None = Field(
-        None, alias="gcePersistentDisk"
+    azure_disk: V1AzureDiskVolumeSource = Field(
+        default_factory=lambda: V1AzureDiskVolumeSource(), alias="azureDisk"
     )
 
-    git_repo: V1GitRepoVolumeSource | None = Field(None, alias="gitRepo")
-
-    glusterfs: V1GlusterfsVolumeSource | None = Field(None, alias="glusterfs")
-
-    host_path: V1HostPathVolumeSource | None = Field(None, alias="hostPath")
-
-    image: V1ImageVolumeSource | None = Field(None, alias="image")
-
-    iscsi: V1ISCSIVolumeSource | None = Field(None, alias="iscsi")
-
-    name: str | None = Field(None, alias="name")
-
-    nfs: V1NFSVolumeSource | None = Field(None, alias="nfs")
-
-    persistent_volume_claim: V1PersistentVolumeClaimVolumeSource | None = Field(
-        None, alias="persistentVolumeClaim"
+    azure_file: V1AzureFileVolumeSource = Field(
+        default_factory=lambda: V1AzureFileVolumeSource(), alias="azureFile"
     )
 
-    photon_persistent_disk: V1PhotonPersistentDiskVolumeSource | None = Field(
-        None, alias="photonPersistentDisk"
+    cephfs: V1CephFSVolumeSource = Field(
+        default_factory=lambda: V1CephFSVolumeSource(), alias="cephfs"
     )
 
-    portworx_volume: V1PortworxVolumeSource | None = Field(None, alias="portworxVolume")
+    cinder: V1CinderVolumeSource = Field(
+        default_factory=lambda: V1CinderVolumeSource(), alias="cinder"
+    )
 
-    projected: V1ProjectedVolumeSource | None = Field(None, alias="projected")
+    config_map: V1ConfigMapVolumeSource = Field(
+        default_factory=lambda: V1ConfigMapVolumeSource(), alias="configMap"
+    )
 
-    quobyte: V1QuobyteVolumeSource | None = Field(None, alias="quobyte")
+    csi: V1CSIVolumeSource = Field(
+        default_factory=lambda: V1CSIVolumeSource(), alias="csi"
+    )
 
-    rbd: V1RBDVolumeSource | None = Field(None, alias="rbd")
+    downward_api: V1DownwardAPIVolumeSource = Field(
+        default_factory=lambda: V1DownwardAPIVolumeSource(), alias="downwardAPI"
+    )
 
-    scale_io: V1ScaleIOVolumeSource | None = Field(None, alias="scaleIO")
+    empty_dir: V1EmptyDirVolumeSource = Field(
+        default_factory=lambda: V1EmptyDirVolumeSource(), alias="emptyDir"
+    )
 
-    secret: V1SecretVolumeSource | None = Field(None, alias="secret")
+    ephemeral: V1EphemeralVolumeSource = Field(
+        default_factory=lambda: V1EphemeralVolumeSource(), alias="ephemeral"
+    )
 
-    storageos: V1StorageOSVolumeSource | None = Field(None, alias="storageos")
+    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource(), alias="fc")
 
-    vsphere_volume: V1VsphereVirtualDiskVolumeSource | None = Field(
-        None, alias="vsphereVolume"
+    flex_volume: V1FlexVolumeSource = Field(
+        default_factory=lambda: V1FlexVolumeSource(), alias="flexVolume"
+    )
+
+    flocker: V1FlockerVolumeSource = Field(
+        default_factory=lambda: V1FlockerVolumeSource(), alias="flocker"
+    )
+
+    gce_persistent_disk: V1GCEPersistentDiskVolumeSource = Field(
+        default_factory=lambda: V1GCEPersistentDiskVolumeSource(),
+        alias="gcePersistentDisk",
+    )
+
+    git_repo: V1GitRepoVolumeSource = Field(
+        default_factory=lambda: V1GitRepoVolumeSource(), alias="gitRepo"
+    )
+
+    glusterfs: V1GlusterfsVolumeSource = Field(
+        default_factory=lambda: V1GlusterfsVolumeSource(), alias="glusterfs"
+    )
+
+    host_path: V1HostPathVolumeSource = Field(
+        default_factory=lambda: V1HostPathVolumeSource(), alias="hostPath"
+    )
+
+    image: V1ImageVolumeSource = Field(
+        default_factory=lambda: V1ImageVolumeSource(), alias="image"
+    )
+
+    iscsi: V1ISCSIVolumeSource = Field(
+        default_factory=lambda: V1ISCSIVolumeSource(), alias="iscsi"
+    )
+
+    name: str | None = Field(default_factory=lambda: None, alias="name")
+
+    nfs: V1NFSVolumeSource = Field(
+        default_factory=lambda: V1NFSVolumeSource(), alias="nfs"
+    )
+
+    persistent_volume_claim: V1PersistentVolumeClaimVolumeSource = Field(
+        default_factory=lambda: V1PersistentVolumeClaimVolumeSource(),
+        alias="persistentVolumeClaim",
+    )
+
+    photon_persistent_disk: V1PhotonPersistentDiskVolumeSource = Field(
+        default_factory=lambda: V1PhotonPersistentDiskVolumeSource(),
+        alias="photonPersistentDisk",
+    )
+
+    portworx_volume: V1PortworxVolumeSource = Field(
+        default_factory=lambda: V1PortworxVolumeSource(), alias="portworxVolume"
+    )
+
+    projected: V1ProjectedVolumeSource = Field(
+        default_factory=lambda: V1ProjectedVolumeSource(), alias="projected"
+    )
+
+    quobyte: V1QuobyteVolumeSource = Field(
+        default_factory=lambda: V1QuobyteVolumeSource(), alias="quobyte"
+    )
+
+    rbd: V1RBDVolumeSource = Field(
+        default_factory=lambda: V1RBDVolumeSource(), alias="rbd"
+    )
+
+    scale_io: V1ScaleIOVolumeSource = Field(
+        default_factory=lambda: V1ScaleIOVolumeSource(), alias="scaleIO"
+    )
+
+    secret: V1SecretVolumeSource = Field(
+        default_factory=lambda: V1SecretVolumeSource(), alias="secret"
+    )
+
+    storageos: V1StorageOSVolumeSource = Field(
+        default_factory=lambda: V1StorageOSVolumeSource(), alias="storageos"
+    )
+
+    vsphere_volume: V1VsphereVirtualDiskVolumeSource = Field(
+        default_factory=lambda: V1VsphereVirtualDiskVolumeSource(),
+        alias="vsphereVolume",
     )

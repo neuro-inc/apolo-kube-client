@@ -1,11 +1,11 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("V1UncountedTerminatedPods",)
 
 
 class V1UncountedTerminatedPods(BaseModel):
-    failed: list[str] | None = Field(None, alias="failed")
+    failed: list[str] = Field(default_factory=lambda: [], alias="failed")
 
-    succeeded: list[str] | None = Field(None, alias="succeeded")
+    succeeded: list[str] = Field(default_factory=lambda: [], alias="succeeded")

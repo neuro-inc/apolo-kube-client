@@ -1,23 +1,29 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
 
 __all__ = ("V1APIServiceSpec",)
 
 
 class V1APIServiceSpec(BaseModel):
-    ca_bundle: str | None = Field(None, alias="caBundle")
+    ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
 
-    group: str | None = Field(None, alias="group")
+    group: str | None = Field(default_factory=lambda: None, alias="group")
 
-    group_priority_minimum: int | None = Field(None, alias="groupPriorityMinimum")
+    group_priority_minimum: int | None = Field(
+        default_factory=lambda: None, alias="groupPriorityMinimum"
+    )
 
-    insecure_skip_tls_verify: bool | None = Field(None, alias="insecureSkipTLSVerify")
+    insecure_skip_tls_verify: bool | None = Field(
+        default_factory=lambda: None, alias="insecureSkipTLSVerify"
+    )
 
-    service: ApiregistrationV1ServiceReference | None = Field(None, alias="service")
+    service: ApiregistrationV1ServiceReference = Field(
+        default_factory=lambda: ApiregistrationV1ServiceReference(), alias="service"
+    )
 
-    version: str | None = Field(None, alias="version")
+    version: str | None = Field(default_factory=lambda: None, alias="version")
 
-    version_priority: int | None = Field(None, alias="versionPriority")
+    version_priority: int | None = Field(
+        default_factory=lambda: None, alias="versionPriority"
+    )

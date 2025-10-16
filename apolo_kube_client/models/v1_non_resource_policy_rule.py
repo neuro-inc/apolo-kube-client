@@ -1,11 +1,13 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("V1NonResourcePolicyRule",)
 
 
 class V1NonResourcePolicyRule(BaseModel):
-    non_resource_ur_ls: list[str] | None = Field(None, alias="nonResourceURLs")
+    non_resource_ur_ls: list[str] = Field(
+        default_factory=lambda: [], alias="nonResourceURLs"
+    )
 
-    verbs: list[str] | None = Field(None, alias="verbs")
+    verbs: list[str] = Field(default_factory=lambda: [], alias="verbs")

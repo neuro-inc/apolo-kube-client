@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_attached_volume import V1AttachedVolume
 from .v1_container_image import V1ContainerImage
 from .v1_node_address import V1NodeAddress
@@ -16,34 +14,44 @@ __all__ = ("V1NodeStatus",)
 
 
 class V1NodeStatus(BaseModel):
-    addresses: list[V1NodeAddress] | None = Field(None, alias="addresses")
-
-    allocatable: dict[str, str] | None = Field(None, alias="allocatable")
-
-    capacity: dict[str, str] | None = Field(None, alias="capacity")
-
-    conditions: list[V1NodeCondition] | None = Field(None, alias="conditions")
-
-    config: V1NodeConfigStatus | None = Field(None, alias="config")
-
-    daemon_endpoints: V1NodeDaemonEndpoints | None = Field(
-        None, alias="daemonEndpoints"
+    addresses: list[V1NodeAddress] = Field(
+        default_factory=lambda: [], alias="addresses"
     )
 
-    features: V1NodeFeatures | None = Field(None, alias="features")
+    allocatable: dict[str, str] = Field(default_factory=lambda: {}, alias="allocatable")
 
-    images: list[V1ContainerImage] | None = Field(None, alias="images")
+    capacity: dict[str, str] = Field(default_factory=lambda: {}, alias="capacity")
 
-    node_info: V1NodeSystemInfo | None = Field(None, alias="nodeInfo")
-
-    phase: str | None = Field(None, alias="phase")
-
-    runtime_handlers: list[V1NodeRuntimeHandler] | None = Field(
-        None, alias="runtimeHandlers"
+    conditions: list[V1NodeCondition] = Field(
+        default_factory=lambda: [], alias="conditions"
     )
 
-    volumes_attached: list[V1AttachedVolume] | None = Field(
-        None, alias="volumesAttached"
+    config: V1NodeConfigStatus = Field(
+        default_factory=lambda: V1NodeConfigStatus(), alias="config"
     )
 
-    volumes_in_use: list[str] | None = Field(None, alias="volumesInUse")
+    daemon_endpoints: V1NodeDaemonEndpoints = Field(
+        default_factory=lambda: V1NodeDaemonEndpoints(), alias="daemonEndpoints"
+    )
+
+    features: V1NodeFeatures = Field(
+        default_factory=lambda: V1NodeFeatures(), alias="features"
+    )
+
+    images: list[V1ContainerImage] = Field(default_factory=lambda: [], alias="images")
+
+    node_info: V1NodeSystemInfo = Field(
+        default_factory=lambda: V1NodeSystemInfo(), alias="nodeInfo"
+    )
+
+    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+
+    runtime_handlers: list[V1NodeRuntimeHandler] = Field(
+        default_factory=lambda: [], alias="runtimeHandlers"
+    )
+
+    volumes_attached: list[V1AttachedVolume] = Field(
+        default_factory=lambda: [], alias="volumesAttached"
+    )
+
+    volumes_in_use: list[str] = Field(default_factory=lambda: [], alias="volumesInUse")

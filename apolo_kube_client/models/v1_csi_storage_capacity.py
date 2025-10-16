@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_label_selector import V1LabelSelector
 from .v1_object_meta import V1ObjectMeta
 
@@ -9,16 +7,24 @@ __all__ = ("V1CSIStorageCapacity",)
 
 
 class V1CSIStorageCapacity(BaseModel):
-    api_version: str | None = Field(None, alias="apiVersion")
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    capacity: str | None = Field(None, alias="capacity")
+    capacity: str | None = Field(default_factory=lambda: None, alias="capacity")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    maximum_volume_size: str | None = Field(None, alias="maximumVolumeSize")
+    maximum_volume_size: str | None = Field(
+        default_factory=lambda: None, alias="maximumVolumeSize"
+    )
 
-    metadata: V1ObjectMeta | None = Field(None, alias="metadata")
+    metadata: V1ObjectMeta = Field(
+        default_factory=lambda: V1ObjectMeta(), alias="metadata"
+    )
 
-    node_topology: V1LabelSelector | None = Field(None, alias="nodeTopology")
+    node_topology: V1LabelSelector = Field(
+        default_factory=lambda: V1LabelSelector(), alias="nodeTopology"
+    )
 
-    storage_class_name: str | None = Field(None, alias="storageClassName")
+    storage_class_name: str | None = Field(
+        default_factory=lambda: None, alias="storageClassName"
+    )

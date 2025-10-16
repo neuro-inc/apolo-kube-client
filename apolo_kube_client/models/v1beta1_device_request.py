@@ -1,21 +1,40 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
+from .v1beta1_capacity_requirements import V1beta1CapacityRequirements
 from .v1beta1_device_selector import V1beta1DeviceSelector
+from .v1beta1_device_sub_request import V1beta1DeviceSubRequest
+from .v1beta1_device_toleration import V1beta1DeviceToleration
 
 __all__ = ("V1beta1DeviceRequest",)
 
 
 class V1beta1DeviceRequest(BaseModel):
-    admin_access: bool | None = Field(None, alias="adminAccess")
+    admin_access: bool | None = Field(default_factory=lambda: None, alias="adminAccess")
 
-    allocation_mode: str | None = Field(None, alias="allocationMode")
+    allocation_mode: str | None = Field(
+        default_factory=lambda: None, alias="allocationMode"
+    )
 
-    count: int | None = Field(None, alias="count")
+    capacity: V1beta1CapacityRequirements = Field(
+        default_factory=lambda: V1beta1CapacityRequirements(), alias="capacity"
+    )
 
-    device_class_name: str | None = Field(None, alias="deviceClassName")
+    count: int | None = Field(default_factory=lambda: None, alias="count")
 
-    name: str | None = Field(None, alias="name")
+    device_class_name: str | None = Field(
+        default_factory=lambda: None, alias="deviceClassName"
+    )
 
-    selectors: list[V1beta1DeviceSelector] | None = Field(None, alias="selectors")
+    first_available: list[V1beta1DeviceSubRequest] = Field(
+        default_factory=lambda: [], alias="firstAvailable"
+    )
+
+    name: str | None = Field(default_factory=lambda: None, alias="name")
+
+    selectors: list[V1beta1DeviceSelector] = Field(
+        default_factory=lambda: [], alias="selectors"
+    )
+
+    tolerations: list[V1beta1DeviceToleration] = Field(
+        default_factory=lambda: [], alias="tolerations"
+    )

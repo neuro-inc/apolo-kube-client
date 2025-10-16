@@ -1,7 +1,6 @@
-from kubernetes.client.models import V1StatefulSet, V1StatefulSetList, V1Status
-
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
+from .models import V1StatefulSet, V1StatefulSetList, V1Status
 
 
 class StatefulSet(NamespacedResource[V1StatefulSet, V1StatefulSetList, V1Status]):

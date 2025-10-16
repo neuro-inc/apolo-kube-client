@@ -1,4 +1,5 @@
-from kubernetes.client.models import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client.models import (
     V1LabelSelector,
     V1NetworkPolicy,
     V1NetworkPolicyEgressRule,
@@ -7,8 +8,6 @@ from kubernetes.client.models import (
     V1NetworkPolicySpec,
     V1ObjectMeta,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestNetworkPolicy:

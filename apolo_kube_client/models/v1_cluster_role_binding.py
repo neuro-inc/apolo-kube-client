@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .rbac_v1_subject import RbacV1Subject
 from .v1_object_meta import V1ObjectMeta
 from .v1_role_ref import V1RoleRef
@@ -10,12 +8,14 @@ __all__ = ("V1ClusterRoleBinding",)
 
 
 class V1ClusterRoleBinding(BaseModel):
-    api_version: str | None = Field(None, alias="apiVersion")
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    metadata: V1ObjectMeta | None = Field(None, alias="metadata")
+    metadata: V1ObjectMeta = Field(
+        default_factory=lambda: V1ObjectMeta(), alias="metadata"
+    )
 
-    role_ref: V1RoleRef | None = Field(None, alias="roleRef")
+    role_ref: V1RoleRef = Field(default_factory=lambda: V1RoleRef(), alias="roleRef")
 
-    subjects: list[RbacV1Subject] | None = Field(None, alias="subjects")
+    subjects: list[RbacV1Subject] = Field(default_factory=lambda: [], alias="subjects")

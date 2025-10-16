@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_object_meta import V1ObjectMeta
 from .v1_resource_quota_spec import V1ResourceQuotaSpec
 from .v1_resource_quota_status import V1ResourceQuotaStatus
@@ -10,12 +8,18 @@ __all__ = ("V1ResourceQuota",)
 
 
 class V1ResourceQuota(BaseModel):
-    api_version: str | None = Field(None, alias="apiVersion")
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    metadata: V1ObjectMeta | None = Field(None, alias="metadata")
+    metadata: V1ObjectMeta = Field(
+        default_factory=lambda: V1ObjectMeta(), alias="metadata"
+    )
 
-    spec: V1ResourceQuotaSpec | None = Field(None, alias="spec")
+    spec: V1ResourceQuotaSpec = Field(
+        default_factory=lambda: V1ResourceQuotaSpec(), alias="spec"
+    )
 
-    status: V1ResourceQuotaStatus | None = Field(None, alias="status")
+    status: V1ResourceQuotaStatus = Field(
+        default_factory=lambda: V1ResourceQuotaStatus(), alias="status"
+    )

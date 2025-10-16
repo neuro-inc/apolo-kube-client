@@ -1,10 +1,9 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client.models import (
     V1ObjectMeta,
     V1PersistentVolume,
     V1PersistentVolumeSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestPersistentVolume:

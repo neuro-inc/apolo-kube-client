@@ -1,0 +1,19 @@
+from __future__ import annotations
+from pydantic import BaseModel, Field
+from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1VolumeAttributesClass",)
+
+
+class V1VolumeAttributesClass(BaseModel):
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
+
+    driver_name: str | None = Field(default_factory=lambda: None, alias="driverName")
+
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+
+    metadata: V1ObjectMeta = Field(
+        default_factory=lambda: V1ObjectMeta(), alias="metadata"
+    )
+
+    parameters: dict[str, str] = Field(default_factory=lambda: {}, alias="parameters")

@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec
@@ -10,18 +8,30 @@ __all__ = ("V1DeploymentSpec",)
 
 
 class V1DeploymentSpec(BaseModel):
-    min_ready_seconds: int | None = Field(None, alias="minReadySeconds")
+    min_ready_seconds: int | None = Field(
+        default_factory=lambda: None, alias="minReadySeconds"
+    )
 
-    paused: bool | None = Field(None, alias="paused")
+    paused: bool | None = Field(default_factory=lambda: None, alias="paused")
 
-    progress_deadline_seconds: int | None = Field(None, alias="progressDeadlineSeconds")
+    progress_deadline_seconds: int | None = Field(
+        default_factory=lambda: None, alias="progressDeadlineSeconds"
+    )
 
-    replicas: int | None = Field(None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
 
-    revision_history_limit: int | None = Field(None, alias="revisionHistoryLimit")
+    revision_history_limit: int | None = Field(
+        default_factory=lambda: None, alias="revisionHistoryLimit"
+    )
 
-    selector: V1LabelSelector | None = Field(None, alias="selector")
+    selector: V1LabelSelector = Field(
+        default_factory=lambda: V1LabelSelector(), alias="selector"
+    )
 
-    strategy: V1DeploymentStrategy | None = Field(None, alias="strategy")
+    strategy: V1DeploymentStrategy = Field(
+        default_factory=lambda: V1DeploymentStrategy(), alias="strategy"
+    )
 
-    template: V1PodTemplateSpec | None = Field(None, alias="template")
+    template: V1PodTemplateSpec = Field(
+        default_factory=lambda: V1PodTemplateSpec(), alias="template"
+    )

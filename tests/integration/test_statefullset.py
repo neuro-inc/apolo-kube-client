@@ -1,4 +1,5 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client.models import (
     V1Container,
     V1LabelSelector,
     V1ObjectMeta,
@@ -7,8 +8,6 @@ from kubernetes.client import (
     V1StatefulSet,
     V1StatefulSetSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestStatefulSet:

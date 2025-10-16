@@ -1,17 +1,19 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_pod_template_spec import V1PodTemplateSpec
 
 __all__ = ("V1ReplicationControllerSpec",)
 
 
 class V1ReplicationControllerSpec(BaseModel):
-    min_ready_seconds: int | None = Field(None, alias="minReadySeconds")
+    min_ready_seconds: int | None = Field(
+        default_factory=lambda: None, alias="minReadySeconds"
+    )
 
-    replicas: int | None = Field(None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
 
-    selector: dict[str, str] | None = Field(None, alias="selector")
+    selector: dict[str, str] = Field(default_factory=lambda: {}, alias="selector")
 
-    template: V1PodTemplateSpec | None = Field(None, alias="template")
+    template: V1PodTemplateSpec = Field(
+        default_factory=lambda: V1PodTemplateSpec(), alias="template"
+    )

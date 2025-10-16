@@ -5,7 +5,9 @@
 import re
 from hashlib import sha256
 
-from kubernetes.client.models import (
+from apolo_kube_client import KubeClient
+
+from .models import (
     V1IPBlock,
     V1LabelSelector,
     V1Namespace,
@@ -16,8 +18,6 @@ from kubernetes.client.models import (
     V1NetworkPolicySpec,
     V1ObjectMeta,
 )
-
-from apolo_kube_client import KubeClient
 
 KUBE_NAME_LENGTH_MAX = 63
 DASH = "-"

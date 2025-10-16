@@ -1,9 +1,8 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_container_port import V1ContainerPort
 from .v1_container_resize_policy import V1ContainerResizePolicy
+from .v1_container_restart_rule import V1ContainerRestartRule
 from .v1_env_from_source import V1EnvFromSource
 from .v1_env_var import V1EnvVar
 from .v1_lifecycle import V1Lifecycle
@@ -17,56 +16,84 @@ __all__ = ("V1EphemeralContainer",)
 
 
 class V1EphemeralContainer(BaseModel):
-    args: list[str] | None = Field(None, alias="args")
+    args: list[str] = Field(default_factory=lambda: [], alias="args")
 
-    command: list[str] | None = Field(None, alias="command")
+    command: list[str] = Field(default_factory=lambda: [], alias="command")
 
-    env: list[V1EnvVar] | None = Field(None, alias="env")
+    env: list[V1EnvVar] = Field(default_factory=lambda: [], alias="env")
 
-    env_from: list[V1EnvFromSource] | None = Field(None, alias="envFrom")
+    env_from: list[V1EnvFromSource] = Field(default_factory=lambda: [], alias="envFrom")
 
-    image: str | None = Field(None, alias="image")
+    image: str | None = Field(default_factory=lambda: None, alias="image")
 
-    image_pull_policy: str | None = Field(None, alias="imagePullPolicy")
-
-    lifecycle: V1Lifecycle | None = Field(None, alias="lifecycle")
-
-    liveness_probe: V1Probe | None = Field(None, alias="livenessProbe")
-
-    name: str | None = Field(None, alias="name")
-
-    ports: list[V1ContainerPort] | None = Field(None, alias="ports")
-
-    readiness_probe: V1Probe | None = Field(None, alias="readinessProbe")
-
-    resize_policy: list[V1ContainerResizePolicy] | None = Field(
-        None, alias="resizePolicy"
+    image_pull_policy: str | None = Field(
+        default_factory=lambda: None, alias="imagePullPolicy"
     )
 
-    resources: V1ResourceRequirements | None = Field(None, alias="resources")
+    lifecycle: V1Lifecycle = Field(
+        default_factory=lambda: V1Lifecycle(), alias="lifecycle"
+    )
 
-    restart_policy: str | None = Field(None, alias="restartPolicy")
+    liveness_probe: V1Probe = Field(
+        default_factory=lambda: V1Probe(), alias="livenessProbe"
+    )
 
-    security_context: V1SecurityContext | None = Field(None, alias="securityContext")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    startup_probe: V1Probe | None = Field(None, alias="startupProbe")
+    ports: list[V1ContainerPort] = Field(default_factory=lambda: [], alias="ports")
 
-    stdin: bool | None = Field(None, alias="stdin")
+    readiness_probe: V1Probe = Field(
+        default_factory=lambda: V1Probe(), alias="readinessProbe"
+    )
 
-    stdin_once: bool | None = Field(None, alias="stdinOnce")
+    resize_policy: list[V1ContainerResizePolicy] = Field(
+        default_factory=lambda: [], alias="resizePolicy"
+    )
 
-    target_container_name: str | None = Field(None, alias="targetContainerName")
+    resources: V1ResourceRequirements = Field(
+        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+    )
 
-    termination_message_path: str | None = Field(None, alias="terminationMessagePath")
+    restart_policy: str | None = Field(
+        default_factory=lambda: None, alias="restartPolicy"
+    )
+
+    restart_policy_rules: list[V1ContainerRestartRule] = Field(
+        default_factory=lambda: [], alias="restartPolicyRules"
+    )
+
+    security_context: V1SecurityContext = Field(
+        default_factory=lambda: V1SecurityContext(), alias="securityContext"
+    )
+
+    startup_probe: V1Probe = Field(
+        default_factory=lambda: V1Probe(), alias="startupProbe"
+    )
+
+    stdin: bool | None = Field(default_factory=lambda: None, alias="stdin")
+
+    stdin_once: bool | None = Field(default_factory=lambda: None, alias="stdinOnce")
+
+    target_container_name: str | None = Field(
+        default_factory=lambda: None, alias="targetContainerName"
+    )
+
+    termination_message_path: str | None = Field(
+        default_factory=lambda: None, alias="terminationMessagePath"
+    )
 
     termination_message_policy: str | None = Field(
-        None, alias="terminationMessagePolicy"
+        default_factory=lambda: None, alias="terminationMessagePolicy"
     )
 
-    tty: bool | None = Field(None, alias="tty")
+    tty: bool | None = Field(default_factory=lambda: None, alias="tty")
 
-    volume_devices: list[V1VolumeDevice] | None = Field(None, alias="volumeDevices")
+    volume_devices: list[V1VolumeDevice] = Field(
+        default_factory=lambda: [], alias="volumeDevices"
+    )
 
-    volume_mounts: list[V1VolumeMount] | None = Field(None, alias="volumeMounts")
+    volume_mounts: list[V1VolumeMount] = Field(
+        default_factory=lambda: [], alias="volumeMounts"
+    )
 
-    working_dir: str | None = Field(None, alias="workingDir")
+    working_dir: str | None = Field(default_factory=lambda: None, alias="workingDir")

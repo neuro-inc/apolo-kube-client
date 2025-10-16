@@ -1,23 +1,23 @@
 from __future__ import annotations
-
-from datetime import datetime
-
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 __all__ = ("V1ContainerStateTerminated",)
 
 
 class V1ContainerStateTerminated(BaseModel):
-    container_id: str | None = Field(None, alias="containerID")
+    container_id: str | None = Field(default_factory=lambda: None, alias="containerID")
 
-    exit_code: int | None = Field(None, alias="exitCode")
+    exit_code: int | None = Field(default_factory=lambda: None, alias="exitCode")
 
-    finished_at: datetime | None = Field(None, alias="finishedAt")
+    finished_at: datetime | None = Field(
+        default_factory=lambda: None, alias="finishedAt"
+    )
 
-    message: str | None = Field(None, alias="message")
+    message: str | None = Field(default_factory=lambda: None, alias="message")
 
-    reason: str | None = Field(None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None, alias="reason")
 
-    signal: int | None = Field(None, alias="signal")
+    signal: int | None = Field(default_factory=lambda: None, alias="signal")
 
-    started_at: datetime | None = Field(None, alias="startedAt")
+    started_at: datetime | None = Field(default_factory=lambda: None, alias="startedAt")

@@ -1,21 +1,21 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_status_cause import V1StatusCause
 
 __all__ = ("V1StatusDetails",)
 
 
 class V1StatusDetails(BaseModel):
-    causes: list[V1StatusCause] | None = Field(None, alias="causes")
+    causes: list[V1StatusCause] = Field(default_factory=lambda: [], alias="causes")
 
-    group: str | None = Field(None, alias="group")
+    group: str | None = Field(default_factory=lambda: None, alias="group")
 
-    kind: str | None = Field(None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None, alias="kind")
 
-    name: str | None = Field(None, alias="name")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    retry_after_seconds: int | None = Field(None, alias="retryAfterSeconds")
+    retry_after_seconds: int | None = Field(
+        default_factory=lambda: None, alias="retryAfterSeconds"
+    )
 
-    uid: str | None = Field(None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None, alias="uid")

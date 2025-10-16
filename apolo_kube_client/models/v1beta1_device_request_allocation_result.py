@@ -1,17 +1,35 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+from .v1beta1_device_toleration import V1beta1DeviceToleration
 
 __all__ = ("V1beta1DeviceRequestAllocationResult",)
 
 
 class V1beta1DeviceRequestAllocationResult(BaseModel):
-    admin_access: bool | None = Field(None, alias="adminAccess")
+    admin_access: bool | None = Field(default_factory=lambda: None, alias="adminAccess")
 
-    device: str | None = Field(None, alias="device")
+    binding_conditions: list[str] = Field(
+        default_factory=lambda: [], alias="bindingConditions"
+    )
 
-    driver: str | None = Field(None, alias="driver")
+    binding_failure_conditions: list[str] = Field(
+        default_factory=lambda: [], alias="bindingFailureConditions"
+    )
 
-    pool: str | None = Field(None, alias="pool")
+    consumed_capacity: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="consumedCapacity"
+    )
 
-    request: str | None = Field(None, alias="request")
+    device: str | None = Field(default_factory=lambda: None, alias="device")
+
+    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+
+    pool: str | None = Field(default_factory=lambda: None, alias="pool")
+
+    request: str | None = Field(default_factory=lambda: None, alias="request")
+
+    share_id: str | None = Field(default_factory=lambda: None, alias="shareID")
+
+    tolerations: list[V1beta1DeviceToleration] = Field(
+        default_factory=lambda: [], alias="tolerations"
+    )

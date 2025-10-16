@@ -1,4 +1,5 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client.models import (
     V1Container,
     V1Job,
     V1JobSpec,
@@ -6,8 +7,6 @@ from kubernetes.client import (
     V1PodSpec,
     V1PodTemplateSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestJob:

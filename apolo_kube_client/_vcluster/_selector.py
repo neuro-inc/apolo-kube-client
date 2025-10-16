@@ -10,7 +10,6 @@ from types import TracebackType
 from typing import Self
 
 from cachetools import LRUCache
-from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._config import KubeConfig
@@ -22,6 +21,8 @@ from apolo_kube_client._vcluster._client_factory import (
 )
 from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
 from apolo_kube_client.apolo import create_namespace, generate_namespace_name
+
+from .models import V1Secret
 
 logger = logging.getLogger(__name__)
 

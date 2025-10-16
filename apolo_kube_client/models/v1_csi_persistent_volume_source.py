@@ -1,39 +1,41 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_secret_reference import V1SecretReference
 
 __all__ = ("V1CSIPersistentVolumeSource",)
 
 
 class V1CSIPersistentVolumeSource(BaseModel):
-    controller_expand_secret_ref: V1SecretReference | None = Field(
-        None, alias="controllerExpandSecretRef"
+    controller_expand_secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="controllerExpandSecretRef"
     )
 
-    controller_publish_secret_ref: V1SecretReference | None = Field(
-        None, alias="controllerPublishSecretRef"
+    controller_publish_secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="controllerPublishSecretRef"
     )
 
-    driver: str | None = Field(None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None, alias="driver")
 
-    fs_type: str | None = Field(None, alias="fsType")
+    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    node_expand_secret_ref: V1SecretReference | None = Field(
-        None, alias="nodeExpandSecretRef"
+    node_expand_secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="nodeExpandSecretRef"
     )
 
-    node_publish_secret_ref: V1SecretReference | None = Field(
-        None, alias="nodePublishSecretRef"
+    node_publish_secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="nodePublishSecretRef"
     )
 
-    node_stage_secret_ref: V1SecretReference | None = Field(
-        None, alias="nodeStageSecretRef"
+    node_stage_secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(), alias="nodeStageSecretRef"
     )
 
-    read_only: bool | None = Field(None, alias="readOnly")
+    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 
-    volume_attributes: dict[str, str] | None = Field(None, alias="volumeAttributes")
+    volume_attributes: dict[str, str] = Field(
+        default_factory=lambda: {}, alias="volumeAttributes"
+    )
 
-    volume_handle: str | None = Field(None, alias="volumeHandle")
+    volume_handle: str | None = Field(
+        default_factory=lambda: None, alias="volumeHandle"
+    )

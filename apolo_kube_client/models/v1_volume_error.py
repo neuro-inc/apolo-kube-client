@@ -1,13 +1,13 @@
 from __future__ import annotations
-
-from datetime import datetime
-
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 __all__ = ("V1VolumeError",)
 
 
 class V1VolumeError(BaseModel):
-    message: str | None = Field(None, alias="message")
+    error_code: int | None = Field(default_factory=lambda: None, alias="errorCode")
 
-    time: datetime | None = Field(None, alias="time")
+    message: str | None = Field(default_factory=lambda: None, alias="message")
+
+    time: datetime | None = Field(default_factory=lambda: None, alias="time")

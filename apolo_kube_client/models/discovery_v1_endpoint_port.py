@@ -1,15 +1,15 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 
 __all__ = ("DiscoveryV1EndpointPort",)
 
 
 class DiscoveryV1EndpointPort(BaseModel):
-    app_protocol: str | None = Field(None, alias="appProtocol")
+    app_protocol: str | None = Field(default_factory=lambda: None, alias="appProtocol")
 
-    name: str | None = Field(None, alias="name")
+    name: str | None = Field(default_factory=lambda: None, alias="name")
 
-    port: int | None = Field(None, alias="port")
+    port: int | None = Field(default_factory=lambda: None, alias="port")
 
-    protocol: str | None = Field(None, alias="protocol")
+    protocol: str | None = Field(default_factory=lambda: None, alias="protocol")

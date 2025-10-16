@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
-
 from .v1_audit_annotation import V1AuditAnnotation
 from .v1_match_condition import V1MatchCondition
 from .v1_match_resources import V1MatchResources
@@ -13,20 +11,28 @@ __all__ = ("V1ValidatingAdmissionPolicySpec",)
 
 
 class V1ValidatingAdmissionPolicySpec(BaseModel):
-    audit_annotations: list[V1AuditAnnotation] | None = Field(
-        None, alias="auditAnnotations"
+    audit_annotations: list[V1AuditAnnotation] = Field(
+        default_factory=lambda: [], alias="auditAnnotations"
     )
 
-    failure_policy: str | None = Field(None, alias="failurePolicy")
-
-    match_conditions: list[V1MatchCondition] | None = Field(
-        None, alias="matchConditions"
+    failure_policy: str | None = Field(
+        default_factory=lambda: None, alias="failurePolicy"
     )
 
-    match_constraints: V1MatchResources | None = Field(None, alias="matchConstraints")
+    match_conditions: list[V1MatchCondition] = Field(
+        default_factory=lambda: [], alias="matchConditions"
+    )
 
-    param_kind: V1ParamKind | None = Field(None, alias="paramKind")
+    match_constraints: V1MatchResources = Field(
+        default_factory=lambda: V1MatchResources(), alias="matchConstraints"
+    )
 
-    validations: list[V1Validation] | None = Field(None, alias="validations")
+    param_kind: V1ParamKind = Field(
+        default_factory=lambda: V1ParamKind(), alias="paramKind"
+    )
 
-    variables: list[V1Variable] | None = Field(None, alias="variables")
+    validations: list[V1Validation] = Field(
+        default_factory=lambda: [], alias="validations"
+    )
+
+    variables: list[V1Variable] = Field(default_factory=lambda: [], alias="variables")
