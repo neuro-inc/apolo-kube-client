@@ -1,7 +1,7 @@
 import functools
 from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
-from typing import ClassVar, Protocol, cast, get_args
+from typing import ClassVar, Protocol, cast, get_args, Any, Self
 
 import aiohttp
 from yarl import URL
@@ -10,6 +10,7 @@ from ._core import _KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
+from .models import V1ObjectMeta
 
 
 class Base:
@@ -17,12 +18,13 @@ class Base:
         self._core = core
 
 
-class MetadataModel(Protocol):
-    name: str
-
-
 class KubeResourceModel(Protocol):
-    metadata: MetadataModel
+    metadata: V1ObjectMeta
+
+    def model_dump(self, *, by_alias: bool, exclude_defaults: bool) -> Any: ...
+
+    @classmethod
+    def model_validate(cls, data: Any) -> Self: ...
 
 
 class BaseResource[
@@ -339,6 +341,7 @@ class NamespacedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None
         try:
             return False, await self.get(name=model.metadata.name, namespace=namespace)
         except ResourceNotFound:
@@ -352,6 +355,7 @@ class NamespacedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None
         try:
             await self.get(name=model.metadata.name, namespace=namespace)
             async with self._core.request(

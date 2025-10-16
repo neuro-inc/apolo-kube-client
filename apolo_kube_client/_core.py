@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 from ssl import SSLContext
 from types import TracebackType
-from typing import Self, TypeVar, cast
+from typing import Self, cast
+from pydantic import BaseModel
 
 import aiohttp
 from aiohttp.hdrs import METH_DELETE, METH_GET, METH_PATCH, METH_POST, METH_PUT
@@ -17,8 +18,6 @@ from ._transport import KubeTransport
 from ._typedefs import JsonType
 
 logger = logging.getLogger(__name__)
-
-ModelT = TypeVar("ModelT")
 
 
 class _KubeCore:
@@ -153,13 +152,15 @@ class _KubeCore:
         self._token = token
         logger.info("%s: kube token was refreshed", self)
 
-    def serialize(self, obj: ModelT) -> JsonType:
-        return cast(JsonType, obj.model_dump(by_alias=True, exclude_none=True))
+    def serialize[ModelT: BaseModel](self, obj: BaseModel) -> JsonType:
+        return cast(JsonType, obj.model_dump(by_alias=True, exclude_defaults=True))
 
-    def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
+    def deserialize[ModelT: BaseModel](
+        self, data: JsonType, klass: type[ModelT]
+    ) -> ModelT:
         return klass.model_validate(data)
 
-    async def deserialize_response(
+    async def deserialize_response[ModelT: BaseModel](
         self,
         response: aiohttp.ClientResponse,
         klass: type[ModelT],

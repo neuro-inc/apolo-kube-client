@@ -9,7 +9,7 @@ from .._core_v1 import (
 )
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from .models import (
+from ..models import (
     CoreV1Event,
     CoreV1EventList,
     V1Endpoints,
