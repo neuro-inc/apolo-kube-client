@@ -20,15 +20,22 @@ from .._core_v1 import (
     Event,
     PersistentVolumeClaim,
     Pod,
+    PodStatus,
     Secret,
     Service,
 )
 from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy, NestedResourceProxy
+
+
+class PodStatusProxy(NestedResourceProxy[V1Pod, V1Pod, V1Pod, PodStatus]):
+    pass
 
 
 class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
-    pass
+    @attr(PodStatusProxy)
+    def status(self) -> PodStatus:
+        return self._origin.status
 
 
 class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secret]):
