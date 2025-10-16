@@ -1,7 +1,7 @@
 from collections.abc import Collection
-from typing import cast
+from typing import Self, cast
 
-from .._base_resource import KubeResourceModel, NamespacedResource
+from .._base_resource import KubeResourceModel, NamespacedResource, NestedResource
 from .._typedefs import JsonType
 from .._watch import Watch
 
@@ -11,9 +11,17 @@ class BaseProxy[OriginT]:
         self,
         origin: OriginT,
         namespace: str,
+        resource_id: str | None = None,
     ):
         self._origin = origin
         self._namespace = namespace  # 'default' for vcluster projects
+        self._resource_id = resource_id
+
+    def __getitem__(self, resource_id: str) -> Self:
+        if self._resource_id is not None:
+            raise ValueError(f"kube client was already bound to {self._resource_id}")
+        new_origin = self._origin[resource_id]  # type: ignore[index]
+        return self.__class__(new_origin, self._namespace, resource_id)
 
 
 class NamespacedResourceProxy[
@@ -102,3 +110,24 @@ class NamespacedResourceProxy[
         return await origin.patch_json(
             name=name, patch_json_list=patch_json_list, namespace=self._namespace
         )
+
+
+class NestedResourceProxy[
+    ModelT: KubeResourceModel,
+    ListModelT: KubeResourceModel,
+    DeleteModelT: KubeResourceModel,
+    OriginT,
+](
+    BaseProxy[OriginT],
+):
+    async def get(self, name: str) -> ModelT:
+        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
+        return await origin.get(name=name)
+
+    async def get_list(self) -> ListModelT:
+        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
+        return await origin.get_list()
+
+    async def update(self, model: ModelT) -> ModelT:
+        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
+        return await origin.update(model)
