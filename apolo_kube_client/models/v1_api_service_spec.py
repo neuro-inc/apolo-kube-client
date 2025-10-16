@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
+
+__all__ = ("V1APIServiceSpec",)
 
 
 class V1APIServiceSpec(BaseModel):

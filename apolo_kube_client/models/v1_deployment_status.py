@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_deployment_condition import V1DeploymentCondition
+
+__all__ = ("V1DeploymentStatus",)
 
 
 class V1DeploymentStatus(BaseModel):

@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_ingress_spec import V1IngressSpec
 from .v1_ingress_status import V1IngressStatus
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1Ingress",)
 
 
 class V1Ingress(BaseModel):

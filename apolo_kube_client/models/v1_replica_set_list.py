@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1_replica_set import V1ReplicaSet
+
+__all__ = ("V1ReplicaSetList",)
 
 
 class V1ReplicaSetList(BaseModel):

@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
+
+__all__ = ("V1EphemeralVolumeSource",)
 
 
 class V1EphemeralVolumeSource(BaseModel):

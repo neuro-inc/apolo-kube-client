@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_node_config_source import V1NodeConfigSource
 from .v1_taint import V1Taint
+
+__all__ = ("V1NodeSpec",)
 
 
 class V1NodeSpec(BaseModel):

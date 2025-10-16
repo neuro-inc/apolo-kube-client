@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v2_h_p_a_scaling_rules import V2HPAScalingRules
+from .v2_hpa_scaling_rules import V2HPAScalingRules
+
+__all__ = ("V2HorizontalPodAutoscalerBehavior",)
 
 
 class V2HorizontalPodAutoscalerBehavior(BaseModel):

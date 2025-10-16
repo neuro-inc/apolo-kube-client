@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_attached_volume import V1AttachedVolume
@@ -10,13 +12,15 @@ from .v1_node_features import V1NodeFeatures
 from .v1_node_runtime_handler import V1NodeRuntimeHandler
 from .v1_node_system_info import V1NodeSystemInfo
 
+__all__ = ("V1NodeStatus",)
+
 
 class V1NodeStatus(BaseModel):
     addresses: list[V1NodeAddress] | None = Field(None, alias="addresses")
 
-    allocatable: dict(str, str) | None = Field(None, alias="allocatable")
+    allocatable: dict[str, str] | None = Field(None, alias="allocatable")
 
-    capacity: dict(str, str) | None = Field(None, alias="capacity")
+    capacity: dict[str, str] | None = Field(None, alias="capacity")
 
     conditions: list[V1NodeCondition] | None = Field(None, alias="conditions")
 

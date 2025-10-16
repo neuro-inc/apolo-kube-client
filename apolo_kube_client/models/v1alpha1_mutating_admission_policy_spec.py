@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha1_match_condition import V1alpha1MatchCondition
@@ -5,6 +7,8 @@ from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_mutation import V1alpha1Mutation
 from .v1alpha1_param_kind import V1alpha1ParamKind
 from .v1alpha1_variable import V1alpha1Variable
+
+__all__ = ("V1alpha1MutatingAdmissionPolicySpec",)
 
 
 class V1alpha1MutatingAdmissionPolicySpec(BaseModel):

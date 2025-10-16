@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_self_subject_rules_review_spec import V1SelfSubjectRulesReviewSpec
 from .v1_subject_rules_review_status import V1SubjectRulesReviewStatus
+
+__all__ = ("V1SelfSubjectRulesReview",)
 
 
 class V1SelfSubjectRulesReview(BaseModel):

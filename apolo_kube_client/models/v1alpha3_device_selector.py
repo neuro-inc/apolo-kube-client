@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1alpha3_c_e_l_device_selector import V1alpha3CELDeviceSelector
+from .v1alpha3_cel_device_selector import V1alpha3CELDeviceSelector
+
+__all__ = ("V1alpha3DeviceSelector",)
 
 
 class V1alpha3DeviceSelector(BaseModel):

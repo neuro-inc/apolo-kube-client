@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_secret_reference import V1SecretReference
+
+__all__ = ("V1RBDPersistentVolumeSource",)
 
 
 class V1RBDPersistentVolumeSource(BaseModel):

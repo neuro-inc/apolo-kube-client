@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_preconditions import V1Preconditions
+
+__all__ = ("V1DeleteOptions",)
 
 
 class V1DeleteOptions(BaseModel):

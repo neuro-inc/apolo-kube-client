@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_custom_resource_definition_condition import V1CustomResourceDefinitionCondition
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
+
+__all__ = ("V1CustomResourceDefinitionStatus",)
 
 
 class V1CustomResourceDefinitionStatus(BaseModel):

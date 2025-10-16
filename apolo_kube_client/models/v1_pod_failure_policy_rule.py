@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_pod_failure_policy_on_exit_codes_requirement import (
@@ -6,6 +8,8 @@ from .v1_pod_failure_policy_on_exit_codes_requirement import (
 from .v1_pod_failure_policy_on_pod_conditions_pattern import (
     V1PodFailurePolicyOnPodConditionsPattern,
 )
+
+__all__ = ("V1PodFailurePolicyRule",)
 
 
 class V1PodFailurePolicyRule(BaseModel):

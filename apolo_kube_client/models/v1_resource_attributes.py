@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
+
+__all__ = ("V1ResourceAttributes",)
 
 
 class V1ResourceAttributes(BaseModel):

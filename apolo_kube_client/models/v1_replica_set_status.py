@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_replica_set_condition import V1ReplicaSetCondition
+
+__all__ = ("V1ReplicaSetStatus",)
 
 
 class V1ReplicaSetStatus(BaseModel):

@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
 from .v1_selectable_field import V1SelectableField
+
+__all__ = ("V1CustomResourceDefinitionVersion",)
 
 
 class V1CustomResourceDefinitionVersion(BaseModel):
@@ -17,7 +21,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
 
     name: str | None = Field(None, alias="name")
 
-    schema: V1CustomResourceValidation | None = Field(None, alias="schema")
+    _schema: V1CustomResourceValidation | None = Field(None, alias="schema")
 
     selectable_fields: list[V1SelectableField] | None = Field(
         None, alias="selectableFields"

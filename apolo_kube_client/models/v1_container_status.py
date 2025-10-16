@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_container_state import V1ContainerState
@@ -6,9 +8,11 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_resource_status import V1ResourceStatus
 from .v1_volume_mount_status import V1VolumeMountStatus
 
+__all__ = ("V1ContainerStatus",)
+
 
 class V1ContainerStatus(BaseModel):
-    allocated_resources: dict(str, str) | None = Field(None, alias="allocatedResources")
+    allocated_resources: dict[str, str] | None = Field(None, alias="allocatedResources")
 
     allocated_resources_status: list[V1ResourceStatus] | None = Field(
         None, alias="allocatedResourcesStatus"

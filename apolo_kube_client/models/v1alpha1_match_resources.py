@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_label_selector import V1LabelSelector
 from .v1alpha1_named_rule_with_operations import V1alpha1NamedRuleWithOperations
+
+__all__ = ("V1alpha1MatchResources",)
 
 
 class V1alpha1MatchResources(BaseModel):

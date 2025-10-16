@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from .object import object
+from apolo_kube_client._typedefs import JsonType
+
+__all__ = ("V1ManagedFieldsEntry",)
 
 
 class V1ManagedFieldsEntry(BaseModel):
@@ -10,7 +14,7 @@ class V1ManagedFieldsEntry(BaseModel):
 
     fields_type: str | None = Field(None, alias="fieldsType")
 
-    fields_v1: object | None = Field(None, alias="fieldsV1")
+    fields_v1: JsonType | None = Field(None, alias="fieldsV1")
 
     manager: str | None = Field(None, alias="manager")
 

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
-from .v1beta1_service_c_i_d_r import V1beta1ServiceCIDR
+from .v1beta1_service_cidr import V1beta1ServiceCIDR
+
+__all__ = ("V1beta1ServiceCIDRList",)
 
 
 class V1beta1ServiceCIDRList(BaseModel):

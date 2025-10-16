@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .admissionregistration_v1_webhook_client_config import (
@@ -6,6 +8,8 @@ from .admissionregistration_v1_webhook_client_config import (
 from .v1_label_selector import V1LabelSelector
 from .v1_match_condition import V1MatchCondition
 from .v1_rule_with_operations import V1RuleWithOperations
+
+__all__ = ("V1MutatingWebhook",)
 
 
 class V1MutatingWebhook(BaseModel):

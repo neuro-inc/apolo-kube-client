@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
+
+__all__ = ("V1NodeAffinity",)
 
 
 class V1NodeAffinity(BaseModel):

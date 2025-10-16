@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -6,6 +8,8 @@ from .core_v1_event_series import CoreV1EventSeries
 from .v1_event_source import V1EventSource
 from .v1_object_meta import V1ObjectMeta
 from .v1_object_reference import V1ObjectReference
+
+__all__ = ("CoreV1Event",)
 
 
 class CoreV1Event(BaseModel):

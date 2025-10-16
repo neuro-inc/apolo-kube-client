@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_job import V1Job
 from .v1_list_meta import V1ListMeta
+
+__all__ = ("V1JobList",)
 
 
 class V1JobList(BaseModel):

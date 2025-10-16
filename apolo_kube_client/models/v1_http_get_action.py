@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .object import object
-from .v1_h_t_t_p_header import V1HTTPHeader
+from apolo_kube_client._typedefs import JsonType
+
+from .v1_http_header import V1HTTPHeader
+
+__all__ = ("V1HTTPGetAction",)
 
 
 class V1HTTPGetAction(BaseModel):
@@ -11,6 +16,6 @@ class V1HTTPGetAction(BaseModel):
 
     path: str | None = Field(None, alias="path")
 
-    port: object | None = Field(None, alias="port")
+    port: JsonType | None = Field(None, alias="port")
 
     scheme: str | None = Field(None, alias="scheme")

@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_secret_reference import V1SecretReference
+
+__all__ = ("V1CSIPersistentVolumeSource",)
 
 
 class V1CSIPersistentVolumeSource(BaseModel):
@@ -30,6 +34,6 @@ class V1CSIPersistentVolumeSource(BaseModel):
 
     read_only: bool | None = Field(None, alias="readOnly")
 
-    volume_attributes: dict(str, str) | None = Field(None, alias="volumeAttributes")
+    volume_attributes: dict[str, str] | None = Field(None, alias="volumeAttributes")
 
     volume_handle: str | None = Field(None, alias="volumeHandle")

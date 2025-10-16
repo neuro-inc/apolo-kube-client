@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_pod_d_n_s_config_option import V1PodDNSConfigOption
+from .v1_pod_dns_config_option import V1PodDNSConfigOption
+
+__all__ = ("V1PodDNSConfig",)
 
 
 class V1PodDNSConfig(BaseModel):

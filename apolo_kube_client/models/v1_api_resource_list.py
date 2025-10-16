@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_a_p_i_resource import V1APIResource
+from .v1_api_resource import V1APIResource
+
+__all__ = ("V1APIResourceList",)
 
 
 class V1APIResourceList(BaseModel):

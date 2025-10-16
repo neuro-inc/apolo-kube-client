@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha3_device_claim_configuration import V1alpha3DeviceClaimConfiguration
 from .v1alpha3_device_constraint import V1alpha3DeviceConstraint
 from .v1alpha3_device_request import V1alpha3DeviceRequest
+
+__all__ = ("V1alpha3DeviceClaim",)
 
 
 class V1alpha3DeviceClaim(BaseModel):

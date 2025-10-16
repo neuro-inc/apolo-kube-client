@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec
+
+__all__ = ("V1DeploymentSpec",)
 
 
 class V1DeploymentSpec(BaseModel):

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha3_device_class_configuration import V1alpha3DeviceClassConfiguration
 from .v1alpha3_device_selector import V1alpha3DeviceSelector
+
+__all__ = ("V1alpha3DeviceClassSpec",)
 
 
 class V1alpha3DeviceClassSpec(BaseModel):

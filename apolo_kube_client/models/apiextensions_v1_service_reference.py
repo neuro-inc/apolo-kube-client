@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
+__all__ = ("ApiextensionsV1ServiceReference",)
 
 
 class ApiextensionsV1ServiceReference(BaseModel):

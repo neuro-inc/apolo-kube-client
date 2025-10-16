@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha3_allocated_device_status import V1alpha3AllocatedDeviceStatus
@@ -5,6 +7,8 @@ from .v1alpha3_allocation_result import V1alpha3AllocationResult
 from .v1alpha3_resource_claim_consumer_reference import (
     V1alpha3ResourceClaimConsumerReference,
 )
+
+__all__ = ("V1alpha3ResourceClaimStatus",)
 
 
 class V1alpha3ResourceClaimStatus(BaseModel):

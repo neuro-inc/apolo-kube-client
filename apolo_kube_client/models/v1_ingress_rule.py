@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_h_t_t_p_ingress_rule_value import V1HTTPIngressRuleValue
+from .v1_http_ingress_rule_value import V1HTTPIngressRuleValue
+
+__all__ = ("V1IngressRule",)
 
 
 class V1IngressRule(BaseModel):

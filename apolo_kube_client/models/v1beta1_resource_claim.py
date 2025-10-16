@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1beta1_resource_claim_spec import V1beta1ResourceClaimSpec
 from .v1beta1_resource_claim_status import V1beta1ResourceClaimStatus
+
+__all__ = ("V1beta1ResourceClaim",)
 
 
 class V1beta1ResourceClaim(BaseModel):

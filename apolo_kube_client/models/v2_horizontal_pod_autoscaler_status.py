@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
 from .v2_horizontal_pod_autoscaler_condition import V2HorizontalPodAutoscalerCondition
 from .v2_metric_status import V2MetricStatus
+
+__all__ = ("V2HorizontalPodAutoscalerStatus",)
 
 
 class V2HorizontalPodAutoscalerStatus(BaseModel):

@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_a_p_i_service_spec import V1APIServiceSpec
-from .v1_a_p_i_service_status import V1APIServiceStatus
+from .v1_api_service_spec import V1APIServiceSpec
+from .v1_api_service_status import V1APIServiceStatus
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1APIService",)
 
 
 class V1APIService(BaseModel):

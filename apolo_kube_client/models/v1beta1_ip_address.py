@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
-from .v1beta1_i_p_address_spec import V1beta1IPAddressSpec
+from .v1beta1_ip_address_spec import V1beta1IPAddressSpec
+
+__all__ = ("V1beta1IPAddress",)
 
 
 class V1beta1IPAddress(BaseModel):

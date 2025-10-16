@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_field_selector import V1ObjectFieldSelector
 from .v1_resource_field_selector import V1ResourceFieldSelector
+
+__all__ = ("V1DownwardAPIVolumeFile",)
 
 
 class V1DownwardAPIVolumeFile(BaseModel):

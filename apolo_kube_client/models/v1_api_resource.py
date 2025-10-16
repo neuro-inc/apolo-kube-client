@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
+__all__ = ("V1APIResource",)
 
 
 class V1APIResource(BaseModel):

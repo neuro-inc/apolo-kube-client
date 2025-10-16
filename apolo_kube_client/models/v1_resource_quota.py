@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_resource_quota_spec import V1ResourceQuotaSpec
 from .v1_resource_quota_status import V1ResourceQuotaStatus
+
+__all__ = ("V1ResourceQuota",)
 
 
 class V1ResourceQuota(BaseModel):

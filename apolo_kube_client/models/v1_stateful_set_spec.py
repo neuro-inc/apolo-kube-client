@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_label_selector import V1LabelSelector
@@ -8,6 +10,8 @@ from .v1_stateful_set_persistent_volume_claim_retention_policy import (
     V1StatefulSetPersistentVolumeClaimRetentionPolicy,
 )
 from .v1_stateful_set_update_strategy import V1StatefulSetUpdateStrategy
+
+__all__ = ("V1StatefulSetSpec",)
 
 
 class V1StatefulSetSpec(BaseModel):

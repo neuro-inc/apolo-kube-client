@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1beta1_audit_annotation import V1beta1AuditAnnotation
@@ -6,6 +8,8 @@ from .v1beta1_match_resources import V1beta1MatchResources
 from .v1beta1_param_kind import V1beta1ParamKind
 from .v1beta1_validation import V1beta1Validation
 from .v1beta1_variable import V1beta1Variable
+
+__all__ = ("V1beta1ValidatingAdmissionPolicySpec",)
 
 
 class V1beta1ValidatingAdmissionPolicySpec(BaseModel):

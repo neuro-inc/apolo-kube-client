@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_local_object_reference import V1LocalObjectReference
 from .v1_object_meta import V1ObjectMeta
 from .v1_object_reference import V1ObjectReference
+
+__all__ = ("V1ServiceAccount",)
 
 
 class V1ServiceAccount(BaseModel):

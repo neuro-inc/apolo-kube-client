@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_group_subject import V1GroupSubject
 from .v1_service_account_subject import V1ServiceAccountSubject
 from .v1_user_subject import V1UserSubject
+
+__all__ = ("FlowcontrolV1Subject",)
 
 
 class FlowcontrolV1Subject(BaseModel):

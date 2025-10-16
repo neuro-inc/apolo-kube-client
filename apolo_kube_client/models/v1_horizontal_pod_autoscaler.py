@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_horizontal_pod_autoscaler_spec import V1HorizontalPodAutoscalerSpec
 from .v1_horizontal_pod_autoscaler_status import V1HorizontalPodAutoscalerStatus
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1HorizontalPodAutoscaler",)
 
 
 class V1HorizontalPodAutoscaler(BaseModel):

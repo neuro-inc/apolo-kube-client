@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_node_selector import V1NodeSelector
 from .v1alpha3_device_allocation_result import V1alpha3DeviceAllocationResult
+
+__all__ = ("V1alpha3AllocationResult",)
 
 
 class V1alpha3AllocationResult(BaseModel):

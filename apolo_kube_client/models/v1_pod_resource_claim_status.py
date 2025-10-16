@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
+__all__ = ("V1PodResourceClaimStatus",)
 
 
 class V1PodResourceClaimStatus(BaseModel):

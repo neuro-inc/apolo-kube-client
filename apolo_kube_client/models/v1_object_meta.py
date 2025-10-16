@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -5,9 +7,11 @@ from pydantic import BaseModel, Field
 from .v1_managed_fields_entry import V1ManagedFieldsEntry
 from .v1_owner_reference import V1OwnerReference
 
+__all__ = ("V1ObjectMeta",)
+
 
 class V1ObjectMeta(BaseModel):
-    annotations: dict(str, str) | None = Field(None, alias="annotations")
+    annotations: dict[str, str] | None = Field(None, alias="annotations")
 
     creation_timestamp: datetime | None = Field(None, alias="creationTimestamp")
 
@@ -23,7 +27,7 @@ class V1ObjectMeta(BaseModel):
 
     generation: int | None = Field(None, alias="generation")
 
-    labels: dict(str, str) | None = Field(None, alias="labels")
+    labels: dict[str, str] | None = Field(None, alias="labels")
 
     managed_fields: list[V1ManagedFieldsEntry] | None = Field(
         None, alias="managedFields"

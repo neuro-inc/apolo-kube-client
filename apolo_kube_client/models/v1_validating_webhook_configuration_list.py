@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1_validating_webhook_configuration import V1ValidatingWebhookConfiguration
+
+__all__ = ("V1ValidatingWebhookConfigurationList",)
 
 
 class V1ValidatingWebhookConfigurationList(BaseModel):

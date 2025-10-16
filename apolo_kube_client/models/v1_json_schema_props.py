@@ -1,35 +1,39 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .object import object
+from apolo_kube_client._typedefs import JsonType
+
 from .v1_external_documentation import V1ExternalDocumentation
-from .v1_j_s_o_n_schema_props import V1JSONSchemaProps
 from .v1_validation_rule import V1ValidationRule
+
+__all__ = ("V1JSONSchemaProps",)
 
 
 class V1JSONSchemaProps(BaseModel):
     ref: str | None = Field(None, alias="$ref")
 
-    schema: str | None = Field(None, alias="$schema")
+    _schema: str | None = Field(None, alias="$schema")
 
-    additional_items: object | None = Field(None, alias="additionalItems")
+    additional_items: JsonType | None = Field(None, alias="additionalItems")
 
-    additional_properties: object | None = Field(None, alias="additionalProperties")
+    additional_properties: JsonType | None = Field(None, alias="additionalProperties")
 
     all_of: list[V1JSONSchemaProps] | None = Field(None, alias="allOf")
 
     any_of: list[V1JSONSchemaProps] | None = Field(None, alias="anyOf")
 
-    default: object | None = Field(None, alias="default")
+    default: JsonType | None = Field(None, alias="default")
 
-    definitions: dict(str, V1JSONSchemaProps) | None = Field(None, alias="definitions")
+    definitions: dict[str, V1JSONSchemaProps] | None = Field(None, alias="definitions")
 
-    dependencies: dict(str, object) | None = Field(None, alias="dependencies")
+    dependencies: dict[str, JsonType] | None = Field(None, alias="dependencies")
 
     description: str | None = Field(None, alias="description")
 
-    enum: list[object] | None = Field(None, alias="enum")
+    enum: list[JsonType] | None = Field(None, alias="enum")
 
-    example: object | None = Field(None, alias="example")
+    example: JsonType | None = Field(None, alias="example")
 
     exclusive_maximum: bool | None = Field(None, alias="exclusiveMaximum")
 
@@ -41,7 +45,7 @@ class V1JSONSchemaProps(BaseModel):
 
     id: str | None = Field(None, alias="id")
 
-    items: object | None = Field(None, alias="items")
+    items: JsonType | None = Field(None, alias="items")
 
     max_items: int | None = Field(None, alias="maxItems")
 
@@ -69,11 +73,11 @@ class V1JSONSchemaProps(BaseModel):
 
     pattern: str | None = Field(None, alias="pattern")
 
-    pattern_properties: dict(str, V1JSONSchemaProps) | None = Field(
+    pattern_properties: dict[str, V1JSONSchemaProps] | None = Field(
         None, alias="patternProperties"
     )
 
-    properties: dict(str, V1JSONSchemaProps) | None = Field(None, alias="properties")
+    properties: dict[str, V1JSONSchemaProps] | None = Field(None, alias="properties")
 
     required: list[str] | None = Field(None, alias="required")
 

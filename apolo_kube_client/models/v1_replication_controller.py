@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_replication_controller_spec import V1ReplicationControllerSpec
 from .v1_replication_controller_status import V1ReplicationControllerStatus
+
+__all__ = ("V1ReplicationController",)
 
 
 class V1ReplicationController(BaseModel):

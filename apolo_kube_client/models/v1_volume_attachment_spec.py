@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
+
+__all__ = ("V1VolumeAttachmentSpec",)
 
 
 class V1VolumeAttachmentSpec(BaseModel):

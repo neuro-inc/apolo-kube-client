@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_replication_controller_condition import V1ReplicationControllerCondition
+
+__all__ = ("V1ReplicationControllerStatus",)
 
 
 class V1ReplicationControllerStatus(BaseModel):

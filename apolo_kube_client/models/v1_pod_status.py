@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
 from .v1_container_status import V1ContainerStatus
-from .v1_host_i_p import V1HostIP
+from .v1_host_ip import V1HostIP
 from .v1_pod_condition import V1PodCondition
-from .v1_pod_i_p import V1PodIP
+from .v1_pod_ip import V1PodIP
 from .v1_pod_resource_claim_status import V1PodResourceClaimStatus
+
+__all__ = ("V1PodStatus",)
 
 
 class V1PodStatus(BaseModel):

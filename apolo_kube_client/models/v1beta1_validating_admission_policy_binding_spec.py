@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1beta1_match_resources import V1beta1MatchResources
 from .v1beta1_param_ref import V1beta1ParamRef
+
+__all__ = ("V1beta1ValidatingAdmissionPolicyBindingSpec",)
 
 
 class V1beta1ValidatingAdmissionPolicyBindingSpec(BaseModel):

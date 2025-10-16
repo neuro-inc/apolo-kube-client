@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1alpha3_resource_claim_template import V1alpha3ResourceClaimTemplate
+
+__all__ = ("V1alpha3ResourceClaimTemplateList",)
 
 
 class V1alpha3ResourceClaimTemplateList(BaseModel):

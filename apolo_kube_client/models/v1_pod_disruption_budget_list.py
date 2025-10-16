@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1_pod_disruption_budget import V1PodDisruptionBudget
+
+__all__ = ("V1PodDisruptionBudgetList",)
 
 
 class V1PodDisruptionBudgetList(BaseModel):

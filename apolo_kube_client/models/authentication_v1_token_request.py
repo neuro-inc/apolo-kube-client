@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_token_request_spec import V1TokenRequestSpec
 from .v1_token_request_status import V1TokenRequestStatus
+
+__all__ = ("AuthenticationV1TokenRequest",)
 
 
 class AuthenticationV1TokenRequest(BaseModel):

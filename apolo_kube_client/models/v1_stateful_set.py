@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_stateful_set_spec import V1StatefulSetSpec
 from .v1_stateful_set_status import V1StatefulSetStatus
+
+__all__ = ("V1StatefulSet",)
 
 
 class V1StatefulSet(BaseModel):

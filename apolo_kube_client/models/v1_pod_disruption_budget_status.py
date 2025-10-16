@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
 from .v1_condition import V1Condition
+
+__all__ = ("V1PodDisruptionBudgetStatus",)
 
 
 class V1PodDisruptionBudgetStatus(BaseModel):
@@ -12,7 +16,7 @@ class V1PodDisruptionBudgetStatus(BaseModel):
 
     desired_healthy: int | None = Field(None, alias="desiredHealthy")
 
-    disrupted_pods: dict(str, datetime) | None = Field(None, alias="disruptedPods")
+    disrupted_pods: dict[str, datetime] | None = Field(None, alias="disruptedPods")
 
     disruptions_allowed: int | None = Field(None, alias="disruptionsAllowed")
 

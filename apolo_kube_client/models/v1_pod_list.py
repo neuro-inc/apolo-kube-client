@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1_pod import V1Pod
+
+__all__ = ("V1PodList",)
 
 
 class V1PodList(BaseModel):

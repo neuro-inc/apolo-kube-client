@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_j_s_o_n_schema_props import V1JSONSchemaProps
+from .v1_json_schema_props import V1JSONSchemaProps
+
+__all__ = ("V1CustomResourceValidation",)
 
 
 class V1CustomResourceValidation(BaseModel):

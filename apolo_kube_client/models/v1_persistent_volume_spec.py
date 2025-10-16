@@ -1,31 +1,33 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_a_w_s_elastic_block_store_volume_source import (
-    V1AWSElasticBlockStoreVolumeSource,
-)
+from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_persistent_volume_source import V1AzureFilePersistentVolumeSource
-from .v1_c_s_i_persistent_volume_source import V1CSIPersistentVolumeSource
-from .v1_ceph_f_s_persistent_volume_source import V1CephFSPersistentVolumeSource
+from .v1_ceph_fs_persistent_volume_source import V1CephFSPersistentVolumeSource
 from .v1_cinder_persistent_volume_source import V1CinderPersistentVolumeSource
-from .v1_f_c_volume_source import V1FCVolumeSource
+from .v1_csi_persistent_volume_source import V1CSIPersistentVolumeSource
+from .v1_fc_volume_source import V1FCVolumeSource
 from .v1_flex_persistent_volume_source import V1FlexPersistentVolumeSource
 from .v1_flocker_volume_source import V1FlockerVolumeSource
-from .v1_g_c_e_persistent_disk_volume_source import V1GCEPersistentDiskVolumeSource
+from .v1_gce_persistent_disk_volume_source import V1GCEPersistentDiskVolumeSource
 from .v1_glusterfs_persistent_volume_source import V1GlusterfsPersistentVolumeSource
 from .v1_host_path_volume_source import V1HostPathVolumeSource
-from .v1_i_s_c_s_i_persistent_volume_source import V1ISCSIPersistentVolumeSource
+from .v1_iscsi_persistent_volume_source import V1ISCSIPersistentVolumeSource
 from .v1_local_volume_source import V1LocalVolumeSource
-from .v1_n_f_s_volume_source import V1NFSVolumeSource
+from .v1_nfs_volume_source import V1NFSVolumeSource
 from .v1_object_reference import V1ObjectReference
 from .v1_photon_persistent_disk_volume_source import V1PhotonPersistentDiskVolumeSource
 from .v1_portworx_volume_source import V1PortworxVolumeSource
 from .v1_quobyte_volume_source import V1QuobyteVolumeSource
-from .v1_r_b_d_persistent_volume_source import V1RBDPersistentVolumeSource
-from .v1_scale_i_o_persistent_volume_source import V1ScaleIOPersistentVolumeSource
-from .v1_storage_o_s_persistent_volume_source import V1StorageOSPersistentVolumeSource
+from .v1_rbd_persistent_volume_source import V1RBDPersistentVolumeSource
+from .v1_scale_io_persistent_volume_source import V1ScaleIOPersistentVolumeSource
+from .v1_storage_os_persistent_volume_source import V1StorageOSPersistentVolumeSource
 from .v1_volume_node_affinity import V1VolumeNodeAffinity
 from .v1_vsphere_virtual_disk_volume_source import V1VsphereVirtualDiskVolumeSource
+
+__all__ = ("V1PersistentVolumeSpec",)
 
 
 class V1PersistentVolumeSpec(BaseModel):
@@ -41,7 +43,7 @@ class V1PersistentVolumeSpec(BaseModel):
         None, alias="azureFile"
     )
 
-    capacity: dict(str, str) | None = Field(None, alias="capacity")
+    capacity: dict[str, str] | None = Field(None, alias="capacity")
 
     cephfs: V1CephFSPersistentVolumeSource | None = Field(None, alias="cephfs")
 

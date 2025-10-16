@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .object import object
+from apolo_kube_client._typedefs import JsonType
+
+__all__ = ("V1ServicePort",)
 
 
 class V1ServicePort(BaseModel):
@@ -14,4 +18,4 @@ class V1ServicePort(BaseModel):
 
     protocol: str | None = Field(None, alias="protocol")
 
-    target_port: object | None = Field(None, alias="targetPort")
+    target_port: JsonType | None = Field(None, alias="targetPort")

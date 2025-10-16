@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_daemon_set_condition import V1DaemonSetCondition
+
+__all__ = ("V1DaemonSetStatus",)
 
 
 class V1DaemonSetStatus(BaseModel):

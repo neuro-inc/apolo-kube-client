@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_node_selector_term import V1NodeSelectorTerm
+
+__all__ = ("V1PreferredSchedulingTerm",)
 
 
 class V1PreferredSchedulingTerm(BaseModel):

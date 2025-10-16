@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha3_resource_slice_spec import V1alpha3ResourceSliceSpec
+
+__all__ = ("V1alpha3ResourceSlice",)
 
 
 class V1alpha3ResourceSlice(BaseModel):

@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_bound_object_reference import V1BoundObjectReference
+
+__all__ = ("V1TokenRequestSpec",)
 
 
 class V1TokenRequestSpec(BaseModel):

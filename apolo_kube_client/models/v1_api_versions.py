@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_server_address_by_client_c_i_d_r import V1ServerAddressByClientCIDR
+from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
+
+__all__ = ("V1APIVersions",)
 
 
 class V1APIVersions(BaseModel):

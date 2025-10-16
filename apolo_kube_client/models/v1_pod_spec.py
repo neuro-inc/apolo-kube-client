@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_affinity import V1Affinity
@@ -5,8 +7,8 @@ from .v1_container import V1Container
 from .v1_ephemeral_container import V1EphemeralContainer
 from .v1_host_alias import V1HostAlias
 from .v1_local_object_reference import V1LocalObjectReference
-from .v1_pod_d_n_s_config import V1PodDNSConfig
-from .v1_pod_o_s import V1PodOS
+from .v1_pod_dns_config import V1PodDNSConfig
+from .v1_pod_os import V1PodOS
 from .v1_pod_readiness_gate import V1PodReadinessGate
 from .v1_pod_resource_claim import V1PodResourceClaim
 from .v1_pod_scheduling_gate import V1PodSchedulingGate
@@ -15,6 +17,8 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_toleration import V1Toleration
 from .v1_topology_spread_constraint import V1TopologySpreadConstraint
 from .v1_volume import V1Volume
+
+__all__ = ("V1PodSpec",)
 
 
 class V1PodSpec(BaseModel):
@@ -58,11 +62,11 @@ class V1PodSpec(BaseModel):
 
     node_name: str | None = Field(None, alias="nodeName")
 
-    node_selector: dict(str, str) | None = Field(None, alias="nodeSelector")
+    node_selector: dict[str, str] | None = Field(None, alias="nodeSelector")
 
     os: V1PodOS | None = Field(None, alias="os")
 
-    overhead: dict(str, str) | None = Field(None, alias="overhead")
+    overhead: dict[str, str] | None = Field(None, alias="overhead")
 
     preemption_policy: str | None = Field(None, alias="preemptionPolicy")
 

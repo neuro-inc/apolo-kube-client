@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
+__all__ = ("V1alpha1ServerStorageVersion",)
 
 
 class V1alpha1ServerStorageVersion(BaseModel):

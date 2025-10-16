@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
 from .v1_persistent_volume_claim_spec import V1PersistentVolumeClaimSpec
 from .v1_persistent_volume_claim_status import V1PersistentVolumeClaimStatus
+
+__all__ = ("V1PersistentVolumeClaim",)
 
 
 class V1PersistentVolumeClaim(BaseModel):

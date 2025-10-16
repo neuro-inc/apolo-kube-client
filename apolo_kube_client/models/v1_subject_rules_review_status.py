@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_non_resource_rule import V1NonResourceRule
 from .v1_resource_rule import V1ResourceRule
+
+__all__ = ("V1SubjectRulesReviewStatus",)
 
 
 class V1SubjectRulesReviewStatus(BaseModel):

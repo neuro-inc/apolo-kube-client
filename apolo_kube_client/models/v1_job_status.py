@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
 from .v1_job_condition import V1JobCondition
 from .v1_uncounted_terminated_pods import V1UncountedTerminatedPods
+
+__all__ = ("V1JobStatus",)
 
 
 class V1JobStatus(BaseModel):

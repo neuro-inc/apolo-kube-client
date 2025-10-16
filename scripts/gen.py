@@ -1,45 +1,64 @@
+import keyword
 import re
-import string
 from pathlib import Path
 
 from kubernetes.client import models
+from pydantic import BaseModel
 
 from apolo_kube_client import models as apolo_models
 
 MOD = """
+from __future__ import annotations
 from pydantic import BaseModel, Field
 {imports}
+
+__all__ = ("{clsname}",)
 
 class {clsname}(BaseModel):
 {body}
 """
 
-LIST_RE = re.compile(r"^list\[(?P<subtype>.+)\]$")
+LIST_RE = re.compile(r"^list\[(?P<itemtype>.+)\]$")
 DICT_RE = re.compile(r"^dict\((?P<keytype>.+), (?P<valtype>.+)\)$")
-
-TRANS = str.maketrans({ch: "_" + ch.lower() for ch in string.ascii_uppercase})
 
 
 def mod_name(cls_name: str) -> str:
-    return cls_name[0].lower() + cls_name[1:].translate(TRANS)
+    obj = getattr(models, cls_name)
+    _, _, mod_name = obj.__module__.rpartition(".")
+    return mod_name
 
 
-def parse_type(descr: str) -> set[str]:
-    ret: set[str] = set()
-    if match := DICT_RE.match(descr):
-        ret |= parse_type(match.group("keytype"))
-        ret |= parse_type(match.group("valtype"))
+def parse_type(self_name: str, descr: str, imports: set[str]) -> str:
+    descr = descr.strip()
+    if descr == self_name:
+        return descr
+    elif descr == "object":
+        imports.add("from apolo_kube_client._typedefs import JsonType")
+        return "JsonType"
+    elif match := DICT_RE.match(descr):
+        keytype = parse_type(self_name, match.group("keytype"), imports)
+        valtype = parse_type(self_name, match.group("valtype"), imports)
+        return f"dict[{keytype}, {valtype}]"
     elif match := LIST_RE.match(descr):
-        ret |= parse_type(match.group("subtype"))
+        itemtype = parse_type(self_name, match.group("itemtype"), imports)
+        return f"list[{itemtype}]"
     else:
         if descr not in ("int", "bool", "int", "float", "str"):
             assert "[" not in descr, descr
+            assert not descr.startswith(("list", "dict")), descr
             match descr:
                 case "datetime":
-                    ret.add("from datetime import datetime")
+                    imports.add("from datetime import datetime")
                 case _:
-                    ret.add(f"from .{mod_name(descr)} import {descr}")
-    return ret
+                    imports.add(f"from .{mod_name(descr)} import {descr}")
+        return descr
+
+
+def calc_attr_name(attr: str) -> str:
+    if attr in dir(BaseModel) or keyword.iskeyword(attr):
+        return "_" + attr
+    else:
+        return attr
 
 
 def generate(cls: type, target_dir: Path, init_lines: list[str]) -> None:
@@ -49,8 +68,9 @@ def generate(cls: type, target_dir: Path, init_lines: list[str]) -> None:
     body: list[str] = []
     for attr, typ in cls.openapi_types.items():
         alias = cls.attribute_map[attr]
-        field = f'{attr}: {typ} | None = Field(None, alias="{alias}")'
-        imports |= parse_type(typ)
+        res_type = parse_type(name, typ, imports)
+        real_attr = calc_attr_name(attr)
+        field = f'{real_attr}: {res_type} | None = Field(None, alias="{alias}")'
         body.append(f"    {field}\n")
     mod = MOD.format(
         imports="\n".join(sorted(imports)), clsname=name, body="\n".join(body)

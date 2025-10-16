@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .rbac_v1_subject import RbacV1Subject
 from .v1_object_meta import V1ObjectMeta
 from .v1_role_ref import V1RoleRef
+
+__all__ = ("V1RoleBinding",)
 
 
 class V1RoleBinding(BaseModel):

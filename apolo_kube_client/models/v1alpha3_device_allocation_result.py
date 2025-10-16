@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha3_device_allocation_configuration import (
@@ -6,6 +8,8 @@ from .v1alpha3_device_allocation_configuration import (
 from .v1alpha3_device_request_allocation_result import (
     V1alpha3DeviceRequestAllocationResult,
 )
+
+__all__ = ("V1alpha3DeviceAllocationResult",)
 
 
 class V1alpha3DeviceAllocationResult(BaseModel):

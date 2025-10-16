@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_status_cause import V1StatusCause
+
+__all__ = ("V1StatusDetails",)
 
 
 class V1StatusDetails(BaseModel):

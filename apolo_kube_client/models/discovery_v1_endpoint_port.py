@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
+__all__ = ("DiscoveryV1EndpointPort",)
 
 
 class DiscoveryV1EndpointPort(BaseModel):

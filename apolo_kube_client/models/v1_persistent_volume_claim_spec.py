@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_label_selector import V1LabelSelector
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference
 from .v1_typed_object_reference import V1TypedObjectReference
 from .v1_volume_resource_requirements import V1VolumeResourceRequirements
+
+__all__ = ("V1PersistentVolumeClaimSpec",)
 
 
 class V1PersistentVolumeClaimSpec(BaseModel):

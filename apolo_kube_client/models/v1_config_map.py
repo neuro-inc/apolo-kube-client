@@ -1,14 +1,18 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1ConfigMap",)
 
 
 class V1ConfigMap(BaseModel):
     api_version: str | None = Field(None, alias="apiVersion")
 
-    binary_data: dict(str, str) | None = Field(None, alias="binaryData")
+    binary_data: dict[str, str] | None = Field(None, alias="binaryData")
 
-    data: dict(str, str) | None = Field(None, alias="data")
+    data: dict[str, str] | None = Field(None, alias="data")
 
     immutable: bool | None = Field(None, alias="immutable")
 

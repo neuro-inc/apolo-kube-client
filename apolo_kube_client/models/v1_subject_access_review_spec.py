@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
 
+__all__ = ("V1SubjectAccessReviewSpec",)
+
 
 class V1SubjectAccessReviewSpec(BaseModel):
-    extra: dict(str, list[str]) | None = Field(None, alias="extra")
+    extra: dict[str, list[str]] | None = Field(None, alias="extra")
 
     groups: list[str] | None = Field(None, alias="groups")
 

@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_topology_selector_label_requirement import V1TopologySelectorLabelRequirement
+
+__all__ = ("V1TopologySelectorTerm",)
 
 
 class V1TopologySelectorTerm(BaseModel):

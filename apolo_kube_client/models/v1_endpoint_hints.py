@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_for_zone import V1ForZone
+
+__all__ = ("V1EndpointHints",)
 
 
 class V1EndpointHints(BaseModel):

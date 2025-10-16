@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1beta1_validating_admission_policy import V1beta1ValidatingAdmissionPolicy
+
+__all__ = ("V1beta1ValidatingAdmissionPolicyList",)
 
 
 class V1beta1ValidatingAdmissionPolicyList(BaseModel):

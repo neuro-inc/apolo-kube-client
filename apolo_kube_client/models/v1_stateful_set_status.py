@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_stateful_set_condition import V1StatefulSetCondition
+
+__all__ = ("V1StatefulSetStatus",)
 
 
 class V1StatefulSetStatus(BaseModel):

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
-from .v1_c_s_i_node_spec import V1CSINodeSpec
+from .v1_csi_node_spec import V1CSINodeSpec
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1CSINode",)
 
 
 class V1CSINode(BaseModel):

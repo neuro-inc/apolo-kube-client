@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1alpha1_apply_configuration import V1alpha1ApplyConfiguration
-from .v1alpha1_j_s_o_n_patch import V1alpha1JSONPatch
+from .v1alpha1_json_patch import V1alpha1JSONPatch
+
+__all__ = ("V1alpha1Mutation",)
 
 
 class V1alpha1Mutation(BaseModel):

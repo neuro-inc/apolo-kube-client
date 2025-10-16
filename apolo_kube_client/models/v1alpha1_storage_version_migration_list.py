@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_storage_version_migration import V1alpha1StorageVersionMigration
+
+__all__ = ("V1alpha1StorageVersionMigrationList",)
 
 
 class V1alpha1StorageVersionMigrationList(BaseModel):

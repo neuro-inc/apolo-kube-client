@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_object_meta import V1ObjectMeta
+
+__all__ = ("V1beta1VolumeAttributesClass",)
 
 
 class V1beta1VolumeAttributesClass(BaseModel):
@@ -12,4 +16,4 @@ class V1beta1VolumeAttributesClass(BaseModel):
 
     metadata: V1ObjectMeta | None = Field(None, alias="metadata")
 
-    parameters: dict(str, str) | None = Field(None, alias="parameters")
+    parameters: dict[str, str] | None = Field(None, alias="parameters")

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_service_port import V1ServicePort
 from .v1_session_affinity_config import V1SessionAffinityConfig
+
+__all__ = ("V1ServiceSpec",)
 
 
 class V1ServiceSpec(BaseModel):
@@ -41,7 +45,7 @@ class V1ServiceSpec(BaseModel):
         None, alias="publishNotReadyAddresses"
     )
 
-    selector: dict(str, str) | None = Field(None, alias="selector")
+    selector: dict[str, str] | None = Field(None, alias="selector")
 
     session_affinity: str | None = Field(None, alias="sessionAffinity")
 

@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_endpoint_conditions import V1EndpointConditions
 from .v1_endpoint_hints import V1EndpointHints
 from .v1_object_reference import V1ObjectReference
+
+__all__ = ("V1Endpoint",)
 
 
 class V1Endpoint(BaseModel):
@@ -10,7 +14,7 @@ class V1Endpoint(BaseModel):
 
     conditions: V1EndpointConditions | None = Field(None, alias="conditions")
 
-    deprecated_topology: dict(str, str) | None = Field(None, alias="deprecatedTopology")
+    deprecated_topology: dict[str, str] | None = Field(None, alias="deprecatedTopology")
 
     hints: V1EndpointHints | None = Field(None, alias="hints")
 

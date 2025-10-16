@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from .v1_container_port import V1ContainerPort
@@ -10,6 +12,8 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_security_context import V1SecurityContext
 from .v1_volume_device import V1VolumeDevice
 from .v1_volume_mount import V1VolumeMount
+
+__all__ = ("V1EphemeralContainer",)
 
 
 class V1EphemeralContainer(BaseModel):
