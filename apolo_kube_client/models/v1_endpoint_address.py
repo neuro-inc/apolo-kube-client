@@ -6,9 +6,9 @@ __all__ = ("V1EndpointAddress",)
 
 
 class V1EndpointAddress(BaseModel):
-    hostname: str | None = Field(default_factory=lambda: None, alias="hostname")
+    hostname: str | None = Field(default_factory=lambda: None)
 
-    ip: str | None = Field(default_factory=lambda: None, alias="ip")
+    ip: str | None = Field(default_factory=lambda: None)
 
     node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
 

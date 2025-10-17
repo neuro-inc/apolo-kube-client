@@ -6,6 +6,6 @@ __all__ = ("V1VolumeResourceRequirements",)
 
 
 class V1VolumeResourceRequirements(BaseModel):
-    limits: dict[str, str] = Field(default_factory=lambda: {}, alias="limits")
+    limits: dict[str, str] = Field(default_factory=lambda: {})
 
-    requests: dict[str, str] = Field(default_factory=lambda: {}, alias="requests")
+    requests: dict[str, str] = Field(default_factory=lambda: {})

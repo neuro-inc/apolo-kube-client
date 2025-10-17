@@ -9,13 +9,13 @@ __all__ = ("V1ContainerState",)
 
 class V1ContainerState(BaseModel):
     running: V1ContainerStateRunning = Field(
-        default_factory=lambda: V1ContainerStateRunning(), alias="running"
+        default_factory=lambda: V1ContainerStateRunning()
     )
 
     terminated: V1ContainerStateTerminated = Field(
-        default_factory=lambda: V1ContainerStateTerminated(), alias="terminated"
+        default_factory=lambda: V1ContainerStateTerminated()
     )
 
     waiting: V1ContainerStateWaiting = Field(
-        default_factory=lambda: V1ContainerStateWaiting(), alias="waiting"
+        default_factory=lambda: V1ContainerStateWaiting()
     )

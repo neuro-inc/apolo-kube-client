@@ -10,16 +10,16 @@ class V1CertificateSigningRequestSpec(BaseModel):
         default_factory=lambda: None, alias="expirationSeconds"
     )
 
-    extra: dict[str, list[str]] = Field(default_factory=lambda: {}, alias="extra")
+    extra: dict[str, list[str]] = Field(default_factory=lambda: {})
 
-    groups: list[str] = Field(default_factory=lambda: [], alias="groups")
+    groups: list[str] = Field(default_factory=lambda: [])
 
-    request: str | None = Field(default_factory=lambda: None, alias="request")
+    request: str | None = Field(default_factory=lambda: None)
 
     signer_name: str | None = Field(default_factory=lambda: None, alias="signerName")
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)
 
-    usages: list[str] = Field(default_factory=lambda: [], alias="usages")
+    usages: list[str] = Field(default_factory=lambda: [])
 
-    username: str | None = Field(default_factory=lambda: None, alias="username")
+    username: str | None = Field(default_factory=lambda: None)

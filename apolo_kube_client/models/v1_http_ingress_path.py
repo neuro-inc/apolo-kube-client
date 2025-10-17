@@ -6,10 +6,8 @@ __all__ = ("V1HTTPIngressPath",)
 
 
 class V1HTTPIngressPath(BaseModel):
-    backend: V1IngressBackend = Field(
-        default_factory=lambda: V1IngressBackend(), alias="backend"
-    )
+    backend: V1IngressBackend = Field(default_factory=lambda: V1IngressBackend())
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
     path_type: str | None = Field(default_factory=lambda: None, alias="pathType")

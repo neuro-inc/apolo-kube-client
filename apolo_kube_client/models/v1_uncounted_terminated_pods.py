@@ -6,6 +6,6 @@ __all__ = ("V1UncountedTerminatedPods",)
 
 
 class V1UncountedTerminatedPods(BaseModel):
-    failed: list[str] = Field(default_factory=lambda: [], alias="failed")
+    failed: list[str] = Field(default_factory=lambda: [])
 
-    succeeded: list[str] = Field(default_factory=lambda: [], alias="succeeded")
+    succeeded: list[str] = Field(default_factory=lambda: [])

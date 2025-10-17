@@ -13,13 +13,13 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         default_factory=lambda: [], alias="additionalPrinterColumns"
     )
 
-    deprecated: bool | None = Field(default_factory=lambda: None, alias="deprecated")
+    deprecated: bool | None = Field(default_factory=lambda: None)
 
     deprecation_warning: str | None = Field(
         default_factory=lambda: None, alias="deprecationWarning"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     schema_: V1CustomResourceValidation = Field(
         default_factory=lambda: V1CustomResourceValidation(), alias="schema"
@@ -29,10 +29,10 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         default_factory=lambda: [], alias="selectableFields"
     )
 
-    served: bool | None = Field(default_factory=lambda: None, alias="served")
+    served: bool | None = Field(default_factory=lambda: None)
 
-    storage: bool | None = Field(default_factory=lambda: None, alias="storage")
+    storage: bool | None = Field(default_factory=lambda: None)
 
     subresources: V1CustomResourceSubresources = Field(
-        default_factory=lambda: V1CustomResourceSubresources(), alias="subresources"
+        default_factory=lambda: V1CustomResourceSubresources()
     )

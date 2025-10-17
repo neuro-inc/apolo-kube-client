@@ -44,14 +44,14 @@ class V1PersistentVolumeSpec(BaseModel):
         default_factory=lambda: V1AzureFilePersistentVolumeSource(), alias="azureFile"
     )
 
-    capacity: dict[str, str] = Field(default_factory=lambda: {}, alias="capacity")
+    capacity: dict[str, str] = Field(default_factory=lambda: {})
 
     cephfs: V1CephFSPersistentVolumeSource = Field(
-        default_factory=lambda: V1CephFSPersistentVolumeSource(), alias="cephfs"
+        default_factory=lambda: V1CephFSPersistentVolumeSource()
     )
 
     cinder: V1CinderPersistentVolumeSource = Field(
-        default_factory=lambda: V1CinderPersistentVolumeSource(), alias="cinder"
+        default_factory=lambda: V1CinderPersistentVolumeSource()
     )
 
     claim_ref: V1ObjectReference = Field(
@@ -59,17 +59,17 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     csi: V1CSIPersistentVolumeSource = Field(
-        default_factory=lambda: V1CSIPersistentVolumeSource(), alias="csi"
+        default_factory=lambda: V1CSIPersistentVolumeSource()
     )
 
-    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource(), alias="fc")
+    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource())
 
     flex_volume: V1FlexPersistentVolumeSource = Field(
         default_factory=lambda: V1FlexPersistentVolumeSource(), alias="flexVolume"
     )
 
     flocker: V1FlockerVolumeSource = Field(
-        default_factory=lambda: V1FlockerVolumeSource(), alias="flocker"
+        default_factory=lambda: V1FlockerVolumeSource()
     )
 
     gce_persistent_disk: V1GCEPersistentDiskVolumeSource = Field(
@@ -78,7 +78,7 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     glusterfs: V1GlusterfsPersistentVolumeSource = Field(
-        default_factory=lambda: V1GlusterfsPersistentVolumeSource(), alias="glusterfs"
+        default_factory=lambda: V1GlusterfsPersistentVolumeSource()
     )
 
     host_path: V1HostPathVolumeSource = Field(
@@ -86,18 +86,14 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     iscsi: V1ISCSIPersistentVolumeSource = Field(
-        default_factory=lambda: V1ISCSIPersistentVolumeSource(), alias="iscsi"
+        default_factory=lambda: V1ISCSIPersistentVolumeSource()
     )
 
-    local: V1LocalVolumeSource = Field(
-        default_factory=lambda: V1LocalVolumeSource(), alias="local"
-    )
+    local: V1LocalVolumeSource = Field(default_factory=lambda: V1LocalVolumeSource())
 
     mount_options: list[str] = Field(default_factory=lambda: [], alias="mountOptions")
 
-    nfs: V1NFSVolumeSource = Field(
-        default_factory=lambda: V1NFSVolumeSource(), alias="nfs"
-    )
+    nfs: V1NFSVolumeSource = Field(default_factory=lambda: V1NFSVolumeSource())
 
     node_affinity: V1VolumeNodeAffinity = Field(
         default_factory=lambda: V1VolumeNodeAffinity(), alias="nodeAffinity"
@@ -117,11 +113,11 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     quobyte: V1QuobyteVolumeSource = Field(
-        default_factory=lambda: V1QuobyteVolumeSource(), alias="quobyte"
+        default_factory=lambda: V1QuobyteVolumeSource()
     )
 
     rbd: V1RBDPersistentVolumeSource = Field(
-        default_factory=lambda: V1RBDPersistentVolumeSource(), alias="rbd"
+        default_factory=lambda: V1RBDPersistentVolumeSource()
     )
 
     scale_io: V1ScaleIOPersistentVolumeSource = Field(
@@ -133,7 +129,7 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     storageos: V1StorageOSPersistentVolumeSource = Field(
-        default_factory=lambda: V1StorageOSPersistentVolumeSource(), alias="storageos"
+        default_factory=lambda: V1StorageOSPersistentVolumeSource()
     )
 
     volume_attributes_class_name: str | None = Field(

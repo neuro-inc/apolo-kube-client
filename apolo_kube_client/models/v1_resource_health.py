@@ -6,6 +6,6 @@ __all__ = ("V1ResourceHealth",)
 
 
 class V1ResourceHealth(BaseModel):
-    health: str | None = Field(default_factory=lambda: None, alias="health")
+    health: str | None = Field(default_factory=lambda: None)
 
     resource_id: str | None = Field(default_factory=lambda: None, alias="resourceID")

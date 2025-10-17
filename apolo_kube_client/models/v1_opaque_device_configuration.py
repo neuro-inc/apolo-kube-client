@@ -6,6 +6,6 @@ __all__ = ("V1OpaqueDeviceConfiguration",)
 
 
 class V1OpaqueDeviceConfiguration(BaseModel):
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
-    parameters: JsonType = Field(default_factory=lambda: {}, alias="parameters")
+    parameters: JsonType = Field(default_factory=lambda: {})

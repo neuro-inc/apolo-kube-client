@@ -8,6 +8,6 @@ __all__ = ("V1NetworkPolicyPort",)
 class V1NetworkPolicyPort(BaseModel):
     end_port: int | None = Field(default_factory=lambda: None, alias="endPort")
 
-    port: JsonType = Field(default_factory=lambda: {}, alias="port")
+    port: JsonType = Field(default_factory=lambda: {})
 
-    protocol: str | None = Field(default_factory=lambda: None, alias="protocol")
+    protocol: str | None = Field(default_factory=lambda: None)

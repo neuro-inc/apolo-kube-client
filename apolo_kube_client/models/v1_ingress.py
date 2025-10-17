@@ -10,14 +10,10 @@ __all__ = ("V1Ingress",)
 class V1Ingress(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1IngressSpec = Field(default_factory=lambda: V1IngressSpec(), alias="spec")
+    spec: V1IngressSpec = Field(default_factory=lambda: V1IngressSpec())
 
-    status: V1IngressStatus = Field(
-        default_factory=lambda: V1IngressStatus(), alias="status"
-    )
+    status: V1IngressStatus = Field(default_factory=lambda: V1IngressStatus())

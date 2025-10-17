@@ -10,16 +10,10 @@ __all__ = ("V1TokenReview",)
 class V1TokenReview(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1TokenReviewSpec = Field(
-        default_factory=lambda: V1TokenReviewSpec(), alias="spec"
-    )
+    spec: V1TokenReviewSpec = Field(default_factory=lambda: V1TokenReviewSpec())
 
-    status: V1TokenReviewStatus = Field(
-        default_factory=lambda: V1TokenReviewStatus(), alias="status"
-    )
+    status: V1TokenReviewStatus = Field(default_factory=lambda: V1TokenReviewStatus())

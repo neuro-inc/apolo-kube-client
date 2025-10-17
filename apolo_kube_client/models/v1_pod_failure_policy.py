@@ -6,6 +6,4 @@ __all__ = ("V1PodFailurePolicy",)
 
 
 class V1PodFailurePolicy(BaseModel):
-    rules: list[V1PodFailurePolicyRule] = Field(
-        default_factory=lambda: [], alias="rules"
-    )
+    rules: list[V1PodFailurePolicyRule] = Field(default_factory=lambda: [])

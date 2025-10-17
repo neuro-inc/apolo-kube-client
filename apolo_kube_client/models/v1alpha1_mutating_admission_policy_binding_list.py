@@ -12,9 +12,9 @@ class V1alpha1MutatingAdmissionPolicyBindingList(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
     items: list[V1alpha1MutatingAdmissionPolicyBinding] = Field(
-        default_factory=lambda: [], alias="items"
+        default_factory=lambda: []
     )
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta(), alias="metadata")
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

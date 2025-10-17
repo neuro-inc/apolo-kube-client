@@ -10,12 +10,10 @@ class V1ConfigMap(BaseModel):
 
     binary_data: dict[str, str] = Field(default_factory=lambda: {}, alias="binaryData")
 
-    data: dict[str, str] = Field(default_factory=lambda: {}, alias="data")
+    data: dict[str, str] = Field(default_factory=lambda: {})
 
-    immutable: bool | None = Field(default_factory=lambda: None, alias="immutable")
+    immutable: bool | None = Field(default_factory=lambda: None)
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())

@@ -6,12 +6,12 @@ __all__ = ("V1Validation",)
 
 
 class V1Validation(BaseModel):
-    expression: str | None = Field(default_factory=lambda: None, alias="expression")
+    expression: str | None = Field(default_factory=lambda: None)
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
     message_expression: str | None = Field(
         default_factory=lambda: None, alias="messageExpression"
     )
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)

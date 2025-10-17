@@ -6,15 +6,15 @@ __all__ = ("V1APIResource",)
 
 
 class V1APIResource(BaseModel):
-    categories: list[str] = Field(default_factory=lambda: [], alias="categories")
+    categories: list[str] = Field(default_factory=lambda: [])
 
-    group: str | None = Field(default_factory=lambda: None, alias="group")
+    group: str | None = Field(default_factory=lambda: None)
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespaced: bool | None = Field(default_factory=lambda: None, alias="namespaced")
+    namespaced: bool | None = Field(default_factory=lambda: None)
 
     short_names: list[str] = Field(default_factory=lambda: [], alias="shortNames")
 
@@ -26,6 +26,6 @@ class V1APIResource(BaseModel):
         default_factory=lambda: None, alias="storageVersionHash"
     )
 
-    verbs: list[str] = Field(default_factory=lambda: [], alias="verbs")
+    verbs: list[str] = Field(default_factory=lambda: [])
 
-    version: str | None = Field(default_factory=lambda: None, alias="version")
+    version: str | None = Field(default_factory=lambda: None)

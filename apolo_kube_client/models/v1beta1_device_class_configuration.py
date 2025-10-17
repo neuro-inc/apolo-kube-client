@@ -7,5 +7,5 @@ __all__ = ("V1beta1DeviceClassConfiguration",)
 
 class V1beta1DeviceClassConfiguration(BaseModel):
     opaque: V1beta1OpaqueDeviceConfiguration = Field(
-        default_factory=lambda: V1beta1OpaqueDeviceConfiguration(), alias="opaque"
+        default_factory=lambda: V1beta1OpaqueDeviceConfiguration()
     )

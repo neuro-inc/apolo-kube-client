@@ -7,9 +7,7 @@ __all__ = ("V1ValidatingAdmissionPolicyStatus",)
 
 
 class V1ValidatingAdmissionPolicyStatus(BaseModel):
-    conditions: list[V1Condition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1Condition] = Field(default_factory=lambda: [])
 
     observed_generation: int | None = Field(
         default_factory=lambda: None, alias="observedGeneration"

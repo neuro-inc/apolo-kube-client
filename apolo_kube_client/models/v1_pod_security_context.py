@@ -48,7 +48,7 @@ class V1PodSecurityContext(BaseModel):
         default_factory=lambda: None, alias="supplementalGroupsPolicy"
     )
 
-    sysctls: list[V1Sysctl] = Field(default_factory=lambda: [], alias="sysctls")
+    sysctls: list[V1Sysctl] = Field(default_factory=lambda: [])
 
     windows_options: V1WindowsSecurityContextOptions = Field(
         default_factory=lambda: V1WindowsSecurityContextOptions(),

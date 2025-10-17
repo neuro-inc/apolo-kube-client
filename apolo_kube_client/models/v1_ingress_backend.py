@@ -8,9 +8,9 @@ __all__ = ("V1IngressBackend",)
 
 class V1IngressBackend(BaseModel):
     resource: V1TypedLocalObjectReference = Field(
-        default_factory=lambda: V1TypedLocalObjectReference(), alias="resource"
+        default_factory=lambda: V1TypedLocalObjectReference()
     )
 
     service: V1IngressServiceBackend = Field(
-        default_factory=lambda: V1IngressServiceBackend(), alias="service"
+        default_factory=lambda: V1IngressServiceBackend()
     )

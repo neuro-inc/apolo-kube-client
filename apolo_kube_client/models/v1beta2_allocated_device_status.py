@@ -8,20 +8,18 @@ __all__ = ("V1beta2AllocatedDeviceStatus",)
 
 
 class V1beta2AllocatedDeviceStatus(BaseModel):
-    conditions: list[V1Condition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1Condition] = Field(default_factory=lambda: [])
 
-    data: JsonType = Field(default_factory=lambda: {}, alias="data")
+    data: JsonType = Field(default_factory=lambda: {})
 
-    device: str | None = Field(default_factory=lambda: None, alias="device")
+    device: str | None = Field(default_factory=lambda: None)
 
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
     network_data: V1beta2NetworkDeviceData = Field(
         default_factory=lambda: V1beta2NetworkDeviceData(), alias="networkData"
     )
 
-    pool: str | None = Field(default_factory=lambda: None, alias="pool")
+    pool: str | None = Field(default_factory=lambda: None)
 
     share_id: str | None = Field(default_factory=lambda: None, alias="shareID")

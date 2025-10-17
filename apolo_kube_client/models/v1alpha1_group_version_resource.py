@@ -6,8 +6,8 @@ __all__ = ("V1alpha1GroupVersionResource",)
 
 
 class V1alpha1GroupVersionResource(BaseModel):
-    group: str | None = Field(default_factory=lambda: None, alias="group")
+    group: str | None = Field(default_factory=lambda: None)
 
-    resource: str | None = Field(default_factory=lambda: None, alias="resource")
+    resource: str | None = Field(default_factory=lambda: None)
 
-    version: str | None = Field(default_factory=lambda: None, alias="version")
+    version: str | None = Field(default_factory=lambda: None)

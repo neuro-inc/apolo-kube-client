@@ -8,13 +8,9 @@ __all__ = ("V1NetworkPolicySpec",)
 
 
 class V1NetworkPolicySpec(BaseModel):
-    egress: list[V1NetworkPolicyEgressRule] = Field(
-        default_factory=lambda: [], alias="egress"
-    )
+    egress: list[V1NetworkPolicyEgressRule] = Field(default_factory=lambda: [])
 
-    ingress: list[V1NetworkPolicyIngressRule] = Field(
-        default_factory=lambda: [], alias="ingress"
-    )
+    ingress: list[V1NetworkPolicyIngressRule] = Field(default_factory=lambda: [])
 
     pod_selector: V1LabelSelector = Field(
         default_factory=lambda: V1LabelSelector(), alias="podSelector"

@@ -8,7 +8,7 @@ __all__ = ("V1APIServiceSpec",)
 class V1APIServiceSpec(BaseModel):
     ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
 
-    group: str | None = Field(default_factory=lambda: None, alias="group")
+    group: str | None = Field(default_factory=lambda: None)
 
     group_priority_minimum: int | None = Field(
         default_factory=lambda: None, alias="groupPriorityMinimum"
@@ -19,10 +19,10 @@ class V1APIServiceSpec(BaseModel):
     )
 
     service: ApiregistrationV1ServiceReference = Field(
-        default_factory=lambda: ApiregistrationV1ServiceReference(), alias="service"
+        default_factory=lambda: ApiregistrationV1ServiceReference()
     )
 
-    version: str | None = Field(default_factory=lambda: None, alias="version")
+    version: str | None = Field(default_factory=lambda: None)
 
     version_priority: int | None = Field(
         default_factory=lambda: None, alias="versionPriority"

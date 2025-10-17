@@ -8,11 +8,11 @@ __all__ = ("V1DeviceRequest",)
 
 class V1DeviceRequest(BaseModel):
     exactly: V1ExactDeviceRequest = Field(
-        default_factory=lambda: V1ExactDeviceRequest(), alias="exactly"
+        default_factory=lambda: V1ExactDeviceRequest()
     )
 
     first_available: list[V1DeviceSubRequest] = Field(
         default_factory=lambda: [], alias="firstAvailable"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)

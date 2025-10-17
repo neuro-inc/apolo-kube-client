@@ -10,16 +10,14 @@ __all__ = ("V1PersistentVolume",)
 class V1PersistentVolume(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1PersistentVolumeSpec = Field(
-        default_factory=lambda: V1PersistentVolumeSpec(), alias="spec"
+        default_factory=lambda: V1PersistentVolumeSpec()
     )
 
     status: V1PersistentVolumeStatus = Field(
-        default_factory=lambda: V1PersistentVolumeStatus(), alias="status"
+        default_factory=lambda: V1PersistentVolumeStatus()
     )

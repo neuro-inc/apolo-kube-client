@@ -20,4 +20,4 @@ class V1beta1LeaseCandidateSpec(BaseModel):
 
     renew_time: datetime | None = Field(default_factory=lambda: None, alias="renewTime")
 
-    strategy: str | None = Field(default_factory=lambda: None, alias="strategy")
+    strategy: str | None = Field(default_factory=lambda: None)

@@ -6,6 +6,4 @@ __all__ = ("V1VolumeNodeAffinity",)
 
 
 class V1VolumeNodeAffinity(BaseModel):
-    required: V1NodeSelector = Field(
-        default_factory=lambda: V1NodeSelector(), alias="required"
-    )
+    required: V1NodeSelector = Field(default_factory=lambda: V1NodeSelector())

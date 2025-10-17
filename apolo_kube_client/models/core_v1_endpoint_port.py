@@ -8,8 +8,8 @@ __all__ = ("CoreV1EndpointPort",)
 class CoreV1EndpointPort(BaseModel):
     app_protocol: str | None = Field(default_factory=lambda: None, alias="appProtocol")
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    port: int | None = Field(default_factory=lambda: None, alias="port")
+    port: int | None = Field(default_factory=lambda: None)
 
-    protocol: str | None = Field(default_factory=lambda: None, alias="protocol")
+    protocol: str | None = Field(default_factory=lambda: None)

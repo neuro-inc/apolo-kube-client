@@ -9,10 +9,8 @@ __all__ = ("V1Lease",)
 class V1Lease(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1LeaseSpec = Field(default_factory=lambda: V1LeaseSpec(), alias="spec")
+    spec: V1LeaseSpec = Field(default_factory=lambda: V1LeaseSpec())

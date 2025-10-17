@@ -10,6 +10,4 @@ class V1Scheduling(BaseModel):
         default_factory=lambda: {}, alias="nodeSelector"
     )
 
-    tolerations: list[V1Toleration] = Field(
-        default_factory=lambda: [], alias="tolerations"
-    )
+    tolerations: list[V1Toleration] = Field(default_factory=lambda: [])

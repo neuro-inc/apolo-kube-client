@@ -8,6 +8,4 @@ __all__ = ("V1DownwardAPIVolumeSource",)
 class V1DownwardAPIVolumeSource(BaseModel):
     default_mode: int | None = Field(default_factory=lambda: None, alias="defaultMode")
 
-    items: list[V1DownwardAPIVolumeFile] = Field(
-        default_factory=lambda: [], alias="items"
-    )
+    items: list[V1DownwardAPIVolumeFile] = Field(default_factory=lambda: [])

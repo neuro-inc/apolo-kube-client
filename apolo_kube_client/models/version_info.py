@@ -8,7 +8,7 @@ __all__ = ("VersionInfo",)
 class VersionInfo(BaseModel):
     build_date: str | None = Field(default_factory=lambda: None, alias="buildDate")
 
-    compiler: str | None = Field(default_factory=lambda: None, alias="compiler")
+    compiler: str | None = Field(default_factory=lambda: None)
 
     emulation_major: str | None = Field(
         default_factory=lambda: None, alias="emulationMajor"
@@ -28,7 +28,7 @@ class VersionInfo(BaseModel):
 
     go_version: str | None = Field(default_factory=lambda: None, alias="goVersion")
 
-    major: str | None = Field(default_factory=lambda: None, alias="major")
+    major: str | None = Field(default_factory=lambda: None)
 
     min_compatibility_major: str | None = Field(
         default_factory=lambda: None, alias="minCompatibilityMajor"
@@ -38,6 +38,6 @@ class VersionInfo(BaseModel):
         default_factory=lambda: None, alias="minCompatibilityMinor"
     )
 
-    minor: str | None = Field(default_factory=lambda: None, alias="minor")
+    minor: str | None = Field(default_factory=lambda: None)
 
-    platform: str | None = Field(default_factory=lambda: None, alias="platform")
+    platform: str | None = Field(default_factory=lambda: None)

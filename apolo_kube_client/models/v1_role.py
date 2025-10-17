@@ -9,10 +9,8 @@ __all__ = ("V1Role",)
 class V1Role(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    rules: list[V1PolicyRule] = Field(default_factory=lambda: [], alias="rules")
+    rules: list[V1PolicyRule] = Field(default_factory=lambda: [])

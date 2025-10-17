@@ -6,7 +6,7 @@ __all__ = ("StorageV1TokenRequest",)
 
 
 class StorageV1TokenRequest(BaseModel):
-    audience: str | None = Field(default_factory=lambda: None, alias="audience")
+    audience: str | None = Field(default_factory=lambda: None)
 
     expiration_seconds: int | None = Field(
         default_factory=lambda: None, alias="expirationSeconds"

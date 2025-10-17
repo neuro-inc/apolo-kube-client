@@ -20,16 +20,14 @@ class V1beta1DeviceRequestAllocationResult(BaseModel):
         default_factory=lambda: {}, alias="consumedCapacity"
     )
 
-    device: str | None = Field(default_factory=lambda: None, alias="device")
+    device: str | None = Field(default_factory=lambda: None)
 
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
-    pool: str | None = Field(default_factory=lambda: None, alias="pool")
+    pool: str | None = Field(default_factory=lambda: None)
 
-    request: str | None = Field(default_factory=lambda: None, alias="request")
+    request: str | None = Field(default_factory=lambda: None)
 
     share_id: str | None = Field(default_factory=lambda: None, alias="shareID")
 
-    tolerations: list[V1beta1DeviceToleration] = Field(
-        default_factory=lambda: [], alias="tolerations"
-    )
+    tolerations: list[V1beta1DeviceToleration] = Field(default_factory=lambda: [])

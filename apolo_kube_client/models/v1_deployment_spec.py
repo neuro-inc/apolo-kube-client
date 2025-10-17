@@ -12,26 +12,22 @@ class V1DeploymentSpec(BaseModel):
         default_factory=lambda: None, alias="minReadySeconds"
     )
 
-    paused: bool | None = Field(default_factory=lambda: None, alias="paused")
+    paused: bool | None = Field(default_factory=lambda: None)
 
     progress_deadline_seconds: int | None = Field(
         default_factory=lambda: None, alias="progressDeadlineSeconds"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
     revision_history_limit: int | None = Field(
         default_factory=lambda: None, alias="revisionHistoryLimit"
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
     strategy: V1DeploymentStrategy = Field(
-        default_factory=lambda: V1DeploymentStrategy(), alias="strategy"
+        default_factory=lambda: V1DeploymentStrategy()
     )
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())

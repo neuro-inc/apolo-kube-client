@@ -18,11 +18,9 @@ class V1SecurityContext(BaseModel):
         default_factory=lambda: V1AppArmorProfile(), alias="appArmorProfile"
     )
 
-    capabilities: V1Capabilities = Field(
-        default_factory=lambda: V1Capabilities(), alias="capabilities"
-    )
+    capabilities: V1Capabilities = Field(default_factory=lambda: V1Capabilities())
 
-    privileged: bool | None = Field(default_factory=lambda: None, alias="privileged")
+    privileged: bool | None = Field(default_factory=lambda: None)
 
     proc_mount: str | None = Field(default_factory=lambda: None, alias="procMount")
 

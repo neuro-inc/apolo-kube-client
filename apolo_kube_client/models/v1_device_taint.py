@@ -6,10 +6,10 @@ __all__ = ("V1DeviceTaint",)
 
 
 class V1DeviceTaint(BaseModel):
-    effect: str | None = Field(default_factory=lambda: None, alias="effect")
+    effect: str | None = Field(default_factory=lambda: None)
 
-    key: str | None = Field(default_factory=lambda: None, alias="key")
+    key: str | None = Field(default_factory=lambda: None)
 
     time_added: datetime | None = Field(default_factory=lambda: None, alias="timeAdded")
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

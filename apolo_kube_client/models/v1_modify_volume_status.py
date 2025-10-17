@@ -6,7 +6,7 @@ __all__ = ("V1ModifyVolumeStatus",)
 
 
 class V1ModifyVolumeStatus(BaseModel):
-    status: str | None = Field(default_factory=lambda: None, alias="status")
+    status: str | None = Field(default_factory=lambda: None)
 
     target_volume_attributes_class_name: str | None = Field(
         default_factory=lambda: None, alias="targetVolumeAttributesClassName"

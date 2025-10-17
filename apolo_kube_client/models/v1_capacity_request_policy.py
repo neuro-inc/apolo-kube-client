@@ -6,7 +6,7 @@ __all__ = ("V1CapacityRequestPolicy",)
 
 
 class V1CapacityRequestPolicy(BaseModel):
-    default: str | None = Field(default_factory=lambda: None, alias="default")
+    default: str | None = Field(default_factory=lambda: None)
 
     valid_range: V1CapacityRequestPolicyRange = Field(
         default_factory=lambda: V1CapacityRequestPolicyRange(), alias="validRange"

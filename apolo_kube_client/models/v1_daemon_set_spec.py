@@ -16,13 +16,9 @@ class V1DaemonSetSpec(BaseModel):
         default_factory=lambda: None, alias="revisionHistoryLimit"
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())
 
     update_strategy: V1DaemonSetUpdateStrategy = Field(
         default_factory=lambda: V1DaemonSetUpdateStrategy(), alias="updateStrategy"

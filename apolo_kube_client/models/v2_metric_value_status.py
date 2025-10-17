@@ -14,4 +14,4 @@ class V2MetricValueStatus(BaseModel):
         default_factory=lambda: None, alias="averageValue"
     )
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

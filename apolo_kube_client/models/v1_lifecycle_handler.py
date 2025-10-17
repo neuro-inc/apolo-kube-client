@@ -9,13 +9,13 @@ __all__ = ("V1LifecycleHandler",)
 
 
 class V1LifecycleHandler(BaseModel):
-    _exec: V1ExecAction = Field(default_factory=lambda: V1ExecAction(), alias="exec")
+    exec_: V1ExecAction = Field(default_factory=lambda: V1ExecAction(), alias="exec")
 
     http_get: V1HTTPGetAction = Field(
         default_factory=lambda: V1HTTPGetAction(), alias="httpGet"
     )
 
-    sleep: V1SleepAction = Field(default_factory=lambda: V1SleepAction(), alias="sleep")
+    sleep: V1SleepAction = Field(default_factory=lambda: V1SleepAction())
 
     tcp_socket: V1TCPSocketAction = Field(
         default_factory=lambda: V1TCPSocketAction(), alias="tcpSocket"

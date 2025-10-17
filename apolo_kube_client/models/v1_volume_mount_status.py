@@ -8,7 +8,7 @@ __all__ = ("V1VolumeMountStatus",)
 class V1VolumeMountStatus(BaseModel):
     mount_path: str | None = Field(default_factory=lambda: None, alias="mountPath")
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 

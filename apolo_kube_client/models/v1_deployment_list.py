@@ -9,8 +9,8 @@ __all__ = ("V1DeploymentList",)
 class V1DeploymentList(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    items: list[V1Deployment] = Field(default_factory=lambda: [], alias="items")
+    items: list[V1Deployment] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta(), alias="metadata")
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

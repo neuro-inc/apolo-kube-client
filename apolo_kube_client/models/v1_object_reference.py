@@ -10,14 +10,14 @@ class V1ObjectReference(BaseModel):
 
     field_path: str | None = Field(default_factory=lambda: None, alias="fieldPath")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)
 
     resource_version: str | None = Field(
         default_factory=lambda: None, alias="resourceVersion"
     )
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)

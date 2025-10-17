@@ -6,14 +6,12 @@ __all__ = ("V1beta1ParamRef",)
 
 
 class V1beta1ParamRef(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)
 
     parameter_not_found_action: str | None = Field(
         default_factory=lambda: None, alias="parameterNotFoundAction"
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())

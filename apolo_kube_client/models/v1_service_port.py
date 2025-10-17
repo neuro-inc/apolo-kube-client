@@ -8,12 +8,12 @@ __all__ = ("V1ServicePort",)
 class V1ServicePort(BaseModel):
     app_protocol: str | None = Field(default_factory=lambda: None, alias="appProtocol")
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     node_port: int | None = Field(default_factory=lambda: None, alias="nodePort")
 
-    port: int | None = Field(default_factory=lambda: None, alias="port")
+    port: int | None = Field(default_factory=lambda: None)
 
-    protocol: str | None = Field(default_factory=lambda: None, alias="protocol")
+    protocol: str | None = Field(default_factory=lambda: None)
 
     target_port: JsonType = Field(default_factory=lambda: {}, alias="targetPort")

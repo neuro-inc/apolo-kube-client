@@ -6,7 +6,7 @@ __all__ = ("V1CSIVolumeSource",)
 
 
 class V1CSIVolumeSource(BaseModel):
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 

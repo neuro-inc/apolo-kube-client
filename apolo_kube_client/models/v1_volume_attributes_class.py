@@ -10,10 +10,8 @@ class V1VolumeAttributesClass(BaseModel):
 
     driver_name: str | None = Field(default_factory=lambda: None, alias="driverName")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    parameters: dict[str, str] = Field(default_factory=lambda: {}, alias="parameters")
+    parameters: dict[str, str] = Field(default_factory=lambda: {})

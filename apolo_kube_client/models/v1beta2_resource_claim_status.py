@@ -11,12 +11,10 @@ __all__ = ("V1beta2ResourceClaimStatus",)
 
 class V1beta2ResourceClaimStatus(BaseModel):
     allocation: V1beta2AllocationResult = Field(
-        default_factory=lambda: V1beta2AllocationResult(), alias="allocation"
+        default_factory=lambda: V1beta2AllocationResult()
     )
 
-    devices: list[V1beta2AllocatedDeviceStatus] = Field(
-        default_factory=lambda: [], alias="devices"
-    )
+    devices: list[V1beta2AllocatedDeviceStatus] = Field(default_factory=lambda: [])
 
     reserved_for: list[V1beta2ResourceClaimConsumerReference] = Field(
         default_factory=lambda: [], alias="reservedFor"

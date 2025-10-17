@@ -14,6 +14,6 @@ class V1AzureDiskVolumeSource(BaseModel):
 
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")

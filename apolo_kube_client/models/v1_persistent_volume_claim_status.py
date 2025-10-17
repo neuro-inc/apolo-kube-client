@@ -17,10 +17,10 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         default_factory=lambda: {}, alias="allocatedResources"
     )
 
-    capacity: dict[str, str] = Field(default_factory=lambda: {}, alias="capacity")
+    capacity: dict[str, str] = Field(default_factory=lambda: {})
 
     conditions: list[V1PersistentVolumeClaimCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
+        default_factory=lambda: []
     )
 
     current_volume_attributes_class_name: str | None = Field(
@@ -31,4 +31,4 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         default_factory=lambda: V1ModifyVolumeStatus(), alias="modifyVolumeStatus"
     )
 
-    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None)

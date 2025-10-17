@@ -7,10 +7,6 @@ __all__ = ("V1ResourceClaimTemplateSpec",)
 
 
 class V1ResourceClaimTemplateSpec(BaseModel):
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1ResourceClaimSpec = Field(
-        default_factory=lambda: V1ResourceClaimSpec(), alias="spec"
-    )
+    spec: V1ResourceClaimSpec = Field(default_factory=lambda: V1ResourceClaimSpec())

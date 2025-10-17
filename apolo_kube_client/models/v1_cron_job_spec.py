@@ -18,7 +18,7 @@ class V1CronJobSpec(BaseModel):
         default_factory=lambda: V1JobTemplateSpec(), alias="jobTemplate"
     )
 
-    schedule: str | None = Field(default_factory=lambda: None, alias="schedule")
+    schedule: str | None = Field(default_factory=lambda: None)
 
     starting_deadline_seconds: int | None = Field(
         default_factory=lambda: None, alias="startingDeadlineSeconds"
@@ -28,6 +28,6 @@ class V1CronJobSpec(BaseModel):
         default_factory=lambda: None, alias="successfulJobsHistoryLimit"
     )
 
-    suspend: bool | None = Field(default_factory=lambda: None, alias="suspend")
+    suspend: bool | None = Field(default_factory=lambda: None)
 
     time_zone: str | None = Field(default_factory=lambda: None, alias="timeZone")

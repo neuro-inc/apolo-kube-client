@@ -23,6 +23,4 @@ class V1FlowSchemaSpec(BaseModel):
         alias="priorityLevelConfiguration",
     )
 
-    rules: list[V1PolicyRulesWithSubjects] = Field(
-        default_factory=lambda: [], alias="rules"
-    )
+    rules: list[V1PolicyRulesWithSubjects] = Field(default_factory=lambda: [])

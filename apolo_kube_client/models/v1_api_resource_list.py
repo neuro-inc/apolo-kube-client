@@ -12,8 +12,6 @@ class V1APIResourceList(BaseModel):
         default_factory=lambda: None, alias="groupVersion"
     )
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    resources: list[V1APIResource] = Field(
-        default_factory=lambda: [], alias="resources"
-    )
+    resources: list[V1APIResource] = Field(default_factory=lambda: [])

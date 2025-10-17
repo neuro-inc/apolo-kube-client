@@ -10,16 +10,14 @@ __all__ = ("V1PriorityLevelConfiguration",)
 class V1PriorityLevelConfiguration(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1PriorityLevelConfigurationSpec = Field(
-        default_factory=lambda: V1PriorityLevelConfigurationSpec(), alias="spec"
+        default_factory=lambda: V1PriorityLevelConfigurationSpec()
     )
 
     status: V1PriorityLevelConfigurationStatus = Field(
-        default_factory=lambda: V1PriorityLevelConfigurationStatus(), alias="status"
+        default_factory=lambda: V1PriorityLevelConfigurationStatus()
     )

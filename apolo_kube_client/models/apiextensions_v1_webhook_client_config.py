@@ -9,7 +9,7 @@ class ApiextensionsV1WebhookClientConfig(BaseModel):
     ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
 
     service: ApiextensionsV1ServiceReference = Field(
-        default_factory=lambda: ApiextensionsV1ServiceReference(), alias="service"
+        default_factory=lambda: ApiextensionsV1ServiceReference()
     )
 
-    url: str | None = Field(default_factory=lambda: None, alias="url")
+    url: str | None = Field(default_factory=lambda: None)

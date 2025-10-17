@@ -6,4 +6,4 @@ __all__ = ("V1CapacityRequirements",)
 
 
 class V1CapacityRequirements(BaseModel):
-    requests: dict[str, str] = Field(default_factory=lambda: {}, alias="requests")
+    requests: dict[str, str] = Field(default_factory=lambda: {})

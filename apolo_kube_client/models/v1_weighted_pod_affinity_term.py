@@ -10,4 +10,4 @@ class V1WeightedPodAffinityTerm(BaseModel):
         default_factory=lambda: V1PodAffinityTerm(), alias="podAffinityTerm"
     )
 
-    weight: int | None = Field(default_factory=lambda: None, alias="weight")
+    weight: int | None = Field(default_factory=lambda: None)

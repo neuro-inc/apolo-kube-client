@@ -7,5 +7,5 @@ __all__ = ("V1beta2DeviceSelector",)
 
 class V1beta2DeviceSelector(BaseModel):
     cel: V1beta2CELDeviceSelector = Field(
-        default_factory=lambda: V1beta2CELDeviceSelector(), alias="cel"
+        default_factory=lambda: V1beta2CELDeviceSelector()
     )

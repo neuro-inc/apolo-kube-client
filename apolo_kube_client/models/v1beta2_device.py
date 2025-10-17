@@ -16,9 +16,7 @@ class V1beta2Device(BaseModel):
         default_factory=lambda: None, alias="allowMultipleAllocations"
     )
 
-    attributes: dict[str, V1beta2DeviceAttribute] = Field(
-        default_factory=lambda: {}, alias="attributes"
-    )
+    attributes: dict[str, V1beta2DeviceAttribute] = Field(default_factory=lambda: {})
 
     binding_conditions: list[str] = Field(
         default_factory=lambda: [], alias="bindingConditions"
@@ -32,15 +30,13 @@ class V1beta2Device(BaseModel):
         default_factory=lambda: None, alias="bindsToNode"
     )
 
-    capacity: dict[str, V1beta2DeviceCapacity] = Field(
-        default_factory=lambda: {}, alias="capacity"
-    )
+    capacity: dict[str, V1beta2DeviceCapacity] = Field(default_factory=lambda: {})
 
     consumes_counters: list[V1beta2DeviceCounterConsumption] = Field(
         default_factory=lambda: [], alias="consumesCounters"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
 
@@ -48,4 +44,4 @@ class V1beta2Device(BaseModel):
         default_factory=lambda: V1NodeSelector(), alias="nodeSelector"
     )
 
-    taints: list[V1beta2DeviceTaint] = Field(default_factory=lambda: [], alias="taints")
+    taints: list[V1beta2DeviceTaint] = Field(default_factory=lambda: [])

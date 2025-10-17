@@ -12,9 +12,9 @@ __all__ = ("V1beta1DeviceAllocationResult",)
 
 class V1beta1DeviceAllocationResult(BaseModel):
     config: list[V1beta1DeviceAllocationConfiguration] = Field(
-        default_factory=lambda: [], alias="config"
+        default_factory=lambda: []
     )
 
     results: list[V1beta1DeviceRequestAllocationResult] = Field(
-        default_factory=lambda: [], alias="results"
+        default_factory=lambda: []
     )

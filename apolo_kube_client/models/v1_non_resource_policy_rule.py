@@ -10,4 +10,4 @@ class V1NonResourcePolicyRule(BaseModel):
         default_factory=lambda: [], alias="nonResourceURLs"
     )
 
-    verbs: list[str] = Field(default_factory=lambda: [], alias="verbs")
+    verbs: list[str] = Field(default_factory=lambda: [])

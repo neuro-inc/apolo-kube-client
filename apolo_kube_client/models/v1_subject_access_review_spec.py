@@ -7,9 +7,9 @@ __all__ = ("V1SubjectAccessReviewSpec",)
 
 
 class V1SubjectAccessReviewSpec(BaseModel):
-    extra: dict[str, list[str]] = Field(default_factory=lambda: {}, alias="extra")
+    extra: dict[str, list[str]] = Field(default_factory=lambda: {})
 
-    groups: list[str] = Field(default_factory=lambda: [], alias="groups")
+    groups: list[str] = Field(default_factory=lambda: [])
 
     non_resource_attributes: V1NonResourceAttributes = Field(
         default_factory=lambda: V1NonResourceAttributes(), alias="nonResourceAttributes"
@@ -19,6 +19,6 @@ class V1SubjectAccessReviewSpec(BaseModel):
         default_factory=lambda: V1ResourceAttributes(), alias="resourceAttributes"
     )
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)
 
-    user: str | None = Field(default_factory=lambda: None, alias="user")
+    user: str | None = Field(default_factory=lambda: None)

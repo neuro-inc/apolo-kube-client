@@ -8,7 +8,7 @@ __all__ = ("V1JobStatus",)
 
 
 class V1JobStatus(BaseModel):
-    active: int | None = Field(default_factory=lambda: None, alias="active")
+    active: int | None = Field(default_factory=lambda: None)
 
     completed_indexes: str | None = Field(
         default_factory=lambda: None, alias="completedIndexes"
@@ -18,23 +18,21 @@ class V1JobStatus(BaseModel):
         default_factory=lambda: None, alias="completionTime"
     )
 
-    conditions: list[V1JobCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1JobCondition] = Field(default_factory=lambda: [])
 
-    failed: int | None = Field(default_factory=lambda: None, alias="failed")
+    failed: int | None = Field(default_factory=lambda: None)
 
     failed_indexes: str | None = Field(
         default_factory=lambda: None, alias="failedIndexes"
     )
 
-    ready: int | None = Field(default_factory=lambda: None, alias="ready")
+    ready: int | None = Field(default_factory=lambda: None)
 
     start_time: datetime | None = Field(default_factory=lambda: None, alias="startTime")
 
-    succeeded: int | None = Field(default_factory=lambda: None, alias="succeeded")
+    succeeded: int | None = Field(default_factory=lambda: None)
 
-    terminating: int | None = Field(default_factory=lambda: None, alias="terminating")
+    terminating: int | None = Field(default_factory=lambda: None)
 
     uncounted_terminated_pods: V1UncountedTerminatedPods = Field(
         default_factory=lambda: V1UncountedTerminatedPods(),

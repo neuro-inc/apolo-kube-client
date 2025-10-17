@@ -10,7 +10,7 @@ __all__ = ("EventsV1Event",)
 
 
 class EventsV1Event(BaseModel):
-    action: str | None = Field(default_factory=lambda: None, alias="action")
+    action: str | None = Field(default_factory=lambda: None)
 
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
@@ -32,23 +32,17 @@ class EventsV1Event(BaseModel):
 
     event_time: datetime | None = Field(default_factory=lambda: None, alias="eventTime")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    note: str | None = Field(default_factory=lambda: None, alias="note")
+    note: str | None = Field(default_factory=lambda: None)
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)
 
-    regarding: V1ObjectReference = Field(
-        default_factory=lambda: V1ObjectReference(), alias="regarding"
-    )
+    regarding: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
 
-    related: V1ObjectReference = Field(
-        default_factory=lambda: V1ObjectReference(), alias="related"
-    )
+    related: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
 
     reporting_controller: str | None = Field(
         default_factory=lambda: None, alias="reportingController"
@@ -58,8 +52,6 @@ class EventsV1Event(BaseModel):
         default_factory=lambda: None, alias="reportingInstance"
     )
 
-    series: EventsV1EventSeries = Field(
-        default_factory=lambda: EventsV1EventSeries(), alias="series"
-    )
+    series: EventsV1EventSeries = Field(default_factory=lambda: EventsV1EventSeries())
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

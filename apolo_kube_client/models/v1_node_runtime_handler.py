@@ -7,7 +7,7 @@ __all__ = ("V1NodeRuntimeHandler",)
 
 class V1NodeRuntimeHandler(BaseModel):
     features: V1NodeRuntimeHandlerFeatures = Field(
-        default_factory=lambda: V1NodeRuntimeHandlerFeatures(), alias="features"
+        default_factory=lambda: V1NodeRuntimeHandlerFeatures()
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)

@@ -22,6 +22,6 @@ class V1PodAffinityTerm(BaseModel):
         default_factory=lambda: V1LabelSelector(), alias="namespaceSelector"
     )
 
-    namespaces: list[str] = Field(default_factory=lambda: [], alias="namespaces")
+    namespaces: list[str] = Field(default_factory=lambda: [])
 
     topology_key: str | None = Field(default_factory=lambda: None, alias="topologyKey")

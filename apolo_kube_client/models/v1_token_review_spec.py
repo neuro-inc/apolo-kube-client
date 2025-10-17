@@ -6,6 +6,6 @@ __all__ = ("V1TokenReviewSpec",)
 
 
 class V1TokenReviewSpec(BaseModel):
-    audiences: list[str] = Field(default_factory=lambda: [], alias="audiences")
+    audiences: list[str] = Field(default_factory=lambda: [])
 
-    token: str | None = Field(default_factory=lambda: None, alias="token")
+    token: str | None = Field(default_factory=lambda: None)

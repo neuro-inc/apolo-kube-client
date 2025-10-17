@@ -16,6 +16,6 @@ class V1IngressSpec(BaseModel):
         default_factory=lambda: None, alias="ingressClassName"
     )
 
-    rules: list[V1IngressRule] = Field(default_factory=lambda: [], alias="rules")
+    rules: list[V1IngressRule] = Field(default_factory=lambda: [])
 
-    tls: list[V1IngressTLS] = Field(default_factory=lambda: [], alias="tls")
+    tls: list[V1IngressTLS] = Field(default_factory=lambda: [])

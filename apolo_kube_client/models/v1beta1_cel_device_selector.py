@@ -6,4 +6,4 @@ __all__ = ("V1beta1CELDeviceSelector",)
 
 
 class V1beta1CELDeviceSelector(BaseModel):
-    expression: str | None = Field(default_factory=lambda: None, alias="expression")
+    expression: str | None = Field(default_factory=lambda: None)

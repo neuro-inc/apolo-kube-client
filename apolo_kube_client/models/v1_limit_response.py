@@ -7,7 +7,7 @@ __all__ = ("V1LimitResponse",)
 
 class V1LimitResponse(BaseModel):
     queuing: V1QueuingConfiguration = Field(
-        default_factory=lambda: V1QueuingConfiguration(), alias="queuing"
+        default_factory=lambda: V1QueuingConfiguration()
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

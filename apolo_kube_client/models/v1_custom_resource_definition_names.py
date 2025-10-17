@@ -6,14 +6,14 @@ __all__ = ("V1CustomResourceDefinitionNames",)
 
 
 class V1CustomResourceDefinitionNames(BaseModel):
-    categories: list[str] = Field(default_factory=lambda: [], alias="categories")
+    categories: list[str] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     list_kind: str | None = Field(default_factory=lambda: None, alias="listKind")
 
-    plural: str | None = Field(default_factory=lambda: None, alias="plural")
+    plural: str | None = Field(default_factory=lambda: None)
 
     short_names: list[str] = Field(default_factory=lambda: [], alias="shortNames")
 
-    singular: str | None = Field(default_factory=lambda: None, alias="singular")
+    singular: str | None = Field(default_factory=lambda: None)

@@ -8,6 +8,6 @@ __all__ = ("V1RoleRef",)
 class V1RoleRef(BaseModel):
     api_group: str | None = Field(default_factory=lambda: None, alias="apiGroup")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)

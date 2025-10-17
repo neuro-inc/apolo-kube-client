@@ -8,13 +8,9 @@ __all__ = ("V1ResourceClaimStatus",)
 
 
 class V1ResourceClaimStatus(BaseModel):
-    allocation: V1AllocationResult = Field(
-        default_factory=lambda: V1AllocationResult(), alias="allocation"
-    )
+    allocation: V1AllocationResult = Field(default_factory=lambda: V1AllocationResult())
 
-    devices: list[V1AllocatedDeviceStatus] = Field(
-        default_factory=lambda: [], alias="devices"
-    )
+    devices: list[V1AllocatedDeviceStatus] = Field(default_factory=lambda: [])
 
     reserved_for: list[V1ResourceClaimConsumerReference] = Field(
         default_factory=lambda: [], alias="reservedFor"

@@ -10,4 +10,4 @@ class V1TokenRequestStatus(BaseModel):
         default_factory=lambda: None, alias="expirationTimestamp"
     )
 
-    token: str | None = Field(default_factory=lambda: None, alias="token")
+    token: str | None = Field(default_factory=lambda: None)

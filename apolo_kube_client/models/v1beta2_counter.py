@@ -6,4 +6,4 @@ __all__ = ("V1beta2Counter",)
 
 
 class V1beta2Counter(BaseModel):
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

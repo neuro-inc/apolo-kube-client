@@ -20,15 +20,15 @@ class V1ISCSIVolumeSource(BaseModel):
         default_factory=lambda: None, alias="initiatorName"
     )
 
-    iqn: str | None = Field(default_factory=lambda: None, alias="iqn")
+    iqn: str | None = Field(default_factory=lambda: None)
 
     iscsi_interface: str | None = Field(
         default_factory=lambda: None, alias="iscsiInterface"
     )
 
-    lun: int | None = Field(default_factory=lambda: None, alias="lun")
+    lun: int | None = Field(default_factory=lambda: None)
 
-    portals: list[str] = Field(default_factory=lambda: [], alias="portals")
+    portals: list[str] = Field(default_factory=lambda: [])
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 

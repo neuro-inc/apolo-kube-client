@@ -6,6 +6,6 @@ __all__ = ("V1NonResourceAttributes",)
 
 
 class V1NonResourceAttributes(BaseModel):
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
-    verb: str | None = Field(default_factory=lambda: None, alias="verb")
+    verb: str | None = Field(default_factory=lambda: None)

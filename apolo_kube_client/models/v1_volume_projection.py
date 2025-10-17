@@ -28,9 +28,7 @@ class V1VolumeProjection(BaseModel):
         default_factory=lambda: V1PodCertificateProjection(), alias="podCertificate"
     )
 
-    secret: V1SecretProjection = Field(
-        default_factory=lambda: V1SecretProjection(), alias="secret"
-    )
+    secret: V1SecretProjection = Field(default_factory=lambda: V1SecretProjection())
 
     service_account_token: V1ServiceAccountTokenProjection = Field(
         default_factory=lambda: V1ServiceAccountTokenProjection(),

@@ -8,7 +8,7 @@ __all__ = ("V1ObjectMeta",)
 
 
 class V1ObjectMeta(BaseModel):
-    annotations: dict[str, str] = Field(default_factory=lambda: {}, alias="annotations")
+    annotations: dict[str, str] = Field(default_factory=lambda: {})
 
     creation_timestamp: datetime | None = Field(
         default_factory=lambda: None, alias="creationTimestamp"
@@ -22,23 +22,23 @@ class V1ObjectMeta(BaseModel):
         default_factory=lambda: None, alias="deletionTimestamp"
     )
 
-    finalizers: list[str] = Field(default_factory=lambda: [], alias="finalizers")
+    finalizers: list[str] = Field(default_factory=lambda: [])
 
     generate_name: str | None = Field(
         default_factory=lambda: None, alias="generateName"
     )
 
-    generation: int | None = Field(default_factory=lambda: None, alias="generation")
+    generation: int | None = Field(default_factory=lambda: None)
 
-    labels: dict[str, str] = Field(default_factory=lambda: {}, alias="labels")
+    labels: dict[str, str] = Field(default_factory=lambda: {})
 
     managed_fields: list[V1ManagedFieldsEntry] = Field(
         default_factory=lambda: [], alias="managedFields"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)
 
     owner_references: list[V1OwnerReference] = Field(
         default_factory=lambda: [], alias="ownerReferences"
@@ -50,4 +50,4 @@ class V1ObjectMeta(BaseModel):
 
     self_link: str | None = Field(default_factory=lambda: None, alias="selfLink")
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)

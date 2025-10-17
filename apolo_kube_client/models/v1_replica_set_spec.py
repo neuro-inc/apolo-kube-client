@@ -11,12 +11,8 @@ class V1ReplicaSetSpec(BaseModel):
         default_factory=lambda: None, alias="minReadySeconds"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())

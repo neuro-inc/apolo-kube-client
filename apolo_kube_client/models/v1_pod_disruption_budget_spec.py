@@ -13,9 +13,7 @@ class V1PodDisruptionBudgetSpec(BaseModel):
 
     min_available: JsonType = Field(default_factory=lambda: {}, alias="minAvailable")
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
     unhealthy_pod_eviction_policy: str | None = Field(
         default_factory=lambda: None, alias="unhealthyPodEvictionPolicy"

@@ -6,8 +6,8 @@ __all__ = ("V1IngressPortStatus",)
 
 
 class V1IngressPortStatus(BaseModel):
-    error: str | None = Field(default_factory=lambda: None, alias="error")
+    error: str | None = Field(default_factory=lambda: None)
 
-    port: int | None = Field(default_factory=lambda: None, alias="port")
+    port: int | None = Field(default_factory=lambda: None)
 
-    protocol: str | None = Field(default_factory=lambda: None, alias="protocol")
+    protocol: str | None = Field(default_factory=lambda: None)

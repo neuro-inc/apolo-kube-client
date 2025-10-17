@@ -6,9 +6,9 @@ __all__ = ("V1EnvVar",)
 
 
 class V1EnvVar(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)
 
     value_from: V1EnvVarSource = Field(
         default_factory=lambda: V1EnvVarSource(), alias="valueFrom"

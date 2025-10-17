@@ -7,12 +7,10 @@ __all__ = ("V1EndpointSubset",)
 
 
 class V1EndpointSubset(BaseModel):
-    addresses: list[V1EndpointAddress] = Field(
-        default_factory=lambda: [], alias="addresses"
-    )
+    addresses: list[V1EndpointAddress] = Field(default_factory=lambda: [])
 
     not_ready_addresses: list[V1EndpointAddress] = Field(
         default_factory=lambda: [], alias="notReadyAddresses"
     )
 
-    ports: list[CoreV1EndpointPort] = Field(default_factory=lambda: [], alias="ports")
+    ports: list[CoreV1EndpointPort] = Field(default_factory=lambda: [])

@@ -6,10 +6,10 @@ __all__ = ("V1beta2DeviceAttribute",)
 
 
 class V1beta2DeviceAttribute(BaseModel):
-    bool: bool | None = Field(default_factory=lambda: None, alias="bool")
+    bool: bool | None = Field(default_factory=lambda: None)
 
-    int: int | None = Field(default_factory=lambda: None, alias="int")
+    int: int | None = Field(default_factory=lambda: None)
 
-    string: str | None = Field(default_factory=lambda: None, alias="string")
+    string: str | None = Field(default_factory=lambda: None)
 
-    version: str | None = Field(default_factory=lambda: None, alias="version")
+    version: str | None = Field(default_factory=lambda: None)

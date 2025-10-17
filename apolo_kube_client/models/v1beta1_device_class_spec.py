@@ -7,14 +7,10 @@ __all__ = ("V1beta1DeviceClassSpec",)
 
 
 class V1beta1DeviceClassSpec(BaseModel):
-    config: list[V1beta1DeviceClassConfiguration] = Field(
-        default_factory=lambda: [], alias="config"
-    )
+    config: list[V1beta1DeviceClassConfiguration] = Field(default_factory=lambda: [])
 
     extended_resource_name: str | None = Field(
         default_factory=lambda: None, alias="extendedResourceName"
     )
 
-    selectors: list[V1beta1DeviceSelector] = Field(
-        default_factory=lambda: [], alias="selectors"
-    )
+    selectors: list[V1beta1DeviceSelector] = Field(default_factory=lambda: [])

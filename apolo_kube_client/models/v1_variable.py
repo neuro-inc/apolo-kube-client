@@ -6,6 +6,6 @@ __all__ = ("V1Variable",)
 
 
 class V1Variable(BaseModel):
-    expression: str | None = Field(default_factory=lambda: None, alias="expression")
+    expression: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)

@@ -14,6 +14,6 @@ class V2MetricTarget(BaseModel):
         default_factory=lambda: None, alias="averageValue"
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

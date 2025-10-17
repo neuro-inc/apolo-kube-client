@@ -6,14 +6,14 @@ __all__ = ("V1DeviceToleration",)
 
 
 class V1DeviceToleration(BaseModel):
-    effect: str | None = Field(default_factory=lambda: None, alias="effect")
+    effect: str | None = Field(default_factory=lambda: None)
 
-    key: str | None = Field(default_factory=lambda: None, alias="key")
+    key: str | None = Field(default_factory=lambda: None)
 
-    operator: str | None = Field(default_factory=lambda: None, alias="operator")
+    operator: str | None = Field(default_factory=lambda: None)
 
     toleration_seconds: int | None = Field(
         default_factory=lambda: None, alias="tolerationSeconds"
     )
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

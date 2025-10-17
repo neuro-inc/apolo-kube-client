@@ -10,6 +10,6 @@ class V1ResourceFieldSelector(BaseModel):
         default_factory=lambda: None, alias="containerName"
     )
 
-    divisor: str | None = Field(default_factory=lambda: None, alias="divisor")
+    divisor: str | None = Field(default_factory=lambda: None)
 
-    resource: str | None = Field(default_factory=lambda: None, alias="resource")
+    resource: str | None = Field(default_factory=lambda: None)

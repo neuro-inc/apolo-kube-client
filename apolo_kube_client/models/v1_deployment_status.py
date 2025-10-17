@@ -14,9 +14,7 @@ class V1DeploymentStatus(BaseModel):
         default_factory=lambda: None, alias="collisionCount"
     )
 
-    conditions: list[V1DeploymentCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1DeploymentCondition] = Field(default_factory=lambda: [])
 
     observed_generation: int | None = Field(
         default_factory=lambda: None, alias="observedGeneration"
@@ -26,7 +24,7 @@ class V1DeploymentStatus(BaseModel):
         default_factory=lambda: None, alias="readyReplicas"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
     terminating_replicas: int | None = Field(
         default_factory=lambda: None, alias="terminatingReplicas"

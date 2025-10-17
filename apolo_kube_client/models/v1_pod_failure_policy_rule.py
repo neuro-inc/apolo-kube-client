@@ -11,7 +11,7 @@ __all__ = ("V1PodFailurePolicyRule",)
 
 
 class V1PodFailurePolicyRule(BaseModel):
-    action: str | None = Field(default_factory=lambda: None, alias="action")
+    action: str | None = Field(default_factory=lambda: None)
 
     on_exit_codes: V1PodFailurePolicyOnExitCodesRequirement = Field(
         default_factory=lambda: V1PodFailurePolicyOnExitCodesRequirement(),

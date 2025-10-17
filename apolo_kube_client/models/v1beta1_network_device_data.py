@@ -14,4 +14,4 @@ class V1beta1NetworkDeviceData(BaseModel):
         default_factory=lambda: None, alias="interfaceName"
     )
 
-    ips: list[str] = Field(default_factory=lambda: [], alias="ips")
+    ips: list[str] = Field(default_factory=lambda: [])

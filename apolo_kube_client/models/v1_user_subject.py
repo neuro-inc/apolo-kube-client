@@ -6,4 +6,4 @@ __all__ = ("V1UserSubject",)
 
 
 class V1UserSubject(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)

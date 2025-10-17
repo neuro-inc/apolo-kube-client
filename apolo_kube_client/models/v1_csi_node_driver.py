@@ -7,10 +7,10 @@ __all__ = ("V1CSINodeDriver",)
 
 class V1CSINodeDriver(BaseModel):
     allocatable: V1VolumeNodeResources = Field(
-        default_factory=lambda: V1VolumeNodeResources(), alias="allocatable"
+        default_factory=lambda: V1VolumeNodeResources()
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     node_id: str | None = Field(default_factory=lambda: None, alias="nodeID")
 

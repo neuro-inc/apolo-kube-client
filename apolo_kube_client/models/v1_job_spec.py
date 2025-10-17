@@ -25,7 +25,7 @@ class V1JobSpec(BaseModel):
         default_factory=lambda: None, alias="completionMode"
     )
 
-    completions: int | None = Field(default_factory=lambda: None, alias="completions")
+    completions: int | None = Field(default_factory=lambda: None)
 
     managed_by: str | None = Field(default_factory=lambda: None, alias="managedBy")
 
@@ -37,7 +37,7 @@ class V1JobSpec(BaseModel):
         default_factory=lambda: None, alias="maxFailedIndexes"
     )
 
-    parallelism: int | None = Field(default_factory=lambda: None, alias="parallelism")
+    parallelism: int | None = Field(default_factory=lambda: None)
 
     pod_failure_policy: V1PodFailurePolicy = Field(
         default_factory=lambda: V1PodFailurePolicy(), alias="podFailurePolicy"
@@ -47,19 +47,15 @@ class V1JobSpec(BaseModel):
         default_factory=lambda: None, alias="podReplacementPolicy"
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
     success_policy: V1SuccessPolicy = Field(
         default_factory=lambda: V1SuccessPolicy(), alias="successPolicy"
     )
 
-    suspend: bool | None = Field(default_factory=lambda: None, alias="suspend")
+    suspend: bool | None = Field(default_factory=lambda: None)
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())
 
     ttl_seconds_after_finished: int | None = Field(
         default_factory=lambda: None, alias="ttlSecondsAfterFinished"

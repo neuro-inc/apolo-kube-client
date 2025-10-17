@@ -6,6 +6,4 @@ __all__ = ("V1DownwardAPIProjection",)
 
 
 class V1DownwardAPIProjection(BaseModel):
-    items: list[V1DownwardAPIVolumeFile] = Field(
-        default_factory=lambda: [], alias="items"
-    )
+    items: list[V1DownwardAPIVolumeFile] = Field(default_factory=lambda: [])

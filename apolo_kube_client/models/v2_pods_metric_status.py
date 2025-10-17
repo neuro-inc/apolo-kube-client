@@ -7,10 +7,6 @@ __all__ = ("V2PodsMetricStatus",)
 
 
 class V2PodsMetricStatus(BaseModel):
-    current: V2MetricValueStatus = Field(
-        default_factory=lambda: V2MetricValueStatus(), alias="current"
-    )
+    current: V2MetricValueStatus = Field(default_factory=lambda: V2MetricValueStatus())
 
-    metric: V2MetricIdentifier = Field(
-        default_factory=lambda: V2MetricIdentifier(), alias="metric"
-    )
+    metric: V2MetricIdentifier = Field(default_factory=lambda: V2MetricIdentifier())

@@ -7,10 +7,6 @@ __all__ = ("V2PodsMetricSource",)
 
 
 class V2PodsMetricSource(BaseModel):
-    metric: V2MetricIdentifier = Field(
-        default_factory=lambda: V2MetricIdentifier(), alias="metric"
-    )
+    metric: V2MetricIdentifier = Field(default_factory=lambda: V2MetricIdentifier())
 
-    target: V2MetricTarget = Field(
-        default_factory=lambda: V2MetricTarget(), alias="target"
-    )
+    target: V2MetricTarget = Field(default_factory=lambda: V2MetricTarget())

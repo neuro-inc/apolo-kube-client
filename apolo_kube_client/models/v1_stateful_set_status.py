@@ -14,9 +14,7 @@ class V1StatefulSetStatus(BaseModel):
         default_factory=lambda: None, alias="collisionCount"
     )
 
-    conditions: list[V1StatefulSetCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1StatefulSetCondition] = Field(default_factory=lambda: [])
 
     current_replicas: int | None = Field(
         default_factory=lambda: None, alias="currentReplicas"
@@ -34,7 +32,7 @@ class V1StatefulSetStatus(BaseModel):
         default_factory=lambda: None, alias="readyReplicas"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
     update_revision: str | None = Field(
         default_factory=lambda: None, alias="updateRevision"

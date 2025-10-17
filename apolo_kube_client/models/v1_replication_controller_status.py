@@ -11,7 +11,7 @@ class V1ReplicationControllerStatus(BaseModel):
     )
 
     conditions: list[V1ReplicationControllerCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
+        default_factory=lambda: []
     )
 
     fully_labeled_replicas: int | None = Field(
@@ -26,4 +26,4 @@ class V1ReplicationControllerStatus(BaseModel):
         default_factory=lambda: None, alias="readyReplicas"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)

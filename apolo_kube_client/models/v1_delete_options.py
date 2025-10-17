@@ -19,15 +19,13 @@ class V1DeleteOptions(BaseModel):
         alias="ignoreStoreReadErrorWithClusterBreakingPotential",
     )
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     orphan_dependents: bool | None = Field(
         default_factory=lambda: None, alias="orphanDependents"
     )
 
-    preconditions: V1Preconditions = Field(
-        default_factory=lambda: V1Preconditions(), alias="preconditions"
-    )
+    preconditions: V1Preconditions = Field(default_factory=lambda: V1Preconditions())
 
     propagation_policy: str | None = Field(
         default_factory=lambda: None, alias="propagationPolicy"

@@ -20,12 +20,10 @@ class V1PersistentVolumeClaimSpec(BaseModel):
     )
 
     resources: V1VolumeResourceRequirements = Field(
-        default_factory=lambda: V1VolumeResourceRequirements(), alias="resources"
+        default_factory=lambda: V1VolumeResourceRequirements()
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
     storage_class_name: str | None = Field(
         default_factory=lambda: None, alias="storageClassName"

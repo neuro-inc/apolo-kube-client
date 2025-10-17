@@ -11,5 +11,5 @@ class V1alpha1StorageVersionMigrationSpec(BaseModel):
     )
 
     resource: V1alpha1GroupVersionResource = Field(
-        default_factory=lambda: V1alpha1GroupVersionResource(), alias="resource"
+        default_factory=lambda: V1alpha1GroupVersionResource()
     )

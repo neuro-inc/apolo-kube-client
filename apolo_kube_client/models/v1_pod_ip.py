@@ -6,4 +6,4 @@ __all__ = ("V1PodIP",)
 
 
 class V1PodIP(BaseModel):
-    ip: str | None = Field(default_factory=lambda: None, alias="ip")
+    ip: str | None = Field(default_factory=lambda: None)

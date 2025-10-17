@@ -10,10 +10,10 @@ class V2HorizontalPodAutoscalerCondition(BaseModel):
         default_factory=lambda: None, alias="lastTransitionTime"
     )
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)
 
-    status: str | None = Field(default_factory=lambda: None, alias="status")
+    status: str | None = Field(default_factory=lambda: None)
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

@@ -6,6 +6,6 @@ __all__ = ("V1EmptyDirVolumeSource",)
 
 
 class V1EmptyDirVolumeSource(BaseModel):
-    medium: str | None = Field(default_factory=lambda: None, alias="medium")
+    medium: str | None = Field(default_factory=lambda: None)
 
     size_limit: str | None = Field(default_factory=lambda: None, alias="sizeLimit")

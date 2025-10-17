@@ -10,10 +10,8 @@ class V1ReplicationControllerSpec(BaseModel):
         default_factory=lambda: None, alias="minReadySeconds"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
-    selector: dict[str, str] = Field(default_factory=lambda: {}, alias="selector")
+    selector: dict[str, str] = Field(default_factory=lambda: {})
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())

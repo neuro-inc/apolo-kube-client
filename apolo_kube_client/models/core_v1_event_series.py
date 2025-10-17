@@ -6,7 +6,7 @@ __all__ = ("CoreV1EventSeries",)
 
 
 class CoreV1EventSeries(BaseModel):
-    count: int | None = Field(default_factory=lambda: None, alias="count")
+    count: int | None = Field(default_factory=lambda: None)
 
     last_observed_time: datetime | None = Field(
         default_factory=lambda: None, alias="lastObservedTime"

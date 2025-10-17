@@ -6,6 +6,6 @@ __all__ = ("V1NodeAddress",)
 
 
 class V1NodeAddress(BaseModel):
-    address: str | None = Field(default_factory=lambda: None, alias="address")
+    address: str | None = Field(default_factory=lambda: None)
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

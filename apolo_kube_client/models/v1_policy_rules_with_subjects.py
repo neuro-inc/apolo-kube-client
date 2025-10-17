@@ -16,6 +16,4 @@ class V1PolicyRulesWithSubjects(BaseModel):
         default_factory=lambda: [], alias="resourceRules"
     )
 
-    subjects: list[FlowcontrolV1Subject] = Field(
-        default_factory=lambda: [], alias="subjects"
-    )
+    subjects: list[FlowcontrolV1Subject] = Field(default_factory=lambda: [])

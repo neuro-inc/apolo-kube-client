@@ -12,8 +12,8 @@ class V1ResourcePolicyRule(BaseModel):
         default_factory=lambda: None, alias="clusterScope"
     )
 
-    namespaces: list[str] = Field(default_factory=lambda: [], alias="namespaces")
+    namespaces: list[str] = Field(default_factory=lambda: [])
 
-    resources: list[str] = Field(default_factory=lambda: [], alias="resources")
+    resources: list[str] = Field(default_factory=lambda: [])
 
-    verbs: list[str] = Field(default_factory=lambda: [], alias="verbs")
+    verbs: list[str] = Field(default_factory=lambda: [])

@@ -15,9 +15,7 @@ class V1alpha1PodCertificateRequestStatus(BaseModel):
         default_factory=lambda: None, alias="certificateChain"
     )
 
-    conditions: list[V1Condition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1Condition] = Field(default_factory=lambda: [])
 
     not_after: datetime | None = Field(default_factory=lambda: None, alias="notAfter")
 

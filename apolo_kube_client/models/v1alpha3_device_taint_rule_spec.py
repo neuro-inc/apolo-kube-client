@@ -11,6 +11,4 @@ class V1alpha3DeviceTaintRuleSpec(BaseModel):
         default_factory=lambda: V1alpha3DeviceTaintSelector(), alias="deviceSelector"
     )
 
-    taint: V1alpha3DeviceTaint = Field(
-        default_factory=lambda: V1alpha3DeviceTaint(), alias="taint"
-    )
+    taint: V1alpha3DeviceTaint = Field(default_factory=lambda: V1alpha3DeviceTaint())

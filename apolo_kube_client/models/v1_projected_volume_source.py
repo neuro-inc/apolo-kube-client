@@ -8,6 +8,4 @@ __all__ = ("V1ProjectedVolumeSource",)
 class V1ProjectedVolumeSource(BaseModel):
     default_mode: int | None = Field(default_factory=lambda: None, alias="defaultMode")
 
-    sources: list[V1VolumeProjection] = Field(
-        default_factory=lambda: [], alias="sources"
-    )
+    sources: list[V1VolumeProjection] = Field(default_factory=lambda: [])

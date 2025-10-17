@@ -6,8 +6,8 @@ __all__ = ("ApiregistrationV1ServiceReference",)
 
 
 class ApiregistrationV1ServiceReference(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)
 
-    port: int | None = Field(default_factory=lambda: None, alias="port")
+    port: int | None = Field(default_factory=lambda: None)

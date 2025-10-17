@@ -11,4 +11,4 @@ class V1StatefulSetUpdateStrategy(BaseModel):
         alias="rollingUpdate",
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

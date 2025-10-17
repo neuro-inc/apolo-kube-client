@@ -6,4 +6,4 @@ __all__ = ("V1FlowDistinguisherMethod",)
 
 
 class V1FlowDistinguisherMethod(BaseModel):
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

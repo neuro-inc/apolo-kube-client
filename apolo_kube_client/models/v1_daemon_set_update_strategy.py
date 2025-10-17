@@ -10,4 +10,4 @@ class V1DaemonSetUpdateStrategy(BaseModel):
         default_factory=lambda: V1RollingUpdateDaemonSet(), alias="rollingUpdate"
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

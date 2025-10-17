@@ -8,7 +8,7 @@ __all__ = ("V1GCEPersistentDiskVolumeSource",)
 class V1GCEPersistentDiskVolumeSource(BaseModel):
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    partition: int | None = Field(default_factory=lambda: None, alias="partition")
+    partition: int | None = Field(default_factory=lambda: None)
 
     pd_name: str | None = Field(default_factory=lambda: None, alias="pdName")
 

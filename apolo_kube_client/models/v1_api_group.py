@@ -9,9 +9,9 @@ __all__ = ("V1APIGroup",)
 class V1APIGroup(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     preferred_version: V1GroupVersionForDiscovery = Field(
         default_factory=lambda: V1GroupVersionForDiscovery(), alias="preferredVersion"
@@ -21,6 +21,4 @@ class V1APIGroup(BaseModel):
         default_factory=lambda: [], alias="serverAddressByClientCIDRs"
     )
 
-    versions: list[V1GroupVersionForDiscovery] = Field(
-        default_factory=lambda: [], alias="versions"
-    )
+    versions: list[V1GroupVersionForDiscovery] = Field(default_factory=lambda: [])

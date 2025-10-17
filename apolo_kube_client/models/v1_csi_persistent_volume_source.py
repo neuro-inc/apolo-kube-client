@@ -14,7 +14,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         default_factory=lambda: V1SecretReference(), alias="controllerPublishSecretRef"
     )
 
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 

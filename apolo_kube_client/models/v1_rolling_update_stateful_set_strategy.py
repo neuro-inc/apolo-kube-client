@@ -10,4 +10,4 @@ class V1RollingUpdateStatefulSetStrategy(BaseModel):
         default_factory=lambda: {}, alias="maxUnavailable"
     )
 
-    partition: int | None = Field(default_factory=lambda: None, alias="partition")
+    partition: int | None = Field(default_factory=lambda: None)

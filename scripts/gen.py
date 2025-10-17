@@ -83,7 +83,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
 def calc_attr_name(attr: str) -> str:
     if attr in dir(BaseModel) or keyword.iskeyword(attr):
         return attr + "_"
-    elif attr.startswith("_") and keyword.iskeyword(attr[1:]):
+    elif attr.startswith("_"):
         return attr[1:] + "_"
     else:
         return attr
@@ -101,7 +101,11 @@ def generate(
         res = parse_type(name, typ)
         imports |= res.imports
         real_attr = calc_attr_name(attr)
-        field = f'{real_attr}: {res.type_} = Field(default_factory=lambda: {res.default}, alias="{alias}")'
+        if alias != real_attr:
+            real_alias = f', alias="{alias}"'
+        else:
+            real_alias = ""
+        field = f"{real_attr}: {res.type_} = Field(default_factory=lambda: {res.default}{real_alias})"
         body.append(f"    {field}\n")
     mod = MOD.format(
         imports="\n".join(sorted(imports)), clsname=name, body="\n".join(body)

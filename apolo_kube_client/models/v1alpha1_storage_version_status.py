@@ -12,7 +12,7 @@ class V1alpha1StorageVersionStatus(BaseModel):
     )
 
     conditions: list[V1alpha1StorageVersionCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
+        default_factory=lambda: []
     )
 
     storage_versions: list[V1alpha1ServerStorageVersion] = Field(

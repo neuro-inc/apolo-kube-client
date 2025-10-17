@@ -6,10 +6,10 @@ __all__ = ("V1ComponentCondition",)
 
 
 class V1ComponentCondition(BaseModel):
-    error: str | None = Field(default_factory=lambda: None, alias="error")
+    error: str | None = Field(default_factory=lambda: None)
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
-    status: str | None = Field(default_factory=lambda: None, alias="status")
+    status: str | None = Field(default_factory=lambda: None)
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

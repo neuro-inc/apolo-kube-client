@@ -6,9 +6,9 @@ __all__ = ("V1CephFSPersistentVolumeSource",)
 
 
 class V1CephFSPersistentVolumeSource(BaseModel):
-    monitors: list[str] = Field(default_factory=lambda: [], alias="monitors")
+    monitors: list[str] = Field(default_factory=lambda: [])
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 
@@ -18,4 +18,4 @@ class V1CephFSPersistentVolumeSource(BaseModel):
         default_factory=lambda: V1SecretReference(), alias="secretRef"
     )
 
-    user: str | None = Field(default_factory=lambda: None, alias="user")
+    user: str | None = Field(default_factory=lambda: None)

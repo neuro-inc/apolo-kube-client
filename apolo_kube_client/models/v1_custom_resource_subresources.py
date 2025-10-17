@@ -8,7 +8,7 @@ __all__ = ("V1CustomResourceSubresources",)
 
 class V1CustomResourceSubresources(BaseModel):
     scale: V1CustomResourceSubresourceScale = Field(
-        default_factory=lambda: V1CustomResourceSubresourceScale(), alias="scale"
+        default_factory=lambda: V1CustomResourceSubresourceScale()
     )
 
-    status: JsonType = Field(default_factory=lambda: {}, alias="status")
+    status: JsonType = Field(default_factory=lambda: {})

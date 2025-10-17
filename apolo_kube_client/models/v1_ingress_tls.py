@@ -6,6 +6,6 @@ __all__ = ("V1IngressTLS",)
 
 
 class V1IngressTLS(BaseModel):
-    hosts: list[str] = Field(default_factory=lambda: [], alias="hosts")
+    hosts: list[str] = Field(default_factory=lambda: [])
 
     secret_name: str | None = Field(default_factory=lambda: None, alias="secretName")

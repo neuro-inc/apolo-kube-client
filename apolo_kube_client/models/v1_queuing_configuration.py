@@ -12,4 +12,4 @@ class V1QueuingConfiguration(BaseModel):
         default_factory=lambda: None, alias="queueLengthLimit"
     )
 
-    queues: int | None = Field(default_factory=lambda: None, alias="queues")
+    queues: int | None = Field(default_factory=lambda: None)

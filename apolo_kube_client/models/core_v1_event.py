@@ -10,11 +10,11 @@ __all__ = ("CoreV1Event",)
 
 
 class CoreV1Event(BaseModel):
-    action: str | None = Field(default_factory=lambda: None, alias="action")
+    action: str | None = Field(default_factory=lambda: None)
 
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    count: int | None = Field(default_factory=lambda: None, alias="count")
+    count: int | None = Field(default_factory=lambda: None)
 
     event_time: datetime | None = Field(default_factory=lambda: None, alias="eventTime")
 
@@ -26,23 +26,19 @@ class CoreV1Event(BaseModel):
         default_factory=lambda: V1ObjectReference(), alias="involvedObject"
     )
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     last_timestamp: datetime | None = Field(
         default_factory=lambda: None, alias="lastTimestamp"
     )
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)
 
-    related: V1ObjectReference = Field(
-        default_factory=lambda: V1ObjectReference(), alias="related"
-    )
+    related: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
 
     reporting_component: str | None = Field(
         default_factory=lambda: None, alias="reportingComponent"
@@ -52,12 +48,8 @@ class CoreV1Event(BaseModel):
         default_factory=lambda: None, alias="reportingInstance"
     )
 
-    series: CoreV1EventSeries = Field(
-        default_factory=lambda: CoreV1EventSeries(), alias="series"
-    )
+    series: CoreV1EventSeries = Field(default_factory=lambda: CoreV1EventSeries())
 
-    source: V1EventSource = Field(
-        default_factory=lambda: V1EventSource(), alias="source"
-    )
+    source: V1EventSource = Field(default_factory=lambda: V1EventSource())
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

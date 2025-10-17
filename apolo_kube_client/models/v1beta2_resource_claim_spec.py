@@ -6,6 +6,4 @@ __all__ = ("V1beta2ResourceClaimSpec",)
 
 
 class V1beta2ResourceClaimSpec(BaseModel):
-    devices: V1beta2DeviceClaim = Field(
-        default_factory=lambda: V1beta2DeviceClaim(), alias="devices"
-    )
+    devices: V1beta2DeviceClaim = Field(default_factory=lambda: V1beta2DeviceClaim())

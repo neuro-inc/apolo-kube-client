@@ -50,21 +50,15 @@ class V1Volume(BaseModel):
         default_factory=lambda: V1AzureFileVolumeSource(), alias="azureFile"
     )
 
-    cephfs: V1CephFSVolumeSource = Field(
-        default_factory=lambda: V1CephFSVolumeSource(), alias="cephfs"
-    )
+    cephfs: V1CephFSVolumeSource = Field(default_factory=lambda: V1CephFSVolumeSource())
 
-    cinder: V1CinderVolumeSource = Field(
-        default_factory=lambda: V1CinderVolumeSource(), alias="cinder"
-    )
+    cinder: V1CinderVolumeSource = Field(default_factory=lambda: V1CinderVolumeSource())
 
     config_map: V1ConfigMapVolumeSource = Field(
         default_factory=lambda: V1ConfigMapVolumeSource(), alias="configMap"
     )
 
-    csi: V1CSIVolumeSource = Field(
-        default_factory=lambda: V1CSIVolumeSource(), alias="csi"
-    )
+    csi: V1CSIVolumeSource = Field(default_factory=lambda: V1CSIVolumeSource())
 
     downward_api: V1DownwardAPIVolumeSource = Field(
         default_factory=lambda: V1DownwardAPIVolumeSource(), alias="downwardAPI"
@@ -75,17 +69,17 @@ class V1Volume(BaseModel):
     )
 
     ephemeral: V1EphemeralVolumeSource = Field(
-        default_factory=lambda: V1EphemeralVolumeSource(), alias="ephemeral"
+        default_factory=lambda: V1EphemeralVolumeSource()
     )
 
-    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource(), alias="fc")
+    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource())
 
     flex_volume: V1FlexVolumeSource = Field(
         default_factory=lambda: V1FlexVolumeSource(), alias="flexVolume"
     )
 
     flocker: V1FlockerVolumeSource = Field(
-        default_factory=lambda: V1FlockerVolumeSource(), alias="flocker"
+        default_factory=lambda: V1FlockerVolumeSource()
     )
 
     gce_persistent_disk: V1GCEPersistentDiskVolumeSource = Field(
@@ -98,26 +92,20 @@ class V1Volume(BaseModel):
     )
 
     glusterfs: V1GlusterfsVolumeSource = Field(
-        default_factory=lambda: V1GlusterfsVolumeSource(), alias="glusterfs"
+        default_factory=lambda: V1GlusterfsVolumeSource()
     )
 
     host_path: V1HostPathVolumeSource = Field(
         default_factory=lambda: V1HostPathVolumeSource(), alias="hostPath"
     )
 
-    image: V1ImageVolumeSource = Field(
-        default_factory=lambda: V1ImageVolumeSource(), alias="image"
-    )
+    image: V1ImageVolumeSource = Field(default_factory=lambda: V1ImageVolumeSource())
 
-    iscsi: V1ISCSIVolumeSource = Field(
-        default_factory=lambda: V1ISCSIVolumeSource(), alias="iscsi"
-    )
+    iscsi: V1ISCSIVolumeSource = Field(default_factory=lambda: V1ISCSIVolumeSource())
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    nfs: V1NFSVolumeSource = Field(
-        default_factory=lambda: V1NFSVolumeSource(), alias="nfs"
-    )
+    nfs: V1NFSVolumeSource = Field(default_factory=lambda: V1NFSVolumeSource())
 
     persistent_volume_claim: V1PersistentVolumeClaimVolumeSource = Field(
         default_factory=lambda: V1PersistentVolumeClaimVolumeSource(),
@@ -134,27 +122,23 @@ class V1Volume(BaseModel):
     )
 
     projected: V1ProjectedVolumeSource = Field(
-        default_factory=lambda: V1ProjectedVolumeSource(), alias="projected"
+        default_factory=lambda: V1ProjectedVolumeSource()
     )
 
     quobyte: V1QuobyteVolumeSource = Field(
-        default_factory=lambda: V1QuobyteVolumeSource(), alias="quobyte"
+        default_factory=lambda: V1QuobyteVolumeSource()
     )
 
-    rbd: V1RBDVolumeSource = Field(
-        default_factory=lambda: V1RBDVolumeSource(), alias="rbd"
-    )
+    rbd: V1RBDVolumeSource = Field(default_factory=lambda: V1RBDVolumeSource())
 
     scale_io: V1ScaleIOVolumeSource = Field(
         default_factory=lambda: V1ScaleIOVolumeSource(), alias="scaleIO"
     )
 
-    secret: V1SecretVolumeSource = Field(
-        default_factory=lambda: V1SecretVolumeSource(), alias="secret"
-    )
+    secret: V1SecretVolumeSource = Field(default_factory=lambda: V1SecretVolumeSource())
 
     storageos: V1StorageOSVolumeSource = Field(
-        default_factory=lambda: V1StorageOSVolumeSource(), alias="storageos"
+        default_factory=lambda: V1StorageOSVolumeSource()
     )
 
     vsphere_volume: V1VsphereVirtualDiskVolumeSource = Field(

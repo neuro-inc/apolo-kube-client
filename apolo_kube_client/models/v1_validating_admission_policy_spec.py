@@ -31,8 +31,6 @@ class V1ValidatingAdmissionPolicySpec(BaseModel):
         default_factory=lambda: V1ParamKind(), alias="paramKind"
     )
 
-    validations: list[V1Validation] = Field(
-        default_factory=lambda: [], alias="validations"
-    )
+    validations: list[V1Validation] = Field(default_factory=lambda: [])
 
-    variables: list[V1Variable] = Field(default_factory=lambda: [], alias="variables")
+    variables: list[V1Variable] = Field(default_factory=lambda: [])

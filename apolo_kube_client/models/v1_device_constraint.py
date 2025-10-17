@@ -14,4 +14,4 @@ class V1DeviceConstraint(BaseModel):
         default_factory=lambda: None, alias="matchAttribute"
     )
 
-    requests: list[str] = Field(default_factory=lambda: [], alias="requests")
+    requests: list[str] = Field(default_factory=lambda: [])

@@ -6,10 +6,8 @@ __all__ = ("V2ContainerResourceMetricSource",)
 
 
 class V2ContainerResourceMetricSource(BaseModel):
-    container: str | None = Field(default_factory=lambda: None, alias="container")
+    container: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    target: V2MetricTarget = Field(
-        default_factory=lambda: V2MetricTarget(), alias="target"
-    )
+    target: V2MetricTarget = Field(default_factory=lambda: V2MetricTarget())

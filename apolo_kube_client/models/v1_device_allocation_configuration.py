@@ -7,9 +7,9 @@ __all__ = ("V1DeviceAllocationConfiguration",)
 
 class V1DeviceAllocationConfiguration(BaseModel):
     opaque: V1OpaqueDeviceConfiguration = Field(
-        default_factory=lambda: V1OpaqueDeviceConfiguration(), alias="opaque"
+        default_factory=lambda: V1OpaqueDeviceConfiguration()
     )
 
-    requests: list[str] = Field(default_factory=lambda: [], alias="requests")
+    requests: list[str] = Field(default_factory=lambda: [])
 
-    source: str | None = Field(default_factory=lambda: None, alias="source")
+    source: str | None = Field(default_factory=lambda: None)

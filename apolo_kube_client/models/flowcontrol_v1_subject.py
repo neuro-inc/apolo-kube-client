@@ -8,14 +8,12 @@ __all__ = ("FlowcontrolV1Subject",)
 
 
 class FlowcontrolV1Subject(BaseModel):
-    group: V1GroupSubject = Field(
-        default_factory=lambda: V1GroupSubject(), alias="group"
-    )
+    group: V1GroupSubject = Field(default_factory=lambda: V1GroupSubject())
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     service_account: V1ServiceAccountSubject = Field(
         default_factory=lambda: V1ServiceAccountSubject(), alias="serviceAccount"
     )
 
-    user: V1UserSubject = Field(default_factory=lambda: V1UserSubject(), alias="user")
+    user: V1UserSubject = Field(default_factory=lambda: V1UserSubject())

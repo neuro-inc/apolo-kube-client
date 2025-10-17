@@ -6,8 +6,6 @@ __all__ = ("V1IngressServiceBackend",)
 
 
 class V1IngressServiceBackend(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    port: V1ServiceBackendPort = Field(
-        default_factory=lambda: V1ServiceBackendPort(), alias="port"
-    )
+    port: V1ServiceBackendPort = Field(default_factory=lambda: V1ServiceBackendPort())

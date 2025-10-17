@@ -24,15 +24,13 @@ class V1PodSpec(BaseModel):
         default_factory=lambda: None, alias="activeDeadlineSeconds"
     )
 
-    affinity: V1Affinity = Field(default_factory=lambda: V1Affinity(), alias="affinity")
+    affinity: V1Affinity = Field(default_factory=lambda: V1Affinity())
 
     automount_service_account_token: bool | None = Field(
         default_factory=lambda: None, alias="automountServiceAccountToken"
     )
 
-    containers: list[V1Container] = Field(
-        default_factory=lambda: [], alias="containers"
-    )
+    containers: list[V1Container] = Field(default_factory=lambda: [])
 
     dns_config: V1PodDNSConfig = Field(
         default_factory=lambda: V1PodDNSConfig(), alias="dnsConfig"
@@ -60,7 +58,7 @@ class V1PodSpec(BaseModel):
 
     host_users: bool | None = Field(default_factory=lambda: None, alias="hostUsers")
 
-    hostname: str | None = Field(default_factory=lambda: None, alias="hostname")
+    hostname: str | None = Field(default_factory=lambda: None)
 
     hostname_override: str | None = Field(
         default_factory=lambda: None, alias="hostnameOverride"
@@ -80,15 +78,15 @@ class V1PodSpec(BaseModel):
         default_factory=lambda: {}, alias="nodeSelector"
     )
 
-    os: V1PodOS = Field(default_factory=lambda: V1PodOS(), alias="os")
+    os: V1PodOS = Field(default_factory=lambda: V1PodOS())
 
-    overhead: dict[str, str] = Field(default_factory=lambda: {}, alias="overhead")
+    overhead: dict[str, str] = Field(default_factory=lambda: {})
 
     preemption_policy: str | None = Field(
         default_factory=lambda: None, alias="preemptionPolicy"
     )
 
-    priority: int | None = Field(default_factory=lambda: None, alias="priority")
+    priority: int | None = Field(default_factory=lambda: None)
 
     priority_class_name: str | None = Field(
         default_factory=lambda: None, alias="priorityClassName"
@@ -103,7 +101,7 @@ class V1PodSpec(BaseModel):
     )
 
     resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+        default_factory=lambda: V1ResourceRequirements()
     )
 
     restart_policy: str | None = Field(
@@ -142,18 +140,16 @@ class V1PodSpec(BaseModel):
         default_factory=lambda: None, alias="shareProcessNamespace"
     )
 
-    subdomain: str | None = Field(default_factory=lambda: None, alias="subdomain")
+    subdomain: str | None = Field(default_factory=lambda: None)
 
     termination_grace_period_seconds: int | None = Field(
         default_factory=lambda: None, alias="terminationGracePeriodSeconds"
     )
 
-    tolerations: list[V1Toleration] = Field(
-        default_factory=lambda: [], alias="tolerations"
-    )
+    tolerations: list[V1Toleration] = Field(default_factory=lambda: [])
 
     topology_spread_constraints: list[V1TopologySpreadConstraint] = Field(
         default_factory=lambda: [], alias="topologySpreadConstraints"
     )
 
-    volumes: list[V1Volume] = Field(default_factory=lambda: [], alias="volumes")
+    volumes: list[V1Volume] = Field(default_factory=lambda: [])

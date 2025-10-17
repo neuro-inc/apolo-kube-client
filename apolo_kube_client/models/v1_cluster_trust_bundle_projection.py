@@ -10,10 +10,10 @@ class V1ClusterTrustBundleProjection(BaseModel):
         default_factory=lambda: V1LabelSelector(), alias="labelSelector"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    optional: bool | None = Field(default_factory=lambda: None, alias="optional")
+    optional: bool | None = Field(default_factory=lambda: None)
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
     signer_name: str | None = Field(default_factory=lambda: None, alias="signerName")

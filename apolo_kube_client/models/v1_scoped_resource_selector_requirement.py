@@ -6,8 +6,8 @@ __all__ = ("V1ScopedResourceSelectorRequirement",)
 
 
 class V1ScopedResourceSelectorRequirement(BaseModel):
-    operator: str | None = Field(default_factory=lambda: None, alias="operator")
+    operator: str | None = Field(default_factory=lambda: None)
 
     scope_name: str | None = Field(default_factory=lambda: None, alias="scopeName")
 
-    values: list[str] = Field(default_factory=lambda: [], alias="values")
+    values: list[str] = Field(default_factory=lambda: [])

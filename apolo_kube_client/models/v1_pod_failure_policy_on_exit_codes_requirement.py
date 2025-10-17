@@ -10,6 +10,6 @@ class V1PodFailurePolicyOnExitCodesRequirement(BaseModel):
         default_factory=lambda: None, alias="containerName"
     )
 
-    operator: str | None = Field(default_factory=lambda: None, alias="operator")
+    operator: str | None = Field(default_factory=lambda: None)
 
-    values: list[int] = Field(default_factory=lambda: [], alias="values")
+    values: list[int] = Field(default_factory=lambda: [])

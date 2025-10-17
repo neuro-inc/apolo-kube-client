@@ -10,4 +10,4 @@ class V1beta1DeviceCapacity(BaseModel):
         default_factory=lambda: V1beta1CapacityRequestPolicy(), alias="requestPolicy"
     )
 
-    value: str | None = Field(default_factory=lambda: None, alias="value")
+    value: str | None = Field(default_factory=lambda: None)

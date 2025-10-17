@@ -10,16 +10,12 @@ __all__ = ("V1RuntimeClass",)
 class V1RuntimeClass(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    handler: str | None = Field(default_factory=lambda: None, alias="handler")
+    handler: str | None = Field(default_factory=lambda: None)
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    overhead: V1Overhead = Field(default_factory=lambda: V1Overhead(), alias="overhead")
+    overhead: V1Overhead = Field(default_factory=lambda: V1Overhead())
 
-    scheduling: V1Scheduling = Field(
-        default_factory=lambda: V1Scheduling(), alias="scheduling"
-    )
+    scheduling: V1Scheduling = Field(default_factory=lambda: V1Scheduling())

@@ -10,7 +10,7 @@ class V1VolumeAttachmentStatus(BaseModel):
         default_factory=lambda: V1VolumeError(), alias="attachError"
     )
 
-    attached: bool | None = Field(default_factory=lambda: None, alias="attached")
+    attached: bool | None = Field(default_factory=lambda: None)
 
     attachment_metadata: dict[str, str] = Field(
         default_factory=lambda: {}, alias="attachmentMetadata"

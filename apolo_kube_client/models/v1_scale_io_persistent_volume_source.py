@@ -8,7 +8,7 @@ __all__ = ("V1ScaleIOPersistentVolumeSource",)
 class V1ScaleIOPersistentVolumeSource(BaseModel):
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    gateway: str | None = Field(default_factory=lambda: None, alias="gateway")
+    gateway: str | None = Field(default_factory=lambda: None)
 
     protection_domain: str | None = Field(
         default_factory=lambda: None, alias="protectionDomain"
@@ -26,6 +26,6 @@ class V1ScaleIOPersistentVolumeSource(BaseModel):
 
     storage_pool: str | None = Field(default_factory=lambda: None, alias="storagePool")
 
-    system: str | None = Field(default_factory=lambda: None, alias="system")
+    system: str | None = Field(default_factory=lambda: None)
 
     volume_name: str | None = Field(default_factory=lambda: None, alias="volumeName")

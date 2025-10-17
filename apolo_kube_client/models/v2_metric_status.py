@@ -16,19 +16,15 @@ class V2MetricStatus(BaseModel):
     )
 
     external: V2ExternalMetricStatus = Field(
-        default_factory=lambda: V2ExternalMetricStatus(), alias="external"
+        default_factory=lambda: V2ExternalMetricStatus()
     )
 
-    object: V2ObjectMetricStatus = Field(
-        default_factory=lambda: V2ObjectMetricStatus(), alias="object"
-    )
+    object: V2ObjectMetricStatus = Field(default_factory=lambda: V2ObjectMetricStatus())
 
-    pods: V2PodsMetricStatus = Field(
-        default_factory=lambda: V2PodsMetricStatus(), alias="pods"
-    )
+    pods: V2PodsMetricStatus = Field(default_factory=lambda: V2PodsMetricStatus())
 
     resource: V2ResourceMetricStatus = Field(
-        default_factory=lambda: V2ResourceMetricStatus(), alias="resource"
+        default_factory=lambda: V2ResourceMetricStatus()
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

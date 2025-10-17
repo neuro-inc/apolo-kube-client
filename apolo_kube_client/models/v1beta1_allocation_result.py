@@ -13,7 +13,7 @@ class V1beta1AllocationResult(BaseModel):
     )
 
     devices: V1beta1DeviceAllocationResult = Field(
-        default_factory=lambda: V1beta1DeviceAllocationResult(), alias="devices"
+        default_factory=lambda: V1beta1DeviceAllocationResult()
     )
 
     node_selector: V1NodeSelector = Field(

@@ -12,14 +12,10 @@ class V1EndpointSlice(BaseModel):
 
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    endpoints: list[V1Endpoint] = Field(default_factory=lambda: [], alias="endpoints")
+    endpoints: list[V1Endpoint] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    ports: list[DiscoveryV1EndpointPort] = Field(
-        default_factory=lambda: [], alias="ports"
-    )
+    ports: list[DiscoveryV1EndpointPort] = Field(default_factory=lambda: [])

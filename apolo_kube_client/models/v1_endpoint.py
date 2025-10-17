@@ -8,21 +8,19 @@ __all__ = ("V1Endpoint",)
 
 
 class V1Endpoint(BaseModel):
-    addresses: list[str] = Field(default_factory=lambda: [], alias="addresses")
+    addresses: list[str] = Field(default_factory=lambda: [])
 
     conditions: V1EndpointConditions = Field(
-        default_factory=lambda: V1EndpointConditions(), alias="conditions"
+        default_factory=lambda: V1EndpointConditions()
     )
 
     deprecated_topology: dict[str, str] = Field(
         default_factory=lambda: {}, alias="deprecatedTopology"
     )
 
-    hints: V1EndpointHints = Field(
-        default_factory=lambda: V1EndpointHints(), alias="hints"
-    )
+    hints: V1EndpointHints = Field(default_factory=lambda: V1EndpointHints())
 
-    hostname: str | None = Field(default_factory=lambda: None, alias="hostname")
+    hostname: str | None = Field(default_factory=lambda: None)
 
     node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
 
@@ -30,4 +28,4 @@ class V1Endpoint(BaseModel):
         default_factory=lambda: V1ObjectReference(), alias="targetRef"
     )
 
-    zone: str | None = Field(default_factory=lambda: None, alias="zone")
+    zone: str | None = Field(default_factory=lambda: None)

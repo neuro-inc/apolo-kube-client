@@ -10,8 +10,8 @@ class V1PersistentVolumeStatus(BaseModel):
         default_factory=lambda: None, alias="lastPhaseTransitionTime"
     )
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
-    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None)
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)

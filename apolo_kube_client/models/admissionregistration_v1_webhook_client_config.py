@@ -11,8 +11,7 @@ class AdmissionregistrationV1WebhookClientConfig(BaseModel):
     ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
 
     service: AdmissionregistrationV1ServiceReference = Field(
-        default_factory=lambda: AdmissionregistrationV1ServiceReference(),
-        alias="service",
+        default_factory=lambda: AdmissionregistrationV1ServiceReference()
     )
 
-    url: str | None = Field(default_factory=lambda: None, alias="url")
+    url: str | None = Field(default_factory=lambda: None)

@@ -6,8 +6,8 @@ __all__ = ("V1CapacityRequestPolicyRange",)
 
 
 class V1CapacityRequestPolicyRange(BaseModel):
-    max: str | None = Field(default_factory=lambda: None, alias="max")
+    max: str | None = Field(default_factory=lambda: None)
 
-    min: str | None = Field(default_factory=lambda: None, alias="min")
+    min: str | None = Field(default_factory=lambda: None)
 
-    step: str | None = Field(default_factory=lambda: None, alias="step")
+    step: str | None = Field(default_factory=lambda: None)

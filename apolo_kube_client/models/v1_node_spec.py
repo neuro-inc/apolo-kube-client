@@ -19,8 +19,6 @@ class V1NodeSpec(BaseModel):
 
     provider_id: str | None = Field(default_factory=lambda: None, alias="providerID")
 
-    taints: list[V1Taint] = Field(default_factory=lambda: [], alias="taints")
+    taints: list[V1Taint] = Field(default_factory=lambda: [])
 
-    unschedulable: bool | None = Field(
-        default_factory=lambda: None, alias="unschedulable"
-    )
+    unschedulable: bool | None = Field(default_factory=lambda: None)

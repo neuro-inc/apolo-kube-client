@@ -10,16 +10,14 @@ __all__ = ("V1ValidatingAdmissionPolicy",)
 class V1ValidatingAdmissionPolicy(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1ValidatingAdmissionPolicySpec = Field(
-        default_factory=lambda: V1ValidatingAdmissionPolicySpec(), alias="spec"
+        default_factory=lambda: V1ValidatingAdmissionPolicySpec()
     )
 
     status: V1ValidatingAdmissionPolicyStatus = Field(
-        default_factory=lambda: V1ValidatingAdmissionPolicyStatus(), alias="status"
+        default_factory=lambda: V1ValidatingAdmissionPolicyStatus()
     )

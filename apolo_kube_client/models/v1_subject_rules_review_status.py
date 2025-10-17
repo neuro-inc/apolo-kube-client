@@ -11,7 +11,7 @@ class V1SubjectRulesReviewStatus(BaseModel):
         default_factory=lambda: None, alias="evaluationError"
     )
 
-    incomplete: bool | None = Field(default_factory=lambda: None, alias="incomplete")
+    incomplete: bool | None = Field(default_factory=lambda: None)
 
     non_resource_rules: list[V1NonResourceRule] = Field(
         default_factory=lambda: [], alias="nonResourceRules"

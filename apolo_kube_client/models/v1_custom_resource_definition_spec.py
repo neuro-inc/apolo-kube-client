@@ -9,21 +9,21 @@ __all__ = ("V1CustomResourceDefinitionSpec",)
 
 class V1CustomResourceDefinitionSpec(BaseModel):
     conversion: V1CustomResourceConversion = Field(
-        default_factory=lambda: V1CustomResourceConversion(), alias="conversion"
+        default_factory=lambda: V1CustomResourceConversion()
     )
 
-    group: str | None = Field(default_factory=lambda: None, alias="group")
+    group: str | None = Field(default_factory=lambda: None)
 
     names: V1CustomResourceDefinitionNames = Field(
-        default_factory=lambda: V1CustomResourceDefinitionNames(), alias="names"
+        default_factory=lambda: V1CustomResourceDefinitionNames()
     )
 
     preserve_unknown_fields: bool | None = Field(
         default_factory=lambda: None, alias="preserveUnknownFields"
     )
 
-    scope: str | None = Field(default_factory=lambda: None, alias="scope")
+    scope: str | None = Field(default_factory=lambda: None)
 
     versions: list[V1CustomResourceDefinitionVersion] = Field(
-        default_factory=lambda: [], alias="versions"
+        default_factory=lambda: []
     )

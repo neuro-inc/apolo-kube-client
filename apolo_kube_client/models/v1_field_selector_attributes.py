@@ -8,6 +8,4 @@ __all__ = ("V1FieldSelectorAttributes",)
 class V1FieldSelectorAttributes(BaseModel):
     raw_selector: str | None = Field(default_factory=lambda: None, alias="rawSelector")
 
-    requirements: list[V1FieldSelectorRequirement] = Field(
-        default_factory=lambda: [], alias="requirements"
-    )
+    requirements: list[V1FieldSelectorRequirement] = Field(default_factory=lambda: [])

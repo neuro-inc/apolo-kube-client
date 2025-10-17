@@ -6,6 +6,6 @@ __all__ = ("V1ServiceBackendPort",)
 
 
 class V1ServiceBackendPort(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    number: int | None = Field(default_factory=lambda: None, alias="number")
+    number: int | None = Field(default_factory=lambda: None)

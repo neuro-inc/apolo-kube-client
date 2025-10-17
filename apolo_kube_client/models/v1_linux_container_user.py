@@ -6,10 +6,10 @@ __all__ = ("V1LinuxContainerUser",)
 
 
 class V1LinuxContainerUser(BaseModel):
-    gid: int | None = Field(default_factory=lambda: None, alias="gid")
+    gid: int | None = Field(default_factory=lambda: None)
 
     supplemental_groups: list[int] = Field(
         default_factory=lambda: [], alias="supplementalGroups"
     )
 
-    uid: int | None = Field(default_factory=lambda: None, alias="uid")
+    uid: int | None = Field(default_factory=lambda: None)

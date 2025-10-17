@@ -6,4 +6,4 @@ __all__ = ("V1ExecAction",)
 
 
 class V1ExecAction(BaseModel):
-    command: list[str] = Field(default_factory=lambda: [], alias="command")
+    command: list[str] = Field(default_factory=lambda: [])

@@ -22,9 +22,7 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default_factory=lambda: V1alpha1MatchResources(), alias="matchConstraints"
     )
 
-    mutations: list[V1alpha1Mutation] = Field(
-        default_factory=lambda: [], alias="mutations"
-    )
+    mutations: list[V1alpha1Mutation] = Field(default_factory=lambda: [])
 
     param_kind: V1alpha1ParamKind = Field(
         default_factory=lambda: V1alpha1ParamKind(), alias="paramKind"
@@ -34,6 +32,4 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default_factory=lambda: None, alias="reinvocationPolicy"
     )
 
-    variables: list[V1alpha1Variable] = Field(
-        default_factory=lambda: [], alias="variables"
-    )
+    variables: list[V1alpha1Variable] = Field(default_factory=lambda: [])

@@ -6,8 +6,6 @@ __all__ = ("V1CustomResourceConversion",)
 
 
 class V1CustomResourceConversion(BaseModel):
-    strategy: str | None = Field(default_factory=lambda: None, alias="strategy")
+    strategy: str | None = Field(default_factory=lambda: None)
 
-    webhook: V1WebhookConversion = Field(
-        default_factory=lambda: V1WebhookConversion(), alias="webhook"
-    )
+    webhook: V1WebhookConversion = Field(default_factory=lambda: V1WebhookConversion())

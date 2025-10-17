@@ -17,17 +17,15 @@ class V1StorageClass(BaseModel):
 
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     mount_options: list[str] = Field(default_factory=lambda: [], alias="mountOptions")
 
-    parameters: dict[str, str] = Field(default_factory=lambda: {}, alias="parameters")
+    parameters: dict[str, str] = Field(default_factory=lambda: {})
 
-    provisioner: str | None = Field(default_factory=lambda: None, alias="provisioner")
+    provisioner: str | None = Field(default_factory=lambda: None)
 
     reclaim_policy: str | None = Field(
         default_factory=lambda: None, alias="reclaimPolicy"

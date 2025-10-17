@@ -7,9 +7,7 @@ __all__ = ("V1ServiceStatus",)
 
 
 class V1ServiceStatus(BaseModel):
-    conditions: list[V1Condition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1Condition] = Field(default_factory=lambda: [])
 
     load_balancer: V1LoadBalancerStatus = Field(
         default_factory=lambda: V1LoadBalancerStatus(), alias="loadBalancer"

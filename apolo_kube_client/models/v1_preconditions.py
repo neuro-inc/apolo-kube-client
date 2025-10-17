@@ -10,4 +10,4 @@ class V1Preconditions(BaseModel):
         default_factory=lambda: None, alias="resourceVersion"
     )
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)

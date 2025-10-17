@@ -6,12 +6,12 @@ __all__ = ("V1SubjectAccessReviewStatus",)
 
 
 class V1SubjectAccessReviewStatus(BaseModel):
-    allowed: bool | None = Field(default_factory=lambda: None, alias="allowed")
+    allowed: bool | None = Field(default_factory=lambda: None)
 
-    denied: bool | None = Field(default_factory=lambda: None, alias="denied")
+    denied: bool | None = Field(default_factory=lambda: None)
 
     evaluation_error: str | None = Field(
         default_factory=lambda: None, alias="evaluationError"
     )
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)

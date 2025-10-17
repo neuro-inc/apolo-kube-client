@@ -9,8 +9,8 @@ __all__ = ("EventsV1EventList",)
 class EventsV1EventList(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    items: list[EventsV1Event] = Field(default_factory=lambda: [], alias="items")
+    items: list[EventsV1Event] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta(), alias="metadata")
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

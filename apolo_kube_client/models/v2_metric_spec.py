@@ -16,19 +16,15 @@ class V2MetricSpec(BaseModel):
     )
 
     external: V2ExternalMetricSource = Field(
-        default_factory=lambda: V2ExternalMetricSource(), alias="external"
+        default_factory=lambda: V2ExternalMetricSource()
     )
 
-    object: V2ObjectMetricSource = Field(
-        default_factory=lambda: V2ObjectMetricSource(), alias="object"
-    )
+    object: V2ObjectMetricSource = Field(default_factory=lambda: V2ObjectMetricSource())
 
-    pods: V2PodsMetricSource = Field(
-        default_factory=lambda: V2PodsMetricSource(), alias="pods"
-    )
+    pods: V2PodsMetricSource = Field(default_factory=lambda: V2PodsMetricSource())
 
     resource: V2ResourceMetricSource = Field(
-        default_factory=lambda: V2ResourceMetricSource(), alias="resource"
+        default_factory=lambda: V2ResourceMetricSource()
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

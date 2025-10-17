@@ -10,4 +10,4 @@ class V1GroupVersionForDiscovery(BaseModel):
         default_factory=lambda: None, alias="groupVersion"
     )
 
-    version: str | None = Field(default_factory=lambda: None, alias="version")
+    version: str | None = Field(default_factory=lambda: None)

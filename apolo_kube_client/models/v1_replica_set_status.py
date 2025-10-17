@@ -10,9 +10,7 @@ class V1ReplicaSetStatus(BaseModel):
         default_factory=lambda: None, alias="availableReplicas"
     )
 
-    conditions: list[V1ReplicaSetCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1ReplicaSetCondition] = Field(default_factory=lambda: [])
 
     fully_labeled_replicas: int | None = Field(
         default_factory=lambda: None, alias="fullyLabeledReplicas"
@@ -26,7 +24,7 @@ class V1ReplicaSetStatus(BaseModel):
         default_factory=lambda: None, alias="readyReplicas"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
     terminating_replicas: int | None = Field(
         default_factory=lambda: None, alias="terminatingReplicas"

@@ -6,6 +6,6 @@ __all__ = ("V1ContainerStateWaiting",)
 
 
 class V1ContainerStateWaiting(BaseModel):
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)

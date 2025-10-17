@@ -10,16 +10,14 @@ __all__ = ("V1PodDisruptionBudget",)
 class V1PodDisruptionBudget(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1PodDisruptionBudgetSpec = Field(
-        default_factory=lambda: V1PodDisruptionBudgetSpec(), alias="spec"
+        default_factory=lambda: V1PodDisruptionBudgetSpec()
     )
 
     status: V1PodDisruptionBudgetStatus = Field(
-        default_factory=lambda: V1PodDisruptionBudgetStatus(), alias="status"
+        default_factory=lambda: V1PodDisruptionBudgetStatus()
     )

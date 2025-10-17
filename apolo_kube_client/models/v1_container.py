@@ -16,31 +16,29 @@ __all__ = ("V1Container",)
 
 
 class V1Container(BaseModel):
-    args: list[str] = Field(default_factory=lambda: [], alias="args")
+    args: list[str] = Field(default_factory=lambda: [])
 
-    command: list[str] = Field(default_factory=lambda: [], alias="command")
+    command: list[str] = Field(default_factory=lambda: [])
 
-    env: list[V1EnvVar] = Field(default_factory=lambda: [], alias="env")
+    env: list[V1EnvVar] = Field(default_factory=lambda: [])
 
     env_from: list[V1EnvFromSource] = Field(default_factory=lambda: [], alias="envFrom")
 
-    image: str | None = Field(default_factory=lambda: None, alias="image")
+    image: str | None = Field(default_factory=lambda: None)
 
     image_pull_policy: str | None = Field(
         default_factory=lambda: None, alias="imagePullPolicy"
     )
 
-    lifecycle: V1Lifecycle = Field(
-        default_factory=lambda: V1Lifecycle(), alias="lifecycle"
-    )
+    lifecycle: V1Lifecycle = Field(default_factory=lambda: V1Lifecycle())
 
     liveness_probe: V1Probe = Field(
         default_factory=lambda: V1Probe(), alias="livenessProbe"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    ports: list[V1ContainerPort] = Field(default_factory=lambda: [], alias="ports")
+    ports: list[V1ContainerPort] = Field(default_factory=lambda: [])
 
     readiness_probe: V1Probe = Field(
         default_factory=lambda: V1Probe(), alias="readinessProbe"
@@ -51,7 +49,7 @@ class V1Container(BaseModel):
     )
 
     resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+        default_factory=lambda: V1ResourceRequirements()
     )
 
     restart_policy: str | None = Field(
@@ -70,7 +68,7 @@ class V1Container(BaseModel):
         default_factory=lambda: V1Probe(), alias="startupProbe"
     )
 
-    stdin: bool | None = Field(default_factory=lambda: None, alias="stdin")
+    stdin: bool | None = Field(default_factory=lambda: None)
 
     stdin_once: bool | None = Field(default_factory=lambda: None, alias="stdinOnce")
 
@@ -82,7 +80,7 @@ class V1Container(BaseModel):
         default_factory=lambda: None, alias="terminationMessagePolicy"
     )
 
-    tty: bool | None = Field(default_factory=lambda: None, alias="tty")
+    tty: bool | None = Field(default_factory=lambda: None)
 
     volume_devices: list[V1VolumeDevice] = Field(
         default_factory=lambda: [], alias="volumeDevices"

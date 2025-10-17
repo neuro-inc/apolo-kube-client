@@ -10,16 +10,12 @@ __all__ = ("ResourceV1ResourceClaim",)
 class ResourceV1ResourceClaim(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1ResourceClaimSpec = Field(
-        default_factory=lambda: V1ResourceClaimSpec(), alias="spec"
-    )
+    spec: V1ResourceClaimSpec = Field(default_factory=lambda: V1ResourceClaimSpec())
 
     status: V1ResourceClaimStatus = Field(
-        default_factory=lambda: V1ResourceClaimStatus(), alias="status"
+        default_factory=lambda: V1ResourceClaimStatus()
     )

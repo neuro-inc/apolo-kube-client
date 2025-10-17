@@ -10,9 +10,7 @@ class V1DaemonSetStatus(BaseModel):
         default_factory=lambda: None, alias="collisionCount"
     )
 
-    conditions: list[V1DaemonSetCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1DaemonSetCondition] = Field(default_factory=lambda: [])
 
     current_number_scheduled: int | None = Field(
         default_factory=lambda: None, alias="currentNumberScheduled"

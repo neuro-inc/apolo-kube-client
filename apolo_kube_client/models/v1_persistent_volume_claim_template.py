@@ -7,10 +7,8 @@ __all__ = ("V1PersistentVolumeClaimTemplate",)
 
 
 class V1PersistentVolumeClaimTemplate(BaseModel):
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1PersistentVolumeClaimSpec = Field(
-        default_factory=lambda: V1PersistentVolumeClaimSpec(), alias="spec"
+        default_factory=lambda: V1PersistentVolumeClaimSpec()
     )

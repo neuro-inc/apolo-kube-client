@@ -10,16 +10,10 @@ __all__ = ("V1APIService",)
 class V1APIService(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1APIServiceSpec = Field(
-        default_factory=lambda: V1APIServiceSpec(), alias="spec"
-    )
+    spec: V1APIServiceSpec = Field(default_factory=lambda: V1APIServiceSpec())
 
-    status: V1APIServiceStatus = Field(
-        default_factory=lambda: V1APIServiceStatus(), alias="status"
-    )
+    status: V1APIServiceStatus = Field(default_factory=lambda: V1APIServiceStatus())

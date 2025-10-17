@@ -11,9 +11,9 @@ class V1DownwardAPIVolumeFile(BaseModel):
         default_factory=lambda: V1ObjectFieldSelector(), alias="fieldRef"
     )
 
-    mode: int | None = Field(default_factory=lambda: None, alias="mode")
+    mode: int | None = Field(default_factory=lambda: None)
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
     resource_field_ref: V1ResourceFieldSelector = Field(
         default_factory=lambda: V1ResourceFieldSelector(), alias="resourceFieldRef"

@@ -10,14 +10,10 @@ __all__ = ("V1CronJob",)
 class V1CronJob(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1CronJobSpec = Field(default_factory=lambda: V1CronJobSpec(), alias="spec")
+    spec: V1CronJobSpec = Field(default_factory=lambda: V1CronJobSpec())
 
-    status: V1CronJobStatus = Field(
-        default_factory=lambda: V1CronJobStatus(), alias="status"
-    )
+    status: V1CronJobStatus = Field(default_factory=lambda: V1CronJobStatus())

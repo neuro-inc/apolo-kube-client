@@ -6,7 +6,7 @@ __all__ = ("V1PodResourceClaimStatus",)
 
 
 class V1PodResourceClaimStatus(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     resource_claim_name: str | None = Field(
         default_factory=lambda: None, alias="resourceClaimName"

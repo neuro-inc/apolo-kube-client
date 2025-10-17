@@ -6,6 +6,4 @@ __all__ = ("V1LoadBalancerStatus",)
 
 
 class V1LoadBalancerStatus(BaseModel):
-    ingress: list[V1LoadBalancerIngress] = Field(
-        default_factory=lambda: [], alias="ingress"
-    )
+    ingress: list[V1LoadBalancerIngress] = Field(default_factory=lambda: [])

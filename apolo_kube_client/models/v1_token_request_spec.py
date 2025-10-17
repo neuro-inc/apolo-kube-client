@@ -6,7 +6,7 @@ __all__ = ("V1TokenRequestSpec",)
 
 
 class V1TokenRequestSpec(BaseModel):
-    audiences: list[str] = Field(default_factory=lambda: [], alias="audiences")
+    audiences: list[str] = Field(default_factory=lambda: [])
 
     bound_object_ref: V1BoundObjectReference = Field(
         default_factory=lambda: V1BoundObjectReference(), alias="boundObjectRef"

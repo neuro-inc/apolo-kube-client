@@ -6,4 +6,4 @@ __all__ = ("V1SelfSubjectRulesReviewSpec",)
 
 
 class V1SelfSubjectRulesReviewSpec(BaseModel):
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)

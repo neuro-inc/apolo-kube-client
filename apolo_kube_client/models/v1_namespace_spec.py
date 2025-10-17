@@ -6,4 +6,4 @@ __all__ = ("V1NamespaceSpec",)
 
 
 class V1NamespaceSpec(BaseModel):
-    finalizers: list[str] = Field(default_factory=lambda: [], alias="finalizers")
+    finalizers: list[str] = Field(default_factory=lambda: [])

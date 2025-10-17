@@ -6,9 +6,7 @@ __all__ = ("V2HPAScalingRules",)
 
 
 class V2HPAScalingRules(BaseModel):
-    policies: list[V2HPAScalingPolicy] = Field(
-        default_factory=lambda: [], alias="policies"
-    )
+    policies: list[V2HPAScalingPolicy] = Field(default_factory=lambda: [])
 
     select_policy: str | None = Field(
         default_factory=lambda: None, alias="selectPolicy"
@@ -18,4 +16,4 @@ class V2HPAScalingRules(BaseModel):
         default_factory=lambda: None, alias="stabilizationWindowSeconds"
     )
 
-    tolerance: str | None = Field(default_factory=lambda: None, alias="tolerance")
+    tolerance: str | None = Field(default_factory=lambda: None)

@@ -51,13 +51,13 @@ class V1ServiceSpec(BaseModel):
         default_factory=lambda: [], alias="loadBalancerSourceRanges"
     )
 
-    ports: list[V1ServicePort] = Field(default_factory=lambda: [], alias="ports")
+    ports: list[V1ServicePort] = Field(default_factory=lambda: [])
 
     publish_not_ready_addresses: bool | None = Field(
         default_factory=lambda: None, alias="publishNotReadyAddresses"
     )
 
-    selector: dict[str, str] = Field(default_factory=lambda: {}, alias="selector")
+    selector: dict[str, str] = Field(default_factory=lambda: {})
 
     session_affinity: str | None = Field(
         default_factory=lambda: None, alias="sessionAffinity"
@@ -71,4 +71,4 @@ class V1ServiceSpec(BaseModel):
         default_factory=lambda: None, alias="trafficDistribution"
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

@@ -11,13 +11,10 @@ __all__ = ("V1alpha1MutatingAdmissionPolicyBinding",)
 class V1alpha1MutatingAdmissionPolicyBinding(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1alpha1MutatingAdmissionPolicyBindingSpec = Field(
-        default_factory=lambda: V1alpha1MutatingAdmissionPolicyBindingSpec(),
-        alias="spec",
+        default_factory=lambda: V1alpha1MutatingAdmissionPolicyBindingSpec()
     )

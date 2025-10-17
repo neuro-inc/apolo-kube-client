@@ -6,7 +6,7 @@ __all__ = ("V1NodeSystemInfo",)
 
 
 class V1NodeSystemInfo(BaseModel):
-    architecture: str | None = Field(default_factory=lambda: None, alias="architecture")
+    architecture: str | None = Field(default_factory=lambda: None)
 
     boot_id: str | None = Field(default_factory=lambda: None, alias="bootID")
 
@@ -34,8 +34,6 @@ class V1NodeSystemInfo(BaseModel):
 
     os_image: str | None = Field(default_factory=lambda: None, alias="osImage")
 
-    swap: V1NodeSwapStatus = Field(
-        default_factory=lambda: V1NodeSwapStatus(), alias="swap"
-    )
+    swap: V1NodeSwapStatus = Field(default_factory=lambda: V1NodeSwapStatus())
 
     system_uuid: str | None = Field(default_factory=lambda: None, alias="systemUUID")

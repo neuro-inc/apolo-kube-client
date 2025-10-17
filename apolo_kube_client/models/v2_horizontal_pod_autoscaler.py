@@ -10,16 +10,14 @@ __all__ = ("V2HorizontalPodAutoscaler",)
 class V2HorizontalPodAutoscaler(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V2HorizontalPodAutoscalerSpec = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerSpec(), alias="spec"
+        default_factory=lambda: V2HorizontalPodAutoscalerSpec()
     )
 
     status: V2HorizontalPodAutoscalerStatus = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerStatus(), alias="status"
+        default_factory=lambda: V2HorizontalPodAutoscalerStatus()
     )

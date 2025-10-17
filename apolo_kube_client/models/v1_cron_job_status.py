@@ -7,7 +7,7 @@ __all__ = ("V1CronJobStatus",)
 
 
 class V1CronJobStatus(BaseModel):
-    active: list[V1ObjectReference] = Field(default_factory=lambda: [], alias="active")
+    active: list[V1ObjectReference] = Field(default_factory=lambda: [])
 
     last_schedule_time: datetime | None = Field(
         default_factory=lambda: None, alias="lastScheduleTime"

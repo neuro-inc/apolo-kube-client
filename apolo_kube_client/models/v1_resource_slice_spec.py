@@ -11,9 +11,9 @@ __all__ = ("V1ResourceSliceSpec",)
 class V1ResourceSliceSpec(BaseModel):
     all_nodes: bool | None = Field(default_factory=lambda: None, alias="allNodes")
 
-    devices: list[V1Device] = Field(default_factory=lambda: [], alias="devices")
+    devices: list[V1Device] = Field(default_factory=lambda: [])
 
-    driver: str | None = Field(default_factory=lambda: None, alias="driver")
+    driver: str | None = Field(default_factory=lambda: None)
 
     node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
 
@@ -25,7 +25,7 @@ class V1ResourceSliceSpec(BaseModel):
         default_factory=lambda: None, alias="perDeviceNodeSelection"
     )
 
-    pool: V1ResourcePool = Field(default_factory=lambda: V1ResourcePool(), alias="pool")
+    pool: V1ResourcePool = Field(default_factory=lambda: V1ResourcePool())
 
     shared_counters: list[V1CounterSet] = Field(
         default_factory=lambda: [], alias="sharedCounters"

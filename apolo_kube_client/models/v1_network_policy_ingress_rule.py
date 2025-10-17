@@ -9,4 +9,4 @@ __all__ = ("V1NetworkPolicyIngressRule",)
 class V1NetworkPolicyIngressRule(BaseModel):
     from_: list[V1NetworkPolicyPeer] = Field(default_factory=lambda: [], alias="from")
 
-    ports: list[V1NetworkPolicyPort] = Field(default_factory=lambda: [], alias="ports")
+    ports: list[V1NetworkPolicyPort] = Field(default_factory=lambda: [])

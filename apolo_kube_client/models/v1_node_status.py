@@ -14,37 +14,29 @@ __all__ = ("V1NodeStatus",)
 
 
 class V1NodeStatus(BaseModel):
-    addresses: list[V1NodeAddress] = Field(
-        default_factory=lambda: [], alias="addresses"
-    )
+    addresses: list[V1NodeAddress] = Field(default_factory=lambda: [])
 
-    allocatable: dict[str, str] = Field(default_factory=lambda: {}, alias="allocatable")
+    allocatable: dict[str, str] = Field(default_factory=lambda: {})
 
-    capacity: dict[str, str] = Field(default_factory=lambda: {}, alias="capacity")
+    capacity: dict[str, str] = Field(default_factory=lambda: {})
 
-    conditions: list[V1NodeCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1NodeCondition] = Field(default_factory=lambda: [])
 
-    config: V1NodeConfigStatus = Field(
-        default_factory=lambda: V1NodeConfigStatus(), alias="config"
-    )
+    config: V1NodeConfigStatus = Field(default_factory=lambda: V1NodeConfigStatus())
 
     daemon_endpoints: V1NodeDaemonEndpoints = Field(
         default_factory=lambda: V1NodeDaemonEndpoints(), alias="daemonEndpoints"
     )
 
-    features: V1NodeFeatures = Field(
-        default_factory=lambda: V1NodeFeatures(), alias="features"
-    )
+    features: V1NodeFeatures = Field(default_factory=lambda: V1NodeFeatures())
 
-    images: list[V1ContainerImage] = Field(default_factory=lambda: [], alias="images")
+    images: list[V1ContainerImage] = Field(default_factory=lambda: [])
 
     node_info: V1NodeSystemInfo = Field(
         default_factory=lambda: V1NodeSystemInfo(), alias="nodeInfo"
     )
 
-    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None)
 
     runtime_handlers: list[V1NodeRuntimeHandler] = Field(
         default_factory=lambda: [], alias="runtimeHandlers"

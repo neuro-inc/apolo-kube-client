@@ -9,13 +9,13 @@ __all__ = ("V1Probe",)
 
 
 class V1Probe(BaseModel):
-    _exec: V1ExecAction = Field(default_factory=lambda: V1ExecAction(), alias="exec")
+    exec_: V1ExecAction = Field(default_factory=lambda: V1ExecAction(), alias="exec")
 
     failure_threshold: int | None = Field(
         default_factory=lambda: None, alias="failureThreshold"
     )
 
-    grpc: V1GRPCAction = Field(default_factory=lambda: V1GRPCAction(), alias="grpc")
+    grpc: V1GRPCAction = Field(default_factory=lambda: V1GRPCAction())
 
     http_get: V1HTTPGetAction = Field(
         default_factory=lambda: V1HTTPGetAction(), alias="httpGet"

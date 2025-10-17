@@ -13,10 +13,10 @@ class V1ManagedFieldsEntry(BaseModel):
 
     fields_v1: JsonType = Field(default_factory=lambda: {}, alias="fieldsV1")
 
-    manager: str | None = Field(default_factory=lambda: None, alias="manager")
+    manager: str | None = Field(default_factory=lambda: None)
 
-    operation: str | None = Field(default_factory=lambda: None, alias="operation")
+    operation: str | None = Field(default_factory=lambda: None)
 
-    subresource: str | None = Field(default_factory=lambda: None, alias="subresource")
+    subresource: str | None = Field(default_factory=lambda: None)
 
-    time: datetime | None = Field(default_factory=lambda: None, alias="time")
+    time: datetime | None = Field(default_factory=lambda: None)

@@ -7,14 +7,14 @@ __all__ = ("V1HTTPGetAction",)
 
 
 class V1HTTPGetAction(BaseModel):
-    host: str | None = Field(default_factory=lambda: None, alias="host")
+    host: str | None = Field(default_factory=lambda: None)
 
     http_headers: list[V1HTTPHeader] = Field(
         default_factory=lambda: [], alias="httpHeaders"
     )
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)
 
-    port: JsonType = Field(default_factory=lambda: {}, alias="port")
+    port: JsonType = Field(default_factory=lambda: {})
 
-    scheme: str | None = Field(default_factory=lambda: None, alias="scheme")
+    scheme: str | None = Field(default_factory=lambda: None)

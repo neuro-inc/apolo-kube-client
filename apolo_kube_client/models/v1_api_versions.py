@@ -8,10 +8,10 @@ __all__ = ("V1APIVersions",)
 class V1APIVersions(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
     server_address_by_client_cid_rs: list[V1ServerAddressByClientCIDR] = Field(
         default_factory=lambda: [], alias="serverAddressByClientCIDRs"
     )
 
-    versions: list[str] = Field(default_factory=lambda: [], alias="versions")
+    versions: list[str] = Field(default_factory=lambda: [])

@@ -10,12 +10,10 @@ __all__ = ("V1Node",)
 class V1Node(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1NodeSpec = Field(default_factory=lambda: V1NodeSpec(), alias="spec")
+    spec: V1NodeSpec = Field(default_factory=lambda: V1NodeSpec())
 
-    status: V1NodeStatus = Field(default_factory=lambda: V1NodeStatus(), alias="status")
+    status: V1NodeStatus = Field(default_factory=lambda: V1NodeStatus())

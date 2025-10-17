@@ -10,4 +10,4 @@ class V1AppArmorProfile(BaseModel):
         default_factory=lambda: None, alias="localhostProfile"
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

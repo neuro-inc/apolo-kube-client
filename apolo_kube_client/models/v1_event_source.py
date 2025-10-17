@@ -6,6 +6,6 @@ __all__ = ("V1EventSource",)
 
 
 class V1EventSource(BaseModel):
-    component: str | None = Field(default_factory=lambda: None, alias="component")
+    component: str | None = Field(default_factory=lambda: None)
 
-    host: str | None = Field(default_factory=lambda: None, alias="host")
+    host: str | None = Field(default_factory=lambda: None)

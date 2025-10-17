@@ -12,10 +12,10 @@ class V1OwnerReference(BaseModel):
         default_factory=lambda: None, alias="blockOwnerDeletion"
     )
 
-    controller: bool | None = Field(default_factory=lambda: None, alias="controller")
+    controller: bool | None = Field(default_factory=lambda: None)
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)

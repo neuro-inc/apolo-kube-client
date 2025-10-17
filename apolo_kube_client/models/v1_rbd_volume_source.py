@@ -8,13 +8,13 @@ __all__ = ("V1RBDVolumeSource",)
 class V1RBDVolumeSource(BaseModel):
     fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
 
-    image: str | None = Field(default_factory=lambda: None, alias="image")
+    image: str | None = Field(default_factory=lambda: None)
 
-    keyring: str | None = Field(default_factory=lambda: None, alias="keyring")
+    keyring: str | None = Field(default_factory=lambda: None)
 
-    monitors: list[str] = Field(default_factory=lambda: [], alias="monitors")
+    monitors: list[str] = Field(default_factory=lambda: [])
 
-    pool: str | None = Field(default_factory=lambda: None, alias="pool")
+    pool: str | None = Field(default_factory=lambda: None)
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 
@@ -22,4 +22,4 @@ class V1RBDVolumeSource(BaseModel):
         default_factory=lambda: V1LocalObjectReference(), alias="secretRef"
     )
 
-    user: str | None = Field(default_factory=lambda: None, alias="user")
+    user: str | None = Field(default_factory=lambda: None)

@@ -7,6 +7,6 @@ __all__ = ("V1NetworkPolicyEgressRule",)
 
 
 class V1NetworkPolicyEgressRule(BaseModel):
-    ports: list[V1NetworkPolicyPort] = Field(default_factory=lambda: [], alias="ports")
+    ports: list[V1NetworkPolicyPort] = Field(default_factory=lambda: [])
 
-    to: list[V1NetworkPolicyPeer] = Field(default_factory=lambda: [], alias="to")
+    to: list[V1NetworkPolicyPeer] = Field(default_factory=lambda: [])

@@ -10,12 +10,10 @@ __all__ = ("V1ClusterRoleBinding",)
 class V1ClusterRoleBinding(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     role_ref: V1RoleRef = Field(default_factory=lambda: V1RoleRef(), alias="roleRef")
 
-    subjects: list[RbacV1Subject] = Field(default_factory=lambda: [], alias="subjects")
+    subjects: list[RbacV1Subject] = Field(default_factory=lambda: [])

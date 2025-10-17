@@ -8,16 +8,14 @@ __all__ = ("V1Secret",)
 class V1Secret(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    data: dict[str, str] = Field(default_factory=lambda: {}, alias="data")
+    data: dict[str, str] = Field(default_factory=lambda: {})
 
-    immutable: bool | None = Field(default_factory=lambda: None, alias="immutable")
+    immutable: bool | None = Field(default_factory=lambda: None)
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     string_data: dict[str, str] = Field(default_factory=lambda: {}, alias="stringData")
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)

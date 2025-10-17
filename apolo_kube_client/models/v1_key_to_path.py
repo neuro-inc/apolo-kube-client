@@ -6,8 +6,8 @@ __all__ = ("V1KeyToPath",)
 
 
 class V1KeyToPath(BaseModel):
-    key: str | None = Field(default_factory=lambda: None, alias="key")
+    key: str | None = Field(default_factory=lambda: None)
 
-    mode: int | None = Field(default_factory=lambda: None, alias="mode")
+    mode: int | None = Field(default_factory=lambda: None)
 
-    path: str | None = Field(default_factory=lambda: None, alias="path")
+    path: str | None = Field(default_factory=lambda: None)

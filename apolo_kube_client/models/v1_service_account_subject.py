@@ -6,6 +6,6 @@ __all__ = ("V1ServiceAccountSubject",)
 
 
 class V1ServiceAccountSubject(BaseModel):
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)

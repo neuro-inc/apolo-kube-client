@@ -12,9 +12,7 @@ __all__ = ("V1PodStatus",)
 
 
 class V1PodStatus(BaseModel):
-    conditions: list[V1PodCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1PodCondition] = Field(default_factory=lambda: [])
 
     container_statuses: list[V1ContainerStatus] = Field(
         default_factory=lambda: [], alias="containerStatuses"
@@ -37,7 +35,7 @@ class V1PodStatus(BaseModel):
         default_factory=lambda: [], alias="initContainerStatuses"
     )
 
-    message: str | None = Field(default_factory=lambda: None, alias="message")
+    message: str | None = Field(default_factory=lambda: None)
 
     nominated_node_name: str | None = Field(
         default_factory=lambda: None, alias="nominatedNodeName"
@@ -47,7 +45,7 @@ class V1PodStatus(BaseModel):
         default_factory=lambda: None, alias="observedGeneration"
     )
 
-    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None)
 
     pod_ip: str | None = Field(default_factory=lambda: None, alias="podIP")
 
@@ -55,9 +53,9 @@ class V1PodStatus(BaseModel):
 
     qos_class: str | None = Field(default_factory=lambda: None, alias="qosClass")
 
-    reason: str | None = Field(default_factory=lambda: None, alias="reason")
+    reason: str | None = Field(default_factory=lambda: None)
 
-    resize: str | None = Field(default_factory=lambda: None, alias="resize")
+    resize: str | None = Field(default_factory=lambda: None)
 
     resource_claim_statuses: list[V1PodResourceClaimStatus] = Field(
         default_factory=lambda: [], alias="resourceClaimStatuses"

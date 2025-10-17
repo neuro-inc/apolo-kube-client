@@ -12,7 +12,7 @@ class V1CustomResourceDefinitionStatus(BaseModel):
     )
 
     conditions: list[V1CustomResourceDefinitionCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
+        default_factory=lambda: []
     )
 
     stored_versions: list[str] = Field(

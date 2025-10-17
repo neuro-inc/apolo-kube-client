@@ -20,7 +20,7 @@ class V1ContainerStatus(BaseModel):
 
     container_id: str | None = Field(default_factory=lambda: None, alias="containerID")
 
-    image: str | None = Field(default_factory=lambda: None, alias="image")
+    image: str | None = Field(default_factory=lambda: None)
 
     image_id: str | None = Field(default_factory=lambda: None, alias="imageID")
 
@@ -28,29 +28,25 @@ class V1ContainerStatus(BaseModel):
         default_factory=lambda: V1ContainerState(), alias="lastState"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    ready: bool | None = Field(default_factory=lambda: None, alias="ready")
+    ready: bool | None = Field(default_factory=lambda: None)
 
     resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements(), alias="resources"
+        default_factory=lambda: V1ResourceRequirements()
     )
 
     restart_count: int | None = Field(
         default_factory=lambda: None, alias="restartCount"
     )
 
-    started: bool | None = Field(default_factory=lambda: None, alias="started")
+    started: bool | None = Field(default_factory=lambda: None)
 
-    state: V1ContainerState = Field(
-        default_factory=lambda: V1ContainerState(), alias="state"
-    )
+    state: V1ContainerState = Field(default_factory=lambda: V1ContainerState())
 
     stop_signal: str | None = Field(default_factory=lambda: None, alias="stopSignal")
 
-    user: V1ContainerUser = Field(
-        default_factory=lambda: V1ContainerUser(), alias="user"
-    )
+    user: V1ContainerUser = Field(default_factory=lambda: V1ContainerUser())
 
     volume_mounts: list[V1VolumeMountStatus] = Field(
         default_factory=lambda: [], alias="volumeMounts"

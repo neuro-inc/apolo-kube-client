@@ -30,7 +30,7 @@ class V1ValidatingWebhook(BaseModel):
 
     match_policy: str | None = Field(default_factory=lambda: None, alias="matchPolicy")
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     namespace_selector: V1LabelSelector = Field(
         default_factory=lambda: V1LabelSelector(), alias="namespaceSelector"
@@ -40,7 +40,7 @@ class V1ValidatingWebhook(BaseModel):
         default_factory=lambda: V1LabelSelector(), alias="objectSelector"
     )
 
-    rules: list[V1RuleWithOperations] = Field(default_factory=lambda: [], alias="rules")
+    rules: list[V1RuleWithOperations] = Field(default_factory=lambda: [])
 
     side_effects: str | None = Field(default_factory=lambda: None, alias="sideEffects")
 

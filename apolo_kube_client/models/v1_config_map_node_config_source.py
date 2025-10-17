@@ -10,12 +10,12 @@ class V1ConfigMapNodeConfigSource(BaseModel):
         default_factory=lambda: None, alias="kubeletConfigKey"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)
 
     resource_version: str | None = Field(
         default_factory=lambda: None, alias="resourceVersion"
     )
 
-    uid: str | None = Field(default_factory=lambda: None, alias="uid")
+    uid: str | None = Field(default_factory=lambda: None)

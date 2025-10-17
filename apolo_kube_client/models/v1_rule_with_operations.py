@@ -10,8 +10,8 @@ class V1RuleWithOperations(BaseModel):
 
     api_versions: list[str] = Field(default_factory=lambda: [], alias="apiVersions")
 
-    operations: list[str] = Field(default_factory=lambda: [], alias="operations")
+    operations: list[str] = Field(default_factory=lambda: [])
 
-    resources: list[str] = Field(default_factory=lambda: [], alias="resources")
+    resources: list[str] = Field(default_factory=lambda: [])
 
-    scope: str | None = Field(default_factory=lambda: None, alias="scope")
+    scope: str | None = Field(default_factory=lambda: None)

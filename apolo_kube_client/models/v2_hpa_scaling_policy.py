@@ -10,6 +10,6 @@ class V2HPAScalingPolicy(BaseModel):
         default_factory=lambda: None, alias="periodSeconds"
     )
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)
 
-    value: int | None = Field(default_factory=lambda: None, alias="value")
+    value: int | None = Field(default_factory=lambda: None)

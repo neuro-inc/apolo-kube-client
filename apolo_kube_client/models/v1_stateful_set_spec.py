@@ -18,7 +18,7 @@ class V1StatefulSetSpec(BaseModel):
     )
 
     ordinals: V1StatefulSetOrdinals = Field(
-        default_factory=lambda: V1StatefulSetOrdinals(), alias="ordinals"
+        default_factory=lambda: V1StatefulSetOrdinals()
     )
 
     persistent_volume_claim_retention_policy: V1StatefulSetPersistentVolumeClaimRetentionPolicy = Field(
@@ -30,21 +30,17 @@ class V1StatefulSetSpec(BaseModel):
         default_factory=lambda: None, alias="podManagementPolicy"
     )
 
-    replicas: int | None = Field(default_factory=lambda: None, alias="replicas")
+    replicas: int | None = Field(default_factory=lambda: None)
 
     revision_history_limit: int | None = Field(
         default_factory=lambda: None, alias="revisionHistoryLimit"
     )
 
-    selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="selector"
-    )
+    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
 
     service_name: str | None = Field(default_factory=lambda: None, alias="serviceName")
 
-    template: V1PodTemplateSpec = Field(
-        default_factory=lambda: V1PodTemplateSpec(), alias="template"
-    )
+    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())
 
     update_strategy: V1StatefulSetUpdateStrategy = Field(
         default_factory=lambda: V1StatefulSetUpdateStrategy(), alias="updateStrategy"

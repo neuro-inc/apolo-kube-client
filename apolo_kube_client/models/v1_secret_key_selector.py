@@ -6,8 +6,8 @@ __all__ = ("V1SecretKeySelector",)
 
 
 class V1SecretKeySelector(BaseModel):
-    key: str | None = Field(default_factory=lambda: None, alias="key")
+    key: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    optional: bool | None = Field(default_factory=lambda: None, alias="optional")
+    optional: bool | None = Field(default_factory=lambda: None)

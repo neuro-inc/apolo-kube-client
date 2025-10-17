@@ -11,7 +11,7 @@ class V1EnvFromSource(BaseModel):
         default_factory=lambda: V1ConfigMapEnvSource(), alias="configMapRef"
     )
 
-    prefix: str | None = Field(default_factory=lambda: None, alias="prefix")
+    prefix: str | None = Field(default_factory=lambda: None)
 
     secret_ref: V1SecretEnvSource = Field(
         default_factory=lambda: V1SecretEnvSource(), alias="secretRef"

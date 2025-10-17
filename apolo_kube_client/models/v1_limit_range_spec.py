@@ -6,4 +6,4 @@ __all__ = ("V1LimitRangeSpec",)
 
 
 class V1LimitRangeSpec(BaseModel):
-    limits: list[V1LimitRangeItem] = Field(default_factory=lambda: [], alias="limits")
+    limits: list[V1LimitRangeItem] = Field(default_factory=lambda: [])

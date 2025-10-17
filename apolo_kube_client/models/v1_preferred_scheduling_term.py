@@ -6,8 +6,6 @@ __all__ = ("V1PreferredSchedulingTerm",)
 
 
 class V1PreferredSchedulingTerm(BaseModel):
-    preference: V1NodeSelectorTerm = Field(
-        default_factory=lambda: V1NodeSelectorTerm(), alias="preference"
-    )
+    preference: V1NodeSelectorTerm = Field(default_factory=lambda: V1NodeSelectorTerm())
 
-    weight: int | None = Field(default_factory=lambda: None, alias="weight")
+    weight: int | None = Field(default_factory=lambda: None)

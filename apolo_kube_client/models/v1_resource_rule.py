@@ -10,6 +10,6 @@ class V1ResourceRule(BaseModel):
 
     resource_names: list[str] = Field(default_factory=lambda: [], alias="resourceNames")
 
-    resources: list[str] = Field(default_factory=lambda: [], alias="resources")
+    resources: list[str] = Field(default_factory=lambda: [])
 
-    verbs: list[str] = Field(default_factory=lambda: [], alias="verbs")
+    verbs: list[str] = Field(default_factory=lambda: [])

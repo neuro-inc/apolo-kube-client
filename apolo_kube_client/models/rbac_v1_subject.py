@@ -8,8 +8,8 @@ __all__ = ("RbacV1Subject",)
 class RbacV1Subject(BaseModel):
     api_group: str | None = Field(default_factory=lambda: None, alias="apiGroup")
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
-    namespace: str | None = Field(default_factory=lambda: None, alias="namespace")
+    namespace: str | None = Field(default_factory=lambda: None)

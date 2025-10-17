@@ -12,7 +12,7 @@ class V1VolumeMount(BaseModel):
         default_factory=lambda: None, alias="mountPropagation"
     )
 
-    name: str | None = Field(default_factory=lambda: None, alias="name")
+    name: str | None = Field(default_factory=lambda: None)
 
     read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
 

@@ -15,19 +15,15 @@ class V1beta2ExactDeviceRequest(BaseModel):
     )
 
     capacity: V1beta2CapacityRequirements = Field(
-        default_factory=lambda: V1beta2CapacityRequirements(), alias="capacity"
+        default_factory=lambda: V1beta2CapacityRequirements()
     )
 
-    count: int | None = Field(default_factory=lambda: None, alias="count")
+    count: int | None = Field(default_factory=lambda: None)
 
     device_class_name: str | None = Field(
         default_factory=lambda: None, alias="deviceClassName"
     )
 
-    selectors: list[V1beta2DeviceSelector] = Field(
-        default_factory=lambda: [], alias="selectors"
-    )
+    selectors: list[V1beta2DeviceSelector] = Field(default_factory=lambda: [])
 
-    tolerations: list[V1beta2DeviceToleration] = Field(
-        default_factory=lambda: [], alias="tolerations"
-    )
+    tolerations: list[V1beta2DeviceToleration] = Field(default_factory=lambda: [])

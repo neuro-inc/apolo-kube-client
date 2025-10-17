@@ -9,12 +9,10 @@ __all__ = ("V1ControllerRevision",)
 class V1ControllerRevision(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    data: JsonType = Field(default_factory=lambda: {}, alias="data")
+    data: JsonType = Field(default_factory=lambda: {})
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    revision: int | None = Field(default_factory=lambda: None, alias="revision")
+    revision: int | None = Field(default_factory=lambda: None)

@@ -6,4 +6,4 @@ __all__ = ("V1SuccessPolicy",)
 
 
 class V1SuccessPolicy(BaseModel):
-    rules: list[V1SuccessPolicyRule] = Field(default_factory=lambda: [], alias="rules")
+    rules: list[V1SuccessPolicyRule] = Field(default_factory=lambda: [])

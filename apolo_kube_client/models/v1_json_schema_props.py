@@ -24,21 +24,17 @@ class V1JSONSchemaProps(BaseModel):
 
     any_of: list[V1JSONSchemaProps] = Field(default_factory=lambda: [], alias="anyOf")
 
-    default: JsonType = Field(default_factory=lambda: {}, alias="default")
+    default: JsonType = Field(default_factory=lambda: {})
 
-    definitions: dict[str, V1JSONSchemaProps] = Field(
-        default_factory=lambda: {}, alias="definitions"
-    )
+    definitions: dict[str, V1JSONSchemaProps] = Field(default_factory=lambda: {})
 
-    dependencies: dict[str, JsonType] = Field(
-        default_factory=lambda: {}, alias="dependencies"
-    )
+    dependencies: dict[str, JsonType] = Field(default_factory=lambda: {})
 
-    description: str | None = Field(default_factory=lambda: None, alias="description")
+    description: str | None = Field(default_factory=lambda: None)
 
-    enum: list[JsonType] = Field(default_factory=lambda: [], alias="enum")
+    enum: list[JsonType] = Field(default_factory=lambda: [])
 
-    example: JsonType = Field(default_factory=lambda: {}, alias="example")
+    example: JsonType = Field(default_factory=lambda: {})
 
     exclusive_maximum: bool | None = Field(
         default_factory=lambda: None, alias="exclusiveMaximum"
@@ -52,11 +48,11 @@ class V1JSONSchemaProps(BaseModel):
         default_factory=lambda: V1ExternalDocumentation(), alias="externalDocs"
     )
 
-    format: str | None = Field(default_factory=lambda: None, alias="format")
+    format: str | None = Field(default_factory=lambda: None)
 
-    id: str | None = Field(default_factory=lambda: None, alias="id")
+    id: str | None = Field(default_factory=lambda: None)
 
-    items: JsonType = Field(default_factory=lambda: {}, alias="items")
+    items: JsonType = Field(default_factory=lambda: {})
 
     max_items: int | None = Field(default_factory=lambda: None, alias="maxItems")
 
@@ -66,7 +62,7 @@ class V1JSONSchemaProps(BaseModel):
         default_factory=lambda: None, alias="maxProperties"
     )
 
-    maximum: float | None = Field(default_factory=lambda: None, alias="maximum")
+    maximum: float | None = Field(default_factory=lambda: None)
 
     min_items: int | None = Field(default_factory=lambda: None, alias="minItems")
 
@@ -76,7 +72,7 @@ class V1JSONSchemaProps(BaseModel):
         default_factory=lambda: None, alias="minProperties"
     )
 
-    minimum: float | None = Field(default_factory=lambda: None, alias="minimum")
+    minimum: float | None = Field(default_factory=lambda: None)
 
     multiple_of: float | None = Field(default_factory=lambda: None, alias="multipleOf")
 
@@ -84,25 +80,23 @@ class V1JSONSchemaProps(BaseModel):
         default_factory=lambda: V1JSONSchemaProps(), alias="not"
     )
 
-    nullable: bool | None = Field(default_factory=lambda: None, alias="nullable")
+    nullable: bool | None = Field(default_factory=lambda: None)
 
     one_of: list[V1JSONSchemaProps] = Field(default_factory=lambda: [], alias="oneOf")
 
-    pattern: str | None = Field(default_factory=lambda: None, alias="pattern")
+    pattern: str | None = Field(default_factory=lambda: None)
 
     pattern_properties: dict[str, V1JSONSchemaProps] = Field(
         default_factory=lambda: {}, alias="patternProperties"
     )
 
-    properties: dict[str, V1JSONSchemaProps] = Field(
-        default_factory=lambda: {}, alias="properties"
-    )
+    properties: dict[str, V1JSONSchemaProps] = Field(default_factory=lambda: {})
 
-    required: list[str] = Field(default_factory=lambda: [], alias="required")
+    required: list[str] = Field(default_factory=lambda: [])
 
-    title: str | None = Field(default_factory=lambda: None, alias="title")
+    title: str | None = Field(default_factory=lambda: None)
 
-    type: str | None = Field(default_factory=lambda: None, alias="type")
+    type: str | None = Field(default_factory=lambda: None)
 
     unique_items: bool | None = Field(default_factory=lambda: None, alias="uniqueItems")
 

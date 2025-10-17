@@ -9,10 +9,8 @@ __all__ = ("V1VolumeAttributesClassList",)
 class V1VolumeAttributesClassList(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    items: list[V1VolumeAttributesClass] = Field(
-        default_factory=lambda: [], alias="items"
-    )
+    items: list[V1VolumeAttributesClass] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta(), alias="metadata")
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

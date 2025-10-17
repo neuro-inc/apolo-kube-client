@@ -9,12 +9,12 @@ __all__ = ("V2HorizontalPodAutoscalerSpec",)
 
 class V2HorizontalPodAutoscalerSpec(BaseModel):
     behavior: V2HorizontalPodAutoscalerBehavior = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerBehavior(), alias="behavior"
+        default_factory=lambda: V2HorizontalPodAutoscalerBehavior()
     )
 
     max_replicas: int | None = Field(default_factory=lambda: None, alias="maxReplicas")
 
-    metrics: list[V2MetricSpec] = Field(default_factory=lambda: [], alias="metrics")
+    metrics: list[V2MetricSpec] = Field(default_factory=lambda: [])
 
     min_replicas: int | None = Field(default_factory=lambda: None, alias="minReplicas")
 

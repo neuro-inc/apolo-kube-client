@@ -7,8 +7,6 @@ __all__ = ("V1JobTemplateSpec",)
 
 
 class V1JobTemplateSpec(BaseModel):
-    metadata: V1ObjectMeta = Field(
-        default_factory=lambda: V1ObjectMeta(), alias="metadata"
-    )
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1JobSpec = Field(default_factory=lambda: V1JobSpec(), alias="spec")
+    spec: V1JobSpec = Field(default_factory=lambda: V1JobSpec())

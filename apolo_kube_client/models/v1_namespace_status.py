@@ -6,8 +6,6 @@ __all__ = ("V1NamespaceStatus",)
 
 
 class V1NamespaceStatus(BaseModel):
-    conditions: list[V1NamespaceCondition] = Field(
-        default_factory=lambda: [], alias="conditions"
-    )
+    conditions: list[V1NamespaceCondition] = Field(default_factory=lambda: [])
 
-    phase: str | None = Field(default_factory=lambda: None, alias="phase")
+    phase: str | None = Field(default_factory=lambda: None)

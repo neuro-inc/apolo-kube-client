@@ -6,6 +6,6 @@ __all__ = ("V1GRPCAction",)
 
 
 class V1GRPCAction(BaseModel):
-    port: int | None = Field(default_factory=lambda: None, alias="port")
+    port: int | None = Field(default_factory=lambda: None)
 
-    service: str | None = Field(default_factory=lambda: None, alias="service")
+    service: str | None = Field(default_factory=lambda: None)

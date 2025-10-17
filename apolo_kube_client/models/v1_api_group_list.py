@@ -8,6 +8,6 @@ __all__ = ("V1APIGroupList",)
 class V1APIGroupList(BaseModel):
     api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
 
-    groups: list[V1APIGroup] = Field(default_factory=lambda: [], alias="groups")
+    groups: list[V1APIGroup] = Field(default_factory=lambda: [])
 
-    kind: str | None = Field(default_factory=lambda: None, alias="kind")
+    kind: str | None = Field(default_factory=lambda: None)

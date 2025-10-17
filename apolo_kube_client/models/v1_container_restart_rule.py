@@ -6,7 +6,7 @@ __all__ = ("V1ContainerRestartRule",)
 
 
 class V1ContainerRestartRule(BaseModel):
-    action: str | None = Field(default_factory=lambda: None, alias="action")
+    action: str | None = Field(default_factory=lambda: None)
 
     exit_codes: V1ContainerRestartRuleOnExitCodes = Field(
         default_factory=lambda: V1ContainerRestartRuleOnExitCodes(), alias="exitCodes"

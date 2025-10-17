@@ -6,8 +6,8 @@ __all__ = ("V1GitRepoVolumeSource",)
 
 
 class V1GitRepoVolumeSource(BaseModel):
-    directory: str | None = Field(default_factory=lambda: None, alias="directory")
+    directory: str | None = Field(default_factory=lambda: None)
 
-    repository: str | None = Field(default_factory=lambda: None, alias="repository")
+    repository: str | None = Field(default_factory=lambda: None)
 
-    revision: str | None = Field(default_factory=lambda: None, alias="revision")
+    revision: str | None = Field(default_factory=lambda: None)
