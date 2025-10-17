@@ -7,6 +7,6 @@ __all__ = ("V1DeviceAllocationResult",)
 
 
 class V1DeviceAllocationResult(BaseModel):
-    config: list[V1DeviceAllocationConfiguration] = Field(default_factory=lambda: [])
+    config: list[V1DeviceAllocationConfiguration] = Field(default=[])
 
-    results: list[V1DeviceRequestAllocationResult] = Field(default_factory=lambda: [])
+    results: list[V1DeviceRequestAllocationResult] = Field(default=[])

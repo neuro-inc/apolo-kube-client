@@ -8,8 +8,8 @@ __all__ = ("V1DeviceClaim",)
 
 
 class V1DeviceClaim(BaseModel):
-    config: list[V1DeviceClaimConfiguration] = Field(default_factory=lambda: [])
+    config: list[V1DeviceClaimConfiguration] = Field(default=[])
 
-    constraints: list[V1DeviceConstraint] = Field(default_factory=lambda: [])
+    constraints: list[V1DeviceConstraint] = Field(default=[])
 
-    requests: list[V1DeviceRequest] = Field(default_factory=lambda: [])
+    requests: list[V1DeviceRequest] = Field(default=[])

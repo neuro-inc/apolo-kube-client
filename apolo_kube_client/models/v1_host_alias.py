@@ -6,6 +6,6 @@ __all__ = ("V1HostAlias",)
 
 
 class V1HostAlias(BaseModel):
-    hostnames: list[str] = Field(default_factory=lambda: [])
+    hostnames: list[str] = Field(default=[])
 
-    ip: str | None = Field(default_factory=lambda: None)
+    ip: str | None = Field(default=None)

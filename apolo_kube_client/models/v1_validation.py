@@ -1,17 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1Validation",)
 
 
 class V1Validation(BaseModel):
-    expression: str | None = Field(default_factory=lambda: None)
+    expression: str | None = Field(default=None)
 
-    message: str | None = Field(default_factory=lambda: None)
+    message: str | None = Field(default=None)
 
     message_expression: str | None = Field(
-        default_factory=lambda: None, alias="messageExpression"
+        default=None,
+        serialization_alias="messageExpression",
+        validation_alias=AliasChoices("message_expression", "messageExpression"),
     )
 
-    reason: str | None = Field(default_factory=lambda: None)
+    reason: str | None = Field(default=None)

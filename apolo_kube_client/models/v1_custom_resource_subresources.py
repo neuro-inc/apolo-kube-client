@@ -11,4 +11,4 @@ class V1CustomResourceSubresources(BaseModel):
         default_factory=lambda: V1CustomResourceSubresourceScale()
     )
 
-    status: JsonType = Field(default_factory=lambda: {})
+    status: JsonType = Field(default={})

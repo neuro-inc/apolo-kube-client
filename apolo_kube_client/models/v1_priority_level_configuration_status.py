@@ -8,6 +8,4 @@ __all__ = ("V1PriorityLevelConfigurationStatus",)
 
 
 class V1PriorityLevelConfigurationStatus(BaseModel):
-    conditions: list[V1PriorityLevelConfigurationCondition] = Field(
-        default_factory=lambda: []
-    )
+    conditions: list[V1PriorityLevelConfigurationCondition] = Field(default=[])

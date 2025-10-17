@@ -6,4 +6,4 @@ __all__ = ("V1ServiceCIDRStatus",)
 
 
 class V1ServiceCIDRStatus(BaseModel):
-    conditions: list[V1Condition] = Field(default_factory=lambda: [])
+    conditions: list[V1Condition] = Field(default=[])

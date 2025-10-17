@@ -1,15 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("DiscoveryV1EndpointPort",)
 
 
 class DiscoveryV1EndpointPort(BaseModel):
-    app_protocol: str | None = Field(default_factory=lambda: None, alias="appProtocol")
+    app_protocol: str | None = Field(
+        default=None,
+        serialization_alias="appProtocol",
+        validation_alias=AliasChoices("app_protocol", "appProtocol"),
+    )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    port: int | None = Field(default_factory=lambda: None)
+    port: int | None = Field(default=None)
 
-    protocol: str | None = Field(default_factory=lambda: None)
+    protocol: str | None = Field(default=None)

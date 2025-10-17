@@ -6,4 +6,4 @@ __all__ = ("V1beta1JSONPatch",)
 
 
 class V1beta1JSONPatch(BaseModel):
-    expression: str | None = Field(default_factory=lambda: None)
+    expression: str | None = Field(default=None)

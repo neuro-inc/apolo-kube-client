@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v2_container_resource_metric_source import V2ContainerResourceMetricSource
 from .v2_external_metric_source import V2ExternalMetricSource
 from .v2_object_metric_source import V2ObjectMetricSource
@@ -12,7 +12,8 @@ __all__ = ("V2MetricSpec",)
 class V2MetricSpec(BaseModel):
     container_resource: V2ContainerResourceMetricSource = Field(
         default_factory=lambda: V2ContainerResourceMetricSource(),
-        alias="containerResource",
+        serialization_alias="containerResource",
+        validation_alias=AliasChoices("container_resource", "containerResource"),
     )
 
     external: V2ExternalMetricSource = Field(
@@ -27,4 +28,4 @@ class V2MetricSpec(BaseModel):
         default_factory=lambda: V2ResourceMetricSource()
     )
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

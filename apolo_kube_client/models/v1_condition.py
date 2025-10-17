@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("V1Condition",)
@@ -7,17 +7,21 @@ __all__ = ("V1Condition",)
 
 class V1Condition(BaseModel):
     last_transition_time: datetime | None = Field(
-        default_factory=lambda: None, alias="lastTransitionTime"
+        default=None,
+        serialization_alias="lastTransitionTime",
+        validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
     )
 
-    message: str | None = Field(default_factory=lambda: None)
+    message: str | None = Field(default=None)
 
     observed_generation: int | None = Field(
-        default_factory=lambda: None, alias="observedGeneration"
+        default=None,
+        serialization_alias="observedGeneration",
+        validation_alias=AliasChoices("observed_generation", "observedGeneration"),
     )
 
-    reason: str | None = Field(default_factory=lambda: None)
+    reason: str | None = Field(default=None)
 
-    status: str | None = Field(default_factory=lambda: None)
+    status: str | None = Field(default=None)
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

@@ -1,23 +1,37 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("V1ContainerStateTerminated",)
 
 
 class V1ContainerStateTerminated(BaseModel):
-    container_id: str | None = Field(default_factory=lambda: None, alias="containerID")
-
-    exit_code: int | None = Field(default_factory=lambda: None, alias="exitCode")
-
-    finished_at: datetime | None = Field(
-        default_factory=lambda: None, alias="finishedAt"
+    container_id: str | None = Field(
+        default=None,
+        serialization_alias="containerID",
+        validation_alias=AliasChoices("container_id", "containerID"),
     )
 
-    message: str | None = Field(default_factory=lambda: None)
+    exit_code: int | None = Field(
+        default=None,
+        serialization_alias="exitCode",
+        validation_alias=AliasChoices("exit_code", "exitCode"),
+    )
 
-    reason: str | None = Field(default_factory=lambda: None)
+    finished_at: datetime | None = Field(
+        default=None,
+        serialization_alias="finishedAt",
+        validation_alias=AliasChoices("finished_at", "finishedAt"),
+    )
 
-    signal: int | None = Field(default_factory=lambda: None)
+    message: str | None = Field(default=None)
 
-    started_at: datetime | None = Field(default_factory=lambda: None, alias="startedAt")
+    reason: str | None = Field(default=None)
+
+    signal: int | None = Field(default=None)
+
+    started_at: datetime | None = Field(
+        default=None,
+        serialization_alias="startedAt",
+        validation_alias=AliasChoices("started_at", "startedAt"),
+    )

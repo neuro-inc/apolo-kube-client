@@ -1,11 +1,15 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1ExpressionWarning",)
 
 
 class V1ExpressionWarning(BaseModel):
-    field_ref: str | None = Field(default_factory=lambda: None, alias="fieldRef")
+    field_ref: str | None = Field(
+        default=None,
+        serialization_alias="fieldRef",
+        validation_alias=AliasChoices("field_ref", "fieldRef"),
+    )
 
-    warning: str | None = Field(default_factory=lambda: None)
+    warning: str | None = Field(default=None)

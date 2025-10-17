@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V2HPAScalingPolicy",)
@@ -7,9 +7,11 @@ __all__ = ("V2HPAScalingPolicy",)
 
 class V2HPAScalingPolicy(BaseModel):
     period_seconds: int | None = Field(
-        default_factory=lambda: None, alias="periodSeconds"
+        default=None,
+        serialization_alias="periodSeconds",
+        validation_alias=AliasChoices("period_seconds", "periodSeconds"),
     )
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)
 
-    value: int | None = Field(default_factory=lambda: None)
+    value: int | None = Field(default=None)

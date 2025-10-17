@@ -6,10 +6,10 @@ __all__ = ("V1TokenReviewStatus",)
 
 
 class V1TokenReviewStatus(BaseModel):
-    audiences: list[str] = Field(default_factory=lambda: [])
+    audiences: list[str] = Field(default=[])
 
-    authenticated: bool | None = Field(default_factory=lambda: None)
+    authenticated: bool | None = Field(default=None)
 
-    error: str | None = Field(default_factory=lambda: None)
+    error: str | None = Field(default=None)
 
     user: V1UserInfo = Field(default_factory=lambda: V1UserInfo())

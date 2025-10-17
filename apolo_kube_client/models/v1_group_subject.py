@@ -6,4 +6,4 @@ __all__ = ("V1GroupSubject",)
 
 
 class V1GroupSubject(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

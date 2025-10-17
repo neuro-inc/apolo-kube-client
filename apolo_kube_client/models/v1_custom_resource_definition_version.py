@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
@@ -10,28 +10,38 @@ __all__ = ("V1CustomResourceDefinitionVersion",)
 
 class V1CustomResourceDefinitionVersion(BaseModel):
     additional_printer_columns: list[V1CustomResourceColumnDefinition] = Field(
-        default_factory=lambda: [], alias="additionalPrinterColumns"
+        default=[],
+        serialization_alias="additionalPrinterColumns",
+        validation_alias=AliasChoices(
+            "additional_printer_columns", "additionalPrinterColumns"
+        ),
     )
 
-    deprecated: bool | None = Field(default_factory=lambda: None)
+    deprecated: bool | None = Field(default=None)
 
     deprecation_warning: str | None = Field(
-        default_factory=lambda: None, alias="deprecationWarning"
+        default=None,
+        serialization_alias="deprecationWarning",
+        validation_alias=AliasChoices("deprecation_warning", "deprecationWarning"),
     )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
     schema_: V1CustomResourceValidation = Field(
-        default_factory=lambda: V1CustomResourceValidation(), alias="schema"
+        default_factory=lambda: V1CustomResourceValidation(),
+        serialization_alias="schema",
+        validation_alias=AliasChoices("schema_", "schema"),
     )
 
     selectable_fields: list[V1SelectableField] = Field(
-        default_factory=lambda: [], alias="selectableFields"
+        default=[],
+        serialization_alias="selectableFields",
+        validation_alias=AliasChoices("selectable_fields", "selectableFields"),
     )
 
-    served: bool | None = Field(default_factory=lambda: None)
+    served: bool | None = Field(default=None)
 
-    storage: bool | None = Field(default_factory=lambda: None)
+    storage: bool | None = Field(default=None)
 
     subresources: V1CustomResourceSubresources = Field(
         default_factory=lambda: V1CustomResourceSubresources()

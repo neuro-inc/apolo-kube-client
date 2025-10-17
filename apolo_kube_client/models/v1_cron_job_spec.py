@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_job_template_spec import V1JobTemplateSpec
 
 __all__ = ("V1CronJobSpec",)
@@ -7,27 +7,47 @@ __all__ = ("V1CronJobSpec",)
 
 class V1CronJobSpec(BaseModel):
     concurrency_policy: str | None = Field(
-        default_factory=lambda: None, alias="concurrencyPolicy"
+        default=None,
+        serialization_alias="concurrencyPolicy",
+        validation_alias=AliasChoices("concurrency_policy", "concurrencyPolicy"),
     )
 
     failed_jobs_history_limit: int | None = Field(
-        default_factory=lambda: None, alias="failedJobsHistoryLimit"
+        default=None,
+        serialization_alias="failedJobsHistoryLimit",
+        validation_alias=AliasChoices(
+            "failed_jobs_history_limit", "failedJobsHistoryLimit"
+        ),
     )
 
     job_template: V1JobTemplateSpec = Field(
-        default_factory=lambda: V1JobTemplateSpec(), alias="jobTemplate"
+        default_factory=lambda: V1JobTemplateSpec(),
+        serialization_alias="jobTemplate",
+        validation_alias=AliasChoices("job_template", "jobTemplate"),
     )
 
-    schedule: str | None = Field(default_factory=lambda: None)
+    schedule: str | None = Field(default=None)
 
     starting_deadline_seconds: int | None = Field(
-        default_factory=lambda: None, alias="startingDeadlineSeconds"
+        default=None,
+        serialization_alias="startingDeadlineSeconds",
+        validation_alias=AliasChoices(
+            "starting_deadline_seconds", "startingDeadlineSeconds"
+        ),
     )
 
     successful_jobs_history_limit: int | None = Field(
-        default_factory=lambda: None, alias="successfulJobsHistoryLimit"
+        default=None,
+        serialization_alias="successfulJobsHistoryLimit",
+        validation_alias=AliasChoices(
+            "successful_jobs_history_limit", "successfulJobsHistoryLimit"
+        ),
     )
 
-    suspend: bool | None = Field(default_factory=lambda: None)
+    suspend: bool | None = Field(default=None)
 
-    time_zone: str | None = Field(default_factory=lambda: None, alias="timeZone")
+    time_zone: str | None = Field(
+        default=None,
+        serialization_alias="timeZone",
+        validation_alias=AliasChoices("time_zone", "timeZone"),
+    )

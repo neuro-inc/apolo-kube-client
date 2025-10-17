@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1CertificateSigningRequestSpec",)
@@ -7,19 +7,25 @@ __all__ = ("V1CertificateSigningRequestSpec",)
 
 class V1CertificateSigningRequestSpec(BaseModel):
     expiration_seconds: int | None = Field(
-        default_factory=lambda: None, alias="expirationSeconds"
+        default=None,
+        serialization_alias="expirationSeconds",
+        validation_alias=AliasChoices("expiration_seconds", "expirationSeconds"),
     )
 
-    extra: dict[str, list[str]] = Field(default_factory=lambda: {})
+    extra: dict[str, list[str]] = Field(default={})
 
-    groups: list[str] = Field(default_factory=lambda: [])
+    groups: list[str] = Field(default=[])
 
-    request: str | None = Field(default_factory=lambda: None)
+    request: str | None = Field(default=None)
 
-    signer_name: str | None = Field(default_factory=lambda: None, alias="signerName")
+    signer_name: str | None = Field(
+        default=None,
+        serialization_alias="signerName",
+        validation_alias=AliasChoices("signer_name", "signerName"),
+    )
 
-    uid: str | None = Field(default_factory=lambda: None)
+    uid: str | None = Field(default=None)
 
-    usages: list[str] = Field(default_factory=lambda: [])
+    usages: list[str] = Field(default=[])
 
-    username: str | None = Field(default_factory=lambda: None)
+    username: str | None = Field(default=None)

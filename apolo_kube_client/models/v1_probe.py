@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_exec_action import V1ExecAction
 from .v1_grpc_action import V1GRPCAction
 from .v1_http_get_action import V1HTTPGetAction
@@ -9,38 +9,60 @@ __all__ = ("V1Probe",)
 
 
 class V1Probe(BaseModel):
-    exec_: V1ExecAction = Field(default_factory=lambda: V1ExecAction(), alias="exec")
+    exec_: V1ExecAction = Field(
+        default_factory=lambda: V1ExecAction(),
+        serialization_alias="exec",
+        validation_alias=AliasChoices("exec_", "exec"),
+    )
 
     failure_threshold: int | None = Field(
-        default_factory=lambda: None, alias="failureThreshold"
+        default=None,
+        serialization_alias="failureThreshold",
+        validation_alias=AliasChoices("failure_threshold", "failureThreshold"),
     )
 
     grpc: V1GRPCAction = Field(default_factory=lambda: V1GRPCAction())
 
     http_get: V1HTTPGetAction = Field(
-        default_factory=lambda: V1HTTPGetAction(), alias="httpGet"
+        default_factory=lambda: V1HTTPGetAction(),
+        serialization_alias="httpGet",
+        validation_alias=AliasChoices("http_get", "httpGet"),
     )
 
     initial_delay_seconds: int | None = Field(
-        default_factory=lambda: None, alias="initialDelaySeconds"
+        default=None,
+        serialization_alias="initialDelaySeconds",
+        validation_alias=AliasChoices("initial_delay_seconds", "initialDelaySeconds"),
     )
 
     period_seconds: int | None = Field(
-        default_factory=lambda: None, alias="periodSeconds"
+        default=None,
+        serialization_alias="periodSeconds",
+        validation_alias=AliasChoices("period_seconds", "periodSeconds"),
     )
 
     success_threshold: int | None = Field(
-        default_factory=lambda: None, alias="successThreshold"
+        default=None,
+        serialization_alias="successThreshold",
+        validation_alias=AliasChoices("success_threshold", "successThreshold"),
     )
 
     tcp_socket: V1TCPSocketAction = Field(
-        default_factory=lambda: V1TCPSocketAction(), alias="tcpSocket"
+        default_factory=lambda: V1TCPSocketAction(),
+        serialization_alias="tcpSocket",
+        validation_alias=AliasChoices("tcp_socket", "tcpSocket"),
     )
 
     termination_grace_period_seconds: int | None = Field(
-        default_factory=lambda: None, alias="terminationGracePeriodSeconds"
+        default=None,
+        serialization_alias="terminationGracePeriodSeconds",
+        validation_alias=AliasChoices(
+            "termination_grace_period_seconds", "terminationGracePeriodSeconds"
+        ),
     )
 
     timeout_seconds: int | None = Field(
-        default_factory=lambda: None, alias="timeoutSeconds"
+        default=None,
+        serialization_alias="timeoutSeconds",
+        validation_alias=AliasChoices("timeout_seconds", "timeoutSeconds"),
     )

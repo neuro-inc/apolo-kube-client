@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_device_sub_request import V1DeviceSubRequest
 from .v1_exact_device_request import V1ExactDeviceRequest
 
@@ -12,7 +12,9 @@ class V1DeviceRequest(BaseModel):
     )
 
     first_available: list[V1DeviceSubRequest] = Field(
-        default_factory=lambda: [], alias="firstAvailable"
+        default=[],
+        serialization_alias="firstAvailable",
+        validation_alias=AliasChoices("first_available", "firstAvailable"),
     )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

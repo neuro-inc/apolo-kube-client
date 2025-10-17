@@ -6,7 +6,7 @@ __all__ = ("V1IngressRule",)
 
 
 class V1IngressRule(BaseModel):
-    host: str | None = Field(default_factory=lambda: None)
+    host: str | None = Field(default=None)
 
     http: V1HTTPIngressRuleValue = Field(
         default_factory=lambda: V1HTTPIngressRuleValue()

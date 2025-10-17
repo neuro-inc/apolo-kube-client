@@ -10,4 +10,4 @@ class V1DeviceClaimConfiguration(BaseModel):
         default_factory=lambda: V1OpaqueDeviceConfiguration()
     )
 
-    requests: list[str] = Field(default_factory=lambda: [])
+    requests: list[str] = Field(default=[])

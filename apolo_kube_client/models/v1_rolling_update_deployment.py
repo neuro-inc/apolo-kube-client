@@ -1,13 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1RollingUpdateDeployment",)
 
 
 class V1RollingUpdateDeployment(BaseModel):
-    max_surge: JsonType = Field(default_factory=lambda: {}, alias="maxSurge")
+    max_surge: JsonType = Field(
+        default={},
+        serialization_alias="maxSurge",
+        validation_alias=AliasChoices("max_surge", "maxSurge"),
+    )
 
     max_unavailable: JsonType = Field(
-        default_factory=lambda: {}, alias="maxUnavailable"
+        default={},
+        serialization_alias="maxUnavailable",
+        validation_alias=AliasChoices("max_unavailable", "maxUnavailable"),
     )

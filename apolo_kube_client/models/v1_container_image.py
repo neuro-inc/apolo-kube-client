@@ -1,11 +1,15 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1ContainerImage",)
 
 
 class V1ContainerImage(BaseModel):
-    names: list[str] = Field(default_factory=lambda: [])
+    names: list[str] = Field(default=[])
 
-    size_bytes: int | None = Field(default_factory=lambda: None, alias="sizeBytes")
+    size_bytes: int | None = Field(
+        default=None,
+        serialization_alias="sizeBytes",
+        validation_alias=AliasChoices("size_bytes", "sizeBytes"),
+    )

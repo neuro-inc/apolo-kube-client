@@ -6,6 +6,6 @@ __all__ = ("V1ExternalDocumentation",)
 
 
 class V1ExternalDocumentation(BaseModel):
-    description: str | None = Field(default_factory=lambda: None)
+    description: str | None = Field(default=None)
 
-    url: str | None = Field(default_factory=lambda: None)
+    url: str | None = Field(default=None)

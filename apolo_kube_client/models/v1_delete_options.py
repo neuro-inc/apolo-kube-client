@@ -1,32 +1,50 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_preconditions import V1Preconditions
 
 __all__ = ("V1DeleteOptions",)
 
 
 class V1DeleteOptions(BaseModel):
-    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
+    api_version: str | None = Field(
+        default=None,
+        serialization_alias="apiVersion",
+        validation_alias=AliasChoices("api_version", "apiVersion"),
+    )
 
-    dry_run: list[str] = Field(default_factory=lambda: [], alias="dryRun")
+    dry_run: list[str] = Field(
+        default=[],
+        serialization_alias="dryRun",
+        validation_alias=AliasChoices("dry_run", "dryRun"),
+    )
 
     grace_period_seconds: int | None = Field(
-        default_factory=lambda: None, alias="gracePeriodSeconds"
+        default=None,
+        serialization_alias="gracePeriodSeconds",
+        validation_alias=AliasChoices("grace_period_seconds", "gracePeriodSeconds"),
     )
 
     ignore_store_read_error_with_cluster_breaking_potential: bool | None = Field(
-        default_factory=lambda: None,
-        alias="ignoreStoreReadErrorWithClusterBreakingPotential",
+        default=None,
+        serialization_alias="ignoreStoreReadErrorWithClusterBreakingPotential",
+        validation_alias=AliasChoices(
+            "ignore_store_read_error_with_cluster_breaking_potential",
+            "ignoreStoreReadErrorWithClusterBreakingPotential",
+        ),
     )
 
-    kind: str | None = Field(default_factory=lambda: None)
+    kind: str | None = Field(default=None)
 
     orphan_dependents: bool | None = Field(
-        default_factory=lambda: None, alias="orphanDependents"
+        default=None,
+        serialization_alias="orphanDependents",
+        validation_alias=AliasChoices("orphan_dependents", "orphanDependents"),
     )
 
     preconditions: V1Preconditions = Field(default_factory=lambda: V1Preconditions())
 
     propagation_policy: str | None = Field(
-        default_factory=lambda: None, alias="propagationPolicy"
+        default=None,
+        serialization_alias="propagationPolicy",
+        validation_alias=AliasChoices("propagation_policy", "propagationPolicy"),
     )

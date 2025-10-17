@@ -1,15 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("RbacV1Subject",)
 
 
 class RbacV1Subject(BaseModel):
-    api_group: str | None = Field(default_factory=lambda: None, alias="apiGroup")
+    api_group: str | None = Field(
+        default=None,
+        serialization_alias="apiGroup",
+        validation_alias=AliasChoices("api_group", "apiGroup"),
+    )
 
-    kind: str | None = Field(default_factory=lambda: None)
+    kind: str | None = Field(default=None)
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    namespace: str | None = Field(default_factory=lambda: None)
+    namespace: str | None = Field(default=None)

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_condition import V1Condition
 from datetime import datetime
 
@@ -7,28 +7,40 @@ __all__ = ("V1PodDisruptionBudgetStatus",)
 
 
 class V1PodDisruptionBudgetStatus(BaseModel):
-    conditions: list[V1Condition] = Field(default_factory=lambda: [])
+    conditions: list[V1Condition] = Field(default=[])
 
     current_healthy: int | None = Field(
-        default_factory=lambda: None, alias="currentHealthy"
+        default=None,
+        serialization_alias="currentHealthy",
+        validation_alias=AliasChoices("current_healthy", "currentHealthy"),
     )
 
     desired_healthy: int | None = Field(
-        default_factory=lambda: None, alias="desiredHealthy"
+        default=None,
+        serialization_alias="desiredHealthy",
+        validation_alias=AliasChoices("desired_healthy", "desiredHealthy"),
     )
 
     disrupted_pods: dict[str, datetime] = Field(
-        default_factory=lambda: {}, alias="disruptedPods"
+        default={},
+        serialization_alias="disruptedPods",
+        validation_alias=AliasChoices("disrupted_pods", "disruptedPods"),
     )
 
     disruptions_allowed: int | None = Field(
-        default_factory=lambda: None, alias="disruptionsAllowed"
+        default=None,
+        serialization_alias="disruptionsAllowed",
+        validation_alias=AliasChoices("disruptions_allowed", "disruptionsAllowed"),
     )
 
     expected_pods: int | None = Field(
-        default_factory=lambda: None, alias="expectedPods"
+        default=None,
+        serialization_alias="expectedPods",
+        validation_alias=AliasChoices("expected_pods", "expectedPods"),
     )
 
     observed_generation: int | None = Field(
-        default_factory=lambda: None, alias="observedGeneration"
+        default=None,
+        serialization_alias="observedGeneration",
+        validation_alias=AliasChoices("observed_generation", "observedGeneration"),
     )

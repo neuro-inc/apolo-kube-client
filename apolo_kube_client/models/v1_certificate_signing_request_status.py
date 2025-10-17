@@ -8,8 +8,6 @@ __all__ = ("V1CertificateSigningRequestStatus",)
 
 
 class V1CertificateSigningRequestStatus(BaseModel):
-    certificate: str | None = Field(default_factory=lambda: None)
+    certificate: str | None = Field(default=None)
 
-    conditions: list[V1CertificateSigningRequestCondition] = Field(
-        default_factory=lambda: []
-    )
+    conditions: list[V1CertificateSigningRequestCondition] = Field(default=[])

@@ -10,4 +10,4 @@ class V1LimitResponse(BaseModel):
         default_factory=lambda: V1QueuingConfiguration()
     )
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

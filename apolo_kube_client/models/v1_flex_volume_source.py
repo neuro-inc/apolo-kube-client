@@ -1,19 +1,29 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 
 __all__ = ("V1FlexVolumeSource",)
 
 
 class V1FlexVolumeSource(BaseModel):
-    driver: str | None = Field(default_factory=lambda: None)
+    driver: str | None = Field(default=None)
 
-    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
+    fs_type: str | None = Field(
+        default=None,
+        serialization_alias="fsType",
+        validation_alias=AliasChoices("fs_type", "fsType"),
+    )
 
-    options: dict[str, str] = Field(default_factory=lambda: {})
+    options: dict[str, str] = Field(default={})
 
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )
 
     secret_ref: V1LocalObjectReference = Field(
-        default_factory=lambda: V1LocalObjectReference(), alias="secretRef"
+        default_factory=lambda: V1LocalObjectReference(),
+        serialization_alias="secretRef",
+        validation_alias=AliasChoices("secret_ref", "secretRef"),
     )

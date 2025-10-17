@@ -6,6 +6,6 @@ __all__ = ("V1TCPSocketAction",)
 
 
 class V1TCPSocketAction(BaseModel):
-    host: str | None = Field(default_factory=lambda: None)
+    host: str | None = Field(default=None)
 
-    port: JsonType = Field(default_factory=lambda: {})
+    port: JsonType = Field(default={})

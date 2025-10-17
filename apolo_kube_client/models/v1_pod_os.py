@@ -6,4 +6,4 @@ __all__ = ("V1PodOS",)
 
 
 class V1PodOS(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

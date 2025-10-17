@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_allocation_result import V1beta2DeviceAllocationResult
 from datetime import datetime
@@ -9,7 +9,9 @@ __all__ = ("V1beta2AllocationResult",)
 
 class V1beta2AllocationResult(BaseModel):
     allocation_timestamp: datetime | None = Field(
-        default_factory=lambda: None, alias="allocationTimestamp"
+        default=None,
+        serialization_alias="allocationTimestamp",
+        validation_alias=AliasChoices("allocation_timestamp", "allocationTimestamp"),
     )
 
     devices: V1beta2DeviceAllocationResult = Field(
@@ -17,5 +19,7 @@ class V1beta2AllocationResult(BaseModel):
     )
 
     node_selector: V1NodeSelector = Field(
-        default_factory=lambda: V1NodeSelector(), alias="nodeSelector"
+        default_factory=lambda: V1NodeSelector(),
+        serialization_alias="nodeSelector",
+        validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )

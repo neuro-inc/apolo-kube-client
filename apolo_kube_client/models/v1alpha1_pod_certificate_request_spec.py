@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1alpha1PodCertificateRequestSpec",)
@@ -7,31 +7,61 @@ __all__ = ("V1alpha1PodCertificateRequestSpec",)
 
 class V1alpha1PodCertificateRequestSpec(BaseModel):
     max_expiration_seconds: int | None = Field(
-        default_factory=lambda: None, alias="maxExpirationSeconds"
+        default=None,
+        serialization_alias="maxExpirationSeconds",
+        validation_alias=AliasChoices("max_expiration_seconds", "maxExpirationSeconds"),
     )
 
-    node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
+    node_name: str | None = Field(
+        default=None,
+        serialization_alias="nodeName",
+        validation_alias=AliasChoices("node_name", "nodeName"),
+    )
 
-    node_uid: str | None = Field(default_factory=lambda: None, alias="nodeUID")
+    node_uid: str | None = Field(
+        default=None,
+        serialization_alias="nodeUID",
+        validation_alias=AliasChoices("node_uid", "nodeUID"),
+    )
 
     pkix_public_key: str | None = Field(
-        default_factory=lambda: None, alias="pkixPublicKey"
+        default=None,
+        serialization_alias="pkixPublicKey",
+        validation_alias=AliasChoices("pkix_public_key", "pkixPublicKey"),
     )
 
-    pod_name: str | None = Field(default_factory=lambda: None, alias="podName")
+    pod_name: str | None = Field(
+        default=None,
+        serialization_alias="podName",
+        validation_alias=AliasChoices("pod_name", "podName"),
+    )
 
-    pod_uid: str | None = Field(default_factory=lambda: None, alias="podUID")
+    pod_uid: str | None = Field(
+        default=None,
+        serialization_alias="podUID",
+        validation_alias=AliasChoices("pod_uid", "podUID"),
+    )
 
     proof_of_possession: str | None = Field(
-        default_factory=lambda: None, alias="proofOfPossession"
+        default=None,
+        serialization_alias="proofOfPossession",
+        validation_alias=AliasChoices("proof_of_possession", "proofOfPossession"),
     )
 
     service_account_name: str | None = Field(
-        default_factory=lambda: None, alias="serviceAccountName"
+        default=None,
+        serialization_alias="serviceAccountName",
+        validation_alias=AliasChoices("service_account_name", "serviceAccountName"),
     )
 
     service_account_uid: str | None = Field(
-        default_factory=lambda: None, alias="serviceAccountUID"
+        default=None,
+        serialization_alias="serviceAccountUID",
+        validation_alias=AliasChoices("service_account_uid", "serviceAccountUID"),
     )
 
-    signer_name: str | None = Field(default_factory=lambda: None, alias="signerName")
+    signer_name: str | None = Field(
+        default=None,
+        serialization_alias="signerName",
+        validation_alias=AliasChoices("signer_name", "signerName"),
+    )

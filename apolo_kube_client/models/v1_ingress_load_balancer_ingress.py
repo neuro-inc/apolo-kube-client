@@ -6,8 +6,8 @@ __all__ = ("V1IngressLoadBalancerIngress",)
 
 
 class V1IngressLoadBalancerIngress(BaseModel):
-    hostname: str | None = Field(default_factory=lambda: None)
+    hostname: str | None = Field(default=None)
 
-    ip: str | None = Field(default_factory=lambda: None)
+    ip: str | None = Field(default=None)
 
-    ports: list[V1IngressPortStatus] = Field(default_factory=lambda: [])
+    ports: list[V1IngressPortStatus] = Field(default=[])

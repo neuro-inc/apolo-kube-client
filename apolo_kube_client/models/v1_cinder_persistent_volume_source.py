@@ -1,17 +1,31 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
 __all__ = ("V1CinderPersistentVolumeSource",)
 
 
 class V1CinderPersistentVolumeSource(BaseModel):
-    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
-
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
-
-    secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="secretRef"
+    fs_type: str | None = Field(
+        default=None,
+        serialization_alias="fsType",
+        validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    volume_id: str | None = Field(default_factory=lambda: None, alias="volumeID")
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )
+
+    secret_ref: V1SecretReference = Field(
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="secretRef",
+        validation_alias=AliasChoices("secret_ref", "secretRef"),
+    )
+
+    volume_id: str | None = Field(
+        default=None,
+        serialization_alias="volumeID",
+        validation_alias=AliasChoices("volume_id", "volumeID"),
+    )

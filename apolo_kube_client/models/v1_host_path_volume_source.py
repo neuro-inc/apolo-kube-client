@@ -6,6 +6,6 @@ __all__ = ("V1HostPathVolumeSource",)
 
 
 class V1HostPathVolumeSource(BaseModel):
-    path: str | None = Field(default_factory=lambda: None)
+    path: str | None = Field(default=None)
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

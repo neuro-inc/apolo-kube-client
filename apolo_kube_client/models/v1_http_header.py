@@ -6,6 +6,6 @@ __all__ = ("V1HTTPHeader",)
 
 
 class V1HTTPHeader(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    value: str | None = Field(default_factory=lambda: None)
+    value: str | None = Field(default=None)

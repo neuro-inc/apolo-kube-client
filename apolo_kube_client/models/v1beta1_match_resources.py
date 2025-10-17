@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1beta1_named_rule_with_operations import V1beta1NamedRuleWithOperations
 
@@ -8,19 +8,31 @@ __all__ = ("V1beta1MatchResources",)
 
 class V1beta1MatchResources(BaseModel):
     exclude_resource_rules: list[V1beta1NamedRuleWithOperations] = Field(
-        default_factory=lambda: [], alias="excludeResourceRules"
+        default=[],
+        serialization_alias="excludeResourceRules",
+        validation_alias=AliasChoices("exclude_resource_rules", "excludeResourceRules"),
     )
 
-    match_policy: str | None = Field(default_factory=lambda: None, alias="matchPolicy")
+    match_policy: str | None = Field(
+        default=None,
+        serialization_alias="matchPolicy",
+        validation_alias=AliasChoices("match_policy", "matchPolicy"),
+    )
 
     namespace_selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="namespaceSelector"
+        default_factory=lambda: V1LabelSelector(),
+        serialization_alias="namespaceSelector",
+        validation_alias=AliasChoices("namespace_selector", "namespaceSelector"),
     )
 
     object_selector: V1LabelSelector = Field(
-        default_factory=lambda: V1LabelSelector(), alias="objectSelector"
+        default_factory=lambda: V1LabelSelector(),
+        serialization_alias="objectSelector",
+        validation_alias=AliasChoices("object_selector", "objectSelector"),
     )
 
     resource_rules: list[V1beta1NamedRuleWithOperations] = Field(
-        default_factory=lambda: [], alias="resourceRules"
+        default=[],
+        serialization_alias="resourceRules",
+        validation_alias=AliasChoices("resource_rules", "resourceRules"),
     )

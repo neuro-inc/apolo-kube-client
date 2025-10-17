@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
 
@@ -7,18 +7,24 @@ __all__ = ("V1SubjectAccessReviewSpec",)
 
 
 class V1SubjectAccessReviewSpec(BaseModel):
-    extra: dict[str, list[str]] = Field(default_factory=lambda: {})
+    extra: dict[str, list[str]] = Field(default={})
 
-    groups: list[str] = Field(default_factory=lambda: [])
+    groups: list[str] = Field(default=[])
 
     non_resource_attributes: V1NonResourceAttributes = Field(
-        default_factory=lambda: V1NonResourceAttributes(), alias="nonResourceAttributes"
+        default_factory=lambda: V1NonResourceAttributes(),
+        serialization_alias="nonResourceAttributes",
+        validation_alias=AliasChoices(
+            "non_resource_attributes", "nonResourceAttributes"
+        ),
     )
 
     resource_attributes: V1ResourceAttributes = Field(
-        default_factory=lambda: V1ResourceAttributes(), alias="resourceAttributes"
+        default_factory=lambda: V1ResourceAttributes(),
+        serialization_alias="resourceAttributes",
+        validation_alias=AliasChoices("resource_attributes", "resourceAttributes"),
     )
 
-    uid: str | None = Field(default_factory=lambda: None)
+    uid: str | None = Field(default=None)
 
-    user: str | None = Field(default_factory=lambda: None)
+    user: str | None = Field(default=None)

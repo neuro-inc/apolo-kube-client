@@ -6,6 +6,6 @@ __all__ = ("V1Capabilities",)
 
 
 class V1Capabilities(BaseModel):
-    add: list[str] = Field(default_factory=lambda: [])
+    add: list[str] = Field(default=[])
 
-    drop: list[str] = Field(default_factory=lambda: [])
+    drop: list[str] = Field(default=[])

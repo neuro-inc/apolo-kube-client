@@ -6,6 +6,6 @@ __all__ = ("V1ResourceQuotaStatus",)
 
 
 class V1ResourceQuotaStatus(BaseModel):
-    hard: dict[str, str] = Field(default_factory=lambda: {})
+    hard: dict[str, str] = Field(default={})
 
-    used: dict[str, str] = Field(default_factory=lambda: {})
+    used: dict[str, str] = Field(default={})

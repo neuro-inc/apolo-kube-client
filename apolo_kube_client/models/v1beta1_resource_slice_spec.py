@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_counter_set import V1beta1CounterSet
 from .v1beta1_device import V1beta1Device
@@ -9,24 +9,40 @@ __all__ = ("V1beta1ResourceSliceSpec",)
 
 
 class V1beta1ResourceSliceSpec(BaseModel):
-    all_nodes: bool | None = Field(default_factory=lambda: None, alias="allNodes")
+    all_nodes: bool | None = Field(
+        default=None,
+        serialization_alias="allNodes",
+        validation_alias=AliasChoices("all_nodes", "allNodes"),
+    )
 
-    devices: list[V1beta1Device] = Field(default_factory=lambda: [])
+    devices: list[V1beta1Device] = Field(default=[])
 
-    driver: str | None = Field(default_factory=lambda: None)
+    driver: str | None = Field(default=None)
 
-    node_name: str | None = Field(default_factory=lambda: None, alias="nodeName")
+    node_name: str | None = Field(
+        default=None,
+        serialization_alias="nodeName",
+        validation_alias=AliasChoices("node_name", "nodeName"),
+    )
 
     node_selector: V1NodeSelector = Field(
-        default_factory=lambda: V1NodeSelector(), alias="nodeSelector"
+        default_factory=lambda: V1NodeSelector(),
+        serialization_alias="nodeSelector",
+        validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )
 
     per_device_node_selection: bool | None = Field(
-        default_factory=lambda: None, alias="perDeviceNodeSelection"
+        default=None,
+        serialization_alias="perDeviceNodeSelection",
+        validation_alias=AliasChoices(
+            "per_device_node_selection", "perDeviceNodeSelection"
+        ),
     )
 
     pool: V1beta1ResourcePool = Field(default_factory=lambda: V1beta1ResourcePool())
 
     shared_counters: list[V1beta1CounterSet] = Field(
-        default_factory=lambda: [], alias="sharedCounters"
+        default=[],
+        serialization_alias="sharedCounters",
+        validation_alias=AliasChoices("shared_counters", "sharedCounters"),
     )

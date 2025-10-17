@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_config_source import V1NodeConfigSource
 
 __all__ = ("V1NodeConfigStatus",)
@@ -10,8 +10,10 @@ class V1NodeConfigStatus(BaseModel):
 
     assigned: V1NodeConfigSource = Field(default_factory=lambda: V1NodeConfigSource())
 
-    error: str | None = Field(default_factory=lambda: None)
+    error: str | None = Field(default=None)
 
     last_known_good: V1NodeConfigSource = Field(
-        default_factory=lambda: V1NodeConfigSource(), alias="lastKnownGood"
+        default_factory=lambda: V1NodeConfigSource(),
+        serialization_alias="lastKnownGood",
+        validation_alias=AliasChoices("last_known_good", "lastKnownGood"),
     )

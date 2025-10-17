@@ -1,33 +1,49 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1beta1_device_toleration import V1beta1DeviceToleration
 
 __all__ = ("V1beta1DeviceRequestAllocationResult",)
 
 
 class V1beta1DeviceRequestAllocationResult(BaseModel):
-    admin_access: bool | None = Field(default_factory=lambda: None, alias="adminAccess")
+    admin_access: bool | None = Field(
+        default=None,
+        serialization_alias="adminAccess",
+        validation_alias=AliasChoices("admin_access", "adminAccess"),
+    )
 
     binding_conditions: list[str] = Field(
-        default_factory=lambda: [], alias="bindingConditions"
+        default=[],
+        serialization_alias="bindingConditions",
+        validation_alias=AliasChoices("binding_conditions", "bindingConditions"),
     )
 
     binding_failure_conditions: list[str] = Field(
-        default_factory=lambda: [], alias="bindingFailureConditions"
+        default=[],
+        serialization_alias="bindingFailureConditions",
+        validation_alias=AliasChoices(
+            "binding_failure_conditions", "bindingFailureConditions"
+        ),
     )
 
     consumed_capacity: dict[str, str] = Field(
-        default_factory=lambda: {}, alias="consumedCapacity"
+        default={},
+        serialization_alias="consumedCapacity",
+        validation_alias=AliasChoices("consumed_capacity", "consumedCapacity"),
     )
 
-    device: str | None = Field(default_factory=lambda: None)
+    device: str | None = Field(default=None)
 
-    driver: str | None = Field(default_factory=lambda: None)
+    driver: str | None = Field(default=None)
 
-    pool: str | None = Field(default_factory=lambda: None)
+    pool: str | None = Field(default=None)
 
-    request: str | None = Field(default_factory=lambda: None)
+    request: str | None = Field(default=None)
 
-    share_id: str | None = Field(default_factory=lambda: None, alias="shareID")
+    share_id: str | None = Field(
+        default=None,
+        serialization_alias="shareID",
+        validation_alias=AliasChoices("share_id", "shareID"),
+    )
 
-    tolerations: list[V1beta1DeviceToleration] = Field(default_factory=lambda: [])
+    tolerations: list[V1beta1DeviceToleration] = Field(default=[])

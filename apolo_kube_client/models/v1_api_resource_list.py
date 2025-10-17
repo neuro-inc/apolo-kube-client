@@ -1,17 +1,23 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_api_resource import V1APIResource
 
 __all__ = ("V1APIResourceList",)
 
 
 class V1APIResourceList(BaseModel):
-    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
-
-    group_version: str | None = Field(
-        default_factory=lambda: None, alias="groupVersion"
+    api_version: str | None = Field(
+        default=None,
+        serialization_alias="apiVersion",
+        validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default_factory=lambda: None)
+    group_version: str | None = Field(
+        default=None,
+        serialization_alias="groupVersion",
+        validation_alias=AliasChoices("group_version", "groupVersion"),
+    )
 
-    resources: list[V1APIResource] = Field(default_factory=lambda: [])
+    kind: str | None = Field(default=None)
+
+    resources: list[V1APIResource] = Field(default=[])

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("V1PersistentVolumeStatus",)
@@ -7,11 +7,15 @@ __all__ = ("V1PersistentVolumeStatus",)
 
 class V1PersistentVolumeStatus(BaseModel):
     last_phase_transition_time: datetime | None = Field(
-        default_factory=lambda: None, alias="lastPhaseTransitionTime"
+        default=None,
+        serialization_alias="lastPhaseTransitionTime",
+        validation_alias=AliasChoices(
+            "last_phase_transition_time", "lastPhaseTransitionTime"
+        ),
     )
 
-    message: str | None = Field(default_factory=lambda: None)
+    message: str | None = Field(default=None)
 
-    phase: str | None = Field(default_factory=lambda: None)
+    phase: str | None = Field(default=None)
 
-    reason: str | None = Field(default_factory=lambda: None)
+    reason: str | None = Field(default=None)

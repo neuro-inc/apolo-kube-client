@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1ContainerResizePolicy",)
@@ -7,9 +7,13 @@ __all__ = ("V1ContainerResizePolicy",)
 
 class V1ContainerResizePolicy(BaseModel):
     resource_name: str | None = Field(
-        default_factory=lambda: None, alias="resourceName"
+        default=None,
+        serialization_alias="resourceName",
+        validation_alias=AliasChoices("resource_name", "resourceName"),
     )
 
     restart_policy: str | None = Field(
-        default_factory=lambda: None, alias="restartPolicy"
+        default=None,
+        serialization_alias="restartPolicy",
+        validation_alias=AliasChoices("restart_policy", "restartPolicy"),
     )

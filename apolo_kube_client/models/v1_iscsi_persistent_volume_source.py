@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
 __all__ = ("V1ISCSIPersistentVolumeSource",)
@@ -7,35 +7,55 @@ __all__ = ("V1ISCSIPersistentVolumeSource",)
 
 class V1ISCSIPersistentVolumeSource(BaseModel):
     chap_auth_discovery: bool | None = Field(
-        default_factory=lambda: None, alias="chapAuthDiscovery"
+        default=None,
+        serialization_alias="chapAuthDiscovery",
+        validation_alias=AliasChoices("chap_auth_discovery", "chapAuthDiscovery"),
     )
 
     chap_auth_session: bool | None = Field(
-        default_factory=lambda: None, alias="chapAuthSession"
+        default=None,
+        serialization_alias="chapAuthSession",
+        validation_alias=AliasChoices("chap_auth_session", "chapAuthSession"),
     )
 
-    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
+    fs_type: str | None = Field(
+        default=None,
+        serialization_alias="fsType",
+        validation_alias=AliasChoices("fs_type", "fsType"),
+    )
 
     initiator_name: str | None = Field(
-        default_factory=lambda: None, alias="initiatorName"
+        default=None,
+        serialization_alias="initiatorName",
+        validation_alias=AliasChoices("initiator_name", "initiatorName"),
     )
 
-    iqn: str | None = Field(default_factory=lambda: None)
+    iqn: str | None = Field(default=None)
 
     iscsi_interface: str | None = Field(
-        default_factory=lambda: None, alias="iscsiInterface"
+        default=None,
+        serialization_alias="iscsiInterface",
+        validation_alias=AliasChoices("iscsi_interface", "iscsiInterface"),
     )
 
-    lun: int | None = Field(default_factory=lambda: None)
+    lun: int | None = Field(default=None)
 
-    portals: list[str] = Field(default_factory=lambda: [])
+    portals: list[str] = Field(default=[])
 
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )
 
     secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="secretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="secretRef",
+        validation_alias=AliasChoices("secret_ref", "secretRef"),
     )
 
     target_portal: str | None = Field(
-        default_factory=lambda: None, alias="targetPortal"
+        default=None,
+        serialization_alias="targetPortal",
+        validation_alias=AliasChoices("target_portal", "targetPortal"),
     )

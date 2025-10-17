@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec
@@ -9,19 +9,27 @@ __all__ = ("V1DeploymentSpec",)
 
 class V1DeploymentSpec(BaseModel):
     min_ready_seconds: int | None = Field(
-        default_factory=lambda: None, alias="minReadySeconds"
+        default=None,
+        serialization_alias="minReadySeconds",
+        validation_alias=AliasChoices("min_ready_seconds", "minReadySeconds"),
     )
 
-    paused: bool | None = Field(default_factory=lambda: None)
+    paused: bool | None = Field(default=None)
 
     progress_deadline_seconds: int | None = Field(
-        default_factory=lambda: None, alias="progressDeadlineSeconds"
+        default=None,
+        serialization_alias="progressDeadlineSeconds",
+        validation_alias=AliasChoices(
+            "progress_deadline_seconds", "progressDeadlineSeconds"
+        ),
     )
 
-    replicas: int | None = Field(default_factory=lambda: None)
+    replicas: int | None = Field(default=None)
 
     revision_history_limit: int | None = Field(
-        default_factory=lambda: None, alias="revisionHistoryLimit"
+        default=None,
+        serialization_alias="revisionHistoryLimit",
+        validation_alias=AliasChoices("revision_history_limit", "revisionHistoryLimit"),
     )
 
     selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())

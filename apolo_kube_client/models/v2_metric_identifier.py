@@ -6,6 +6,6 @@ __all__ = ("V2MetricIdentifier",)
 
 
 class V2MetricIdentifier(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
     selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())

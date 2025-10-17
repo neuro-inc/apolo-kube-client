@@ -6,9 +6,9 @@ from pathlib import Path
 from kubernetes.client import models
 from pydantic import BaseModel
 
-MOD = """
+MOD = """\
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 {imports}
 
 __all__ = ("{clsname}",)
@@ -34,49 +34,53 @@ class ParseTypeRes:
     default: str
 
 
+REQUIRED = {"V1ObjectMeta": {"name"}}
+REQUIRED_ALL = {"metadata"}
+
+
 def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
     descr = descr.strip()
     if descr == self_name:
-        return ParseTypeRes(descr, frozenset(), f"{descr}()")
+        return ParseTypeRes(descr, frozenset(), f"default_factory=lambda: {descr}()")
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
-            "{}",
+            "default={}",
         )
     elif match := DICT_RE.match(descr):
         key = parse_type(self_name, match.group("key"), nested=True)
         val = parse_type(self_name, match.group("val"), nested=True)
         return ParseTypeRes(
-            f"dict[{key.type_}, {val.type_}]", key.imports | val.imports, "{}"
+            f"dict[{key.type_}, {val.type_}]", key.imports | val.imports, "default={}"
         )
     elif match := LIST_RE.match(descr):
         item = parse_type(self_name, match.group("item"), nested=True)
-        return ParseTypeRes(f"list[{item.type_}]", item.imports, "[]")
+        return ParseTypeRes(f"list[{item.type_}]", item.imports, "default=[]")
     else:
         suffix = " | None" if not nested else ""
         match descr:
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "None")
+                return ParseTypeRes("int" + suffix, frozenset(), "default=None")
             case "bool":
-                return ParseTypeRes("bool" + suffix, frozenset(), "None")
+                return ParseTypeRes("bool" + suffix, frozenset(), "default=None")
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "None")
+                return ParseTypeRes("int" + suffix, frozenset(), "default=None")
             case "float":
-                return ParseTypeRes("float" + suffix, frozenset(), "None")
+                return ParseTypeRes("float" + suffix, frozenset(), "default=None")
             case "str":
-                return ParseTypeRes("str" + suffix, frozenset(), "None")
+                return ParseTypeRes("str" + suffix, frozenset(), "default=None")
             case "datetime":
                 return ParseTypeRes(
                     "datetime" + suffix,
                     frozenset(["from datetime import datetime"]),
-                    "None",
+                    "default=None",
                 )
             case _:
                 return ParseTypeRes(
                     descr,
                     frozenset([f"from .{mod_name(descr)} import {descr}"]),
-                    f"{descr}()",
+                    f"default_factory=lambda: {descr}()",
                 )
 
 
@@ -102,10 +106,20 @@ def generate(
         imports |= res.imports
         real_attr = calc_attr_name(attr)
         if alias != real_attr:
-            real_alias = f', alias="{alias}"'
+            real_alias = (
+                f', serialization_alias="{alias}", '
+                f'validation_alias=AliasChoices("{real_attr}", "{alias}")'
+            )
         else:
             real_alias = ""
-        field = f"{real_attr}: {res.type_} = Field(default_factory=lambda: {res.default}{real_alias})"
+        if attr in REQUIRED_ALL or attr in REQUIRED.get(name, set()):
+            if real_alias:
+                tail = f" = Field(...{real_alias})"
+            else:
+                tail = ""
+            field = f"{real_attr}: {res.type_.removesuffix(' | None')}{tail}"
+        else:
+            field = f"{real_attr}: {res.type_} = Field({res.default}{real_alias})"
         body.append(f"    {field}\n")
     mod = MOD.format(
         imports="\n".join(sorted(imports)), clsname=name, body="\n".join(body)

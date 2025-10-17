@@ -6,8 +6,8 @@ __all__ = ("V1EndpointConditions",)
 
 
 class V1EndpointConditions(BaseModel):
-    ready: bool | None = Field(default_factory=lambda: None)
+    ready: bool | None = Field(default=None)
 
-    serving: bool | None = Field(default_factory=lambda: None)
+    serving: bool | None = Field(default=None)
 
-    terminating: bool | None = Field(default_factory=lambda: None)
+    terminating: bool | None = Field(default=None)

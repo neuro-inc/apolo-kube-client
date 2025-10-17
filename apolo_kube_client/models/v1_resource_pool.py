@@ -1,15 +1,17 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1ResourcePool",)
 
 
 class V1ResourcePool(BaseModel):
-    generation: int | None = Field(default_factory=lambda: None)
+    generation: int | None = Field(default=None)
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
     resource_slice_count: int | None = Field(
-        default_factory=lambda: None, alias="resourceSliceCount"
+        default=None,
+        serialization_alias="resourceSliceCount",
+        validation_alias=AliasChoices("resource_slice_count", "resourceSliceCount"),
     )

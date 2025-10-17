@@ -6,4 +6,4 @@ __all__ = ("V1LocalObjectReference",)
 
 
 class V1LocalObjectReference(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_attached_volume import V1AttachedVolume
 from .v1_container_image import V1ContainerImage
 from .v1_node_address import V1NodeAddress
@@ -14,36 +14,48 @@ __all__ = ("V1NodeStatus",)
 
 
 class V1NodeStatus(BaseModel):
-    addresses: list[V1NodeAddress] = Field(default_factory=lambda: [])
+    addresses: list[V1NodeAddress] = Field(default=[])
 
-    allocatable: dict[str, str] = Field(default_factory=lambda: {})
+    allocatable: dict[str, str] = Field(default={})
 
-    capacity: dict[str, str] = Field(default_factory=lambda: {})
+    capacity: dict[str, str] = Field(default={})
 
-    conditions: list[V1NodeCondition] = Field(default_factory=lambda: [])
+    conditions: list[V1NodeCondition] = Field(default=[])
 
     config: V1NodeConfigStatus = Field(default_factory=lambda: V1NodeConfigStatus())
 
     daemon_endpoints: V1NodeDaemonEndpoints = Field(
-        default_factory=lambda: V1NodeDaemonEndpoints(), alias="daemonEndpoints"
+        default_factory=lambda: V1NodeDaemonEndpoints(),
+        serialization_alias="daemonEndpoints",
+        validation_alias=AliasChoices("daemon_endpoints", "daemonEndpoints"),
     )
 
     features: V1NodeFeatures = Field(default_factory=lambda: V1NodeFeatures())
 
-    images: list[V1ContainerImage] = Field(default_factory=lambda: [])
+    images: list[V1ContainerImage] = Field(default=[])
 
     node_info: V1NodeSystemInfo = Field(
-        default_factory=lambda: V1NodeSystemInfo(), alias="nodeInfo"
+        default_factory=lambda: V1NodeSystemInfo(),
+        serialization_alias="nodeInfo",
+        validation_alias=AliasChoices("node_info", "nodeInfo"),
     )
 
-    phase: str | None = Field(default_factory=lambda: None)
+    phase: str | None = Field(default=None)
 
     runtime_handlers: list[V1NodeRuntimeHandler] = Field(
-        default_factory=lambda: [], alias="runtimeHandlers"
+        default=[],
+        serialization_alias="runtimeHandlers",
+        validation_alias=AliasChoices("runtime_handlers", "runtimeHandlers"),
     )
 
     volumes_attached: list[V1AttachedVolume] = Field(
-        default_factory=lambda: [], alias="volumesAttached"
+        default=[],
+        serialization_alias="volumesAttached",
+        validation_alias=AliasChoices("volumes_attached", "volumesAttached"),
     )
 
-    volumes_in_use: list[str] = Field(default_factory=lambda: [], alias="volumesInUse")
+    volumes_in_use: list[str] = Field(
+        default=[],
+        serialization_alias="volumesInUse",
+        validation_alias=AliasChoices("volumes_in_use", "volumesInUse"),
+    )

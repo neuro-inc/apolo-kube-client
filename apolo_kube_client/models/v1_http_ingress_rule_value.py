@@ -6,4 +6,4 @@ __all__ = ("V1HTTPIngressRuleValue",)
 
 
 class V1HTTPIngressRuleValue(BaseModel):
-    paths: list[V1HTTPIngressPath] = Field(default_factory=lambda: [])
+    paths: list[V1HTTPIngressPath] = Field(default=[])

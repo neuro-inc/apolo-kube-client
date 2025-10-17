@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1SuccessPolicyRule",)
@@ -7,9 +7,13 @@ __all__ = ("V1SuccessPolicyRule",)
 
 class V1SuccessPolicyRule(BaseModel):
     succeeded_count: int | None = Field(
-        default_factory=lambda: None, alias="succeededCount"
+        default=None,
+        serialization_alias="succeededCount",
+        validation_alias=AliasChoices("succeeded_count", "succeededCount"),
     )
 
     succeeded_indexes: str | None = Field(
-        default_factory=lambda: None, alias="succeededIndexes"
+        default=None,
+        serialization_alias="succeededIndexes",
+        validation_alias=AliasChoices("succeeded_indexes", "succeededIndexes"),
     )

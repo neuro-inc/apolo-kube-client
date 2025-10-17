@@ -6,6 +6,6 @@ __all__ = ("V1ResourceStatus",)
 
 
 class V1ResourceStatus(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    resources: list[V1ResourceHealth] = Field(default_factory=lambda: [])
+    resources: list[V1ResourceHealth] = Field(default=[])

@@ -1,29 +1,41 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
 
 __all__ = ("V1APIServiceSpec",)
 
 
 class V1APIServiceSpec(BaseModel):
-    ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
+    ca_bundle: str | None = Field(
+        default=None,
+        serialization_alias="caBundle",
+        validation_alias=AliasChoices("ca_bundle", "caBundle"),
+    )
 
-    group: str | None = Field(default_factory=lambda: None)
+    group: str | None = Field(default=None)
 
     group_priority_minimum: int | None = Field(
-        default_factory=lambda: None, alias="groupPriorityMinimum"
+        default=None,
+        serialization_alias="groupPriorityMinimum",
+        validation_alias=AliasChoices("group_priority_minimum", "groupPriorityMinimum"),
     )
 
     insecure_skip_tls_verify: bool | None = Field(
-        default_factory=lambda: None, alias="insecureSkipTLSVerify"
+        default=None,
+        serialization_alias="insecureSkipTLSVerify",
+        validation_alias=AliasChoices(
+            "insecure_skip_tls_verify", "insecureSkipTLSVerify"
+        ),
     )
 
     service: ApiregistrationV1ServiceReference = Field(
         default_factory=lambda: ApiregistrationV1ServiceReference()
     )
 
-    version: str | None = Field(default_factory=lambda: None)
+    version: str | None = Field(default=None)
 
     version_priority: int | None = Field(
-        default_factory=lambda: None, alias="versionPriority"
+        default=None,
+        serialization_alias="versionPriority",
+        validation_alias=AliasChoices("version_priority", "versionPriority"),
     )

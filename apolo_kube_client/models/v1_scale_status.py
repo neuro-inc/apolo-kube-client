@@ -6,6 +6,6 @@ __all__ = ("V1ScaleStatus",)
 
 
 class V1ScaleStatus(BaseModel):
-    replicas: int | None = Field(default_factory=lambda: None)
+    replicas: int | None = Field(default=None)
 
-    selector: str | None = Field(default_factory=lambda: None)
+    selector: str | None = Field(default=None)

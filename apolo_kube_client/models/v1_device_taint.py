@@ -1,15 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("V1DeviceTaint",)
 
 
 class V1DeviceTaint(BaseModel):
-    effect: str | None = Field(default_factory=lambda: None)
+    effect: str | None = Field(default=None)
 
-    key: str | None = Field(default_factory=lambda: None)
+    key: str | None = Field(default=None)
 
-    time_added: datetime | None = Field(default_factory=lambda: None, alias="timeAdded")
+    time_added: datetime | None = Field(
+        default=None,
+        serialization_alias="timeAdded",
+        validation_alias=AliasChoices("time_added", "timeAdded"),
+    )
 
-    value: str | None = Field(default_factory=lambda: None)
+    value: str | None = Field(default=None)

@@ -341,7 +341,6 @@ class NamespacedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
-        assert model.metadata.name is not None
         try:
             return False, await self.get(name=model.metadata.name, namespace=namespace)
         except ResourceNotFound:
@@ -355,7 +354,6 @@ class NamespacedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
-        assert model.metadata.name is not None
         try:
             await self.get(name=model.metadata.name, namespace=namespace)
             async with self._core.request(

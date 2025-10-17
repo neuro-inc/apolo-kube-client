@@ -6,6 +6,6 @@ __all__ = ("V1ContainerRestartRuleOnExitCodes",)
 
 
 class V1ContainerRestartRuleOnExitCodes(BaseModel):
-    operator: str | None = Field(default_factory=lambda: None)
+    operator: str | None = Field(default=None)
 
-    values: list[int] = Field(default_factory=lambda: [])
+    values: list[int] = Field(default=[])

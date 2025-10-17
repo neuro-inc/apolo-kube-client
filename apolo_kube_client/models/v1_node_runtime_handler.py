@@ -10,4 +10,4 @@ class V1NodeRuntimeHandler(BaseModel):
         default_factory=lambda: V1NodeRuntimeHandlerFeatures()
     )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

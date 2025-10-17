@@ -6,4 +6,4 @@ __all__ = ("V1ForZone",)
 
 
 class V1ForZone(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

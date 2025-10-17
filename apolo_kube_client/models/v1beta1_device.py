@@ -8,4 +8,4 @@ __all__ = ("V1beta1Device",)
 class V1beta1Device(BaseModel):
     basic: V1beta1BasicDevice = Field(default_factory=lambda: V1beta1BasicDevice())
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

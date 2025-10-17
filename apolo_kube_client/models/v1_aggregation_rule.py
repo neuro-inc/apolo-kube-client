@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 
 __all__ = ("V1AggregationRule",)
@@ -7,5 +7,7 @@ __all__ = ("V1AggregationRule",)
 
 class V1AggregationRule(BaseModel):
     cluster_role_selectors: list[V1LabelSelector] = Field(
-        default_factory=lambda: [], alias="clusterRoleSelectors"
+        default=[],
+        serialization_alias="clusterRoleSelectors",
+        validation_alias=AliasChoices("cluster_role_selectors", "clusterRoleSelectors"),
     )

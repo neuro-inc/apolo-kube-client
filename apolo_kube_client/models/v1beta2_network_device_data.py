@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1beta2NetworkDeviceData",)
@@ -7,11 +7,15 @@ __all__ = ("V1beta2NetworkDeviceData",)
 
 class V1beta2NetworkDeviceData(BaseModel):
     hardware_address: str | None = Field(
-        default_factory=lambda: None, alias="hardwareAddress"
+        default=None,
+        serialization_alias="hardwareAddress",
+        validation_alias=AliasChoices("hardware_address", "hardwareAddress"),
     )
 
     interface_name: str | None = Field(
-        default_factory=lambda: None, alias="interfaceName"
+        default=None,
+        serialization_alias="interfaceName",
+        validation_alias=AliasChoices("interface_name", "interfaceName"),
     )
 
-    ips: list[str] = Field(default_factory=lambda: [])
+    ips: list[str] = Field(default=[])

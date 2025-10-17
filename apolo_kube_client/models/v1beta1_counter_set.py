@@ -6,6 +6,6 @@ __all__ = ("V1beta1CounterSet",)
 
 
 class V1beta1CounterSet(BaseModel):
-    counters: dict[str, V1beta1Counter] = Field(default_factory=lambda: {})
+    counters: dict[str, V1beta1Counter] = Field(default={})
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

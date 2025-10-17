@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 
 __all__ = ("V1VolumeAttachmentSource",)
@@ -7,9 +7,13 @@ __all__ = ("V1VolumeAttachmentSource",)
 
 class V1VolumeAttachmentSource(BaseModel):
     inline_volume_spec: V1PersistentVolumeSpec = Field(
-        default_factory=lambda: V1PersistentVolumeSpec(), alias="inlineVolumeSpec"
+        default_factory=lambda: V1PersistentVolumeSpec(),
+        serialization_alias="inlineVolumeSpec",
+        validation_alias=AliasChoices("inline_volume_spec", "inlineVolumeSpec"),
     )
 
     persistent_volume_name: str | None = Field(
-        default_factory=lambda: None, alias="persistentVolumeName"
+        default=None,
+        serialization_alias="persistentVolumeName",
+        validation_alias=AliasChoices("persistent_volume_name", "persistentVolumeName"),
     )

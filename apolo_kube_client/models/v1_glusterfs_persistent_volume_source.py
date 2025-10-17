@@ -1,17 +1,23 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1GlusterfsPersistentVolumeSource",)
 
 
 class V1GlusterfsPersistentVolumeSource(BaseModel):
-    endpoints: str | None = Field(default_factory=lambda: None)
+    endpoints: str | None = Field(default=None)
 
     endpoints_namespace: str | None = Field(
-        default_factory=lambda: None, alias="endpointsNamespace"
+        default=None,
+        serialization_alias="endpointsNamespace",
+        validation_alias=AliasChoices("endpoints_namespace", "endpointsNamespace"),
     )
 
-    path: str | None = Field(default_factory=lambda: None)
+    path: str | None = Field(default=None)
 
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )

@@ -6,8 +6,8 @@ __all__ = ("V1ResourceRequirements",)
 
 
 class V1ResourceRequirements(BaseModel):
-    claims: list[CoreV1ResourceClaim] = Field(default_factory=lambda: [])
+    claims: list[CoreV1ResourceClaim] = Field(default=[])
 
-    limits: dict[str, str] = Field(default_factory=lambda: {})
+    limits: dict[str, str] = Field(default={})
 
-    requests: dict[str, str] = Field(default_factory=lambda: {})
+    requests: dict[str, str] = Field(default={})

@@ -6,8 +6,8 @@ __all__ = ("V1ConfigMapProjection",)
 
 
 class V1ConfigMapProjection(BaseModel):
-    items: list[V1KeyToPath] = Field(default_factory=lambda: [])
+    items: list[V1KeyToPath] = Field(default=[])
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    optional: bool | None = Field(default_factory=lambda: None)
+    optional: bool | None = Field(default=None)

@@ -1,13 +1,15 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("CoreV1EventSeries",)
 
 
 class CoreV1EventSeries(BaseModel):
-    count: int | None = Field(default_factory=lambda: None)
+    count: int | None = Field(default=None)
 
     last_observed_time: datetime | None = Field(
-        default_factory=lambda: None, alias="lastObservedTime"
+        default=None,
+        serialization_alias="lastObservedTime",
+        validation_alias=AliasChoices("last_observed_time", "lastObservedTime"),
     )

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_toleration import V1Toleration
 
 __all__ = ("V1Scheduling",)
@@ -7,7 +7,9 @@ __all__ = ("V1Scheduling",)
 
 class V1Scheduling(BaseModel):
     node_selector: dict[str, str] = Field(
-        default_factory=lambda: {}, alias="nodeSelector"
+        default={},
+        serialization_alias="nodeSelector",
+        validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )
 
-    tolerations: list[V1Toleration] = Field(default_factory=lambda: [])
+    tolerations: list[V1Toleration] = Field(default=[])

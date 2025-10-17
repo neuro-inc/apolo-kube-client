@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1RollingUpdateStatefulSetStrategy",)
@@ -7,7 +7,9 @@ __all__ = ("V1RollingUpdateStatefulSetStrategy",)
 
 class V1RollingUpdateStatefulSetStrategy(BaseModel):
     max_unavailable: JsonType = Field(
-        default_factory=lambda: {}, alias="maxUnavailable"
+        default={},
+        serialization_alias="maxUnavailable",
+        validation_alias=AliasChoices("max_unavailable", "maxUnavailable"),
     )
 
-    partition: int | None = Field(default_factory=lambda: None)
+    partition: int | None = Field(default=None)

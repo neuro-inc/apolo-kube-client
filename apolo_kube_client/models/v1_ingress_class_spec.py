@@ -6,7 +6,7 @@ __all__ = ("V1IngressClassSpec",)
 
 
 class V1IngressClassSpec(BaseModel):
-    controller: str | None = Field(default_factory=lambda: None)
+    controller: str | None = Field(default=None)
 
     parameters: V1IngressClassParametersReference = Field(
         default_factory=lambda: V1IngressClassParametersReference()

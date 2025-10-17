@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
 __all__ = ("V1NodeCondition",)
@@ -7,17 +7,21 @@ __all__ = ("V1NodeCondition",)
 
 class V1NodeCondition(BaseModel):
     last_heartbeat_time: datetime | None = Field(
-        default_factory=lambda: None, alias="lastHeartbeatTime"
+        default=None,
+        serialization_alias="lastHeartbeatTime",
+        validation_alias=AliasChoices("last_heartbeat_time", "lastHeartbeatTime"),
     )
 
     last_transition_time: datetime | None = Field(
-        default_factory=lambda: None, alias="lastTransitionTime"
+        default=None,
+        serialization_alias="lastTransitionTime",
+        validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
     )
 
-    message: str | None = Field(default_factory=lambda: None)
+    message: str | None = Field(default=None)
 
-    reason: str | None = Field(default_factory=lambda: None)
+    reason: str | None = Field(default=None)
 
-    status: str | None = Field(default_factory=lambda: None)
+    status: str | None = Field(default=None)
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

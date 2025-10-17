@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .admissionregistration_v1_service_reference import (
     AdmissionregistrationV1ServiceReference,
 )
@@ -8,10 +8,14 @@ __all__ = ("AdmissionregistrationV1WebhookClientConfig",)
 
 
 class AdmissionregistrationV1WebhookClientConfig(BaseModel):
-    ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
+    ca_bundle: str | None = Field(
+        default=None,
+        serialization_alias="caBundle",
+        validation_alias=AliasChoices("ca_bundle", "caBundle"),
+    )
 
     service: AdmissionregistrationV1ServiceReference = Field(
         default_factory=lambda: AdmissionregistrationV1ServiceReference()
     )
 
-    url: str | None = Field(default_factory=lambda: None)
+    url: str | None = Field(default=None)

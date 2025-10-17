@@ -10,6 +10,6 @@ class V1beta2DeviceAllocationConfiguration(BaseModel):
         default_factory=lambda: V1beta2OpaqueDeviceConfiguration()
     )
 
-    requests: list[str] = Field(default_factory=lambda: [])
+    requests: list[str] = Field(default=[])
 
-    source: str | None = Field(default_factory=lambda: None)
+    source: str | None = Field(default=None)

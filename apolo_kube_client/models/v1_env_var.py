@@ -1,15 +1,17 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_env_var_source import V1EnvVarSource
 
 __all__ = ("V1EnvVar",)
 
 
 class V1EnvVar(BaseModel):
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    value: str | None = Field(default_factory=lambda: None)
+    value: str | None = Field(default=None)
 
     value_from: V1EnvVarSource = Field(
-        default_factory=lambda: V1EnvVarSource(), alias="valueFrom"
+        default_factory=lambda: V1EnvVarSource(),
+        serialization_alias="valueFrom",
+        validation_alias=AliasChoices("value_from", "valueFrom"),
     )

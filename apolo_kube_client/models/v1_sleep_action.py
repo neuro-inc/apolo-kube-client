@@ -6,4 +6,4 @@ __all__ = ("V1SleepAction",)
 
 
 class V1SleepAction(BaseModel):
-    seconds: int | None = Field(default_factory=lambda: None)
+    seconds: int | None = Field(default=None)

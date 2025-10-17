@@ -1,15 +1,17 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1LinuxContainerUser",)
 
 
 class V1LinuxContainerUser(BaseModel):
-    gid: int | None = Field(default_factory=lambda: None)
+    gid: int | None = Field(default=None)
 
     supplemental_groups: list[int] = Field(
-        default_factory=lambda: [], alias="supplementalGroups"
+        default=[],
+        serialization_alias="supplementalGroups",
+        validation_alias=AliasChoices("supplemental_groups", "supplementalGroups"),
     )
 
-    uid: int | None = Field(default_factory=lambda: None)
+    uid: int | None = Field(default=None)

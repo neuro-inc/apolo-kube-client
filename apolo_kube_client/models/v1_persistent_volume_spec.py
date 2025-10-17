@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_persistent_volume_source import V1AzureFilePersistentVolumeSource
@@ -29,22 +29,33 @@ __all__ = ("V1PersistentVolumeSpec",)
 
 
 class V1PersistentVolumeSpec(BaseModel):
-    access_modes: list[str] = Field(default_factory=lambda: [], alias="accessModes")
+    access_modes: list[str] = Field(
+        default=[],
+        serialization_alias="accessModes",
+        validation_alias=AliasChoices("access_modes", "accessModes"),
+    )
 
     aws_elastic_block_store: V1AWSElasticBlockStoreVolumeSource = Field(
         default_factory=lambda: V1AWSElasticBlockStoreVolumeSource(),
-        alias="awsElasticBlockStore",
+        serialization_alias="awsElasticBlockStore",
+        validation_alias=AliasChoices(
+            "aws_elastic_block_store", "awsElasticBlockStore"
+        ),
     )
 
     azure_disk: V1AzureDiskVolumeSource = Field(
-        default_factory=lambda: V1AzureDiskVolumeSource(), alias="azureDisk"
+        default_factory=lambda: V1AzureDiskVolumeSource(),
+        serialization_alias="azureDisk",
+        validation_alias=AliasChoices("azure_disk", "azureDisk"),
     )
 
     azure_file: V1AzureFilePersistentVolumeSource = Field(
-        default_factory=lambda: V1AzureFilePersistentVolumeSource(), alias="azureFile"
+        default_factory=lambda: V1AzureFilePersistentVolumeSource(),
+        serialization_alias="azureFile",
+        validation_alias=AliasChoices("azure_file", "azureFile"),
     )
 
-    capacity: dict[str, str] = Field(default_factory=lambda: {})
+    capacity: dict[str, str] = Field(default={})
 
     cephfs: V1CephFSPersistentVolumeSource = Field(
         default_factory=lambda: V1CephFSPersistentVolumeSource()
@@ -55,7 +66,9 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     claim_ref: V1ObjectReference = Field(
-        default_factory=lambda: V1ObjectReference(), alias="claimRef"
+        default_factory=lambda: V1ObjectReference(),
+        serialization_alias="claimRef",
+        validation_alias=AliasChoices("claim_ref", "claimRef"),
     )
 
     csi: V1CSIPersistentVolumeSource = Field(
@@ -65,7 +78,9 @@ class V1PersistentVolumeSpec(BaseModel):
     fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource())
 
     flex_volume: V1FlexPersistentVolumeSource = Field(
-        default_factory=lambda: V1FlexPersistentVolumeSource(), alias="flexVolume"
+        default_factory=lambda: V1FlexPersistentVolumeSource(),
+        serialization_alias="flexVolume",
+        validation_alias=AliasChoices("flex_volume", "flexVolume"),
     )
 
     flocker: V1FlockerVolumeSource = Field(
@@ -74,7 +89,8 @@ class V1PersistentVolumeSpec(BaseModel):
 
     gce_persistent_disk: V1GCEPersistentDiskVolumeSource = Field(
         default_factory=lambda: V1GCEPersistentDiskVolumeSource(),
-        alias="gcePersistentDisk",
+        serialization_alias="gcePersistentDisk",
+        validation_alias=AliasChoices("gce_persistent_disk", "gcePersistentDisk"),
     )
 
     glusterfs: V1GlusterfsPersistentVolumeSource = Field(
@@ -82,7 +98,9 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     host_path: V1HostPathVolumeSource = Field(
-        default_factory=lambda: V1HostPathVolumeSource(), alias="hostPath"
+        default_factory=lambda: V1HostPathVolumeSource(),
+        serialization_alias="hostPath",
+        validation_alias=AliasChoices("host_path", "hostPath"),
     )
 
     iscsi: V1ISCSIPersistentVolumeSource = Field(
@@ -91,25 +109,38 @@ class V1PersistentVolumeSpec(BaseModel):
 
     local: V1LocalVolumeSource = Field(default_factory=lambda: V1LocalVolumeSource())
 
-    mount_options: list[str] = Field(default_factory=lambda: [], alias="mountOptions")
+    mount_options: list[str] = Field(
+        default=[],
+        serialization_alias="mountOptions",
+        validation_alias=AliasChoices("mount_options", "mountOptions"),
+    )
 
     nfs: V1NFSVolumeSource = Field(default_factory=lambda: V1NFSVolumeSource())
 
     node_affinity: V1VolumeNodeAffinity = Field(
-        default_factory=lambda: V1VolumeNodeAffinity(), alias="nodeAffinity"
+        default_factory=lambda: V1VolumeNodeAffinity(),
+        serialization_alias="nodeAffinity",
+        validation_alias=AliasChoices("node_affinity", "nodeAffinity"),
     )
 
     persistent_volume_reclaim_policy: str | None = Field(
-        default_factory=lambda: None, alias="persistentVolumeReclaimPolicy"
+        default=None,
+        serialization_alias="persistentVolumeReclaimPolicy",
+        validation_alias=AliasChoices(
+            "persistent_volume_reclaim_policy", "persistentVolumeReclaimPolicy"
+        ),
     )
 
     photon_persistent_disk: V1PhotonPersistentDiskVolumeSource = Field(
         default_factory=lambda: V1PhotonPersistentDiskVolumeSource(),
-        alias="photonPersistentDisk",
+        serialization_alias="photonPersistentDisk",
+        validation_alias=AliasChoices("photon_persistent_disk", "photonPersistentDisk"),
     )
 
     portworx_volume: V1PortworxVolumeSource = Field(
-        default_factory=lambda: V1PortworxVolumeSource(), alias="portworxVolume"
+        default_factory=lambda: V1PortworxVolumeSource(),
+        serialization_alias="portworxVolume",
+        validation_alias=AliasChoices("portworx_volume", "portworxVolume"),
     )
 
     quobyte: V1QuobyteVolumeSource = Field(
@@ -121,11 +152,15 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     scale_io: V1ScaleIOPersistentVolumeSource = Field(
-        default_factory=lambda: V1ScaleIOPersistentVolumeSource(), alias="scaleIO"
+        default_factory=lambda: V1ScaleIOPersistentVolumeSource(),
+        serialization_alias="scaleIO",
+        validation_alias=AliasChoices("scale_io", "scaleIO"),
     )
 
     storage_class_name: str | None = Field(
-        default_factory=lambda: None, alias="storageClassName"
+        default=None,
+        serialization_alias="storageClassName",
+        validation_alias=AliasChoices("storage_class_name", "storageClassName"),
     )
 
     storageos: V1StorageOSPersistentVolumeSource = Field(
@@ -133,12 +168,21 @@ class V1PersistentVolumeSpec(BaseModel):
     )
 
     volume_attributes_class_name: str | None = Field(
-        default_factory=lambda: None, alias="volumeAttributesClassName"
+        default=None,
+        serialization_alias="volumeAttributesClassName",
+        validation_alias=AliasChoices(
+            "volume_attributes_class_name", "volumeAttributesClassName"
+        ),
     )
 
-    volume_mode: str | None = Field(default_factory=lambda: None, alias="volumeMode")
+    volume_mode: str | None = Field(
+        default=None,
+        serialization_alias="volumeMode",
+        validation_alias=AliasChoices("volume_mode", "volumeMode"),
+    )
 
     vsphere_volume: V1VsphereVirtualDiskVolumeSource = Field(
         default_factory=lambda: V1VsphereVirtualDiskVolumeSource(),
-        alias="vsphereVolume",
+        serialization_alias="vsphereVolume",
+        validation_alias=AliasChoices("vsphere_volume", "vsphereVolume"),
     )

@@ -15,4 +15,4 @@ class V1PriorityLevelConfigurationSpec(BaseModel):
         default_factory=lambda: V1LimitedPriorityLevelConfiguration()
     )
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

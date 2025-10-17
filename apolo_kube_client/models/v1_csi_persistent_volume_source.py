@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
 __all__ = ("V1CSIPersistentVolumeSource",)
@@ -7,35 +7,63 @@ __all__ = ("V1CSIPersistentVolumeSource",)
 
 class V1CSIPersistentVolumeSource(BaseModel):
     controller_expand_secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="controllerExpandSecretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="controllerExpandSecretRef",
+        validation_alias=AliasChoices(
+            "controller_expand_secret_ref", "controllerExpandSecretRef"
+        ),
     )
 
     controller_publish_secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="controllerPublishSecretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="controllerPublishSecretRef",
+        validation_alias=AliasChoices(
+            "controller_publish_secret_ref", "controllerPublishSecretRef"
+        ),
     )
 
-    driver: str | None = Field(default_factory=lambda: None)
+    driver: str | None = Field(default=None)
 
-    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
+    fs_type: str | None = Field(
+        default=None,
+        serialization_alias="fsType",
+        validation_alias=AliasChoices("fs_type", "fsType"),
+    )
 
     node_expand_secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="nodeExpandSecretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="nodeExpandSecretRef",
+        validation_alias=AliasChoices("node_expand_secret_ref", "nodeExpandSecretRef"),
     )
 
     node_publish_secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="nodePublishSecretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="nodePublishSecretRef",
+        validation_alias=AliasChoices(
+            "node_publish_secret_ref", "nodePublishSecretRef"
+        ),
     )
 
     node_stage_secret_ref: V1SecretReference = Field(
-        default_factory=lambda: V1SecretReference(), alias="nodeStageSecretRef"
+        default_factory=lambda: V1SecretReference(),
+        serialization_alias="nodeStageSecretRef",
+        validation_alias=AliasChoices("node_stage_secret_ref", "nodeStageSecretRef"),
     )
 
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )
 
     volume_attributes: dict[str, str] = Field(
-        default_factory=lambda: {}, alias="volumeAttributes"
+        default={},
+        serialization_alias="volumeAttributes",
+        validation_alias=AliasChoices("volume_attributes", "volumeAttributes"),
     )
 
     volume_handle: str | None = Field(
-        default_factory=lambda: None, alias="volumeHandle"
+        default=None,
+        serialization_alias="volumeHandle",
+        validation_alias=AliasChoices("volume_handle", "volumeHandle"),
     )

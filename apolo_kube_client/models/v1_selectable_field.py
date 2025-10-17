@@ -1,9 +1,13 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1SelectableField",)
 
 
 class V1SelectableField(BaseModel):
-    json_path: str | None = Field(default_factory=lambda: None, alias="jsonPath")
+    json_path: str | None = Field(
+        default=None,
+        serialization_alias="jsonPath",
+        validation_alias=AliasChoices("json_path", "jsonPath"),
+    )

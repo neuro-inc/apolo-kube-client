@@ -6,6 +6,6 @@ __all__ = ("V1WatchEvent",)
 
 
 class V1WatchEvent(BaseModel):
-    object: JsonType = Field(default_factory=lambda: {})
+    object: JsonType = Field(default={})
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)

@@ -6,10 +6,10 @@ __all__ = ("V1SELinuxOptions",)
 
 
 class V1SELinuxOptions(BaseModel):
-    level: str | None = Field(default_factory=lambda: None)
+    level: str | None = Field(default=None)
 
-    role: str | None = Field(default_factory=lambda: None)
+    role: str | None = Field(default=None)
 
-    type: str | None = Field(default_factory=lambda: None)
+    type: str | None = Field(default=None)
 
-    user: str | None = Field(default_factory=lambda: None)
+    user: str | None = Field(default=None)

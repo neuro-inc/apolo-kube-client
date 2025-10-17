@@ -1,15 +1,19 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .apiextensions_v1_service_reference import ApiextensionsV1ServiceReference
 
 __all__ = ("ApiextensionsV1WebhookClientConfig",)
 
 
 class ApiextensionsV1WebhookClientConfig(BaseModel):
-    ca_bundle: str | None = Field(default_factory=lambda: None, alias="caBundle")
+    ca_bundle: str | None = Field(
+        default=None,
+        serialization_alias="caBundle",
+        validation_alias=AliasChoices("ca_bundle", "caBundle"),
+    )
 
     service: ApiextensionsV1ServiceReference = Field(
         default_factory=lambda: ApiextensionsV1ServiceReference()
     )
 
-    url: str | None = Field(default_factory=lambda: None)
+    url: str | None = Field(default=None)

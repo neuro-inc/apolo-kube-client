@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_config_source import V1NodeConfigSource
 from .v1_taint import V1Taint
 
@@ -8,17 +8,35 @@ __all__ = ("V1NodeSpec",)
 
 class V1NodeSpec(BaseModel):
     config_source: V1NodeConfigSource = Field(
-        default_factory=lambda: V1NodeConfigSource(), alias="configSource"
+        default_factory=lambda: V1NodeConfigSource(),
+        serialization_alias="configSource",
+        validation_alias=AliasChoices("config_source", "configSource"),
     )
 
-    external_id: str | None = Field(default_factory=lambda: None, alias="externalID")
+    external_id: str | None = Field(
+        default=None,
+        serialization_alias="externalID",
+        validation_alias=AliasChoices("external_id", "externalID"),
+    )
 
-    pod_cidr: str | None = Field(default_factory=lambda: None, alias="podCIDR")
+    pod_cidr: str | None = Field(
+        default=None,
+        serialization_alias="podCIDR",
+        validation_alias=AliasChoices("pod_cidr", "podCIDR"),
+    )
 
-    pod_cid_rs: list[str] = Field(default_factory=lambda: [], alias="podCIDRs")
+    pod_cid_rs: list[str] = Field(
+        default=[],
+        serialization_alias="podCIDRs",
+        validation_alias=AliasChoices("pod_cid_rs", "podCIDRs"),
+    )
 
-    provider_id: str | None = Field(default_factory=lambda: None, alias="providerID")
+    provider_id: str | None = Field(
+        default=None,
+        serialization_alias="providerID",
+        validation_alias=AliasChoices("provider_id", "providerID"),
+    )
 
-    taints: list[V1Taint] = Field(default_factory=lambda: [])
+    taints: list[V1Taint] = Field(default=[])
 
-    unschedulable: bool | None = Field(default_factory=lambda: None)
+    unschedulable: bool | None = Field(default=None)

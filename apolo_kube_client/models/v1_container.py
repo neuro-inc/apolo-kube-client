@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_container_port import V1ContainerPort
 from .v1_container_resize_policy import V1ContainerResizePolicy
 from .v1_container_restart_rule import V1ContainerRestartRule
@@ -16,36 +16,48 @@ __all__ = ("V1Container",)
 
 
 class V1Container(BaseModel):
-    args: list[str] = Field(default_factory=lambda: [])
+    args: list[str] = Field(default=[])
 
-    command: list[str] = Field(default_factory=lambda: [])
+    command: list[str] = Field(default=[])
 
-    env: list[V1EnvVar] = Field(default_factory=lambda: [])
+    env: list[V1EnvVar] = Field(default=[])
 
-    env_from: list[V1EnvFromSource] = Field(default_factory=lambda: [], alias="envFrom")
+    env_from: list[V1EnvFromSource] = Field(
+        default=[],
+        serialization_alias="envFrom",
+        validation_alias=AliasChoices("env_from", "envFrom"),
+    )
 
-    image: str | None = Field(default_factory=lambda: None)
+    image: str | None = Field(default=None)
 
     image_pull_policy: str | None = Field(
-        default_factory=lambda: None, alias="imagePullPolicy"
+        default=None,
+        serialization_alias="imagePullPolicy",
+        validation_alias=AliasChoices("image_pull_policy", "imagePullPolicy"),
     )
 
     lifecycle: V1Lifecycle = Field(default_factory=lambda: V1Lifecycle())
 
     liveness_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(), alias="livenessProbe"
+        default_factory=lambda: V1Probe(),
+        serialization_alias="livenessProbe",
+        validation_alias=AliasChoices("liveness_probe", "livenessProbe"),
     )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    ports: list[V1ContainerPort] = Field(default_factory=lambda: [])
+    ports: list[V1ContainerPort] = Field(default=[])
 
     readiness_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(), alias="readinessProbe"
+        default_factory=lambda: V1Probe(),
+        serialization_alias="readinessProbe",
+        validation_alias=AliasChoices("readiness_probe", "readinessProbe"),
     )
 
     resize_policy: list[V1ContainerResizePolicy] = Field(
-        default_factory=lambda: [], alias="resizePolicy"
+        default=[],
+        serialization_alias="resizePolicy",
+        validation_alias=AliasChoices("resize_policy", "resizePolicy"),
     )
 
     resources: V1ResourceRequirements = Field(
@@ -53,41 +65,69 @@ class V1Container(BaseModel):
     )
 
     restart_policy: str | None = Field(
-        default_factory=lambda: None, alias="restartPolicy"
+        default=None,
+        serialization_alias="restartPolicy",
+        validation_alias=AliasChoices("restart_policy", "restartPolicy"),
     )
 
     restart_policy_rules: list[V1ContainerRestartRule] = Field(
-        default_factory=lambda: [], alias="restartPolicyRules"
+        default=[],
+        serialization_alias="restartPolicyRules",
+        validation_alias=AliasChoices("restart_policy_rules", "restartPolicyRules"),
     )
 
     security_context: V1SecurityContext = Field(
-        default_factory=lambda: V1SecurityContext(), alias="securityContext"
+        default_factory=lambda: V1SecurityContext(),
+        serialization_alias="securityContext",
+        validation_alias=AliasChoices("security_context", "securityContext"),
     )
 
     startup_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(), alias="startupProbe"
+        default_factory=lambda: V1Probe(),
+        serialization_alias="startupProbe",
+        validation_alias=AliasChoices("startup_probe", "startupProbe"),
     )
 
-    stdin: bool | None = Field(default_factory=lambda: None)
+    stdin: bool | None = Field(default=None)
 
-    stdin_once: bool | None = Field(default_factory=lambda: None, alias="stdinOnce")
+    stdin_once: bool | None = Field(
+        default=None,
+        serialization_alias="stdinOnce",
+        validation_alias=AliasChoices("stdin_once", "stdinOnce"),
+    )
 
     termination_message_path: str | None = Field(
-        default_factory=lambda: None, alias="terminationMessagePath"
+        default=None,
+        serialization_alias="terminationMessagePath",
+        validation_alias=AliasChoices(
+            "termination_message_path", "terminationMessagePath"
+        ),
     )
 
     termination_message_policy: str | None = Field(
-        default_factory=lambda: None, alias="terminationMessagePolicy"
+        default=None,
+        serialization_alias="terminationMessagePolicy",
+        validation_alias=AliasChoices(
+            "termination_message_policy", "terminationMessagePolicy"
+        ),
     )
 
-    tty: bool | None = Field(default_factory=lambda: None)
+    tty: bool | None = Field(default=None)
 
     volume_devices: list[V1VolumeDevice] = Field(
-        default_factory=lambda: [], alias="volumeDevices"
+        default=[],
+        serialization_alias="volumeDevices",
+        validation_alias=AliasChoices("volume_devices", "volumeDevices"),
     )
 
     volume_mounts: list[V1VolumeMount] = Field(
-        default_factory=lambda: [], alias="volumeMounts"
+        default=[],
+        serialization_alias="volumeMounts",
+        validation_alias=AliasChoices("volume_mounts", "volumeMounts"),
     )
 
-    working_dir: str | None = Field(default_factory=lambda: None, alias="workingDir")
+    working_dir: str | None = Field(
+        default=None,
+        serialization_alias="workingDir",
+        validation_alias=AliasChoices("working_dir", "workingDir"),
+    )

@@ -6,8 +6,8 @@ __all__ = ("V1PodDNSConfig",)
 
 
 class V1PodDNSConfig(BaseModel):
-    nameservers: list[str] = Field(default_factory=lambda: [])
+    nameservers: list[str] = Field(default=[])
 
-    options: list[V1PodDNSConfigOption] = Field(default_factory=lambda: [])
+    options: list[V1PodDNSConfigOption] = Field(default=[])
 
-    searches: list[str] = Field(default_factory=lambda: [])
+    searches: list[str] = Field(default=[])

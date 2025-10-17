@@ -6,8 +6,8 @@ __all__ = ("V2ContainerResourceMetricStatus",)
 
 
 class V2ContainerResourceMetricStatus(BaseModel):
-    container: str | None = Field(default_factory=lambda: None)
+    container: str | None = Field(default=None)
 
     current: V2MetricValueStatus = Field(default_factory=lambda: V2MetricValueStatus())
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

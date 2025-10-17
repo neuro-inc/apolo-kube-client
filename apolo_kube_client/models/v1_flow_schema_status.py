@@ -6,4 +6,4 @@ __all__ = ("V1FlowSchemaStatus",)
 
 
 class V1FlowSchemaStatus(BaseModel):
-    conditions: list[V1FlowSchemaCondition] = Field(default_factory=lambda: [])
+    conditions: list[V1FlowSchemaCondition] = Field(default=[])

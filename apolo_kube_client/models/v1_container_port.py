@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1ContainerPort",)
@@ -7,13 +7,23 @@ __all__ = ("V1ContainerPort",)
 
 class V1ContainerPort(BaseModel):
     container_port: int | None = Field(
-        default_factory=lambda: None, alias="containerPort"
+        default=None,
+        serialization_alias="containerPort",
+        validation_alias=AliasChoices("container_port", "containerPort"),
     )
 
-    host_ip: str | None = Field(default_factory=lambda: None, alias="hostIP")
+    host_ip: str | None = Field(
+        default=None,
+        serialization_alias="hostIP",
+        validation_alias=AliasChoices("host_ip", "hostIP"),
+    )
 
-    host_port: int | None = Field(default_factory=lambda: None, alias="hostPort")
+    host_port: int | None = Field(
+        default=None,
+        serialization_alias="hostPort",
+        validation_alias=AliasChoices("host_port", "hostPort"),
+    )
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)
 
-    protocol: str | None = Field(default_factory=lambda: None)
+    protocol: str | None = Field(default=None)

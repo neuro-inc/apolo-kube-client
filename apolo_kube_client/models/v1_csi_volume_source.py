@@ -1,21 +1,35 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 
 __all__ = ("V1CSIVolumeSource",)
 
 
 class V1CSIVolumeSource(BaseModel):
-    driver: str | None = Field(default_factory=lambda: None)
+    driver: str | None = Field(default=None)
 
-    fs_type: str | None = Field(default_factory=lambda: None, alias="fsType")
-
-    node_publish_secret_ref: V1LocalObjectReference = Field(
-        default_factory=lambda: V1LocalObjectReference(), alias="nodePublishSecretRef"
+    fs_type: str | None = Field(
+        default=None,
+        serialization_alias="fsType",
+        validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    read_only: bool | None = Field(default_factory=lambda: None, alias="readOnly")
+    node_publish_secret_ref: V1LocalObjectReference = Field(
+        default_factory=lambda: V1LocalObjectReference(),
+        serialization_alias="nodePublishSecretRef",
+        validation_alias=AliasChoices(
+            "node_publish_secret_ref", "nodePublishSecretRef"
+        ),
+    )
+
+    read_only: bool | None = Field(
+        default=None,
+        serialization_alias="readOnly",
+        validation_alias=AliasChoices("read_only", "readOnly"),
+    )
 
     volume_attributes: dict[str, str] = Field(
-        default_factory=lambda: {}, alias="volumeAttributes"
+        default={},
+        serialization_alias="volumeAttributes",
+        validation_alias=AliasChoices("volume_attributes", "volumeAttributes"),
     )

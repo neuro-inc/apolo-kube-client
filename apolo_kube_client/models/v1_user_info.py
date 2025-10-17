@@ -6,10 +6,10 @@ __all__ = ("V1UserInfo",)
 
 
 class V1UserInfo(BaseModel):
-    extra: dict[str, list[str]] = Field(default_factory=lambda: {})
+    extra: dict[str, list[str]] = Field(default={})
 
-    groups: list[str] = Field(default_factory=lambda: [])
+    groups: list[str] = Field(default=[])
 
-    uid: str | None = Field(default_factory=lambda: None)
+    uid: str | None = Field(default=None)
 
-    username: str | None = Field(default_factory=lambda: None)
+    username: str | None = Field(default=None)

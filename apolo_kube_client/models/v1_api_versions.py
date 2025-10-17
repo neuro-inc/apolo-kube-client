@@ -1,17 +1,25 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 
 __all__ = ("V1APIVersions",)
 
 
 class V1APIVersions(BaseModel):
-    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
-
-    kind: str | None = Field(default_factory=lambda: None)
-
-    server_address_by_client_cid_rs: list[V1ServerAddressByClientCIDR] = Field(
-        default_factory=lambda: [], alias="serverAddressByClientCIDRs"
+    api_version: str | None = Field(
+        default=None,
+        serialization_alias="apiVersion",
+        validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    versions: list[str] = Field(default_factory=lambda: [])
+    kind: str | None = Field(default=None)
+
+    server_address_by_client_cid_rs: list[V1ServerAddressByClientCIDR] = Field(
+        default=[],
+        serialization_alias="serverAddressByClientCIDRs",
+        validation_alias=AliasChoices(
+            "server_address_by_client_cid_rs", "serverAddressByClientCIDRs"
+        ),
+    )
+
+    versions: list[str] = Field(default=[])

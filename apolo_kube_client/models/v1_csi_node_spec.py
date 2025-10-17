@@ -6,4 +6,4 @@ __all__ = ("V1CSINodeSpec",)
 
 
 class V1CSINodeSpec(BaseModel):
-    drivers: list[V1CSINodeDriver] = Field(default_factory=lambda: [])
+    drivers: list[V1CSINodeDriver] = Field(default=[])

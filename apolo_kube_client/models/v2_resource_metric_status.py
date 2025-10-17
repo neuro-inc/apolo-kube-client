@@ -8,4 +8,4 @@ __all__ = ("V2ResourceMetricStatus",)
 class V2ResourceMetricStatus(BaseModel):
     current: V2MetricValueStatus = Field(default_factory=lambda: V2MetricValueStatus())
 
-    name: str | None = Field(default_factory=lambda: None)
+    name: str | None = Field(default=None)

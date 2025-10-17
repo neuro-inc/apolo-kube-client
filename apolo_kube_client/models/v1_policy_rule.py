@@ -1,19 +1,29 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1PolicyRule",)
 
 
 class V1PolicyRule(BaseModel):
-    api_groups: list[str] = Field(default_factory=lambda: [], alias="apiGroups")
-
-    non_resource_ur_ls: list[str] = Field(
-        default_factory=lambda: [], alias="nonResourceURLs"
+    api_groups: list[str] = Field(
+        default=[],
+        serialization_alias="apiGroups",
+        validation_alias=AliasChoices("api_groups", "apiGroups"),
     )
 
-    resource_names: list[str] = Field(default_factory=lambda: [], alias="resourceNames")
+    non_resource_ur_ls: list[str] = Field(
+        default=[],
+        serialization_alias="nonResourceURLs",
+        validation_alias=AliasChoices("non_resource_ur_ls", "nonResourceURLs"),
+    )
 
-    resources: list[str] = Field(default_factory=lambda: [])
+    resource_names: list[str] = Field(
+        default=[],
+        serialization_alias="resourceNames",
+        validation_alias=AliasChoices("resource_names", "resourceNames"),
+    )
 
-    verbs: list[str] = Field(default_factory=lambda: [])
+    resources: list[str] = Field(default=[])
+
+    verbs: list[str] = Field(default=[])
