@@ -1,11 +1,10 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client.models import (
     V1Container,
     V1ObjectMeta,
     V1Pod,
     V1PodSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestPod:

@@ -2,7 +2,14 @@ import asyncio
 from collections.abc import AsyncGenerator
 
 import pytest
-from kubernetes.client import (
+
+from apolo_kube_client import KubeClient
+from apolo_kube_client._crd_models import (
+    V1DiskNamingCRD,
+    V1DiskNamingCRDMetadata,
+    V1DiskNamingCRDSpec,
+)
+from apolo_kube_client.models import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,
@@ -11,13 +18,6 @@ from kubernetes.client import (
     V1CustomResourceValidation,
     V1JSONSchemaProps,
     V1ObjectMeta,
-)
-
-from apolo_kube_client import KubeClient
-from apolo_kube_client._crd_models import (
-    V1DiskNamingCRD,
-    V1DiskNamingCRDMetadata,
-    V1DiskNamingCRDSpec,
 )
 
 

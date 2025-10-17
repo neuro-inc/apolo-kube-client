@@ -1,7 +1,9 @@
 import asyncio
 
 import pytest
-from kubernetes.client import (
+
+from apolo_kube_client import KubeClient, ResourceNotFound
+from apolo_kube_client.models import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,
@@ -11,8 +13,6 @@ from kubernetes.client import (
     V1JSONSchemaProps,
     V1ObjectMeta,
 )
-
-from apolo_kube_client import KubeClient, ResourceNotFound
 
 
 @pytest.fixture

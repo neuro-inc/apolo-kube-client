@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel, Field
+
+
+__all__ = ("V1CrossVersionObjectReference",)
+
+
+class V1CrossVersionObjectReference(BaseModel):
+    api_version: str | None = Field(default_factory=lambda: None, alias="apiVersion")
+
+    kind: str | None = Field(default_factory=lambda: None)
+
+    name: str | None = Field(default_factory=lambda: None)

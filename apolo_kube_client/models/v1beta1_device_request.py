@@ -1,0 +1,36 @@
+from __future__ import annotations
+from pydantic import BaseModel, Field
+from .v1beta1_capacity_requirements import V1beta1CapacityRequirements
+from .v1beta1_device_selector import V1beta1DeviceSelector
+from .v1beta1_device_sub_request import V1beta1DeviceSubRequest
+from .v1beta1_device_toleration import V1beta1DeviceToleration
+
+__all__ = ("V1beta1DeviceRequest",)
+
+
+class V1beta1DeviceRequest(BaseModel):
+    admin_access: bool | None = Field(default_factory=lambda: None, alias="adminAccess")
+
+    allocation_mode: str | None = Field(
+        default_factory=lambda: None, alias="allocationMode"
+    )
+
+    capacity: V1beta1CapacityRequirements = Field(
+        default_factory=lambda: V1beta1CapacityRequirements()
+    )
+
+    count: int | None = Field(default_factory=lambda: None)
+
+    device_class_name: str | None = Field(
+        default_factory=lambda: None, alias="deviceClassName"
+    )
+
+    first_available: list[V1beta1DeviceSubRequest] = Field(
+        default_factory=lambda: [], alias="firstAvailable"
+    )
+
+    name: str | None = Field(default_factory=lambda: None)
+
+    selectors: list[V1beta1DeviceSelector] = Field(default_factory=lambda: [])
+
+    tolerations: list[V1beta1DeviceToleration] = Field(default_factory=lambda: [])

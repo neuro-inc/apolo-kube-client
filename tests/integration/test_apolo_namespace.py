@@ -1,13 +1,6 @@
 from unittest import mock
 
 import pytest
-from kubernetes.client.models import (
-    V1IPBlock,
-    V1LabelSelector,
-    V1NetworkPolicyEgressRule,
-    V1NetworkPolicyPeer,
-    V1NetworkPolicyPort,
-)
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client.apolo import (
@@ -17,6 +10,13 @@ from apolo_kube_client.apolo import (
     create_namespace,
     generate_hash,
     normalize_name,
+)
+from apolo_kube_client.models import (
+    V1IPBlock,
+    V1LabelSelector,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyPeer,
+    V1NetworkPolicyPort,
 )
 
 

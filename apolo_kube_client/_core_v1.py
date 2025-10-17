@@ -1,4 +1,8 @@
-from kubernetes.client.models import (
+from ._attr import _Attr
+from ._base_resource import Base, ClusterScopedResource, NamespacedResource
+from ._typedefs import JsonType
+from ._utils import base64_encode, escape_json_pointer
+from .models import (
     CoreV1Event,
     CoreV1EventList,
     V1Endpoints,
@@ -19,11 +23,6 @@ from kubernetes.client.models import (
     V1ServiceList,
     V1Status,
 )
-
-from ._attr import _Attr
-from ._base_resource import Base, ClusterScopedResource, NamespacedResource
-from ._typedefs import JsonType
-from ._utils import base64_encode, escape_json_pointer
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):

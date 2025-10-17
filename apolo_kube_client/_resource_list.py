@@ -1,6 +1,5 @@
-from kubernetes.client.models import V1APIResource, V1APIResourceList
-
 from ._core import _KubeCore
+from .models import V1APIResource, V1APIResourceList
 
 
 class ResourceListApi:

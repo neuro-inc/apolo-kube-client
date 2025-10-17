@@ -2,11 +2,11 @@ from collections.abc import AsyncGenerator, Callable
 from uuid import uuid4
 
 import pytest
-from kubernetes.client.models import V1Namespace, V1ObjectMeta
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client._errors import ResourceExists, ResourceNotFound
 from apolo_kube_client._utils import escape_json_pointer
+from apolo_kube_client.models import V1Namespace, V1ObjectMeta
 
 
 @pytest.fixture

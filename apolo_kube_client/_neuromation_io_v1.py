@@ -1,8 +1,7 @@
-from kubernetes.client.models import V1Status
-
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
 from ._crd_models import V1DiskNamingCRD, V1DiskNamingCRDList
+from .models import V1Status
 
 
 class DiskNamingCRD(NamespacedResource[V1DiskNamingCRD, V1DiskNamingCRDList, V1Status]):  # type: ignore
