@@ -20,8 +20,9 @@ class BaseProxy[OriginT]:
     def __getitem__(self, resource_id: str) -> Self:
         if self._resource_id is not None:
             raise ValueError(f"kube client was already bound to {self._resource_id}")
-        new_origin = self._origin[resource_id]  # type: ignore[index]
-        return self.__class__(new_origin, self._namespace, resource_id)
+        # create a new origin and bound it to a specific resource ID
+        bound_origin = self._origin[resource_id]  # type: ignore[index]
+        return self.__class__(bound_origin, self._namespace, resource_id)
 
 
 class NamespacedResourceProxy[
