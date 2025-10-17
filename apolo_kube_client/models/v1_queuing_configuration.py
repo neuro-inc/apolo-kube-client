@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,4 +17,4 @@ class V1QueuingConfiguration(BaseModel):
         validation_alias=AliasChoices("queue_length_limit", "queueLengthLimit"),
     )
 
-    queues: int | None = Field(default=None)
+    queues: int | None = None

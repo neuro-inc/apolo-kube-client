@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from apolo_kube_client._typedefs import JsonType
 from datetime import datetime
@@ -25,10 +24,10 @@ class V1ManagedFieldsEntry(BaseModel):
         validation_alias=AliasChoices("fields_v1", "fieldsV1"),
     )
 
-    manager: str | None = Field(default=None)
+    manager: str | None = None
 
-    operation: str | None = Field(default=None)
+    operation: str | None = None
 
-    subresource: str | None = Field(default=None)
+    subresource: str | None = None
 
-    time: datetime | None = Field(default=None)
+    time: datetime | None = None

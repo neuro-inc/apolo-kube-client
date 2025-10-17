@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_list_meta import V1ListMeta
 from .v1_status_details import V1StatusDetails
@@ -13,16 +12,16 @@ class V1Status(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    code: int | None = Field(default=None)
+    code: int | None = None
 
     details: V1StatusDetails = Field(default_factory=lambda: V1StatusDetails())
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    status: str | None = Field(default=None)
+    status: str | None = None

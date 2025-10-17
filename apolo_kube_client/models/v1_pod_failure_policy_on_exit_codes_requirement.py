@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,6 +11,6 @@ class V1PodFailurePolicyOnExitCodesRequirement(BaseModel):
         validation_alias=AliasChoices("container_name", "containerName"),
     )
 
-    operator: str | None = Field(default=None)
+    operator: str | None = None
 
-    values: list[int] = Field(default=[])
+    values: list[int] = []

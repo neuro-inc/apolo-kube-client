@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_volume_projection import V1VolumeProjection
 
@@ -12,4 +11,4 @@ class V1ProjectedVolumeSource(BaseModel):
         validation_alias=AliasChoices("default_mode", "defaultMode"),
     )
 
-    sources: list[V1VolumeProjection] = Field(default=[])
+    sources: list[V1VolumeProjection] = []

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,7 +11,7 @@ class V1FCVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    lun: int | None = Field(default=None)
+    lun: int | None = None
 
     read_only: bool | None = Field(
         default=None,
@@ -26,4 +25,4 @@ class V1FCVolumeSource(BaseModel):
         validation_alias=AliasChoices("target_ww_ns", "targetWWNs"),
     )
 
-    wwids: list[str] = Field(default=[])
+    wwids: list[str] = []

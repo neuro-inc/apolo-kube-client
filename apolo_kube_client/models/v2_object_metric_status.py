@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_metric_identifier import V2MetricIdentifier

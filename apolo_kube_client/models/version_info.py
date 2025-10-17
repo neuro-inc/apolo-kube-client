@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,7 +11,7 @@ class VersionInfo(BaseModel):
         validation_alias=AliasChoices("build_date", "buildDate"),
     )
 
-    compiler: str | None = Field(default=None)
+    compiler: str | None = None
 
     emulation_major: str | None = Field(
         default=None,
@@ -50,7 +49,7 @@ class VersionInfo(BaseModel):
         validation_alias=AliasChoices("go_version", "goVersion"),
     )
 
-    major: str | None = Field(default=None)
+    major: str | None = None
 
     min_compatibility_major: str | None = Field(
         default=None,
@@ -68,6 +67,6 @@ class VersionInfo(BaseModel):
         ),
     )
 
-    minor: str | None = Field(default=None)
+    minor: str | None = None
 
-    platform: str | None = Field(default=None)
+    platform: str | None = None

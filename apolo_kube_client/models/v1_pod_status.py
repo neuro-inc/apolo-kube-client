@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
@@ -12,7 +11,7 @@ __all__ = ("V1PodStatus",)
 
 
 class V1PodStatus(BaseModel):
-    conditions: list[V1PodCondition] = Field(default=[])
+    conditions: list[V1PodCondition] = []
 
     container_statuses: list[V1ContainerStatus] = Field(
         default=[],
@@ -56,7 +55,7 @@ class V1PodStatus(BaseModel):
         ),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
     nominated_node_name: str | None = Field(
         default=None,
@@ -70,7 +69,7 @@ class V1PodStatus(BaseModel):
         validation_alias=AliasChoices("observed_generation", "observedGeneration"),
     )
 
-    phase: str | None = Field(default=None)
+    phase: str | None = None
 
     pod_ip: str | None = Field(
         default=None,
@@ -90,9 +89,9 @@ class V1PodStatus(BaseModel):
         validation_alias=AliasChoices("qos_class", "qosClass"),
     )
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    resize: str | None = Field(default=None)
+    resize: str | None = None
 
     resource_claim_statuses: list[V1PodResourceClaimStatus] = Field(
         default=[],

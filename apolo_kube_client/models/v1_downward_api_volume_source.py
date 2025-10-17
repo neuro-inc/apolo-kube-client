@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_downward_api_volume_file import V1DownwardAPIVolumeFile
 
@@ -12,4 +11,4 @@ class V1DownwardAPIVolumeSource(BaseModel):
         validation_alias=AliasChoices("default_mode", "defaultMode"),
     )
 
-    items: list[V1DownwardAPIVolumeFile] = Field(default=[])
+    items: list[V1DownwardAPIVolumeFile] = []

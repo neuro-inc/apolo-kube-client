@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,8 +11,8 @@ class RbacV1Subject(BaseModel):
         validation_alias=AliasChoices("api_group", "apiGroup"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None

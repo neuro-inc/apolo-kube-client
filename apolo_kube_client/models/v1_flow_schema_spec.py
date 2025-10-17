@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_flow_distinguisher_method import V1FlowDistinguisherMethod
 from .v1_policy_rules_with_subjects import V1PolicyRulesWithSubjects
@@ -30,4 +29,4 @@ class V1FlowSchemaSpec(BaseModel):
         ),
     )
 
-    rules: list[V1PolicyRulesWithSubjects] = Field(default=[])
+    rules: list[V1PolicyRulesWithSubjects] = []

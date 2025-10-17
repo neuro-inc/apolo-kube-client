@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
@@ -22,7 +21,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         ),
     )
 
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
     fs_type: str | None = Field(
         default=None,

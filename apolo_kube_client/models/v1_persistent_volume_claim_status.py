@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
@@ -27,9 +26,9 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         validation_alias=AliasChoices("allocated_resources", "allocatedResources"),
     )
 
-    capacity: dict[str, str] = Field(default={})
+    capacity: dict[str, str] = {}
 
-    conditions: list[V1PersistentVolumeClaimCondition] = Field(default=[])
+    conditions: list[V1PersistentVolumeClaimCondition] = []
 
     current_volume_attributes_class_name: str | None = Field(
         default=None,
@@ -45,4 +44,4 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         validation_alias=AliasChoices("modify_volume_status", "modifyVolumeStatus"),
     )
 
-    phase: str | None = Field(default=None)
+    phase: str | None = None

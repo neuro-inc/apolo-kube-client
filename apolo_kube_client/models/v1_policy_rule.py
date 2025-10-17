@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -24,6 +23,6 @@ class V1PolicyRule(BaseModel):
         validation_alias=AliasChoices("resource_names", "resourceNames"),
     )
 
-    resources: list[str] = Field(default=[])
+    resources: list[str] = []
 
-    verbs: list[str] = Field(default=[])
+    verbs: list[str] = []

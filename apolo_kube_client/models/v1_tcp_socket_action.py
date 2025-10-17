@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1TCPSocketAction",)
 
 
 class V1TCPSocketAction(BaseModel):
-    host: str | None = Field(default=None)
+    host: str | None = None
 
-    port: JsonType = Field(default={})
+    port: JsonType = {}

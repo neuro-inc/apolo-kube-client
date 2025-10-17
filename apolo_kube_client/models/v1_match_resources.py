@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_named_rule_with_operations import V1NamedRuleWithOperations

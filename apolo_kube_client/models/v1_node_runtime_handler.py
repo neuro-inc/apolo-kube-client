@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1_node_runtime_handler_features import V1NodeRuntimeHandlerFeatures
 
@@ -10,4 +9,4 @@ class V1NodeRuntimeHandler(BaseModel):
         default_factory=lambda: V1NodeRuntimeHandlerFeatures()
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None

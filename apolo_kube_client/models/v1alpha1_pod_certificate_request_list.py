@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_pod_certificate_request import V1alpha1PodCertificateRequest
@@ -13,8 +12,8 @@ class V1alpha1PodCertificateRequestList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1alpha1PodCertificateRequest] = Field(default=[])
+    items: list[V1alpha1PodCertificateRequest] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

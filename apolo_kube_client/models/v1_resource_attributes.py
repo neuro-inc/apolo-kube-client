@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
@@ -13,7 +12,7 @@ class V1ResourceAttributes(BaseModel):
         validation_alias=AliasChoices("field_selector", "fieldSelector"),
     )
 
-    group: str | None = Field(default=None)
+    group: str | None = None
 
     label_selector: V1LabelSelectorAttributes = Field(
         default_factory=lambda: V1LabelSelectorAttributes(),
@@ -21,14 +20,14 @@ class V1ResourceAttributes(BaseModel):
         validation_alias=AliasChoices("label_selector", "labelSelector"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None
 
-    resource: str | None = Field(default=None)
+    resource: str | None = None
 
-    subresource: str | None = Field(default=None)
+    subresource: str | None = None
 
-    verb: str | None = Field(default=None)
+    verb: str | None = None
 
-    version: str | None = Field(default=None)
+    version: str | None = None

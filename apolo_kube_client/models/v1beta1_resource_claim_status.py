@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta1_allocated_device_status import V1beta1AllocatedDeviceStatus
 from .v1beta1_allocation_result import V1beta1AllocationResult
@@ -14,7 +13,7 @@ class V1beta1ResourceClaimStatus(BaseModel):
         default_factory=lambda: V1beta1AllocationResult()
     )
 
-    devices: list[V1beta1AllocatedDeviceStatus] = Field(default=[])
+    devices: list[V1beta1AllocatedDeviceStatus] = []
 
     reserved_for: list[V1beta1ResourceClaimConsumerReference] = Field(
         default=[],

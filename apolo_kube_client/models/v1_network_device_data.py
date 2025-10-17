@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,4 +17,4 @@ class V1NetworkDeviceData(BaseModel):
         validation_alias=AliasChoices("interface_name", "interfaceName"),
     )
 
-    ips: list[str] = Field(default=[])
+    ips: list[str] = []

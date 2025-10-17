@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,11 +17,11 @@ class V1ObjectReference(BaseModel):
         validation_alias=AliasChoices("field_path", "fieldPath"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None
 
     resource_version: str | None = Field(
         default=None,
@@ -30,4 +29,4 @@ class V1ObjectReference(BaseModel):
         validation_alias=AliasChoices("resource_version", "resourceVersion"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

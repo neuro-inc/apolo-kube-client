@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1PodIP",)
 
 
 class V1PodIP(BaseModel):
-    ip: str | None = Field(default=None)
+    ip: str | None = None

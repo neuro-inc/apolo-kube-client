@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_horizontal_pod_autoscaler_condition import V2HorizontalPodAutoscalerCondition
 from .v2_metric_status import V2MetricStatus
@@ -8,7 +7,7 @@ __all__ = ("V2HorizontalPodAutoscalerStatus",)
 
 
 class V2HorizontalPodAutoscalerStatus(BaseModel):
-    conditions: list[V2HorizontalPodAutoscalerCondition] = Field(default=[])
+    conditions: list[V2HorizontalPodAutoscalerCondition] = []
 
     current_metrics: list[V2MetricStatus] = Field(
         default=[],

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_replica_set_condition import V1ReplicaSetCondition
 
@@ -12,7 +11,7 @@ class V1ReplicaSetStatus(BaseModel):
         validation_alias=AliasChoices("available_replicas", "availableReplicas"),
     )
 
-    conditions: list[V1ReplicaSetCondition] = Field(default=[])
+    conditions: list[V1ReplicaSetCondition] = []
 
     fully_labeled_replicas: int | None = Field(
         default=None,
@@ -32,7 +31,7 @@ class V1ReplicaSetStatus(BaseModel):
         validation_alias=AliasChoices("ready_replicas", "readyReplicas"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
     terminating_replicas: int | None = Field(
         default=None,

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .discovery_v1_endpoint_port import DiscoveryV1EndpointPort
 from .v1_endpoint import V1Endpoint
@@ -20,10 +19,10 @@ class V1EndpointSlice(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    endpoints: list[V1Endpoint] = Field(default=[])
+    endpoints: list[V1Endpoint] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    ports: list[DiscoveryV1EndpointPort] = Field(default=[])
+    ports: list[DiscoveryV1EndpointPort] = []

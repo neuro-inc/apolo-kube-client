@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
@@ -6,7 +5,7 @@ __all__ = ("V1FlexPersistentVolumeSource",)
 
 
 class V1FlexPersistentVolumeSource(BaseModel):
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
     fs_type: str | None = Field(
         default=None,
@@ -14,7 +13,7 @@ class V1FlexPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    options: dict[str, str] = Field(default={})
+    options: dict[str, str] = {}
 
     read_only: bool | None = Field(
         default=None,

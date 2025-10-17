@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1_exempt_priority_level_configuration import V1ExemptPriorityLevelConfiguration
 from .v1_limited_priority_level_configuration import V1LimitedPriorityLevelConfiguration
@@ -15,4 +14,4 @@ class V1PriorityLevelConfigurationSpec(BaseModel):
         default_factory=lambda: V1LimitedPriorityLevelConfiguration()
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

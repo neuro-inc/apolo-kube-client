@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_api_resource import V1APIResource
 
@@ -18,6 +17,6 @@ class V1APIResourceList(BaseModel):
         validation_alias=AliasChoices("group_version", "groupVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    resources: list[V1APIResource] = Field(default=[])
+    resources: list[V1APIResource] = []

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1ImageVolumeSource(BaseModel):
         validation_alias=AliasChoices("pull_policy", "pullPolicy"),
     )
 
-    reference: str | None = Field(default=None)
+    reference: str | None = None

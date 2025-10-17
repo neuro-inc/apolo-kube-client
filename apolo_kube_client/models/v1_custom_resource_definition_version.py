@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
@@ -17,7 +16,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         ),
     )
 
-    deprecated: bool | None = Field(default=None)
+    deprecated: bool | None = None
 
     deprecation_warning: str | None = Field(
         default=None,
@@ -25,7 +24,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         validation_alias=AliasChoices("deprecation_warning", "deprecationWarning"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     schema_: V1CustomResourceValidation = Field(
         default_factory=lambda: V1CustomResourceValidation(),
@@ -39,9 +38,9 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         validation_alias=AliasChoices("selectable_fields", "selectableFields"),
     )
 
-    served: bool | None = Field(default=None)
+    served: bool | None = None
 
-    storage: bool | None = Field(default=None)
+    storage: bool | None = None
 
     subresources: V1CustomResourceSubresources = Field(
         default_factory=lambda: V1CustomResourceSubresources()

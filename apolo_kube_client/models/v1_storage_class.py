@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_topology_selector_term import V1TopologySelectorTerm
@@ -25,9 +24,9 @@ class V1StorageClass(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     mount_options: list[str] = Field(
         default=[],
@@ -35,9 +34,9 @@ class V1StorageClass(BaseModel):
         validation_alias=AliasChoices("mount_options", "mountOptions"),
     )
 
-    parameters: dict[str, str] = Field(default={})
+    parameters: dict[str, str] = {}
 
-    provisioner: str | None = Field(default=None)
+    provisioner: str | None = None
 
     reclaim_policy: str | None = Field(
         default=None,

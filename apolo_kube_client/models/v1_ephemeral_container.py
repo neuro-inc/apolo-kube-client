@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_container_port import V1ContainerPort
 from .v1_container_resize_policy import V1ContainerResizePolicy
@@ -16,11 +15,11 @@ __all__ = ("V1EphemeralContainer",)
 
 
 class V1EphemeralContainer(BaseModel):
-    args: list[str] = Field(default=[])
+    args: list[str] = []
 
-    command: list[str] = Field(default=[])
+    command: list[str] = []
 
-    env: list[V1EnvVar] = Field(default=[])
+    env: list[V1EnvVar] = []
 
     env_from: list[V1EnvFromSource] = Field(
         default=[],
@@ -28,7 +27,7 @@ class V1EphemeralContainer(BaseModel):
         validation_alias=AliasChoices("env_from", "envFrom"),
     )
 
-    image: str | None = Field(default=None)
+    image: str | None = None
 
     image_pull_policy: str | None = Field(
         default=None,
@@ -44,9 +43,9 @@ class V1EphemeralContainer(BaseModel):
         validation_alias=AliasChoices("liveness_probe", "livenessProbe"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    ports: list[V1ContainerPort] = Field(default=[])
+    ports: list[V1ContainerPort] = []
 
     readiness_probe: V1Probe = Field(
         default_factory=lambda: V1Probe(),
@@ -88,7 +87,7 @@ class V1EphemeralContainer(BaseModel):
         validation_alias=AliasChoices("startup_probe", "startupProbe"),
     )
 
-    stdin: bool | None = Field(default=None)
+    stdin: bool | None = None
 
     stdin_once: bool | None = Field(
         default=None,
@@ -118,7 +117,7 @@ class V1EphemeralContainer(BaseModel):
         ),
     )
 
-    tty: bool | None = Field(default=None)
+    tty: bool | None = None
 
     volume_devices: list[V1VolumeDevice] = Field(
         default=[],

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_flow_schema import V1FlowSchema
 from .v1_list_meta import V1ListMeta
@@ -13,8 +12,8 @@ class V1FlowSchemaList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1FlowSchema] = Field(default=[])
+    items: list[V1FlowSchema] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1LocalVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    path: str | None = Field(default=None)
+    path: str | None = None

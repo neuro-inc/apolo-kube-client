@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ResourceQuotaStatus",)
 
 
 class V1ResourceQuotaStatus(BaseModel):
-    hard: dict[str, str] = Field(default={})
+    hard: dict[str, str] = {}
 
-    used: dict[str, str] = Field(default={})
+    used: dict[str, str] = {}

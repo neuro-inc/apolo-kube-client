@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1beta1OpaqueDeviceConfiguration",)
 
 
 class V1beta1OpaqueDeviceConfiguration(BaseModel):
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
-    parameters: JsonType = Field(default={})
+    parameters: JsonType = {}

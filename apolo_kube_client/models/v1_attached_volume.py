@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1AttachedVolume(BaseModel):
         validation_alias=AliasChoices("device_path", "devicePath"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None

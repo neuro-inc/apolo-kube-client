@@ -1,13 +1,12 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1EndpointConditions",)
 
 
 class V1EndpointConditions(BaseModel):
-    ready: bool | None = Field(default=None)
+    ready: bool | None = None
 
-    serving: bool | None = Field(default=None)
+    serving: bool | None = None
 
-    terminating: bool | None = Field(default=None)
+    terminating: bool | None = None

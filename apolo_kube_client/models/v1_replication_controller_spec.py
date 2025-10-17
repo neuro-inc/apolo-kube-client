@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_pod_template_spec import V1PodTemplateSpec
 
@@ -12,8 +11,8 @@ class V1ReplicationControllerSpec(BaseModel):
         validation_alias=AliasChoices("min_ready_seconds", "minReadySeconds"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
-    selector: dict[str, str] = Field(default={})
+    selector: dict[str, str] = {}
 
     template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())

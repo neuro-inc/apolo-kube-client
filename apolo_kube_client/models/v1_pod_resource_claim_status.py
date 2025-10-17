@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,7 +5,7 @@ __all__ = ("V1PodResourceClaimStatus",)
 
 
 class V1PodResourceClaimStatus(BaseModel):
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     resource_claim_name: str | None = Field(
         default=None,

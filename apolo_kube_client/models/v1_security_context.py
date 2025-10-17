@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_capabilities import V1Capabilities
@@ -26,7 +25,7 @@ class V1SecurityContext(BaseModel):
 
     capabilities: V1Capabilities = Field(default_factory=lambda: V1Capabilities())
 
-    privileged: bool | None = Field(default=None)
+    privileged: bool | None = None
 
     proc_mount: str | None = Field(
         default=None,

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_container_resource_metric_source import V2ContainerResourceMetricSource
 from .v2_external_metric_source import V2ExternalMetricSource
@@ -28,4 +27,4 @@ class V2MetricSpec(BaseModel):
         default_factory=lambda: V2ResourceMetricSource()
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

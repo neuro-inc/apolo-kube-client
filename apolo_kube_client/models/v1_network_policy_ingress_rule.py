@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_network_policy_peer import V1NetworkPolicyPeer
 from .v1_network_policy_port import V1NetworkPolicyPort
@@ -13,4 +12,4 @@ class V1NetworkPolicyIngressRule(BaseModel):
         validation_alias=AliasChoices("from_", "from"),
     )
 
-    ports: list[V1NetworkPolicyPort] = Field(default=[])
+    ports: list[V1NetworkPolicyPort] = []

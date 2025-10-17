@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_replication_controller_condition import V1ReplicationControllerCondition
 
@@ -12,7 +11,7 @@ class V1ReplicationControllerStatus(BaseModel):
         validation_alias=AliasChoices("available_replicas", "availableReplicas"),
     )
 
-    conditions: list[V1ReplicationControllerCondition] = Field(default=[])
+    conditions: list[V1ReplicationControllerCondition] = []
 
     fully_labeled_replicas: int | None = Field(
         default=None,
@@ -32,4 +31,4 @@ class V1ReplicationControllerStatus(BaseModel):
         validation_alias=AliasChoices("ready_replicas", "readyReplicas"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None

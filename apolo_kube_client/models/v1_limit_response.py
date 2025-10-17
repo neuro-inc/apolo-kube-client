@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1_queuing_configuration import V1QueuingConfiguration
 
@@ -10,4 +9,4 @@ class V1LimitResponse(BaseModel):
         default_factory=lambda: V1QueuingConfiguration()
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

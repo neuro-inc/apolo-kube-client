@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,7 +5,7 @@ __all__ = ("V1LimitRangeItem",)
 
 
 class V1LimitRangeItem(BaseModel):
-    default: dict[str, str] = Field(default={})
+    default: dict[str, str] = {}
 
     default_request: dict[str, str] = Field(
         default={},
@@ -14,7 +13,7 @@ class V1LimitRangeItem(BaseModel):
         validation_alias=AliasChoices("default_request", "defaultRequest"),
     )
 
-    max: dict[str, str] = Field(default={})
+    max: dict[str, str] = {}
 
     max_limit_request_ratio: dict[str, str] = Field(
         default={},
@@ -24,6 +23,6 @@ class V1LimitRangeItem(BaseModel):
         ),
     )
 
-    min: dict[str, str] = Field(default={})
+    min: dict[str, str] = {}
 
-    type: str | None = Field(default=None)
+    type: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_device_toleration import V1DeviceToleration
 
@@ -32,13 +31,13 @@ class V1DeviceRequestAllocationResult(BaseModel):
         validation_alias=AliasChoices("consumed_capacity", "consumedCapacity"),
     )
 
-    device: str | None = Field(default=None)
+    device: str | None = None
 
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
-    pool: str | None = Field(default=None)
+    pool: str | None = None
 
-    request: str | None = Field(default=None)
+    request: str | None = None
 
     share_id: str | None = Field(
         default=None,
@@ -46,4 +45,4 @@ class V1DeviceRequestAllocationResult(BaseModel):
         validation_alias=AliasChoices("share_id", "shareID"),
     )
 
-    tolerations: list[V1DeviceToleration] = Field(default=[])
+    tolerations: list[V1DeviceToleration] = []

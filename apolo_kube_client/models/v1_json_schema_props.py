@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
@@ -32,29 +31,29 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("additional_properties", "additionalProperties"),
     )
 
-    all_of: list[V1JSONSchemaProps] = Field(
+    all_of: list["V1JSONSchemaProps"] = Field(
         default=[],
         serialization_alias="allOf",
         validation_alias=AliasChoices("all_of", "allOf"),
     )
 
-    any_of: list[V1JSONSchemaProps] = Field(
+    any_of: list["V1JSONSchemaProps"] = Field(
         default=[],
         serialization_alias="anyOf",
         validation_alias=AliasChoices("any_of", "anyOf"),
     )
 
-    default: JsonType = Field(default={})
+    default: JsonType = {}
 
-    definitions: dict[str, V1JSONSchemaProps] = Field(default={})
+    definitions: dict[str, "V1JSONSchemaProps"] = {}
 
-    dependencies: dict[str, JsonType] = Field(default={})
+    dependencies: dict[str, JsonType] = {}
 
-    description: str | None = Field(default=None)
+    description: str | None = None
 
-    enum: list[JsonType] = Field(default=[])
+    enum: list[JsonType] = []
 
-    example: JsonType = Field(default={})
+    example: JsonType = {}
 
     exclusive_maximum: bool | None = Field(
         default=None,
@@ -74,11 +73,11 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("external_docs", "externalDocs"),
     )
 
-    format: str | None = Field(default=None)
+    format: str | None = None
 
-    id: str | None = Field(default=None)
+    id: str | None = None
 
-    items: JsonType = Field(default={})
+    items: JsonType = {}
 
     max_items: int | None = Field(
         default=None,
@@ -98,7 +97,7 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("max_properties", "maxProperties"),
     )
 
-    maximum: float | None = Field(default=None)
+    maximum: float | None = None
 
     min_items: int | None = Field(
         default=None,
@@ -118,7 +117,7 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("min_properties", "minProperties"),
     )
 
-    minimum: float | None = Field(default=None)
+    minimum: float | None = None
 
     multiple_of: float | None = Field(
         default=None,
@@ -126,35 +125,35 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("multiple_of", "multipleOf"),
     )
 
-    not_: V1JSONSchemaProps = Field(
+    not_: "V1JSONSchemaProps" = Field(
         default_factory=lambda: V1JSONSchemaProps(),
         serialization_alias="not",
         validation_alias=AliasChoices("not_", "not"),
     )
 
-    nullable: bool | None = Field(default=None)
+    nullable: bool | None = None
 
-    one_of: list[V1JSONSchemaProps] = Field(
+    one_of: list["V1JSONSchemaProps"] = Field(
         default=[],
         serialization_alias="oneOf",
         validation_alias=AliasChoices("one_of", "oneOf"),
     )
 
-    pattern: str | None = Field(default=None)
+    pattern: str | None = None
 
-    pattern_properties: dict[str, V1JSONSchemaProps] = Field(
+    pattern_properties: dict[str, "V1JSONSchemaProps"] = Field(
         default={},
         serialization_alias="patternProperties",
         validation_alias=AliasChoices("pattern_properties", "patternProperties"),
     )
 
-    properties: dict[str, V1JSONSchemaProps] = Field(default={})
+    properties: dict[str, "V1JSONSchemaProps"] = {}
 
-    required: list[str] = Field(default=[])
+    required: list[str] = []
 
-    title: str | None = Field(default=None)
+    title: str | None = None
 
-    type: str | None = Field(default=None)
+    type: str | None = None
 
     unique_items: bool | None = Field(
         default=None,

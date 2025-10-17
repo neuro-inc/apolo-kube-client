@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_spec import V1NodeSpec
 from .v1_node_status import V1NodeStatus
@@ -14,9 +13,9 @@ class V1Node(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1NodeSpec = Field(default_factory=lambda: V1NodeSpec())
 

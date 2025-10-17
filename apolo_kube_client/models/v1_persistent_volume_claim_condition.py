@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -18,10 +17,10 @@ class V1PersistentVolumeClaimCondition(BaseModel):
         validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    status: str | None = Field(default=None)
+    status: str | None = None
 
-    type: str | None = Field(default=None)
+    type: str | None = None

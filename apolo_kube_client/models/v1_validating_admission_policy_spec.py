@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_audit_annotation import V1AuditAnnotation
 from .v1_match_condition import V1MatchCondition
@@ -41,6 +40,6 @@ class V1ValidatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("param_kind", "paramKind"),
     )
 
-    validations: list[V1Validation] = Field(default=[])
+    validations: list[V1Validation] = []
 
-    variables: list[V1Variable] = Field(default=[])
+    variables: list[V1Variable] = []

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_condition import V1Condition
 from .v1_network_device_data import V1NetworkDeviceData
@@ -8,13 +7,13 @@ __all__ = ("V1AllocatedDeviceStatus",)
 
 
 class V1AllocatedDeviceStatus(BaseModel):
-    conditions: list[V1Condition] = Field(default=[])
+    conditions: list[V1Condition] = []
 
-    data: JsonType = Field(default={})
+    data: JsonType = {}
 
-    device: str | None = Field(default=None)
+    device: str | None = None
 
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
     network_data: V1NetworkDeviceData = Field(
         default_factory=lambda: V1NetworkDeviceData(),
@@ -22,7 +21,7 @@ class V1AllocatedDeviceStatus(BaseModel):
         validation_alias=AliasChoices("network_data", "networkData"),
     )
 
-    pool: str | None = Field(default=None)
+    pool: str | None = None
 
     share_id: str | None = Field(
         default=None,

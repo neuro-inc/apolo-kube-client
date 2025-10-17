@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1TokenReviewSpec",)
 
 
 class V1TokenReviewSpec(BaseModel):
-    audiences: list[str] = Field(default=[])
+    audiences: list[str] = []
 
-    token: str | None = Field(default=None)
+    token: str | None = None

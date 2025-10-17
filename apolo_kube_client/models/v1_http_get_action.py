@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_http_header import V1HTTPHeader
 from apolo_kube_client._typedefs import JsonType
@@ -7,7 +6,7 @@ __all__ = ("V1HTTPGetAction",)
 
 
 class V1HTTPGetAction(BaseModel):
-    host: str | None = Field(default=None)
+    host: str | None = None
 
     http_headers: list[V1HTTPHeader] = Field(
         default=[],
@@ -15,8 +14,8 @@ class V1HTTPGetAction(BaseModel):
         validation_alias=AliasChoices("http_headers", "httpHeaders"),
     )
 
-    path: str | None = Field(default=None)
+    path: str | None = None
 
-    port: JsonType = Field(default={})
+    port: JsonType = {}
 
-    scheme: str | None = Field(default=None)
+    scheme: str | None = None

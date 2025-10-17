@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,11 +5,11 @@ __all__ = ("V1beta2DeviceToleration",)
 
 
 class V1beta2DeviceToleration(BaseModel):
-    effect: str | None = Field(default=None)
+    effect: str | None = None
 
-    key: str | None = Field(default=None)
+    key: str | None = None
 
-    operator: str | None = Field(default=None)
+    operator: str | None = None
 
     toleration_seconds: int | None = Field(
         default=None,
@@ -18,4 +17,4 @@ class V1beta2DeviceToleration(BaseModel):
         validation_alias=AliasChoices("toleration_seconds", "tolerationSeconds"),
     )
 
-    value: str | None = Field(default=None)
+    value: str | None = None

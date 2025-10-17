@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1alpha3_device_taint import V1alpha3DeviceTaint
 from .v1alpha3_device_taint_selector import V1alpha3DeviceTaintSelector

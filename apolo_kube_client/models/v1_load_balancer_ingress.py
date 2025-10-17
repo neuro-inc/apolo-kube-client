@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_port_status import V1PortStatus
 
@@ -6,9 +5,9 @@ __all__ = ("V1LoadBalancerIngress",)
 
 
 class V1LoadBalancerIngress(BaseModel):
-    hostname: str | None = Field(default=None)
+    hostname: str | None = None
 
-    ip: str | None = Field(default=None)
+    ip: str | None = None
 
     ip_mode: str | None = Field(
         default=None,
@@ -16,4 +15,4 @@ class V1LoadBalancerIngress(BaseModel):
         validation_alias=AliasChoices("ip_mode", "ipMode"),
     )
 
-    ports: list[V1PortStatus] = Field(default=[])
+    ports: list[V1PortStatus] = []

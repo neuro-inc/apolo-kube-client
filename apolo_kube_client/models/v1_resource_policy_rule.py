@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,8 +17,8 @@ class V1ResourcePolicyRule(BaseModel):
         validation_alias=AliasChoices("cluster_scope", "clusterScope"),
     )
 
-    namespaces: list[str] = Field(default=[])
+    namespaces: list[str] = []
 
-    resources: list[str] = Field(default=[])
+    resources: list[str] = []
 
-    verbs: list[str] = Field(default=[])
+    verbs: list[str] = []

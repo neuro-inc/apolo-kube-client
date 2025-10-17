@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,7 +11,7 @@ class V1AWSElasticBlockStoreVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    partition: int | None = Field(default=None)
+    partition: int | None = None
 
     read_only: bool | None = Field(
         default=None,

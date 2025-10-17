@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 
@@ -12,7 +11,7 @@ class V1APIVersions(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     server_address_by_client_cid_rs: list[V1ServerAddressByClientCIDR] = Field(
         default=[],
@@ -22,4 +21,4 @@ class V1APIVersions(BaseModel):
         ),
     )
 
-    versions: list[str] = Field(default=[])
+    versions: list[str] = []

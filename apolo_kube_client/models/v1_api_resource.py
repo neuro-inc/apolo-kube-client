@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,15 +5,15 @@ __all__ = ("V1APIResource",)
 
 
 class V1APIResource(BaseModel):
-    categories: list[str] = Field(default=[])
+    categories: list[str] = []
 
-    group: str | None = Field(default=None)
+    group: str | None = None
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespaced: bool | None = Field(default=None)
+    namespaced: bool | None = None
 
     short_names: list[str] = Field(
         default=[],
@@ -34,6 +33,6 @@ class V1APIResource(BaseModel):
         validation_alias=AliasChoices("storage_version_hash", "storageVersionHash"),
     )
 
-    verbs: list[str] = Field(default=[])
+    verbs: list[str] = []
 
-    version: str | None = Field(default=None)
+    version: str | None = None

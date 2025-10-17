@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1alpha1ParamKind(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None

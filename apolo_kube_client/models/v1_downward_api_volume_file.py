@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_field_selector import V1ObjectFieldSelector
 from .v1_resource_field_selector import V1ResourceFieldSelector
@@ -13,9 +12,9 @@ class V1DownwardAPIVolumeFile(BaseModel):
         validation_alias=AliasChoices("field_ref", "fieldRef"),
     )
 
-    mode: int | None = Field(default=None)
+    mode: int | None = None
 
-    path: str | None = Field(default=None)
+    path: str | None = None
 
     resource_field_ref: V1ResourceFieldSelector = Field(
         default_factory=lambda: V1ResourceFieldSelector(),

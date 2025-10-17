@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,6 +11,6 @@ class V2HPAScalingPolicy(BaseModel):
         validation_alias=AliasChoices("period_seconds", "periodSeconds"),
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None
 
-    value: int | None = Field(default=None)
+    value: int | None = None

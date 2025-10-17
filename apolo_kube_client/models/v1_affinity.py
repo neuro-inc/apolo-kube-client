@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_affinity import V1NodeAffinity
 from .v1_pod_affinity import V1PodAffinity

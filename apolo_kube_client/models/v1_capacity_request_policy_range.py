@@ -1,13 +1,12 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1CapacityRequestPolicyRange",)
 
 
 class V1CapacityRequestPolicyRange(BaseModel):
-    max: str | None = Field(default=None)
+    max: str | None = None
 
-    min: str | None = Field(default=None)
+    min: str | None = None
 
-    step: str | None = Field(default=None)
+    step: str | None = None

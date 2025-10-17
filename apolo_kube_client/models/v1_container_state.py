@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1_container_state_running import V1ContainerStateRunning
 from .v1_container_state_terminated import V1ContainerStateTerminated

@@ -1,15 +1,14 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ParentReference",)
 
 
 class V1ParentReference(BaseModel):
-    group: str | None = Field(default=None)
+    group: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None
 
-    resource: str | None = Field(default=None)
+    resource: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1GroupVersionForDiscovery(BaseModel):
         validation_alias=AliasChoices("group_version", "groupVersion"),
     )
 
-    version: str | None = Field(default=None)
+    version: str | None = None

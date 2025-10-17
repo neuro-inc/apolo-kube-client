@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -12,7 +11,7 @@ class V1alpha1StorageVersionCondition(BaseModel):
         validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
     observed_generation: int | None = Field(
         default=None,
@@ -20,8 +19,8 @@ class V1alpha1StorageVersionCondition(BaseModel):
         validation_alias=AliasChoices("observed_generation", "observedGeneration"),
     )
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    status: str | None = Field(default=None)
+    status: str | None = None
 
-    type: str | None = Field(default=None)
+    type: str | None = None

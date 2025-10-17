@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_ingress_load_balancer_status import V1IngressLoadBalancerStatus
 

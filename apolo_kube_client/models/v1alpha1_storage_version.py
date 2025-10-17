@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha1_storage_version_status import V1alpha1StorageVersionStatus
@@ -14,11 +13,11 @@ class V1alpha1StorageVersion(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: JsonType = Field(default={})
+    spec: JsonType = {}
 
     status: V1alpha1StorageVersionStatus = Field(
         default_factory=lambda: V1alpha1StorageVersionStatus()

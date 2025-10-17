@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_daemon_set_update_strategy import V1DaemonSetUpdateStrategy
 from .v1_label_selector import V1LabelSelector

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .apiextensions_v1_webhook_client_config import ApiextensionsV1WebhookClientConfig
 

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1Preconditions(BaseModel):
         validation_alias=AliasChoices("resource_version", "resourceVersion"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

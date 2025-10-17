@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
 

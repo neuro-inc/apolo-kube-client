@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1alpha1_server_storage_version import V1alpha1ServerStorageVersion
 from .v1alpha1_storage_version_condition import V1alpha1StorageVersionCondition
@@ -15,7 +14,7 @@ class V1alpha1StorageVersionStatus(BaseModel):
         ),
     )
 
-    conditions: list[V1alpha1StorageVersionCondition] = Field(default=[])
+    conditions: list[V1alpha1StorageVersionCondition] = []
 
     storage_versions: list[V1alpha1ServerStorageVersion] = Field(
         default=[],

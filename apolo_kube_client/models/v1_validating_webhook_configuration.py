@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_validating_webhook import V1ValidatingWebhook
@@ -13,8 +12,8 @@ class V1ValidatingWebhookConfiguration(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    webhooks: list[V1ValidatingWebhook] = Field(default=[])
+    webhooks: list[V1ValidatingWebhook] = []

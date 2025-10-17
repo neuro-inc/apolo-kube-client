@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1beta1_opaque_device_configuration import V1beta1OpaqueDeviceConfiguration
 
@@ -10,6 +9,6 @@ class V1beta1DeviceAllocationConfiguration(BaseModel):
         default_factory=lambda: V1beta1OpaqueDeviceConfiguration()
     )
 
-    requests: list[str] = Field(default=[])
+    requests: list[str] = []
 
-    source: str | None = Field(default=None)
+    source: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,8 +11,8 @@ class DiscoveryV1EndpointPort(BaseModel):
         validation_alias=AliasChoices("app_protocol", "appProtocol"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    port: int | None = Field(default=None)
+    port: int | None = None
 
-    protocol: str | None = Field(default=None)
+    protocol: str | None = None

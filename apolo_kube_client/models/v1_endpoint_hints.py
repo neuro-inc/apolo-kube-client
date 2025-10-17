@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_for_node import V1ForNode
 from .v1_for_zone import V1ForZone

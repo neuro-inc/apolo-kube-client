@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_persistent_volume_claim import V1PersistentVolumeClaim
@@ -38,7 +37,7 @@ class V1StatefulSetSpec(BaseModel):
         validation_alias=AliasChoices("pod_management_policy", "podManagementPolicy"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
     revision_history_limit: int | None = Field(
         default=None,

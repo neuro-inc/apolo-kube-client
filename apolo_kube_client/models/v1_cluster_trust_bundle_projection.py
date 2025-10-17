@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 
@@ -12,11 +11,11 @@ class V1ClusterTrustBundleProjection(BaseModel):
         validation_alias=AliasChoices("label_selector", "labelSelector"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    optional: bool | None = Field(default=None)
+    optional: bool | None = None
 
-    path: str | None = Field(default=None)
+    path: str | None = None
 
     signer_name: str | None = Field(
         default=None,

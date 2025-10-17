@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_affinity import V1Affinity
 from .v1_container import V1Container
@@ -38,7 +37,7 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    containers: list[V1Container] = Field(default=[])
+    containers: list[V1Container] = []
 
     dns_config: V1PodDNSConfig = Field(
         default_factory=lambda: V1PodDNSConfig(),
@@ -94,7 +93,7 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("host_users", "hostUsers"),
     )
 
-    hostname: str | None = Field(default=None)
+    hostname: str | None = None
 
     hostname_override: str | None = Field(
         default=None,
@@ -128,7 +127,7 @@ class V1PodSpec(BaseModel):
 
     os: V1PodOS = Field(default_factory=lambda: V1PodOS())
 
-    overhead: dict[str, str] = Field(default={})
+    overhead: dict[str, str] = {}
 
     preemption_policy: str | None = Field(
         default=None,
@@ -136,7 +135,7 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("preemption_policy", "preemptionPolicy"),
     )
 
-    priority: int | None = Field(default=None)
+    priority: int | None = None
 
     priority_class_name: str | None = Field(
         default=None,
@@ -216,7 +215,7 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    subdomain: str | None = Field(default=None)
+    subdomain: str | None = None
 
     termination_grace_period_seconds: int | None = Field(
         default=None,
@@ -226,7 +225,7 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    tolerations: list[V1Toleration] = Field(default=[])
+    tolerations: list[V1Toleration] = []
 
     topology_spread_constraints: list[V1TopologySpreadConstraint] = Field(
         default=[],
@@ -236,4 +235,4 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    volumes: list[V1Volume] = Field(default=[])
+    volumes: list[V1Volume] = []

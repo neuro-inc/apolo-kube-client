@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_scoped_resource_selector_requirement import V1ScopedResourceSelectorRequirement
 

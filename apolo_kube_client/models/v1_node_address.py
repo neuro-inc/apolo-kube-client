@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1NodeAddress",)
 
 
 class V1NodeAddress(BaseModel):
-    address: str | None = Field(default=None)
+    address: str | None = None
 
-    type: str | None = Field(default=None)
+    type: str | None = None

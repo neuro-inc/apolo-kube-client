@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_horizontal_pod_autoscaler import V1HorizontalPodAutoscaler
 from .v1_list_meta import V1ListMeta
@@ -13,8 +12,8 @@ class V1HorizontalPodAutoscalerList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1HorizontalPodAutoscaler] = Field(default=[])
+    items: list[V1HorizontalPodAutoscaler] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta2_device_sub_request import V1beta2DeviceSubRequest
 from .v1beta2_exact_device_request import V1beta2ExactDeviceRequest
@@ -17,4 +16,4 @@ class V1beta2DeviceRequest(BaseModel):
         validation_alias=AliasChoices("first_available", "firstAvailable"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None

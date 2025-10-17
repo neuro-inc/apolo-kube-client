@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .events_v1_event_series import EventsV1EventSeries
 from .v1_event_source import V1EventSource
@@ -10,7 +9,7 @@ __all__ = ("EventsV1Event",)
 
 
 class EventsV1Event(BaseModel):
-    action: str | None = Field(default=None)
+    action: str | None = None
 
     api_version: str | None = Field(
         default=None,
@@ -52,13 +51,13 @@ class EventsV1Event(BaseModel):
         validation_alias=AliasChoices("event_time", "eventTime"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    note: str | None = Field(default=None)
+    note: str | None = None
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
     regarding: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
 
@@ -78,4 +77,4 @@ class EventsV1Event(BaseModel):
 
     series: EventsV1EventSeries = Field(default_factory=lambda: EventsV1EventSeries())
 
-    type: str | None = Field(default=None)
+    type: str | None = None

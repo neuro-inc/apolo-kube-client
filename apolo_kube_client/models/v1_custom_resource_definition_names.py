@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,9 +5,9 @@ __all__ = ("V1CustomResourceDefinitionNames",)
 
 
 class V1CustomResourceDefinitionNames(BaseModel):
-    categories: list[str] = Field(default=[])
+    categories: list[str] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     list_kind: str | None = Field(
         default=None,
@@ -16,7 +15,7 @@ class V1CustomResourceDefinitionNames(BaseModel):
         validation_alias=AliasChoices("list_kind", "listKind"),
     )
 
-    plural: str | None = Field(default=None)
+    plural: str | None = None
 
     short_names: list[str] = Field(
         default=[],
@@ -24,4 +23,4 @@ class V1CustomResourceDefinitionNames(BaseModel):
         validation_alias=AliasChoices("short_names", "shortNames"),
     )
 
-    singular: str | None = Field(default=None)
+    singular: str | None = None

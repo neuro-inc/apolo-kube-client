@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1NonResourceRule(BaseModel):
         validation_alias=AliasChoices("non_resource_ur_ls", "nonResourceURLs"),
     )
 
-    verbs: list[str] = Field(default=[])
+    verbs: list[str] = []

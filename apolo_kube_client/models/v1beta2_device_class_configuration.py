@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1beta2_opaque_device_configuration import V1beta2OpaqueDeviceConfiguration
 

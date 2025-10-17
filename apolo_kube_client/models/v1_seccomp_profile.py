@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1SeccompProfile(BaseModel):
         validation_alias=AliasChoices("localhost_profile", "localhostProfile"),
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_failure_policy import V1PodFailurePolicy
@@ -37,7 +36,7 @@ class V1JobSpec(BaseModel):
         validation_alias=AliasChoices("completion_mode", "completionMode"),
     )
 
-    completions: int | None = Field(default=None)
+    completions: int | None = None
 
     managed_by: str | None = Field(
         default=None,
@@ -57,7 +56,7 @@ class V1JobSpec(BaseModel):
         validation_alias=AliasChoices("max_failed_indexes", "maxFailedIndexes"),
     )
 
-    parallelism: int | None = Field(default=None)
+    parallelism: int | None = None
 
     pod_failure_policy: V1PodFailurePolicy = Field(
         default_factory=lambda: V1PodFailurePolicy(),
@@ -79,7 +78,7 @@ class V1JobSpec(BaseModel):
         validation_alias=AliasChoices("success_policy", "successPolicy"),
     )
 
-    suspend: bool | None = Field(default=None)
+    suspend: bool | None = None
 
     template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())
 

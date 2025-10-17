@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -12,4 +11,4 @@ class V1TokenRequestStatus(BaseModel):
         validation_alias=AliasChoices("expiration_timestamp", "expirationTimestamp"),
     )
 
-    token: str | None = Field(default=None)
+    token: str | None = None

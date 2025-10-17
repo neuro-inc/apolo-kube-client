@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
@@ -13,9 +12,9 @@ class V1APIGroup(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     preferred_version: V1GroupVersionForDiscovery = Field(
         default_factory=lambda: V1GroupVersionForDiscovery(),
@@ -31,4 +30,4 @@ class V1APIGroup(BaseModel):
         ),
     )
 
-    versions: list[V1GroupVersionForDiscovery] = Field(default=[])
+    versions: list[V1GroupVersionForDiscovery] = []

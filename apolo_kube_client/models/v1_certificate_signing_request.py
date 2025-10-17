@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_certificate_signing_request_spec import V1CertificateSigningRequestSpec
 from .v1_certificate_signing_request_status import V1CertificateSigningRequestStatus
@@ -14,9 +13,9 @@ class V1CertificateSigningRequest(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1CertificateSigningRequestSpec = Field(
         default_factory=lambda: V1CertificateSigningRequestSpec()

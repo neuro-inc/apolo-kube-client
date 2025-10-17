@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_attached_volume import V1AttachedVolume
 from .v1_container_image import V1ContainerImage
@@ -14,13 +13,13 @@ __all__ = ("V1NodeStatus",)
 
 
 class V1NodeStatus(BaseModel):
-    addresses: list[V1NodeAddress] = Field(default=[])
+    addresses: list[V1NodeAddress] = []
 
-    allocatable: dict[str, str] = Field(default={})
+    allocatable: dict[str, str] = {}
 
-    capacity: dict[str, str] = Field(default={})
+    capacity: dict[str, str] = {}
 
-    conditions: list[V1NodeCondition] = Field(default=[])
+    conditions: list[V1NodeCondition] = []
 
     config: V1NodeConfigStatus = Field(default_factory=lambda: V1NodeConfigStatus())
 
@@ -32,7 +31,7 @@ class V1NodeStatus(BaseModel):
 
     features: V1NodeFeatures = Field(default_factory=lambda: V1NodeFeatures())
 
-    images: list[V1ContainerImage] = Field(default=[])
+    images: list[V1ContainerImage] = []
 
     node_info: V1NodeSystemInfo = Field(
         default_factory=lambda: V1NodeSystemInfo(),
@@ -40,7 +39,7 @@ class V1NodeStatus(BaseModel):
         validation_alias=AliasChoices("node_info", "nodeInfo"),
     )
 
-    phase: str | None = Field(default=None)
+    phase: str | None = None
 
     runtime_handlers: list[V1NodeRuntimeHandler] = Field(
         default=[],

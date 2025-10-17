@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_delete_options import V1DeleteOptions
 from .v1_object_meta import V1ObjectMeta
@@ -19,6 +18,6 @@ class V1Eviction(BaseModel):
         validation_alias=AliasChoices("delete_options", "deleteOptions"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())

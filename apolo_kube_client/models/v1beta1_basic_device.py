@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_device_attribute import V1beta1DeviceAttribute
@@ -24,7 +23,7 @@ class V1beta1BasicDevice(BaseModel):
         ),
     )
 
-    attributes: dict[str, V1beta1DeviceAttribute] = Field(default={})
+    attributes: dict[str, V1beta1DeviceAttribute] = {}
 
     binding_conditions: list[str] = Field(
         default=[],
@@ -46,7 +45,7 @@ class V1beta1BasicDevice(BaseModel):
         validation_alias=AliasChoices("binds_to_node", "bindsToNode"),
     )
 
-    capacity: dict[str, V1beta1DeviceCapacity] = Field(default={})
+    capacity: dict[str, V1beta1DeviceCapacity] = {}
 
     consumes_counters: list[V1beta1DeviceCounterConsumption] = Field(
         default=[],
@@ -66,4 +65,4 @@ class V1beta1BasicDevice(BaseModel):
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )
 
-    taints: list[V1beta1DeviceTaint] = Field(default=[])
+    taints: list[V1beta1DeviceTaint] = []

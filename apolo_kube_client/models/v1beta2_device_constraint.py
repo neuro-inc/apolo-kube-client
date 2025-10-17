@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,4 +17,4 @@ class V1beta2DeviceConstraint(BaseModel):
         validation_alias=AliasChoices("match_attribute", "matchAttribute"),
     )
 
-    requests: list[str] = Field(default=[])
+    requests: list[str] = []

@@ -1,13 +1,12 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1alpha1GroupVersionResource",)
 
 
 class V1alpha1GroupVersionResource(BaseModel):
-    group: str | None = Field(default=None)
+    group: str | None = None
 
-    resource: str | None = Field(default=None)
+    resource: str | None = None
 
-    version: str | None = Field(default=None)
+    version: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_hpa_scaling_rules import V2HPAScalingRules
 

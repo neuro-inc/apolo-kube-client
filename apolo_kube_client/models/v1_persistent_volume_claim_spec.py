@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference

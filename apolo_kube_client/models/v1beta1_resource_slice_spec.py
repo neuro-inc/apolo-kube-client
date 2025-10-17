@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_counter_set import V1beta1CounterSet
@@ -15,9 +14,9 @@ class V1beta1ResourceSliceSpec(BaseModel):
         validation_alias=AliasChoices("all_nodes", "allNodes"),
     )
 
-    devices: list[V1beta1Device] = Field(default=[])
+    devices: list[V1beta1Device] = []
 
-    driver: str | None = Field(default=None)
+    driver: str | None = None
 
     node_name: str | None = Field(
         default=None,

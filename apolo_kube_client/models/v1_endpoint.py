@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_endpoint_conditions import V1EndpointConditions
 from .v1_endpoint_hints import V1EndpointHints
@@ -8,7 +7,7 @@ __all__ = ("V1Endpoint",)
 
 
 class V1Endpoint(BaseModel):
-    addresses: list[str] = Field(default=[])
+    addresses: list[str] = []
 
     conditions: V1EndpointConditions = Field(
         default_factory=lambda: V1EndpointConditions()
@@ -22,7 +21,7 @@ class V1Endpoint(BaseModel):
 
     hints: V1EndpointHints = Field(default_factory=lambda: V1EndpointHints())
 
-    hostname: str | None = Field(default=None)
+    hostname: str | None = None
 
     node_name: str | None = Field(
         default=None,
@@ -36,4 +35,4 @@ class V1Endpoint(BaseModel):
         validation_alias=AliasChoices("target_ref", "targetRef"),
     )
 
-    zone: str | None = Field(default=None)
+    zone: str | None = None

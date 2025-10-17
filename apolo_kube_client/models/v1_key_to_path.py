@@ -1,13 +1,12 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1KeyToPath",)
 
 
 class V1KeyToPath(BaseModel):
-    key: str | None = Field(default=None)
+    key: str | None = None
 
-    mode: int | None = Field(default=None)
+    mode: int | None = None
 
-    path: str | None = Field(default=None)
+    path: str | None = None

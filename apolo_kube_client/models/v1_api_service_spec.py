@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
 
@@ -12,7 +11,7 @@ class V1APIServiceSpec(BaseModel):
         validation_alias=AliasChoices("ca_bundle", "caBundle"),
     )
 
-    group: str | None = Field(default=None)
+    group: str | None = None
 
     group_priority_minimum: int | None = Field(
         default=None,
@@ -32,7 +31,7 @@ class V1APIServiceSpec(BaseModel):
         default_factory=lambda: ApiregistrationV1ServiceReference()
     )
 
-    version: str | None = Field(default=None)
+    version: str | None = None
 
     version_priority: int | None = Field(
         default=None,

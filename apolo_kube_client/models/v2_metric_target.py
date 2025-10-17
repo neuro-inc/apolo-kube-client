@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,6 +17,6 @@ class V2MetricTarget(BaseModel):
         validation_alias=AliasChoices("average_value", "averageValue"),
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None
 
-    value: str | None = Field(default=None)
+    value: str | None = None

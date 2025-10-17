@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,8 +11,8 @@ class V1BoundObjectReference(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

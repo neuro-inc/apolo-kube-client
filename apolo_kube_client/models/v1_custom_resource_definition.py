@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_custom_resource_definition_spec import V1CustomResourceDefinitionSpec
 from .v1_custom_resource_definition_status import V1CustomResourceDefinitionStatus
@@ -14,9 +13,9 @@ class V1CustomResourceDefinition(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     spec: V1CustomResourceDefinitionSpec = Field(
         default_factory=lambda: V1CustomResourceDefinitionSpec()

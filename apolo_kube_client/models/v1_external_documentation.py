@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ExternalDocumentation",)
 
 
 class V1ExternalDocumentation(BaseModel):
-    description: str | None = Field(default=None)
+    description: str | None = None
 
-    url: str | None = Field(default=None)
+    url: str | None = None

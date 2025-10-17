@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 
@@ -12,13 +11,13 @@ class V1RBDVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    image: str | None = Field(default=None)
+    image: str | None = None
 
-    keyring: str | None = Field(default=None)
+    keyring: str | None = None
 
-    monitors: list[str] = Field(default=[])
+    monitors: list[str] = []
 
-    pool: str | None = Field(default=None)
+    pool: str | None = None
 
     read_only: bool | None = Field(
         default=None,
@@ -32,4 +31,4 @@ class V1RBDVolumeSource(BaseModel):
         validation_alias=AliasChoices("secret_ref", "secretRef"),
     )
 
-    user: str | None = Field(default=None)
+    user: str | None = None

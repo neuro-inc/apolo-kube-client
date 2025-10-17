@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_stateful_set_condition import V1StatefulSetCondition
 
@@ -18,7 +17,7 @@ class V1StatefulSetStatus(BaseModel):
         validation_alias=AliasChoices("collision_count", "collisionCount"),
     )
 
-    conditions: list[V1StatefulSetCondition] = Field(default=[])
+    conditions: list[V1StatefulSetCondition] = []
 
     current_replicas: int | None = Field(
         default=None,
@@ -44,7 +43,7 @@ class V1StatefulSetStatus(BaseModel):
         validation_alias=AliasChoices("ready_replicas", "readyReplicas"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
     update_revision: str | None = Field(
         default=None,

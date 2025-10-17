@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from apolo_kube_client._typedefs import JsonType
 
 __all__ = ("V1WatchEvent",)
 
 
 class V1WatchEvent(BaseModel):
-    object: JsonType = Field(default={})
+    object: JsonType = {}
 
-    type: str | None = Field(default=None)
+    type: str | None = None

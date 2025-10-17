@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1alpha3CELDeviceSelector",)
 
 
 class V1alpha3CELDeviceSelector(BaseModel):
-    expression: str | None = Field(default=None)
+    expression: str | None = None

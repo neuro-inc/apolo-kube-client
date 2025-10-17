@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_pod_failure_policy_on_exit_codes_requirement import (
     V1PodFailurePolicyOnExitCodesRequirement,
@@ -11,7 +10,7 @@ __all__ = ("V1PodFailurePolicyRule",)
 
 
 class V1PodFailurePolicyRule(BaseModel):
-    action: str | None = Field(default=None)
+    action: str | None = None
 
     on_exit_codes: V1PodFailurePolicyOnExitCodesRequirement = Field(
         default_factory=lambda: V1PodFailurePolicyOnExitCodesRequirement(),

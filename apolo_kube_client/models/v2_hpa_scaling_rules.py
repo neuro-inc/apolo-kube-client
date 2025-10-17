@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_hpa_scaling_policy import V2HPAScalingPolicy
 
@@ -6,7 +5,7 @@ __all__ = ("V2HPAScalingRules",)
 
 
 class V2HPAScalingRules(BaseModel):
-    policies: list[V2HPAScalingPolicy] = Field(default=[])
+    policies: list[V2HPAScalingPolicy] = []
 
     select_policy: str | None = Field(
         default=None,
@@ -22,4 +21,4 @@ class V2HPAScalingRules(BaseModel):
         ),
     )
 
-    tolerance: str | None = Field(default=None)
+    tolerance: str | None = None

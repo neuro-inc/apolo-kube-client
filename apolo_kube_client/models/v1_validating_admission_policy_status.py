@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_condition import V1Condition
 from .v1_type_checking import V1TypeChecking
@@ -7,7 +6,7 @@ __all__ = ("V1ValidatingAdmissionPolicyStatus",)
 
 
 class V1ValidatingAdmissionPolicyStatus(BaseModel):
-    conditions: list[V1Condition] = Field(default=[])
+    conditions: list[V1Condition] = []
 
     observed_generation: int | None = Field(
         default=None,

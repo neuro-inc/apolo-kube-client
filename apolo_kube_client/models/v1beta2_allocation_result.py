@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_allocation_result import V1beta2DeviceAllocationResult

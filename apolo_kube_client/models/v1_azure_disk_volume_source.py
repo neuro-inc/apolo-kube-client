@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -30,7 +29,7 @@ class V1AzureDiskVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     read_only: bool | None = Field(
         default=None,

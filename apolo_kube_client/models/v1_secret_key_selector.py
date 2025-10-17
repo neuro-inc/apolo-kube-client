@@ -1,13 +1,12 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1SecretKeySelector",)
 
 
 class V1SecretKeySelector(BaseModel):
-    key: str | None = Field(default=None)
+    key: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    optional: bool | None = Field(default=None)
+    optional: bool | None = None

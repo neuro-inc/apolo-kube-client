@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_param_ref import V1alpha1ParamRef

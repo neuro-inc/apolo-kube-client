@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_topology_selector_label_requirement import V1TopologySelectorLabelRequirement
 

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_overhead import V1Overhead
@@ -14,11 +13,11 @@ class V1RuntimeClass(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    handler: str | None = Field(default=None)
+    handler: str | None = None
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     overhead: V1Overhead = Field(default_factory=lambda: V1Overhead())
 

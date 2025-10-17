@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_api_group import V1APIGroup
 
@@ -12,6 +11,6 @@ class V1APIGroupList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    groups: list[V1APIGroup] = Field(default=[])
+    groups: list[V1APIGroup] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 
@@ -12,7 +11,7 @@ class V1ScaleIOVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    gateway: str | None = Field(default=None)
+    gateway: str | None = None
 
     protection_domain: str | None = Field(
         default=None,
@@ -50,7 +49,7 @@ class V1ScaleIOVolumeSource(BaseModel):
         validation_alias=AliasChoices("storage_pool", "storagePool"),
     )
 
-    system: str | None = Field(default=None)
+    system: str | None = None
 
     volume_name: str | None = Field(
         default=None,

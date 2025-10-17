@@ -7,7 +7,6 @@ from kubernetes.client import models
 from pydantic import BaseModel
 
 MOD = """\
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 {imports}
 
@@ -37,11 +36,16 @@ class ParseTypeRes:
 REQUIRED = {"V1ObjectMeta": {"name"}}
 REQUIRED_ALL = {"metadata"}
 
+REQUIRED = {}
+REQUIRED_ALL = set()
+
 
 def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
     descr = descr.strip()
     if descr == self_name:
-        return ParseTypeRes(descr, frozenset(), f"default_factory=lambda: {descr}()")
+        return ParseTypeRes(
+            f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()"
+        )
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",
@@ -106,9 +110,11 @@ def generate(
         imports |= res.imports
         real_attr = calc_attr_name(attr)
         if alias != real_attr:
+            choices = [real_attr, alias]
+            choices_str = ", ".join(f'"{item}"' for item in choices)
             real_alias = (
                 f', serialization_alias="{alias}", '
-                f'validation_alias=AliasChoices("{real_attr}", "{alias}")'
+                f"validation_alias=AliasChoices({choices_str})"
             )
         else:
             real_alias = ""
@@ -119,7 +125,11 @@ def generate(
                 tail = ""
             field = f"{real_attr}: {res.type_.removesuffix(' | None')}{tail}"
         else:
-            field = f"{real_attr}: {res.type_} = Field({res.default}{real_alias})"
+            if real_alias or "lambda" in res.default:
+                tail = f" = Field({res.default}{real_alias})"
+            else:
+                tail = f" = {res.default.removeprefix('default=')}"
+            field = f"{real_attr}: {res.type_}{tail}"
         body.append(f"    {field}\n")
     mod = MOD.format(
         imports="\n".join(sorted(imports)), clsname=name, body="\n".join(body)

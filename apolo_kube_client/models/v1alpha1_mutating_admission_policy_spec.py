@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1alpha1_match_condition import V1alpha1MatchCondition
 from .v1alpha1_match_resources import V1alpha1MatchResources
@@ -28,7 +27,7 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("match_constraints", "matchConstraints"),
     )
 
-    mutations: list[V1alpha1Mutation] = Field(default=[])
+    mutations: list[V1alpha1Mutation] = []
 
     param_kind: V1alpha1ParamKind = Field(
         default_factory=lambda: V1alpha1ParamKind(),
@@ -42,4 +41,4 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("reinvocation_policy", "reinvocationPolicy"),
     )
 
-    variables: list[V1alpha1Variable] = Field(default=[])
+    variables: list[V1alpha1Variable] = []

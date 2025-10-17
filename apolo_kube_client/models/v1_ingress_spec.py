@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_ingress_backend import V1IngressBackend
 from .v1_ingress_rule import V1IngressRule
@@ -20,6 +19,6 @@ class V1IngressSpec(BaseModel):
         validation_alias=AliasChoices("ingress_class_name", "ingressClassName"),
     )
 
-    rules: list[V1IngressRule] = Field(default=[])
+    rules: list[V1IngressRule] = []
 
-    tls: list[V1IngressTLS] = Field(default=[])
+    tls: list[V1IngressTLS] = []

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta1_capacity_requirements import V1beta1CapacityRequirements
 from .v1beta1_device_selector import V1beta1DeviceSelector
@@ -25,7 +24,7 @@ class V1beta1DeviceRequest(BaseModel):
         default_factory=lambda: V1beta1CapacityRequirements()
     )
 
-    count: int | None = Field(default=None)
+    count: int | None = None
 
     device_class_name: str | None = Field(
         default=None,
@@ -39,8 +38,8 @@ class V1beta1DeviceRequest(BaseModel):
         validation_alias=AliasChoices("first_available", "firstAvailable"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    selectors: list[V1beta1DeviceSelector] = Field(default=[])
+    selectors: list[V1beta1DeviceSelector] = []
 
-    tolerations: list[V1beta1DeviceToleration] = Field(default=[])
+    tolerations: list[V1beta1DeviceToleration] = []

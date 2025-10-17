@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ScaleStatus",)
 
 
 class V1ScaleStatus(BaseModel):
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
-    selector: str | None = Field(default=None)
+    selector: str | None = None

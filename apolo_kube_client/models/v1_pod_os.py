@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1PodOS",)
 
 
 class V1PodOS(BaseModel):
-    name: str | None = Field(default=None)
+    name: str | None = None

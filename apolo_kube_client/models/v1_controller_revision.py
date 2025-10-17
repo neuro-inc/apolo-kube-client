@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from apolo_kube_client._typedefs import JsonType
@@ -13,10 +12,10 @@ class V1ControllerRevision(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    data: JsonType = Field(default={})
+    data: JsonType = {}
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    revision: int | None = Field(default=None)
+    revision: int | None = None

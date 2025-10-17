@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -6,7 +5,7 @@ __all__ = ("CoreV1EventSeries",)
 
 
 class CoreV1EventSeries(BaseModel):
-    count: int | None = Field(default=None)
+    count: int | None = None
 
     last_observed_time: datetime | None = Field(
         default=None,

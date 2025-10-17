@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .resource_v1_resource_claim import ResourceV1ResourceClaim
 from .v1_list_meta import V1ListMeta
@@ -13,8 +12,8 @@ class V1ResourceClaimList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[ResourceV1ResourceClaim] = Field(default=[])
+    items: list[ResourceV1ResourceClaim] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

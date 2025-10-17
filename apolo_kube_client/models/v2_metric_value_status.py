@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,4 +17,4 @@ class V2MetricValueStatus(BaseModel):
         validation_alias=AliasChoices("average_value", "averageValue"),
     )
 
-    value: str | None = Field(default=None)
+    value: str | None = None

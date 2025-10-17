@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ExecAction",)
 
 
 class V1ExecAction(BaseModel):
-    command: list[str] = Field(default=[])
+    command: list[str] = []

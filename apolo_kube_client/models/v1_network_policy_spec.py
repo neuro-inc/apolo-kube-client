@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_network_policy_egress_rule import V1NetworkPolicyEgressRule
@@ -8,9 +7,9 @@ __all__ = ("V1NetworkPolicySpec",)
 
 
 class V1NetworkPolicySpec(BaseModel):
-    egress: list[V1NetworkPolicyEgressRule] = Field(default=[])
+    egress: list[V1NetworkPolicyEgressRule] = []
 
-    ingress: list[V1NetworkPolicyIngressRule] = Field(default=[])
+    ingress: list[V1NetworkPolicyIngressRule] = []
 
     pod_selector: V1LabelSelector = Field(
         default_factory=lambda: V1LabelSelector(),

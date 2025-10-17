@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .admissionregistration_v1_webhook_client_config import (
     AdmissionregistrationV1WebhookClientConfig,
@@ -43,7 +42,7 @@ class V1MutatingWebhook(BaseModel):
         validation_alias=AliasChoices("match_policy", "matchPolicy"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     namespace_selector: V1LabelSelector = Field(
         default_factory=lambda: V1LabelSelector(),
@@ -63,7 +62,7 @@ class V1MutatingWebhook(BaseModel):
         validation_alias=AliasChoices("reinvocation_policy", "reinvocationPolicy"),
     )
 
-    rules: list[V1RuleWithOperations] = Field(default=[])
+    rules: list[V1RuleWithOperations] = []
 
     side_effects: str | None = Field(
         default=None,

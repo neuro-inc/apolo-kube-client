@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -14,8 +13,8 @@ class V1PersistentVolumeStatus(BaseModel):
         ),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    phase: str | None = Field(default=None)
+    phase: str | None = None
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None

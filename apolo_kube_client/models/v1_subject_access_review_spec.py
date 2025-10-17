@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
@@ -7,9 +6,9 @@ __all__ = ("V1SubjectAccessReviewSpec",)
 
 
 class V1SubjectAccessReviewSpec(BaseModel):
-    extra: dict[str, list[str]] = Field(default={})
+    extra: dict[str, list[str]] = {}
 
-    groups: list[str] = Field(default=[])
+    groups: list[str] = []
 
     non_resource_attributes: V1NonResourceAttributes = Field(
         default_factory=lambda: V1NonResourceAttributes(),
@@ -25,6 +24,6 @@ class V1SubjectAccessReviewSpec(BaseModel):
         validation_alias=AliasChoices("resource_attributes", "resourceAttributes"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None
 
-    user: str | None = Field(default=None)
+    user: str | None = None

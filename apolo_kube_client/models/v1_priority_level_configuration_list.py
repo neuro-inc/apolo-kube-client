@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_list_meta import V1ListMeta
 from .v1_priority_level_configuration import V1PriorityLevelConfiguration
@@ -13,8 +12,8 @@ class V1PriorityLevelConfigurationList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1PriorityLevelConfiguration] = Field(default=[])
+    items: list[V1PriorityLevelConfiguration] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

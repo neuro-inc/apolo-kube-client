@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,8 +11,8 @@ class V1ResourceClaimConsumerReference(BaseModel):
         validation_alias=AliasChoices("api_group", "apiGroup"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    resource: str | None = Field(default=None)
+    resource: str | None = None
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

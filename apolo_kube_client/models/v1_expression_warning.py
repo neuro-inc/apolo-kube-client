@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,4 +11,4 @@ class V1ExpressionWarning(BaseModel):
         validation_alias=AliasChoices("field_ref", "fieldRef"),
     )
 
-    warning: str | None = Field(default=None)
+    warning: str | None = None

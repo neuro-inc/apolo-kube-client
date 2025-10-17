@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1alpha1_group_version_resource import V1alpha1GroupVersionResource
 

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_condition import V1Condition
 from datetime import datetime
@@ -19,7 +18,7 @@ class V1alpha1PodCertificateRequestStatus(BaseModel):
         validation_alias=AliasChoices("certificate_chain", "certificateChain"),
     )
 
-    conditions: list[V1Condition] = Field(default=[])
+    conditions: list[V1Condition] = []
 
     not_after: datetime | None = Field(
         default=None,

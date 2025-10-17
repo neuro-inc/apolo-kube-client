@@ -1,15 +1,14 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1beta2DeviceAttribute",)
 
 
 class V1beta2DeviceAttribute(BaseModel):
-    bool: bool | None = Field(default=None)
+    bool: bool | None = None
 
-    int: int | None = Field(default=None)
+    int: int | None = None
 
-    string: str | None = Field(default=None)
+    string: str | None = None
 
-    version: str | None = Field(default=None)
+    version: str | None = None

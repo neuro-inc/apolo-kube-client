@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,7 +11,7 @@ class V1ValidationRule(BaseModel):
         validation_alias=AliasChoices("field_path", "fieldPath"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
     message_expression: str | None = Field(
         default=None,
@@ -26,6 +25,6 @@ class V1ValidationRule(BaseModel):
         validation_alias=AliasChoices("optional_old_self", "optionalOldSelf"),
     )
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    rule: str | None = Field(default=None)
+    rule: str | None = None

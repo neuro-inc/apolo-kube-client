@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1UncountedTerminatedPods",)
 
 
 class V1UncountedTerminatedPods(BaseModel):
-    failed: list[str] = Field(default=[])
+    failed: list[str] = []
 
-    succeeded: list[str] = Field(default=[])
+    succeeded: list[str] = []

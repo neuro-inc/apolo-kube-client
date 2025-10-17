@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_custom_resource_definition_condition import V1CustomResourceDefinitionCondition
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
@@ -13,7 +12,7 @@ class V1CustomResourceDefinitionStatus(BaseModel):
         validation_alias=AliasChoices("accepted_names", "acceptedNames"),
     )
 
-    conditions: list[V1CustomResourceDefinitionCondition] = Field(default=[])
+    conditions: list[V1CustomResourceDefinitionCondition] = []
 
     stored_versions: list[str] = Field(
         default=[],

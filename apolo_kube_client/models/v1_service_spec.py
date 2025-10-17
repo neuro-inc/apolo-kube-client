@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_service_port import V1ServicePort
 from .v1_session_affinity_config import V1SessionAffinityConfig
@@ -93,7 +92,7 @@ class V1ServiceSpec(BaseModel):
         ),
     )
 
-    ports: list[V1ServicePort] = Field(default=[])
+    ports: list[V1ServicePort] = []
 
     publish_not_ready_addresses: bool | None = Field(
         default=None,
@@ -103,7 +102,7 @@ class V1ServiceSpec(BaseModel):
         ),
     )
 
-    selector: dict[str, str] = Field(default={})
+    selector: dict[str, str] = {}
 
     session_affinity: str | None = Field(
         default=None,
@@ -125,4 +124,4 @@ class V1ServiceSpec(BaseModel):
         validation_alias=AliasChoices("traffic_distribution", "trafficDistribution"),
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

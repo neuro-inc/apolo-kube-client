@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_rolling_update_deployment import V1RollingUpdateDeployment
 
@@ -12,4 +11,4 @@ class V1DeploymentStrategy(BaseModel):
         validation_alias=AliasChoices("rolling_update", "rollingUpdate"),
     )
 
-    type: str | None = Field(default=None)
+    type: str | None = None

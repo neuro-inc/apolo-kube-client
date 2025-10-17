@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,7 +17,7 @@ class V1VolumeMount(BaseModel):
         validation_alias=AliasChoices("mount_propagation", "mountPropagation"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     read_only: bool | None = Field(
         default=None,

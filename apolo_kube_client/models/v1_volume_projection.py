@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_cluster_trust_bundle_projection import V1ClusterTrustBundleProjection
 from .v1_config_map_projection import V1ConfigMapProjection

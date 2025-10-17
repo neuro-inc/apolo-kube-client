@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from apolo_kube_client._typedefs import JsonType
 
@@ -12,7 +11,7 @@ class V1ServicePort(BaseModel):
         validation_alias=AliasChoices("app_protocol", "appProtocol"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     node_port: int | None = Field(
         default=None,
@@ -20,9 +19,9 @@ class V1ServicePort(BaseModel):
         validation_alias=AliasChoices("node_port", "nodePort"),
     )
 
-    port: int | None = Field(default=None)
+    port: int | None = None
 
-    protocol: str | None = Field(default=None)
+    protocol: str | None = None
 
     target_port: JsonType = Field(
         default={},

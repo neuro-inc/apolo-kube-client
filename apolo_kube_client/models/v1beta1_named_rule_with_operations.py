@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,7 +17,7 @@ class V1beta1NamedRuleWithOperations(BaseModel):
         validation_alias=AliasChoices("api_versions", "apiVersions"),
     )
 
-    operations: list[str] = Field(default=[])
+    operations: list[str] = []
 
     resource_names: list[str] = Field(
         default=[],
@@ -26,6 +25,6 @@ class V1beta1NamedRuleWithOperations(BaseModel):
         validation_alias=AliasChoices("resource_names", "resourceNames"),
     )
 
-    resources: list[str] = Field(default=[])
+    resources: list[str] = []
 
-    scope: str | None = Field(default=None)
+    scope: str | None = None

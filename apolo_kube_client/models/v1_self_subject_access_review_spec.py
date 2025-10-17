@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes

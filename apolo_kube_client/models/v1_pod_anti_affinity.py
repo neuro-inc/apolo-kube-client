@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_pod_affinity_term import V1PodAffinityTerm
 from .v1_weighted_pod_affinity_term import V1WeightedPodAffinityTerm

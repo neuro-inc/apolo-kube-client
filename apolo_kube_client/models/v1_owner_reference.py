@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -18,10 +17,10 @@ class V1OwnerReference(BaseModel):
         validation_alias=AliasChoices("block_owner_deletion", "blockOwnerDeletion"),
     )
 
-    controller: bool | None = Field(default=None)
+    controller: bool | None = None
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

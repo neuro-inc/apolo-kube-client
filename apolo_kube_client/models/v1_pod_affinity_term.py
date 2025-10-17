@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 
@@ -30,7 +29,7 @@ class V1PodAffinityTerm(BaseModel):
         validation_alias=AliasChoices("namespace_selector", "namespaceSelector"),
     )
 
-    namespaces: list[str] = Field(default=[])
+    namespaces: list[str] = []
 
     topology_key: str | None = Field(
         default=None,

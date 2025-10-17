@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,11 +11,11 @@ class V1CertificateSigningRequestSpec(BaseModel):
         validation_alias=AliasChoices("expiration_seconds", "expirationSeconds"),
     )
 
-    extra: dict[str, list[str]] = Field(default={})
+    extra: dict[str, list[str]] = {}
 
-    groups: list[str] = Field(default=[])
+    groups: list[str] = []
 
-    request: str | None = Field(default=None)
+    request: str | None = None
 
     signer_name: str | None = Field(
         default=None,
@@ -24,8 +23,8 @@ class V1CertificateSigningRequestSpec(BaseModel):
         validation_alias=AliasChoices("signer_name", "signerName"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None
 
-    usages: list[str] = Field(default=[])
+    usages: list[str] = []
 
-    username: str | None = Field(default=None)
+    username: str | None = None

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_mutating_admission_policy import V1alpha1MutatingAdmissionPolicy
@@ -13,8 +12,8 @@ class V1alpha1MutatingAdmissionPolicyList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1alpha1MutatingAdmissionPolicy] = Field(default=[])
+    items: list[V1alpha1MutatingAdmissionPolicy] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

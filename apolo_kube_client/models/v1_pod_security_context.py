@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_se_linux_options import V1SELinuxOptions
@@ -78,7 +77,7 @@ class V1PodSecurityContext(BaseModel):
         ),
     )
 
-    sysctls: list[V1Sysctl] = Field(default=[])
+    sysctls: list[V1Sysctl] = []
 
     windows_options: V1WindowsSecurityContextOptions = Field(
         default_factory=lambda: V1WindowsSecurityContextOptions(),

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 
@@ -18,10 +17,10 @@ class V1ConfigMap(BaseModel):
         validation_alias=AliasChoices("binary_data", "binaryData"),
     )
 
-    data: dict[str, str] = Field(default={})
+    data: dict[str, str] = {}
 
-    immutable: bool | None = Field(default=None)
+    immutable: bool | None = None
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())

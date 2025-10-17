@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_endpoint_subset import V1EndpointSubset
 from .v1_object_meta import V1ObjectMeta
@@ -13,8 +12,8 @@ class V1Endpoints(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    subsets: list[V1EndpointSubset] = Field(default=[])
+    subsets: list[V1EndpointSubset] = []

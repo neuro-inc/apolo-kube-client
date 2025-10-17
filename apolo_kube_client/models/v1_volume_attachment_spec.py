@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
 
@@ -6,7 +5,7 @@ __all__ = ("V1VolumeAttachmentSpec",)
 
 
 class V1VolumeAttachmentSpec(BaseModel):
-    attacher: str | None = Field(default=None)
+    attacher: str | None = None
 
     node_name: str | None = Field(
         default=None,

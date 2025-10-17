@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_secret_reference import V1SecretReference
 
@@ -6,9 +5,9 @@ __all__ = ("V1CephFSPersistentVolumeSource",)
 
 
 class V1CephFSPersistentVolumeSource(BaseModel):
-    monitors: list[str] = Field(default=[])
+    monitors: list[str] = []
 
-    path: str | None = Field(default=None)
+    path: str | None = None
 
     read_only: bool | None = Field(
         default=None,
@@ -28,4 +27,4 @@ class V1CephFSPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices("secret_ref", "secretRef"),
     )
 
-    user: str | None = Field(default=None)
+    user: str | None = None

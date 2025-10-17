@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta2_capacity_request_policy import V1beta2CapacityRequestPolicy
 
@@ -12,4 +11,4 @@ class V1beta2DeviceCapacity(BaseModel):
         validation_alias=AliasChoices("request_policy", "requestPolicy"),
     )
 
-    value: str | None = Field(default=None)
+    value: str | None = None

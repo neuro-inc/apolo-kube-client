@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .core_v1_event_series import CoreV1EventSeries
 from .v1_event_source import V1EventSource
@@ -10,7 +9,7 @@ __all__ = ("CoreV1Event",)
 
 
 class CoreV1Event(BaseModel):
-    action: str | None = Field(default=None)
+    action: str | None = None
 
     api_version: str | None = Field(
         default=None,
@@ -18,7 +17,7 @@ class CoreV1Event(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    count: int | None = Field(default=None)
+    count: int | None = None
 
     event_time: datetime | None = Field(
         default=None,
@@ -38,7 +37,7 @@ class CoreV1Event(BaseModel):
         validation_alias=AliasChoices("involved_object", "involvedObject"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     last_timestamp: datetime | None = Field(
         default=None,
@@ -46,11 +45,11 @@ class CoreV1Event(BaseModel):
         validation_alias=AliasChoices("last_timestamp", "lastTimestamp"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
     related: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
 
@@ -70,4 +69,4 @@ class CoreV1Event(BaseModel):
 
     source: V1EventSource = Field(default_factory=lambda: V1EventSource())
 
-    type: str | None = Field(default=None)
+    type: str | None = None

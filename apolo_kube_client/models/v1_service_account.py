@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 from .v1_object_meta import V1ObjectMeta
@@ -28,8 +27,8 @@ class V1ServiceAccount(BaseModel):
         validation_alias=AliasChoices("image_pull_secrets", "imagePullSecrets"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    secrets: list[V1ObjectReference] = Field(default=[])
+    secrets: list[V1ObjectReference] = []

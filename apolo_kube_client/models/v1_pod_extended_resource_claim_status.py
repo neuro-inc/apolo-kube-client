@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_container_extended_resource_request import V1ContainerExtendedResourceRequest
 

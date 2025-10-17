@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
@@ -12,7 +11,7 @@ class V1CustomResourceDefinitionSpec(BaseModel):
         default_factory=lambda: V1CustomResourceConversion()
     )
 
-    group: str | None = Field(default=None)
+    group: str | None = None
 
     names: V1CustomResourceDefinitionNames = Field(
         default_factory=lambda: V1CustomResourceDefinitionNames()
@@ -26,6 +25,6 @@ class V1CustomResourceDefinitionSpec(BaseModel):
         ),
     )
 
-    scope: str | None = Field(default=None)
+    scope: str | None = None
 
-    versions: list[V1CustomResourceDefinitionVersion] = Field(default=[])
+    versions: list[V1CustomResourceDefinitionVersion] = []

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import BaseModel, Field
 from .v1beta2_cel_device_selector import V1beta2CELDeviceSelector
 

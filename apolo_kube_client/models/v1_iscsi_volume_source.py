@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_local_object_reference import V1LocalObjectReference
 
@@ -30,7 +29,7 @@ class V1ISCSIVolumeSource(BaseModel):
         validation_alias=AliasChoices("initiator_name", "initiatorName"),
     )
 
-    iqn: str | None = Field(default=None)
+    iqn: str | None = None
 
     iscsi_interface: str | None = Field(
         default=None,
@@ -38,9 +37,9 @@ class V1ISCSIVolumeSource(BaseModel):
         validation_alias=AliasChoices("iscsi_interface", "iscsiInterface"),
     )
 
-    lun: int | None = Field(default=None)
+    lun: int | None = None
 
-    portals: list[str] = Field(default=[])
+    portals: list[str] = []
 
     read_only: bool | None = Field(
         default=None,

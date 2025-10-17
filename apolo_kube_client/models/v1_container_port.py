@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -24,6 +23,6 @@ class V1ContainerPort(BaseModel):
         validation_alias=AliasChoices("host_port", "hostPort"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    protocol: str | None = Field(default=None)
+    protocol: str | None = None

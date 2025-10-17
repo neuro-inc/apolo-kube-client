@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1beta1Variable",)
 
 
 class V1beta1Variable(BaseModel):
-    expression: str | None = Field(default=None)
+    expression: str | None = None
 
-    name: str | None = Field(default=None)
+    name: str | None = None

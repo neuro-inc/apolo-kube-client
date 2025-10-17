@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector_requirement import V1LabelSelectorRequirement
 
@@ -12,4 +11,4 @@ class V1LabelSelectorAttributes(BaseModel):
         validation_alias=AliasChoices("raw_selector", "rawSelector"),
     )
 
-    requirements: list[V1LabelSelectorRequirement] = Field(default=[])
+    requirements: list[V1LabelSelectorRequirement] = []

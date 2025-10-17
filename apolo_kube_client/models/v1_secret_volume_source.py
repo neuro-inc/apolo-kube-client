@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_key_to_path import V1KeyToPath
 
@@ -12,9 +11,9 @@ class V1SecretVolumeSource(BaseModel):
         validation_alias=AliasChoices("default_mode", "defaultMode"),
     )
 
-    items: list[V1KeyToPath] = Field(default=[])
+    items: list[V1KeyToPath] = []
 
-    optional: bool | None = Field(default=None)
+    optional: bool | None = None
 
     secret_name: str | None = Field(
         default=None,

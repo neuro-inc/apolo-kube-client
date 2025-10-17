@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_job_template_spec import V1JobTemplateSpec
 
@@ -26,7 +25,7 @@ class V1CronJobSpec(BaseModel):
         validation_alias=AliasChoices("job_template", "jobTemplate"),
     )
 
-    schedule: str | None = Field(default=None)
+    schedule: str | None = None
 
     starting_deadline_seconds: int | None = Field(
         default=None,
@@ -44,7 +43,7 @@ class V1CronJobSpec(BaseModel):
         ),
     )
 
-    suspend: bool | None = Field(default=None)
+    suspend: bool | None = None
 
     time_zone: str | None = Field(
         default=None,

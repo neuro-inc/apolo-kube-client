@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
@@ -123,7 +122,7 @@ class V1Volume(BaseModel):
 
     iscsi: V1ISCSIVolumeSource = Field(default_factory=lambda: V1ISCSIVolumeSource())
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     nfs: V1NFSVolumeSource = Field(default_factory=lambda: V1NFSVolumeSource())
 

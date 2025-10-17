@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_non_resource_rule import V1NonResourceRule
 from .v1_resource_rule import V1ResourceRule
@@ -13,7 +12,7 @@ class V1SubjectRulesReviewStatus(BaseModel):
         validation_alias=AliasChoices("evaluation_error", "evaluationError"),
     )
 
-    incomplete: bool | None = Field(default=None)
+    incomplete: bool | None = None
 
     non_resource_rules: list[V1NonResourceRule] = Field(
         default=[],

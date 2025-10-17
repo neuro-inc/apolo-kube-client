@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_horizontal_pod_autoscaler_behavior import V2HorizontalPodAutoscalerBehavior
@@ -18,7 +17,7 @@ class V2HorizontalPodAutoscalerSpec(BaseModel):
         validation_alias=AliasChoices("max_replicas", "maxReplicas"),
     )
 
-    metrics: list[V2MetricSpec] = Field(default=[])
+    metrics: list[V2MetricSpec] = []
 
     min_replicas: int | None = Field(
         default=None,

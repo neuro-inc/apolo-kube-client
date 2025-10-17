@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
@@ -55,7 +54,7 @@ class V1PersistentVolumeSpec(BaseModel):
         validation_alias=AliasChoices("azure_file", "azureFile"),
     )
 
-    capacity: dict[str, str] = Field(default={})
+    capacity: dict[str, str] = {}
 
     cephfs: V1CephFSPersistentVolumeSource = Field(
         default_factory=lambda: V1CephFSPersistentVolumeSource()

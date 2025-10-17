@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
@@ -14,7 +13,7 @@ class V1DeploymentSpec(BaseModel):
         validation_alias=AliasChoices("min_ready_seconds", "minReadySeconds"),
     )
 
-    paused: bool | None = Field(default=None)
+    paused: bool | None = None
 
     progress_deadline_seconds: int | None = Field(
         default=None,
@@ -24,7 +23,7 @@ class V1DeploymentSpec(BaseModel):
         ),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
     revision_history_limit: int | None = Field(
         default=None,

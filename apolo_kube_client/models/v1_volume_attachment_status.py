@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_volume_error import V1VolumeError
 
@@ -12,7 +11,7 @@ class V1VolumeAttachmentStatus(BaseModel):
         validation_alias=AliasChoices("attach_error", "attachError"),
     )
 
-    attached: bool | None = Field(default=None)
+    attached: bool | None = None
 
     attachment_metadata: dict[str, str] = Field(
         default={},

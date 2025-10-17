@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1SleepAction",)
 
 
 class V1SleepAction(BaseModel):
-    seconds: int | None = Field(default=None)
+    seconds: int | None = None

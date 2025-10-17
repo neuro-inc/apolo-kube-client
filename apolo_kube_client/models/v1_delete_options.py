@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_preconditions import V1Preconditions
 
@@ -33,7 +32,7 @@ class V1DeleteOptions(BaseModel):
         ),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     orphan_dependents: bool | None = Field(
         default=None,

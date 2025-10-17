@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_config_map_key_selector import V1ConfigMapKeySelector
 from .v1_file_key_selector import V1FileKeySelector

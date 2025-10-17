@@ -1,15 +1,14 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1UserInfo",)
 
 
 class V1UserInfo(BaseModel):
-    extra: dict[str, list[str]] = Field(default={})
+    extra: dict[str, list[str]] = {}
 
-    groups: list[str] = Field(default=[])
+    groups: list[str] = []
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None
 
-    username: str | None = Field(default=None)
+    username: str | None = None

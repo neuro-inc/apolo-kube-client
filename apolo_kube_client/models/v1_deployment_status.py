@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_deployment_condition import V1DeploymentCondition
 
@@ -18,7 +17,7 @@ class V1DeploymentStatus(BaseModel):
         validation_alias=AliasChoices("collision_count", "collisionCount"),
     )
 
-    conditions: list[V1DeploymentCondition] = Field(default=[])
+    conditions: list[V1DeploymentCondition] = []
 
     observed_generation: int | None = Field(
         default=None,
@@ -32,7 +31,7 @@ class V1DeploymentStatus(BaseModel):
         validation_alias=AliasChoices("ready_replicas", "readyReplicas"),
     )
 
-    replicas: int | None = Field(default=None)
+    replicas: int | None = None
 
     terminating_replicas: int | None = Field(
         default=None,

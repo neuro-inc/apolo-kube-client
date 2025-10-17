@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_config_source import V1NodeConfigSource
 from .v1_taint import V1Taint
@@ -37,6 +36,6 @@ class V1NodeSpec(BaseModel):
         validation_alias=AliasChoices("provider_id", "providerID"),
     )
 
-    taints: list[V1Taint] = Field(default=[])
+    taints: list[V1Taint] = []
 
-    unschedulable: bool | None = Field(default=None)
+    unschedulable: bool | None = None

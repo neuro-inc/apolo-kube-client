@@ -1,11 +1,10 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1VolumeResourceRequirements",)
 
 
 class V1VolumeResourceRequirements(BaseModel):
-    limits: dict[str, str] = Field(default={})
+    limits: dict[str, str] = {}
 
-    requests: dict[str, str] = Field(default={})
+    requests: dict[str, str] = {}

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta1_apply_configuration import V1beta1ApplyConfiguration
 from .v1beta1_json_patch import V1beta1JSONPatch

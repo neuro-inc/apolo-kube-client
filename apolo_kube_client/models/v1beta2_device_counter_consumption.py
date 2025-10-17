@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1beta2_counter import V1beta2Counter
 
@@ -12,4 +11,4 @@ class V1beta2DeviceCounterConsumption(BaseModel):
         validation_alias=AliasChoices("counter_set", "counterSet"),
     )
 
-    counters: dict[str, V1beta2Counter] = Field(default={})
+    counters: dict[str, V1beta2Counter] = {}

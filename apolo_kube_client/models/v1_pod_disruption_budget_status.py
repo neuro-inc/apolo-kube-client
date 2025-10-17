@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_condition import V1Condition
 from datetime import datetime
@@ -7,7 +6,7 @@ __all__ = ("V1PodDisruptionBudgetStatus",)
 
 
 class V1PodDisruptionBudgetStatus(BaseModel):
-    conditions: list[V1Condition] = Field(default=[])
+    conditions: list[V1Condition] = []
 
     current_healthy: int | None = Field(
         default=None,

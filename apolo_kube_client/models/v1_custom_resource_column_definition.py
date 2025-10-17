@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,9 +5,9 @@ __all__ = ("V1CustomResourceColumnDefinition",)
 
 
 class V1CustomResourceColumnDefinition(BaseModel):
-    description: str | None = Field(default=None)
+    description: str | None = None
 
-    format: str | None = Field(default=None)
+    format: str | None = None
 
     json_path: str | None = Field(
         default=None,
@@ -16,8 +15,8 @@ class V1CustomResourceColumnDefinition(BaseModel):
         validation_alias=AliasChoices("json_path", "jsonPath"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    priority: int | None = Field(default=None)
+    priority: int | None = None
 
-    type: str | None = Field(default=None)
+    type: str | None = None

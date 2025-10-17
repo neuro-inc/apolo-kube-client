@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_volume_node_resources import V1VolumeNodeResources
 
@@ -10,7 +9,7 @@ class V1CSINodeDriver(BaseModel):
         default_factory=lambda: V1VolumeNodeResources()
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
     node_id: str | None = Field(
         default=None,

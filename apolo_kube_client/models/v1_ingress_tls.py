@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,7 +5,7 @@ __all__ = ("V1IngressTLS",)
 
 
 class V1IngressTLS(BaseModel):
-    hosts: list[str] = Field(default=[])
+    hosts: list[str] = []
 
     secret_name: str | None = Field(
         default=None,

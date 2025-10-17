@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .events_v1_event import EventsV1Event
 from .v1_list_meta import V1ListMeta
@@ -13,8 +12,8 @@ class EventsV1EventList(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[EventsV1Event] = Field(default=[])
+    items: list[EventsV1Event] = []
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ListMeta
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())

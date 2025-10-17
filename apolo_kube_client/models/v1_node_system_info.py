@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_node_swap_status import V1NodeSwapStatus
 
@@ -6,7 +5,7 @@ __all__ = ("V1NodeSystemInfo",)
 
 
 class V1NodeSystemInfo(BaseModel):
-    architecture: str | None = Field(default=None)
+    architecture: str | None = None
 
     boot_id: str | None = Field(
         default=None,

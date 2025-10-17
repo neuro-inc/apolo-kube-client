@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_label_selector import V1LabelSelector
 from .v1_object_meta import V1ObjectMeta
@@ -13,9 +12,9 @@ class V1CSIStorageCapacity(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    capacity: str | None = Field(default=None)
+    capacity: str | None = None
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
     maximum_volume_size: str | None = Field(
         default=None,
@@ -23,7 +22,7 @@ class V1CSIStorageCapacity(BaseModel):
         validation_alias=AliasChoices("maximum_volume_size", "maximumVolumeSize"),
     )
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     node_topology: V1LabelSelector = Field(
         default_factory=lambda: V1LabelSelector(),

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_managed_fields_entry import V1ManagedFieldsEntry
 from .v1_owner_reference import V1OwnerReference
@@ -8,7 +7,7 @@ __all__ = ("V1ObjectMeta",)
 
 
 class V1ObjectMeta(BaseModel):
-    annotations: dict[str, str] = Field(default={})
+    annotations: dict[str, str] = {}
 
     creation_timestamp: datetime | None = Field(
         default=None,
@@ -30,7 +29,7 @@ class V1ObjectMeta(BaseModel):
         validation_alias=AliasChoices("deletion_timestamp", "deletionTimestamp"),
     )
 
-    finalizers: list[str] = Field(default=[])
+    finalizers: list[str] = []
 
     generate_name: str | None = Field(
         default=None,
@@ -38,9 +37,9 @@ class V1ObjectMeta(BaseModel):
         validation_alias=AliasChoices("generate_name", "generateName"),
     )
 
-    generation: int | None = Field(default=None)
+    generation: int | None = None
 
-    labels: dict[str, str] = Field(default={})
+    labels: dict[str, str] = {}
 
     managed_fields: list[V1ManagedFieldsEntry] = Field(
         default=[],
@@ -48,9 +47,9 @@ class V1ObjectMeta(BaseModel):
         validation_alias=AliasChoices("managed_fields", "managedFields"),
     )
 
-    name: str
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None
 
     owner_references: list[V1OwnerReference] = Field(
         default=[],
@@ -70,4 +69,4 @@ class V1ObjectMeta(BaseModel):
         validation_alias=AliasChoices("self_link", "selfLink"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

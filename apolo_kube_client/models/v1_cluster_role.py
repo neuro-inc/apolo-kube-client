@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_aggregation_rule import V1AggregationRule
 from .v1_object_meta import V1ObjectMeta
@@ -20,8 +19,8 @@ class V1ClusterRole(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
-    rules: list[V1PolicyRule] = Field(default=[])
+    rules: list[V1PolicyRule] = []

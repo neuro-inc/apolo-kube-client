@@ -1,9 +1,8 @@
-from __future__ import annotations
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 __all__ = ("V1ServiceCIDRSpec",)
 
 
 class V1ServiceCIDRSpec(BaseModel):
-    cidrs: list[str] = Field(default=[])
+    cidrs: list[str] = []

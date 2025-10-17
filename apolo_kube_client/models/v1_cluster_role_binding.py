@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .rbac_v1_subject import RbacV1Subject
 from .v1_object_meta import V1ObjectMeta
@@ -14,9 +13,9 @@ class V1ClusterRoleBinding(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    kind: str | None = Field(default=None)
+    kind: str | None = None
 
-    metadata: V1ObjectMeta
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
 
     role_ref: V1RoleRef = Field(
         default_factory=lambda: V1RoleRef(),
@@ -24,4 +23,4 @@ class V1ClusterRoleBinding(BaseModel):
         validation_alias=AliasChoices("role_ref", "roleRef"),
     )
 
-    subjects: list[RbacV1Subject] = Field(default=[])
+    subjects: list[RbacV1Subject] = []

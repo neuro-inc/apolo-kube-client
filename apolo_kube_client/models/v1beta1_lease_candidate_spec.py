@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -36,4 +35,4 @@ class V1beta1LeaseCandidateSpec(BaseModel):
         validation_alias=AliasChoices("renew_time", "renewTime"),
     )
 
-    strategy: str | None = Field(default=None)
+    strategy: str | None = None

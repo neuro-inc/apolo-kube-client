@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .admissionregistration_v1_service_reference import (
     AdmissionregistrationV1ServiceReference,
@@ -18,4 +17,4 @@ class AdmissionregistrationV1WebhookClientConfig(BaseModel):
         default_factory=lambda: AdmissionregistrationV1ServiceReference()
     )
 
-    url: str | None = Field(default=None)
+    url: str | None = None

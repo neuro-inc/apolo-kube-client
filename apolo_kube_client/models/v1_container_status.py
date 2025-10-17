@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from .v1_container_state import V1ContainerState
 from .v1_container_user import V1ContainerUser
@@ -30,7 +29,7 @@ class V1ContainerStatus(BaseModel):
         validation_alias=AliasChoices("container_id", "containerID"),
     )
 
-    image: str | None = Field(default=None)
+    image: str | None = None
 
     image_id: str | None = Field(
         default=None,
@@ -44,9 +43,9 @@ class V1ContainerStatus(BaseModel):
         validation_alias=AliasChoices("last_state", "lastState"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    ready: bool | None = Field(default=None)
+    ready: bool | None = None
 
     resources: V1ResourceRequirements = Field(
         default_factory=lambda: V1ResourceRequirements()
@@ -58,7 +57,7 @@ class V1ContainerStatus(BaseModel):
         validation_alias=AliasChoices("restart_count", "restartCount"),
     )
 
-    started: bool | None = Field(default=None)
+    started: bool | None = None
 
     state: V1ContainerState = Field(default_factory=lambda: V1ContainerState())
 

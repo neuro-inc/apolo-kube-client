@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -6,7 +5,7 @@ __all__ = ("V1ScopedResourceSelectorRequirement",)
 
 
 class V1ScopedResourceSelectorRequirement(BaseModel):
-    operator: str | None = Field(default=None)
+    operator: str | None = None
 
     scope_name: str | None = Field(
         default=None,
@@ -14,4 +13,4 @@ class V1ScopedResourceSelectorRequirement(BaseModel):
         validation_alias=AliasChoices("scope_name", "scopeName"),
     )
 
-    values: list[str] = Field(default=[])
+    values: list[str] = []

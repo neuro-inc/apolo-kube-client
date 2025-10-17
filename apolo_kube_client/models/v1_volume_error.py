@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -12,6 +11,6 @@ class V1VolumeError(BaseModel):
         validation_alias=AliasChoices("error_code", "errorCode"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    time: datetime | None = Field(default=None)
+    time: datetime | None = None

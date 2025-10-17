@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 from datetime import datetime
 
@@ -24,11 +23,11 @@ class V1ContainerStateTerminated(BaseModel):
         validation_alias=AliasChoices("finished_at", "finishedAt"),
     )
 
-    message: str | None = Field(default=None)
+    message: str | None = None
 
-    reason: str | None = Field(default=None)
+    reason: str | None = None
 
-    signal: int | None = Field(default=None)
+    signal: int | None = None
 
     started_at: datetime | None = Field(
         default=None,

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,9 +11,9 @@ class V1ConfigMapNodeConfigSource(BaseModel):
         validation_alias=AliasChoices("kubelet_config_key", "kubeletConfigKey"),
     )
 
-    name: str | None = Field(default=None)
+    name: str | None = None
 
-    namespace: str | None = Field(default=None)
+    namespace: str | None = None
 
     resource_version: str | None = Field(
         default=None,
@@ -22,4 +21,4 @@ class V1ConfigMapNodeConfigSource(BaseModel):
         validation_alias=AliasChoices("resource_version", "resourceVersion"),
     )
 
-    uid: str | None = Field(default=None)
+    uid: str | None = None

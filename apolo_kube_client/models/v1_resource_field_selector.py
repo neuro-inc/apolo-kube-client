@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -12,6 +11,6 @@ class V1ResourceFieldSelector(BaseModel):
         validation_alias=AliasChoices("container_name", "containerName"),
     )
 
-    divisor: str | None = Field(default=None)
+    divisor: str | None = None
 
-    resource: str | None = Field(default=None)
+    resource: str | None = None
