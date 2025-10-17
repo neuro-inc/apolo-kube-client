@@ -26,7 +26,12 @@ class _Attr[T]:
         if inst is not None:
             name = self.name
             assert name is not None
-            ret = self.cls(inst._core, *self._args)  # type: ignore[call-arg]
+            if getattr(self.cls, "is_nested_resource", False):
+                # pass parent to a nested resource
+                ret = self.cls(inst)  # type: ignore[call-arg]
+            else:
+                # construct a new resource
+                ret = self.cls(inst._core, *self._args)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
         else:
