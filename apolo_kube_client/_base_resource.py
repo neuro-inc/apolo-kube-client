@@ -177,6 +177,14 @@ class ClusterScopedResource[
         except ResourceNotFound:
             return True, await self.create(model)
 
+    async def update(self, model: ModelT) -> ModelT:
+        async with self._core.request(
+            method="PUT",
+            url=self._build_url(model.metadata.name),
+            json=self._core.serialize(model),
+        ) as resp:
+            return await self._core.deserialize_response(resp, self._model_class)
+
     async def create_or_update(self, model: ModelT) -> tuple[bool, ModelT]:
         """
         Create or update a resource.
@@ -343,6 +351,14 @@ class NamespacedResource[
             return False, await self.get(name=model.metadata.name, namespace=namespace)
         except ResourceNotFound:
             return True, await self.create(model, namespace=namespace)
+
+    async def update(self, model: ModelT, namespace: str | None = None) -> ModelT:
+        async with self._core.request(
+            method="PUT",
+            url=self._build_url(model.metadata.name, self._get_ns(namespace)),
+            json=self._core.serialize(model),
+        ) as resp:
+            return await self._core.deserialize_response(resp, self._model_class)
 
     async def create_or_update(
         self, model: ModelT, namespace: str | None = None
