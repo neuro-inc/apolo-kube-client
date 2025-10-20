@@ -59,9 +59,16 @@ REQUIRED_ALL = set()
 def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
     descr = descr.strip()
     if descr == self_name:
-        return ParseTypeRes(
-            f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()"
-        )
+        if not nested:
+            return ParseTypeRes(
+                f'"{descr} | None"',
+                frozenset(),
+                "default=None",  # avoid recursive ctor
+            )
+        else:
+            return ParseTypeRes(
+                f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()"
+            )
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",

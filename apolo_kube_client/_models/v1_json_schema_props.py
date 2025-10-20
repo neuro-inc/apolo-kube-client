@@ -125,8 +125,8 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("multiple_of", "multipleOf"),
     )
 
-    not_: "V1JSONSchemaProps" = Field(
-        default_factory=lambda: V1JSONSchemaProps(),
+    not_: "V1JSONSchemaProps | None" = Field(
+        default=None,
         serialization_alias="not",
         validation_alias=AliasChoices("not_", "not"),
     )
