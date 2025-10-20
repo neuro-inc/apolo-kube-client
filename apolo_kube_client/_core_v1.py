@@ -21,7 +21,12 @@ from kubernetes.client.models import (
 )
 
 from ._attr import _Attr
-from ._base_resource import Base, ClusterScopedResource, NamespacedResource
+from ._base_resource import (
+    Base,
+    ClusterScopedResource,
+    NamespacedResource,
+    NestedResource,
+)
 from ._typedefs import JsonType
 from ._utils import base64_encode, escape_json_pointer
 
@@ -39,8 +44,13 @@ class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
         )
 
 
+class PodStatus(NestedResource[V1Pod, V1Pod, V1Pod]):
+    query_path = "status"
+
+
 class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "pods"
+    status = _Attr(PodStatus)
 
 
 class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
