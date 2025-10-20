@@ -103,8 +103,13 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                 )
 
 
+TYPES = {"bool", "int", "float", "str"}
+
+
 def calc_attr_name(attr: str) -> str:
     if attr in dir(BaseModel) or keyword.iskeyword(attr):
+        return attr + "_"
+    elif attr in TYPES:
         return attr + "_"
     elif attr.startswith("_"):
         return attr[1:] + "_"

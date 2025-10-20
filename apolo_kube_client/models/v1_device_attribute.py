@@ -1,13 +1,21 @@
-from pydantic import BaseModel
+from pydantic import AliasChoices, BaseModel, Field
 
 
 __all__ = ("V1DeviceAttribute",)
 
 
 class V1DeviceAttribute(BaseModel):
-    bool: bool | None = None
+    bool_: bool | None = Field(
+        default=None,
+        serialization_alias="bool",
+        validation_alias=AliasChoices("bool_", "bool"),
+    )
 
-    int: int | None = None
+    int_: int | None = Field(
+        default=None,
+        serialization_alias="int",
+        validation_alias=AliasChoices("int_", "int"),
+    )
 
     string: str | None = None
 
