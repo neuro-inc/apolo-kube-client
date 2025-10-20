@@ -93,6 +93,11 @@ class TestDiskNaming:
         )
         assert dn_get.metadata.name == dn.metadata.name
 
+        # test update the dn
+        dn_get.spec.disk_id = "disk-67890"
+        dn_update = await kube_client.neuromation_io_v1.disk_naming.update(model=dn_get)
+        assert dn_update.spec.disk_id == "disk-67890"
+
         # test getting all dns and ensuring the newly created dn is there
         dn_list = await kube_client.neuromation_io_v1.disk_naming.get_list()
         dn_names = {d.metadata.name for d in dn_list.items}
