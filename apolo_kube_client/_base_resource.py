@@ -2,6 +2,7 @@ import functools
 from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
 from typing import ClassVar, cast, get_args
+from typing import Self
 
 import aiohttp
 from yarl import URL
@@ -30,12 +31,29 @@ class BaseResource[
 
     query_path: ClassVar[str]
 
-    def __init__(self, core: _KubeCore, group_api_query_path: str):
+    def __init__(
+        self,
+        core: _KubeCore,
+        group_api_query_path: str,
+        resource_id: str | None = None,
+    ):
         if not self.query_path:
             raise ValueError("resource api query_path must be set")
 
         self._core: _KubeCore = core
         self._group_api_query_path: str = group_api_query_path
+        self._resource_id = resource_id
+
+    def __getitem__(self, resource_id: str) -> Self:
+        """
+        Returns a resource instance bound to a concrete resource_id.
+
+        Usage:
+        >>> kube_client.core_v1.pod["pod-name"]
+        """
+        if self._resource_id is not None:
+            raise ValueError(f"kube client was already bound to {self._resource_id}")
+        return self.__class__(self._core, self._group_api_query_path, resource_id)
 
     @property
     def _model_class(self) -> type[ModelT]:
@@ -172,6 +190,7 @@ class ClusterScopedResource[
             return True, await self.create(model)
 
     async def update(self, model: ModelT) -> ModelT:
+        assert model.metadata.name is not None
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name),
@@ -349,6 +368,7 @@ class NamespacedResource[
             return True, await self.create(model, namespace=namespace)
 
     async def update(self, model: ModelT, namespace: str | None = None) -> ModelT:
+        assert model.metadata.name is not None
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name, self._get_ns(namespace)),
@@ -394,5 +414,59 @@ class NamespacedResource[
             headers={"Content-Type": "application/json-patch+json"},
             url=self._build_url(name, self._get_ns(namespace)),
             json=cast(JsonType, patch_json_list),
+        ) as resp:
+            return await self._core.deserialize_response(resp, self._model_class)
+
+
+class NestedResource[
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
+](BaseResource[ModelT, ListModelT, DeleteModelT]):
+    is_nested_resource = True  # marker
+    query_path: ClassVar[str]
+
+    def __init__(
+        self,
+        parent: (
+            NamespacedResource[ModelT, ListModelT, DeleteModelT]
+            | ClusterScopedResource[ModelT, ListModelT, DeleteModelT]
+        ),
+    ):
+        super().__init__(parent._core, parent._group_api_query_path)
+        self._group_api_query_path = parent._group_api_query_path
+        self._parent = parent
+        rid = getattr(parent, "_resource_id", None)
+        if not rid:
+            raise ValueError("Nested resource requires parent resource_id")
+        self._parent_resource_id: str = rid
+
+    def _build_url_list(self) -> URL:
+        assert self.query_path, "query_path must be set"
+        parent = self._parent
+        # Use parent's _build_url to construct the base URL to the parent resource
+        if isinstance(parent, NamespacedResource):
+            base = parent._build_url(self._parent_resource_id, parent._get_ns())
+        else:
+            base = parent._build_url(self._parent_resource_id)
+        return base / self.query_path
+
+    def _build_url(self, name: str | None = None) -> URL:
+        list_url = self._build_url_list()
+        return list_url / name if name else list_url
+
+    async def get(self, name: str) -> ModelT:
+        async with self._core.request(method="GET", url=self._build_url()) as resp:
+            return await self._core.deserialize_response(resp, self._model_class)
+
+    async def get_list(self) -> ListModelT:
+        async with self._core.request(method="GET", url=self._build_url_list()) as resp:
+            return await self._core.deserialize_response(resp, self._list_model_class)
+
+    async def update(self, model: ModelT) -> ModelT:
+        async with self._core.request(
+            method="PUT",
+            url=self._build_url(),
+            json=self._core.serialize(model),
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)

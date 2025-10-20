@@ -25,6 +25,10 @@ from .models import (
 )
 from collections.abc import Collection
 
+from ._base_resource import (
+    NestedResource,
+)
+
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
     query_path = "namespaces"
@@ -39,8 +43,14 @@ class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
         )
 
 
+# list operations are not really supported for pod statuses
+class PodStatus(NestedResource[V1Pod, V1PodList, V1Pod]):
+    query_path = "status"
+
+
 class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "pods"
+    status = _Attr(PodStatus)
 
 
 class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):

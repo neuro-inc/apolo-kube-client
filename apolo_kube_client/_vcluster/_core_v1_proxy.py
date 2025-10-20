@@ -25,9 +25,20 @@ from ..models import (
     V1Status,
 )
 
+from .._core_v1 import (
+    PodStatus,
+)
+from ._resource_proxy import NestedResourceProxy
+
+
+class PodStatusProxy(NestedResourceProxy[V1Pod, V1PodList, V1Pod, PodStatus]):
+    pass
+
 
 class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
-    pass
+    @attr(PodStatusProxy)
+    def status(self) -> PodStatus:
+        return self._origin.status
 
 
 class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secret]):
