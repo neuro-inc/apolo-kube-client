@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_validating_admission_policy import V1ValidatingAdmissionPolicy
 
 __all__ = ("V1ValidatingAdmissionPolicyList",)
 
 
-class V1ValidatingAdmissionPolicyList(BaseModel):
+class V1ValidatingAdmissionPolicyList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

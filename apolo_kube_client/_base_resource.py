@@ -1,7 +1,7 @@
 import functools
 from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
-from typing import ClassVar, Protocol, cast, get_args, Any, Self
+from typing import ClassVar, cast, get_args
 
 import aiohttp
 from yarl import URL
@@ -10,7 +10,7 @@ from ._core import _KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
-from .models import V1ObjectMeta
+from .models import ResourceModel, ListModel
 
 
 class Base:
@@ -18,19 +18,10 @@ class Base:
         self._core = core
 
 
-class KubeResourceModel(Protocol):
-    metadata: V1ObjectMeta
-
-    def model_dump(self, *, by_alias: bool, exclude_defaults: bool) -> Any: ...
-
-    @classmethod
-    def model_validate(cls, data: Any) -> Self: ...
-
-
 class BaseResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ]:
     """
     Base class for Kubernetes resources
@@ -87,9 +78,9 @@ class BaseResource[
 
 
 class ClusterScopedResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are not namespaced (cluster scoped).
@@ -174,6 +165,7 @@ class ClusterScopedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             return False, await self.get(name=model.metadata.name)
         except ResourceNotFound:
@@ -185,6 +177,7 @@ class ClusterScopedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             await self.get(name=model.metadata.name)
             async with self._core.request(
@@ -216,9 +209,9 @@ class ClusterScopedResource[
 
 
 class NamespacedResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are namespaced.
@@ -341,6 +334,7 @@ class NamespacedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             return False, await self.get(name=model.metadata.name, namespace=namespace)
         except ResourceNotFound:
@@ -354,6 +348,7 @@ class NamespacedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             await self.get(name=model.metadata.name, namespace=namespace)
             async with self._core.request(

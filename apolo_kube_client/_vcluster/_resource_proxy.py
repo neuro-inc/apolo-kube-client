@@ -1,7 +1,8 @@
 from collections.abc import Collection
 from typing import cast
 
-from .._base_resource import KubeResourceModel, NamespacedResource
+from .._base_resource import NamespacedResource
+from ..models import ResourceModel, ListModel
 from .._typedefs import JsonType
 from .._watch import Watch
 
@@ -17,9 +18,9 @@ class BaseProxy[OriginT]:
 
 
 class NamespacedResourceProxy[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
     OriginT,
 ](
     BaseProxy[OriginT],

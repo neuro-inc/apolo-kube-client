@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_topology_selector_term import V1TopologySelectorTerm
 
 __all__ = ("V1StorageClass",)
 
 
-class V1StorageClass(BaseModel):
+class V1StorageClass(ResourceModel):
     allow_volume_expansion: bool | None = Field(
         default=None,
         serialization_alias="allowVolumeExpansion",

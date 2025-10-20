@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_scale_spec import V1ScaleSpec
 from .v1_scale_status import V1ScaleStatus
@@ -6,7 +7,7 @@ from .v1_scale_status import V1ScaleStatus
 __all__ = ("V1Scale",)
 
 
-class V1Scale(BaseModel):
+class V1Scale(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

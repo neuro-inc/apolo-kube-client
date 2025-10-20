@@ -38,6 +38,7 @@ class TestStatefulSet:
             model=statefulset, namespace="default"
         )
         assert statefulset_create.metadata.name == statefulset.metadata.name
+        assert statefulset.metadata.name is not None
 
         # test getting the statefulset
         statefulset_get = await kube_client.apps_v1.statefulset.get(

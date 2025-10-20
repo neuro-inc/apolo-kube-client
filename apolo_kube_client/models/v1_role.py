@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_policy_rule import V1PolicyRule
 
 __all__ = ("V1Role",)
 
 
-class V1Role(BaseModel):
+class V1Role(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

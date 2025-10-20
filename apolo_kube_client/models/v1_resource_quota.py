@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_resource_quota_spec import V1ResourceQuotaSpec
 from .v1_resource_quota_status import V1ResourceQuotaStatus
@@ -6,7 +7,7 @@ from .v1_resource_quota_status import V1ResourceQuotaStatus
 __all__ = ("V1ResourceQuota",)
 
 
-class V1ResourceQuota(BaseModel):
+class V1ResourceQuota(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

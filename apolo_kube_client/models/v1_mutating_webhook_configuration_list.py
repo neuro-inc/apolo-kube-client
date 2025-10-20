@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_mutating_webhook_configuration import V1MutatingWebhookConfiguration
 
 __all__ = ("V1MutatingWebhookConfigurationList",)
 
 
-class V1MutatingWebhookConfigurationList(BaseModel):
+class V1MutatingWebhookConfigurationList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

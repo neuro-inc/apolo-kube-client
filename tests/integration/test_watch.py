@@ -8,6 +8,7 @@ class TestWatch:
     async def test_watch(self, kube_client: KubeClient) -> None:
         node_list = await kube_client.core_v1.node.get_list()
         node: V1Node = node_list.items[0]
+        assert node.metadata.name is not None
 
         try:
             await kube_client.core_v1.node.patch_json(
@@ -44,6 +45,7 @@ class TestWatch:
     async def test_watch__multiple_events(self, kube_client: KubeClient) -> None:
         node_list = await kube_client.core_v1.node.get_list()
         node: V1Node = node_list.items[0]
+        assert node.metadata.name is not None
 
         try:
             await kube_client.core_v1.node.patch_json(

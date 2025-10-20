@@ -18,6 +18,7 @@ class TestStorageClass:
             model=storage_class
         )
         assert storage_class_create.metadata.name == storage_class.metadata.name
+        assert storage_class.metadata.name is not None
 
         # test getting the storage_class
         storage_class_get = await kube_client.storage_k8s_io_v1.storage_class.get(

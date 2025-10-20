@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_ip_address_spec import V1IPAddressSpec
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1IPAddress",)
 
 
-class V1IPAddress(BaseModel):
+class V1IPAddress(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

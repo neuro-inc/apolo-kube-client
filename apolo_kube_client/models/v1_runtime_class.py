@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_overhead import V1Overhead
 from .v1_scheduling import V1Scheduling
@@ -6,7 +7,7 @@ from .v1_scheduling import V1Scheduling
 __all__ = ("V1RuntimeClass",)
 
 
-class V1RuntimeClass(BaseModel):
+class V1RuntimeClass(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

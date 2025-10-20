@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_service_cidr import V1ServiceCIDR
 
 __all__ = ("V1ServiceCIDRList",)
 
 
-class V1ServiceCIDRList(BaseModel):
+class V1ServiceCIDRList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

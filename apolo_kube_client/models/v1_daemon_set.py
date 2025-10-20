@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_daemon_set_spec import V1DaemonSetSpec
 from .v1_daemon_set_status import V1DaemonSetStatus
 from .v1_object_meta import V1ObjectMeta
@@ -6,7 +7,7 @@ from .v1_object_meta import V1ObjectMeta
 __all__ = ("V1DaemonSet",)
 
 
-class V1DaemonSet(BaseModel):
+class V1DaemonSet(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

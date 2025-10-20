@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_stateful_set_spec import V1StatefulSetSpec
 from .v1_stateful_set_status import V1StatefulSetStatus
@@ -6,7 +7,7 @@ from .v1_stateful_set_status import V1StatefulSetStatus
 __all__ = ("V1StatefulSet",)
 
 
-class V1StatefulSet(BaseModel):
+class V1StatefulSet(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_custom_resource_definition import V1CustomResourceDefinition
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1CustomResourceDefinitionList",)
 
 
-class V1CustomResourceDefinitionList(BaseModel):
+class V1CustomResourceDefinitionList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

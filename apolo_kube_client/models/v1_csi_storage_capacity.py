@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_label_selector import V1LabelSelector
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1CSIStorageCapacity",)
 
 
-class V1CSIStorageCapacity(BaseModel):
+class V1CSIStorageCapacity(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_flow_schema import V1FlowSchema
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1FlowSchemaList",)
 
 
-class V1FlowSchemaList(BaseModel):
+class V1FlowSchemaList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

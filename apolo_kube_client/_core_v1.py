@@ -23,6 +23,7 @@ from .models import (
     V1ServiceList,
     V1Status,
 )
+from collections.abc import Collection
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
@@ -55,7 +56,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         encode: bool = True,
     ) -> V1Secret:
         secret = await self.get(name=name, namespace=self._get_ns(namespace))
-        patch_json_list = []
+        patch_json_list: list[dict[str, str | Collection[str]]] = []
         if secret.data is None:
             patch_json_list.append({"op": "add", "path": "/data", "value": {}})
         patch_json_list.append(

@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_network_policy_spec import V1NetworkPolicySpec
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1NetworkPolicy",)
 
 
-class V1NetworkPolicy(BaseModel):
+class V1NetworkPolicy(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

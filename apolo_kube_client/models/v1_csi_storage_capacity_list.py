@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_csi_storage_capacity import V1CSIStorageCapacity
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1CSIStorageCapacityList",)
 
 
-class V1CSIStorageCapacityList(BaseModel):
+class V1CSIStorageCapacityList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

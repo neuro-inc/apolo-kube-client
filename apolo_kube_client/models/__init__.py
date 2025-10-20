@@ -765,6 +765,7 @@ from .v2_pods_metric_status import V2PodsMetricStatus
 from .v2_resource_metric_source import V2ResourceMetricSource
 from .v2_resource_metric_status import V2ResourceMetricStatus
 from .version_info import VersionInfo
+from .base import ListModel, ResourceModel
 
 __all__ = (
     "AdmissionregistrationV1ServiceReference",
@@ -783,7 +784,9 @@ __all__ = (
     "EventsV1EventList",
     "EventsV1EventSeries",
     "FlowcontrolV1Subject",
+    "ListModel",
     "RbacV1Subject",
+    "ResourceModel",
     "ResourceV1ResourceClaim",
     "StorageV1TokenRequest",
     "V1APIGroup",

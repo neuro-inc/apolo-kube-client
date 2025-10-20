@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_limit_range_spec import V1LimitRangeSpec
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1LimitRange",)
 
 
-class V1LimitRange(BaseModel):
+class V1LimitRange(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

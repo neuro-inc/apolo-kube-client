@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_resource_quota import V1ResourceQuota
 
 __all__ = ("V1ResourceQuotaList",)
 
 
-class V1ResourceQuotaList(BaseModel):
+class V1ResourceQuotaList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

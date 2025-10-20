@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v2_horizontal_pod_autoscaler import V2HorizontalPodAutoscaler
 
 __all__ = ("V2HorizontalPodAutoscalerList",)
 
 
-class V2HorizontalPodAutoscalerList(BaseModel):
+class V2HorizontalPodAutoscalerList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

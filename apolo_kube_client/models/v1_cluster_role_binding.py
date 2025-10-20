@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .rbac_v1_subject import RbacV1Subject
 from .v1_object_meta import V1ObjectMeta
 from .v1_role_ref import V1RoleRef
@@ -6,7 +7,7 @@ from .v1_role_ref import V1RoleRef
 __all__ = ("V1ClusterRoleBinding",)
 
 
-class V1ClusterRoleBinding(BaseModel):
+class V1ClusterRoleBinding(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

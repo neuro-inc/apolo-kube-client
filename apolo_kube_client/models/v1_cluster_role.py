@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_aggregation_rule import V1AggregationRule
 from .v1_object_meta import V1ObjectMeta
 from .v1_policy_rule import V1PolicyRule
@@ -6,7 +7,7 @@ from .v1_policy_rule import V1PolicyRule
 __all__ = ("V1ClusterRole",)
 
 
-class V1ClusterRole(BaseModel):
+class V1ClusterRole(ResourceModel):
     aggregation_rule: V1AggregationRule = Field(
         default_factory=lambda: V1AggregationRule(),
         serialization_alias="aggregationRule",

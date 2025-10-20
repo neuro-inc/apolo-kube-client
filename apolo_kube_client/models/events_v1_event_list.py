@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .events_v1_event import EventsV1Event
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("EventsV1EventList",)
 
 
-class EventsV1EventList(BaseModel):
+class EventsV1EventList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

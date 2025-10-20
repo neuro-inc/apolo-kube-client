@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha1_storage_version_status import V1alpha1StorageVersionStatus
 from apolo_kube_client._typedefs import JsonType
@@ -6,7 +7,7 @@ from apolo_kube_client._typedefs import JsonType
 __all__ = ("V1alpha1StorageVersion",)
 
 
-class V1alpha1StorageVersion(BaseModel):
+class V1alpha1StorageVersion(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

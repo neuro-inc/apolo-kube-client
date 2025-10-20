@@ -31,6 +31,7 @@ async def namespace(
 ) -> AsyncGenerator[V1Namespace]:
     namespace = namespace_model_factory(f"test-ns-{uuid4().hex[:8]}", None)
     yield await kube_client.core_v1.namespace.create(model=namespace)
+    assert namespace.metadata.name is not None
     await kube_client.core_v1.namespace.delete(name=namespace.metadata.name)
 
 
@@ -45,6 +46,7 @@ class TestNamespace:
         # create namespace and ensure it was created
         namespace_create = await kube_client.core_v1.namespace.create(model=namespace)
         assert namespace_create.metadata.name == namespace.metadata.name
+        assert namespace.metadata.name is not None
 
         # let's get the namespace and ensure it exists
         namespace_get = await kube_client.core_v1.namespace.get(
@@ -87,6 +89,7 @@ class TestNamespace:
         assert namespace_get_or_create.metadata.name == "test-get-or-create-ns-new"
         assert created is True
         # Clean up the created namespace
+        assert namespace.metadata.name is not None
         await kube_client.core_v1.namespace.delete(name=namespace.metadata.name)
 
     async def test_create_or_update(
@@ -116,6 +119,7 @@ class TestNamespace:
             namespace_create_or_update.metadata.name == "test-create-or-updated-ns-new"
         )
         # Clean up the created namespace
+        assert namespace.metadata.name is not None
         await kube_client.core_v1.namespace.delete(name=namespace.metadata.name)
 
     async def test_patch_json(
@@ -128,6 +132,7 @@ class TestNamespace:
                 "value": "my-app",
             }
         ]
+        assert namespace.metadata.name is not None
         namespace = await kube_client.core_v1.namespace.patch_json(
             name=namespace.metadata.name, patch_json_list=patch_json_list
         )

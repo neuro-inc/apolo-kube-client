@@ -20,7 +20,7 @@ class TestNetworkPolicy:
                 pod_selector=V1LabelSelector(match_labels={}),
                 ingress=[
                     V1NetworkPolicyIngressRule(
-                        _from=[
+                        from_=[
                             V1NetworkPolicyPeer(
                                 pod_selector=V1LabelSelector(match_labels={})
                             )
@@ -45,6 +45,7 @@ class TestNetworkPolicy:
             model=np, namespace="default"
         )
         assert np_create.metadata.name == np.metadata.name
+        assert np.metadata.name is not None
 
         # test getting the network policy
         np_get = await kube_client.networking_k8s_io_v1.network_policy.get(

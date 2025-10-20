@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_custom_resource_definition_spec import V1CustomResourceDefinitionSpec
 from .v1_custom_resource_definition_status import V1CustomResourceDefinitionStatus
 from .v1_object_meta import V1ObjectMeta
@@ -6,7 +7,7 @@ from .v1_object_meta import V1ObjectMeta
 __all__ = ("V1CustomResourceDefinition",)
 
 
-class V1CustomResourceDefinition(BaseModel):
+class V1CustomResourceDefinition(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

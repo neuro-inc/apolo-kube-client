@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .discovery_v1_endpoint_port import DiscoveryV1EndpointPort
 from .v1_endpoint import V1Endpoint
 from .v1_object_meta import V1ObjectMeta
@@ -6,7 +7,7 @@ from .v1_object_meta import V1ObjectMeta
 __all__ = ("V1EndpointSlice",)
 
 
-class V1EndpointSlice(BaseModel):
+class V1EndpointSlice(ResourceModel):
     address_type: str | None = Field(
         default=None,
         serialization_alias="addressType",

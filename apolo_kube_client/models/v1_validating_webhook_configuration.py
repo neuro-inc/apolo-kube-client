@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_validating_webhook import V1ValidatingWebhook
 
 __all__ = ("V1ValidatingWebhookConfiguration",)
 
 
-class V1ValidatingWebhookConfiguration(BaseModel):
+class V1ValidatingWebhookConfiguration(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

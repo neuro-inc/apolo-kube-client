@@ -31,6 +31,7 @@ class TestJob:
         )
         assert job_create.metadata.name == job.metadata.name
 
+        assert job.metadata.name is not None
         # test getting the job
         job_get = await kube_client.batch_v1.job.get(name=job.metadata.name)
         assert job_get.metadata.name == job.metadata.name

@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_role_binding import V1RoleBinding
 
 __all__ = ("V1RoleBindingList",)
 
 
-class V1RoleBindingList(BaseModel):
+class V1RoleBindingList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

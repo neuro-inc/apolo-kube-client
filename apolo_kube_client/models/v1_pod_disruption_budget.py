@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_pod_disruption_budget_spec import V1PodDisruptionBudgetSpec
 from .v1_pod_disruption_budget_status import V1PodDisruptionBudgetStatus
@@ -6,7 +7,7 @@ from .v1_pod_disruption_budget_status import V1PodDisruptionBudgetStatus
 __all__ = ("V1PodDisruptionBudget",)
 
 
-class V1PodDisruptionBudget(BaseModel):
+class V1PodDisruptionBudget(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

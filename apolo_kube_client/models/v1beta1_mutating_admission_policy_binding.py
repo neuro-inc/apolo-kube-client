@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1beta1_mutating_admission_policy_binding_spec import (
     V1beta1MutatingAdmissionPolicyBindingSpec,
@@ -7,7 +8,7 @@ from .v1beta1_mutating_admission_policy_binding_spec import (
 __all__ = ("V1beta1MutatingAdmissionPolicyBinding",)
 
 
-class V1beta1MutatingAdmissionPolicyBinding(BaseModel):
+class V1beta1MutatingAdmissionPolicyBinding(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

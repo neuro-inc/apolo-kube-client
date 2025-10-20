@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_ingress_class_spec import V1IngressClassSpec
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1IngressClass",)
 
 
-class V1IngressClass(BaseModel):
+class V1IngressClass(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

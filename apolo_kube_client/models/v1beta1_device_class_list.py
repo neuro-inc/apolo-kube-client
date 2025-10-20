@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1beta1_device_class import V1beta1DeviceClass
 
 __all__ = ("V1beta1DeviceClassList",)
 
 
-class V1beta1DeviceClassList(BaseModel):
+class V1beta1DeviceClassList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

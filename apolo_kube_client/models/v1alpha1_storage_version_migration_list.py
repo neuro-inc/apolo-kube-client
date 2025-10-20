@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_storage_version_migration import V1alpha1StorageVersionMigration
 
 __all__ = ("V1alpha1StorageVersionMigrationList",)
 
 
-class V1alpha1StorageVersionMigrationList(BaseModel):
+class V1alpha1StorageVersionMigrationList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

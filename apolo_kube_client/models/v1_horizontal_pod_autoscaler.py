@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_horizontal_pod_autoscaler_spec import V1HorizontalPodAutoscalerSpec
 from .v1_horizontal_pod_autoscaler_status import V1HorizontalPodAutoscalerStatus
 from .v1_object_meta import V1ObjectMeta
@@ -6,7 +7,7 @@ from .v1_object_meta import V1ObjectMeta
 __all__ = ("V1HorizontalPodAutoscaler",)
 
 
-class V1HorizontalPodAutoscaler(BaseModel):
+class V1HorizontalPodAutoscaler(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_token_request_spec import V1TokenRequestSpec
 from .v1_token_request_status import V1TokenRequestStatus
@@ -6,7 +7,7 @@ from .v1_token_request_status import V1TokenRequestStatus
 __all__ = ("AuthenticationV1TokenRequest",)
 
 
-class AuthenticationV1TokenRequest(BaseModel):
+class AuthenticationV1TokenRequest(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

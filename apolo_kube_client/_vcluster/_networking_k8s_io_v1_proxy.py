@@ -1,7 +1,7 @@
 from .._networking_k8s_io_v1 import Ingress, NetworkingK8SioV1Api, NetworkPolicy
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from .models import (
+from ..models import (
     V1Ingress,
     V1IngressList,
     V1NetworkPolicy,

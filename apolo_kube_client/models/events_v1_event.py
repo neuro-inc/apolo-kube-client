@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .events_v1_event_series import EventsV1EventSeries
 from .v1_event_source import V1EventSource
 from .v1_object_meta import V1ObjectMeta
@@ -8,7 +9,7 @@ from datetime import datetime
 __all__ = ("EventsV1Event",)
 
 
-class EventsV1Event(BaseModel):
+class EventsV1Event(ResourceModel):
     action: str | None = None
 
     api_version: str | None = Field(

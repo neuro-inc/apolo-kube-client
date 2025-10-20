@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_replication_controller_spec import V1ReplicationControllerSpec
 from .v1_replication_controller_status import V1ReplicationControllerStatus
@@ -6,7 +7,7 @@ from .v1_replication_controller_status import V1ReplicationControllerStatus
 __all__ = ("V1ReplicationController",)
 
 
-class V1ReplicationController(BaseModel):
+class V1ReplicationController(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

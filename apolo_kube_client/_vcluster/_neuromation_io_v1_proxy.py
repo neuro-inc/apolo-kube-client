@@ -2,7 +2,7 @@ from .._crd_models import V1DiskNamingCRD, V1DiskNamingCRDList
 from .._neuromation_io_v1 import DiskNamingCRD, NeuromationioV1API
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from .models import V1Status
+from ..models import V1Status
 
 
 class DiskNamingCRDProxy(

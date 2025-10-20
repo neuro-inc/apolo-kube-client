@@ -22,7 +22,7 @@ from apolo_kube_client._vcluster._client_factory import (
 from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
 from apolo_kube_client.apolo import create_namespace, generate_namespace_name
 
-from .models import V1Secret
+from ..models import V1Secret
 
 logger = logging.getLogger(__name__)
 

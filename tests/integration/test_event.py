@@ -45,4 +45,5 @@ class TestEvent:
             assert event.involved_object.name == pod.metadata.name
 
         # delete a pod
+        assert pod.metadata.name is not None
         await kube_client.core_v1.pod.delete(name=pod.metadata.name)

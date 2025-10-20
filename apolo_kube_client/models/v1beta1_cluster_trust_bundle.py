@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1beta1_cluster_trust_bundle_spec import V1beta1ClusterTrustBundleSpec
 
 __all__ = ("V1beta1ClusterTrustBundle",)
 
 
-class V1beta1ClusterTrustBundle(BaseModel):
+class V1beta1ClusterTrustBundle(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

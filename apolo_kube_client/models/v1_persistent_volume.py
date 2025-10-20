@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 from .v1_persistent_volume_status import V1PersistentVolumeStatus
@@ -6,7 +7,7 @@ from .v1_persistent_volume_status import V1PersistentVolumeStatus
 __all__ = ("V1PersistentVolume",)
 
 
-class V1PersistentVolume(BaseModel):
+class V1PersistentVolume(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

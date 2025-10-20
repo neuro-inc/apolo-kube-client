@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_cron_job_spec import V1CronJobSpec
 from .v1_cron_job_status import V1CronJobStatus
 from .v1_object_meta import V1ObjectMeta
@@ -6,7 +7,7 @@ from .v1_object_meta import V1ObjectMeta
 __all__ = ("V1CronJob",)
 
 
-class V1CronJob(BaseModel):
+class V1CronJob(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

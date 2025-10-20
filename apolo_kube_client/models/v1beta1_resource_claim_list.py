@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1beta1_resource_claim import V1beta1ResourceClaim
 
 __all__ = ("V1beta1ResourceClaimList",)
 
 
-class V1beta1ResourceClaimList(BaseModel):
+class V1beta1ResourceClaimList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

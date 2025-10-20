@@ -12,9 +12,24 @@ from pydantic import AliasChoices, BaseModel, Field
 
 __all__ = ("{clsname}",)
 
-class {clsname}(BaseModel):
+class {clsname}({base}):
 {body}
 """
+
+BASE_MOD = """\
+from pydantic import BaseModel, Field
+from .v1_object_meta import V1ObjectMeta
+from .v1_list_meta import V1ListMeta
+
+
+class ResourceModel(BaseModel):
+    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+
+
+class ListModel(BaseModel):
+    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+"""
+
 
 LIST_RE = re.compile(r"^list\[(?P<item>.+)\]$")
 DICT_RE = re.compile(r"^dict\((?P<key>.+), (?P<val>.+)\)$")
@@ -104,6 +119,15 @@ def generate(
     name = cls.__name__
     imports: set[str] = set()
     body: list[str] = []
+    match cls.openapi_types.get("metadata"):
+        case None:
+            base = "BaseModel"
+        case "V1ObjectMeta":
+            base = "ResourceModel"
+            imports.add("from .base import ResourceModel")
+        case "V1ListMeta":
+            base = "ListModel"
+            imports.add("from .base import ListModel")
     for attr, typ in cls.openapi_types.items():
         alias = cls.attribute_map[attr]
         res = parse_type(name, typ)
@@ -132,7 +156,10 @@ def generate(
             field = f"{real_attr}: {res.type_}{tail}"
         body.append(f"    {field}\n")
     mod = MOD.format(
-        imports="\n".join(sorted(imports)), clsname=name, body="\n".join(body)
+        imports="\n".join(sorted(imports)),
+        clsname=name,
+        base=base,
+        body="\n".join(body),
     )
     (target_dir / modname).with_suffix(".py").write_text(mod)
     init_lines.append(f"from .{modname} import {name}")
@@ -149,6 +176,10 @@ def main() -> None:
         if isinstance(obj, type):
             print(f"Generate {name}")
             generate(obj, target_dir, init_lines, all_names)
+
+    (target_dir / "base.py").write_text(BASE_MOD)
+    init_lines.append("from .base import ListModel, ResourceModel")
+    all_names.extend(["ListModel", "ResourceModel"])
 
     all = ", ".join(f'"{name}"' for name in sorted(all_names))
     init_lines.append(f"__all__ = ({all})")

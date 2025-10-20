@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_cluster_role import V1ClusterRole
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1ClusterRoleList",)
 
 
-class V1ClusterRoleList(BaseModel):
+class V1ClusterRoleList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

@@ -3,6 +3,7 @@ from apolo_kube_client.models import (
     V1ObjectMeta,
     V1PersistentVolume,
     V1PersistentVolumeSpec,
+    V1HostPathVolumeSource,
 )
 
 
@@ -18,13 +19,14 @@ class TestPersistentVolume:
                 persistent_volume_reclaim_policy="Delete",
                 storage_class_name="standard",
                 volume_mode="Filesystem",
-                host_path={"path": "/tmp/data"},
+                host_path=V1HostPathVolumeSource(path="/tmp/data"),
             ),
         )
 
         # test creating the pv
         pv_create = await kube_client.core_v1.persistent_volume.create(model=pv)
         assert pv_create.metadata.name == pv.metadata.name
+        assert pv.metadata.name is not None
 
         # test getting the pv
         pv_get = await kube_client.core_v1.persistent_volume.get(name=pv.metadata.name)

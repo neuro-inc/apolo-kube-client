@@ -34,7 +34,7 @@ async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[Non
                     name="v1",
                     served=True,
                     storage=True,
-                    schema=V1CustomResourceValidation(
+                    schema_=V1CustomResourceValidation(
                         open_apiv3_schema=V1JSONSchemaProps(
                             type="object",
                             properties={
@@ -68,6 +68,7 @@ async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[Non
     await kube_client.extensions_k8s_io_v1.crd.create(model=dn_crd)
     await asyncio.sleep(1)
     yield
+    assert dn_crd.metadata.name is not None
     await kube_client.extensions_k8s_io_v1.crd.delete(name=dn_crd.metadata.name)
 
 

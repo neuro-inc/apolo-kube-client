@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_cron_job import V1CronJob
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1CronJobList",)
 
 
-class V1CronJobList(BaseModel):
+class V1CronJobList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

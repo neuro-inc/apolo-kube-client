@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_replication_controller import V1ReplicationController
 
 __all__ = ("V1ReplicationControllerList",)
 
 
-class V1ReplicationControllerList(BaseModel):
+class V1ReplicationControllerList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

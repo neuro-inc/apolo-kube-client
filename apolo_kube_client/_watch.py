@@ -16,14 +16,14 @@ from ._transport import ERROR_CODES_MAPPING
 from ._typedefs import JsonType
 
 if TYPE_CHECKING:
-    from ._base_resource import KubeResourceModel
+    from .models.base import ResourceModel
 
 
 LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
-class WatchEvent[ModelT: KubeResourceModel]:
+class WatchEvent[ModelT: ResourceModel]:
     type: Literal["ADDED", "MODIFIED", "DELETED"]
     object: ModelT
 
@@ -39,7 +39,7 @@ class GetResponse(Protocol):
     ) -> AbstractAsyncContextManager[aiohttp.ClientResponse]: ...
 
 
-class Watch[ModelT: KubeResourceModel]:
+class Watch[ModelT: ResourceModel]:
     def __init__(
         self,
         resource_version: str | None,

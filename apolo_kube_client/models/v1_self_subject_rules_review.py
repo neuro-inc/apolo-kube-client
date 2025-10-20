@@ -1,4 +1,5 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 from .v1_self_subject_rules_review_spec import V1SelfSubjectRulesReviewSpec
 from .v1_subject_rules_review_status import V1SubjectRulesReviewStatus
@@ -6,7 +7,7 @@ from .v1_subject_rules_review_status import V1SubjectRulesReviewStatus
 __all__ = ("V1SelfSubjectRulesReview",)
 
 
-class V1SelfSubjectRulesReview(BaseModel):
+class V1SelfSubjectRulesReview(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

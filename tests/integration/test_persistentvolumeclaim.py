@@ -3,6 +3,7 @@ from apolo_kube_client.models import (
     V1ObjectMeta,
     V1PersistentVolumeClaim,
     V1PersistentVolumeClaimSpec,
+    V1VolumeResourceRequirements,
 )
 
 
@@ -14,7 +15,7 @@ class TestPersistentVolumeClaim:
             metadata=V1ObjectMeta(name="pvc-test", namespace="default"),
             spec=V1PersistentVolumeClaimSpec(
                 access_modes=["ReadWriteOnce"],
-                resources={"requests": {"storage": "1Gi"}},
+                resources=V1VolumeResourceRequirements(requests={"storage": "1Gi"}),
                 volume_mode="Filesystem",
             ),
         )
@@ -24,6 +25,7 @@ class TestPersistentVolumeClaim:
             model=pvc, namespace="default"
         )
         assert pvc_create.metadata.name == pvc.metadata.name
+        assert pvc.metadata.name is not None
 
         # test getting the pvc
         pvc_get = await kube_client.core_v1.persistent_volume_claim.get(

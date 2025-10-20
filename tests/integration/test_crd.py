@@ -28,7 +28,7 @@ def crd() -> V1CustomResourceDefinition:
                     name="v1",
                     served=True,
                     storage=True,
-                    schema=V1CustomResourceValidation(
+                    schema_=V1CustomResourceValidation(
                         open_apiv3_schema=V1JSONSchemaProps(
                             type="object",
                             properties={
@@ -67,6 +67,8 @@ class TestCRD:
         # test creating the crd
         crd_create = await kube_client.extensions_k8s_io_v1.crd.create(model=crd)
         assert crd_create.metadata.name == crd.metadata.name
+
+        assert crd.metadata.name is not None
 
         # test getting the crd
         crd_get = await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)

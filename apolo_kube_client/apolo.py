@@ -152,7 +152,7 @@ async def create_namespace(
                         V1NetworkPolicyPeer(
                             ip_block=V1IPBlock(
                                 cidr="0.0.0.0/0",
-                                _except=[
+                                except_=[
                                     "10.0.0.0/8",
                                     "172.16.0.0/12",
                                     "192.168.0.0/16",
@@ -194,7 +194,9 @@ async def create_namespace(
                         for address in endpoint.addresses
                     ],
                     ports=[
-                        V1NetworkPolicyPort(port=int(port.port), protocol="TCP")
+                        V1NetworkPolicyPort(
+                            port=int(port.port if port.port else 0), protocol="TCP"
+                        )
                         for port in k8s_api_eps.ports
                     ],
                 ),

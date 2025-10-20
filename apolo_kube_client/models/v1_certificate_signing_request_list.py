@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_certificate_signing_request import V1CertificateSigningRequest
 from .v1_list_meta import V1ListMeta
 
 __all__ = ("V1CertificateSigningRequestList",)
 
 
-class V1CertificateSigningRequestList(BaseModel):
+class V1CertificateSigningRequestList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

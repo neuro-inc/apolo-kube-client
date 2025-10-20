@@ -1,10 +1,11 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ResourceModel
 from .v1_object_meta import V1ObjectMeta
 
 __all__ = ("V1alpha1VolumeAttributesClass",)
 
 
-class V1alpha1VolumeAttributesClass(BaseModel):
+class V1alpha1VolumeAttributesClass(ResourceModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

@@ -1,11 +1,12 @@
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, Field
+from .base import ListModel
 from .v1_list_meta import V1ListMeta
 from .v1_persistent_volume import V1PersistentVolume
 
 __all__ = ("V1PersistentVolumeList",)
 
 
-class V1PersistentVolumeList(BaseModel):
+class V1PersistentVolumeList(ListModel):
     api_version: str | None = Field(
         default=None,
         serialization_alias="apiVersion",

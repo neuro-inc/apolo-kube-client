@@ -80,7 +80,7 @@ class TestApoloNamespace:
                     V1NetworkPolicyPeer(
                         ip_block=V1IPBlock(
                             cidr="0.0.0.0/0",
-                            _except=[
+                            except_=[
                                 "10.0.0.0/8",
                                 "172.16.0.0/12",
                                 "192.168.0.0/16",
