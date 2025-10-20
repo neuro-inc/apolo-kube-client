@@ -9,7 +9,9 @@ class V1DiskNamingCRDSpec(BaseModel):
 
 class V1DiskNamingCRDMetadata(BaseModel):
     name: str
+    labels: dict[str, str] = {}
     namespace: str | None = None
+    resourceVersion: str | None = None
 
 
 class V1DiskNamingCRD(BaseModel):
@@ -26,19 +28,21 @@ class V1DiskNamingCRDList(BaseModel):
 
 
 class V1UserBucketCRDSpec(BaseModel):
-    provider_id: str
-    provider_type: str
-    provider_name: str
-    created_at: str
-    imported: bool
-    credentials: dict[str, Any]
-    public: bool
+    provider_type: str | None
+    provider_name: str | None
+    created_at: str | None
+    public: bool | None
     metadata: dict[str, Any] | None = None
+    provider_id: str | None = None
+    imported: bool | None = None
+    credentials: dict[str, Any] | None = None
 
 
 class V1UserBucketCRDMetadata(BaseModel):
     name: str
+    labels: dict[str, str] = {}
     namespace: str | None = None
+    resourceVersion: str | None = None
 
 
 class V1UserBucketCRD(BaseModel):
@@ -60,12 +64,14 @@ class V1PersistentBucketCredentialCRDSpec(BaseModel):
     credentials: dict[str, Any]
     bucket_ids: list[str]
     read_only: bool
-    public: bool
+    public: bool | None = None
 
 
 class V1PersistentBucketCredentialCRDMetadata(BaseModel):
     name: str
+    labels: dict[str, str] = {}
     namespace: str | None = None
+    resourceVersion: str | None = None
 
 
 class V1PersistentBucketCredentialCRD(BaseModel):
