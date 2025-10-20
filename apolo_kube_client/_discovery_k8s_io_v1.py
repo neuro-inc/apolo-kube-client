@@ -1,6 +1,6 @@
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
-from .models import (
+from ._models import (
     V1EndpointSlice,
     V1EndpointSliceList,
 )

@@ -13,7 +13,7 @@ from .._neuromation_io_v1 import (
 )
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from ..models import V1Status
+from .._models import V1Status
 
 
 class DiskNamingCRDProxy(

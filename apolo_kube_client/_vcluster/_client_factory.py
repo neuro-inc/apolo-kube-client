@@ -12,7 +12,7 @@ from apolo_kube_client._config import KubeClientAuthType, KubeConfig
 from apolo_kube_client._transport import KubeTransport
 from apolo_kube_client._utils import base64_decode
 
-from ..models import V1Secret
+from .._models import V1Secret
 
 logger = logging.getLogger(__name__)
 

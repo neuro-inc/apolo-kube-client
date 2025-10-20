@@ -11,7 +11,7 @@ from ._core import _KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
-from .models import ResourceModel, ListModel
+from ._models import ResourceModel, ListModel
 
 
 class Base:

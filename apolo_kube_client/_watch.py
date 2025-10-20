@@ -16,7 +16,7 @@ from ._transport import ERROR_CODES_MAPPING
 from ._typedefs import JsonType
 
 if TYPE_CHECKING:
-    from .models.base import ResourceModel
+    from ._models.base import ResourceModel
 
 
 LOGGER = logging.getLogger(__name__)

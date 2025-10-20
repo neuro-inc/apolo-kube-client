@@ -11,7 +11,7 @@ from apolo_kube_client.apolo import (
     generate_hash,
     normalize_name,
 )
-from apolo_kube_client.models import (
+from apolo_kube_client import (
     V1IPBlock,
     V1LabelSelector,
     V1NetworkPolicyEgressRule,

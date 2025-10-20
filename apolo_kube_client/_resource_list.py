@@ -1,5 +1,5 @@
 from ._core import _KubeCore
-from .models import V1APIResource, V1APIResourceList
+from ._models import V1APIResource, V1APIResourceList
 
 
 class ResourceListApi:

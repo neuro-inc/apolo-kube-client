@@ -1,7 +1,7 @@
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
 from ._crd_models import V1DiskNamingCRD, V1DiskNamingCRDList
-from .models import V1Status
+from ._models import V1Status
 from ._crd_models import (
     V1PersistentBucketCredentialCRD,
     V1PersistentBucketCredentialCRDList,

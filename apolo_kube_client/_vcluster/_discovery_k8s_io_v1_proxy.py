@@ -1,7 +1,7 @@
 from .._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api, EndpointSlice
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from ..models import (
+from .._models import (
     V1EndpointSlice,
     V1EndpointSliceList,
 )

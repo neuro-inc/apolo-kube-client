@@ -2,7 +2,7 @@ from collections.abc import Collection
 from typing import Self, cast
 
 from .._base_resource import NamespacedResource
-from ..models import ResourceModel, ListModel
+from .._models import ResourceModel, ListModel
 from .._base_resource import NestedResource
 from .._typedefs import JsonType
 from .._watch import Watch

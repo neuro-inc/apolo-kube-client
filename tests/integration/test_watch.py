@@ -1,7 +1,7 @@
 import asyncio
 
 from apolo_kube_client import KubeClient
-from apolo_kube_client.models import V1Node
+from apolo_kube_client import V1Node
 
 
 class TestWatch:

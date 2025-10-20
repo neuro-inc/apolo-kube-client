@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from apolo_kube_client.models import (
+from apolo_kube_client import (
     V1Container,
     V1ObjectMeta,
     V1Pod,

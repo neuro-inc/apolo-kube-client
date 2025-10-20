@@ -7,7 +7,7 @@ from hashlib import sha256
 
 from apolo_kube_client import KubeClient
 
-from .models import (
+from ._models import (
     V1IPBlock,
     V1LabelSelector,
     V1Namespace,

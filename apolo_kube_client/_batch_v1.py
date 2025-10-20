@@ -1,6 +1,6 @@
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
-from .models import V1Job, V1JobList
+from ._models import V1Job, V1JobList
 
 
 class Job(NamespacedResource[V1Job, V1JobList, V1Job]):

@@ -3,7 +3,7 @@ import asyncio
 import pytest
 
 from apolo_kube_client import KubeClient, ResourceNotFound
-from apolo_kube_client.models import (
+from apolo_kube_client import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,

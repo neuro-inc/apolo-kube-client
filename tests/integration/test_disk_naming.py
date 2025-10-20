@@ -9,7 +9,7 @@ from apolo_kube_client._crd_models import (
     V1DiskNamingCRDMetadata,
     V1DiskNamingCRDSpec,
 )
-from apolo_kube_client.models import (
+from apolo_kube_client import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,

@@ -8,7 +8,7 @@ import yaml
 from apolo_kube_client import KubeClientSelector, KubeConfig
 from apolo_kube_client._config import NAMESPACE_DEFAULT
 from apolo_kube_client._errors import ResourceNotFound
-from apolo_kube_client.models import V1ObjectMeta, V1Secret
+from apolo_kube_client import V1ObjectMeta, V1Secret
 
 
 def build_vcluster_secret(server: str) -> V1Secret:

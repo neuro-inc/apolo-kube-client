@@ -2,6 +2,7 @@ import keyword
 import re
 from dataclasses import dataclass
 from pathlib import Path
+import libcst
 
 from kubernetes.client import models
 from pydantic import BaseModel
@@ -171,9 +172,59 @@ def generate(
     all_names.append(name)
 
 
+class Transformer(libcst.CSTTransformer):
+    def __init__(self, names: list[str]) -> None:
+        self._names = sorted(names)
+
+    def visit_ImportFrom(self, node: libcst.ImportFrom) -> bool | None:
+        return False
+
+    def leave_ImportFrom(
+        self, original: libcst.ImportFrom, updated: libcst.ImportFrom
+    ) -> libcst.ImportFrom:
+        if updated.module.value == "_models":
+            return updated.with_changes(
+                names=[
+                    libcst.ImportAlias(libcst.Name(value=name)) for name in self._names
+                ]
+            )
+        return updated
+
+    def visit_Assign(self, node: libcst.Assign) -> bool | None:
+        return False
+
+    def leave_Assign(
+        self, original: libcst.Assign, updated: libcst.Assign
+    ) -> libcst.Assign:
+        if updated.targets[0].target.value == "__all__":
+            existing_all = [elem.value.value for elem in updated.value.elements]
+            new_all = sorted(set(existing_all + [f'"{name}"' for name in self._names]))
+            return updated.with_changes(
+                value=libcst.List(
+                    elements=[
+                        libcst.Element(value=libcst.SimpleString(value=name))
+                        for name in new_all
+                    ],
+                    lbracket=updated.value.lbracket,
+                    rbracket=updated.value.rbracket,
+                )
+            )
+
+        return updated
+
+
+def fix_init(root_dir: Path, all_names: list[str]) -> None:
+    fname = root_dir / "__init__.py"
+    mod = libcst.parse_module(fname.read_text())
+    updated_mod = mod.visit(Transformer(all_names))
+    fname.write_text(updated_mod.code)
+
+
 def main() -> None:
     here = Path(__file__)
-    target_dir = here.parent.parent / "apolo_kube_client" / "models"
+    root_dir = here.parent.parent / "apolo_kube_client"
+    target_dir = root_dir / "_models"
+    target_dir.mkdir(exist_ok=True)
     init_lines: list[str] = []
     all_names: list[str] = []
     for name in dir(models):
@@ -189,6 +240,8 @@ def main() -> None:
     all = ", ".join(f'"{name}"' for name in sorted(all_names))
     init_lines.append(f"__all__ = ({all})")
     (target_dir / "__init__.py").write_text("\n".join(init_lines))
+
+    fix_init(root_dir, all_names)
 
 
 if __name__ == "__main__":

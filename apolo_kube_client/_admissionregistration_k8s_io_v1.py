@@ -1,7 +1,7 @@
 from ._attr import _Attr
 from ._base_resource import ClusterScopedResource
 from ._core import _KubeCore
-from .models import (
+from ._models import (
     V1MutatingWebhookConfiguration,
     V1MutatingWebhookConfigurationList,
     V1Status,

@@ -2,7 +2,7 @@ from ._attr import _Attr
 from ._base_resource import Base, ClusterScopedResource, NamespacedResource
 from ._typedefs import JsonType
 from ._utils import base64_encode, escape_json_pointer
-from .models import (
+from ._models import (
     CoreV1Event,
     CoreV1EventList,
     V1Endpoints,
