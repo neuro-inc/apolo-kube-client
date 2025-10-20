@@ -1,5 +1,3 @@
-from unittest import mock
-
 import pytest
 
 from apolo_kube_client import KubeClient
@@ -111,8 +109,16 @@ class TestApoloNamespace:
                 ],
             ),
             V1NetworkPolicyEgressRule(
-                to=[V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr=mock.ANY))],
-                ports=[V1NetworkPolicyPort(port=mock.ANY, protocol="TCP")],
+                to=[
+                    V1NetworkPolicyPeer(
+                        ip_block=V1IPBlock(cidr=np.spec.egress[-1].to[0].ip_block.cidr)
+                    )
+                ],
+                ports=[
+                    V1NetworkPolicyPort(
+                        port=np.spec.egress[-1].ports[0].port, protocol="TCP"
+                    )
+                ],
             ),
         ]
 
