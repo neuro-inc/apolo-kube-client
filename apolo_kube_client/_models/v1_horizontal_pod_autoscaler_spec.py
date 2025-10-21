@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_cross_version_object_reference import V1CrossVersionObjectReference
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1HorizontalPodAutoscalerSpec",)
 
@@ -17,7 +20,10 @@ class V1HorizontalPodAutoscalerSpec(BaseModel):
         validation_alias=AliasChoices("min_replicas", "minReplicas"),
     )
 
-    scale_target_ref: V1CrossVersionObjectReference = Field(
+    scale_target_ref: Annotated[
+        V1CrossVersionObjectReference,
+        BeforeValidator(_default_if_none(V1CrossVersionObjectReference)),
+    ] = Field(
         default_factory=lambda: V1CrossVersionObjectReference(),
         serialization_alias="scaleTargetRef",
         validation_alias=AliasChoices("scale_target_ref", "scaleTargetRef"),

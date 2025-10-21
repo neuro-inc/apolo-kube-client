@@ -1,10 +1,13 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .events_v1_event_series import EventsV1EventSeries
 from .v1_event_source import V1EventSource
 from .v1_object_meta import V1ObjectMeta
 from .v1_object_reference import V1ObjectReference
 from datetime import datetime
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("EventsV1Event",)
 
@@ -40,7 +43,9 @@ class EventsV1Event(ResourceModel):
         ),
     )
 
-    deprecated_source: V1EventSource = Field(
+    deprecated_source: Annotated[
+        V1EventSource, BeforeValidator(_default_if_none(V1EventSource))
+    ] = Field(
         default_factory=lambda: V1EventSource(),
         serialization_alias="deprecatedSource",
         validation_alias=AliasChoices("deprecated_source", "deprecatedSource"),
@@ -54,15 +59,21 @@ class EventsV1Event(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
     note: str | None = None
 
     reason: str | None = None
 
-    regarding: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
+    regarding: Annotated[
+        V1ObjectReference, BeforeValidator(_default_if_none(V1ObjectReference))
+    ] = Field(default_factory=lambda: V1ObjectReference())
 
-    related: V1ObjectReference = Field(default_factory=lambda: V1ObjectReference())
+    related: Annotated[
+        V1ObjectReference, BeforeValidator(_default_if_none(V1ObjectReference))
+    ] = Field(default_factory=lambda: V1ObjectReference())
 
     reporting_controller: str | None = Field(
         default=None,
@@ -76,6 +87,8 @@ class EventsV1Event(ResourceModel):
         validation_alias=AliasChoices("reporting_instance", "reportingInstance"),
     )
 
-    series: EventsV1EventSeries = Field(default_factory=lambda: EventsV1EventSeries())
+    series: Annotated[
+        EventsV1EventSeries, BeforeValidator(_default_if_none(EventsV1EventSeries))
+    ] = Field(default_factory=lambda: EventsV1EventSeries())
 
     type: str | None = None

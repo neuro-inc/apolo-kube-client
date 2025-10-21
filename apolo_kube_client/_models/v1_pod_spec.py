@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_affinity import V1Affinity
 from .v1_container import V1Container
 from .v1_ephemeral_container import V1EphemeralContainer
@@ -14,6 +15,8 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_toleration import V1Toleration
 from .v1_topology_spread_constraint import V1TopologySpreadConstraint
 from .v1_volume import V1Volume
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodSpec",)
 
@@ -27,7 +30,9 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    affinity: V1Affinity = Field(default_factory=lambda: V1Affinity())
+    affinity: Annotated[V1Affinity, BeforeValidator(_default_if_none(V1Affinity))] = (
+        Field(default_factory=lambda: V1Affinity())
+    )
 
     automount_service_account_token: bool | None = Field(
         default=None,
@@ -39,7 +44,9 @@ class V1PodSpec(BaseModel):
 
     containers: list[V1Container] = []
 
-    dns_config: V1PodDNSConfig = Field(
+    dns_config: Annotated[
+        V1PodDNSConfig, BeforeValidator(_default_if_none(V1PodDNSConfig))
+    ] = Field(
         default_factory=lambda: V1PodDNSConfig(),
         serialization_alias="dnsConfig",
         validation_alias=AliasChoices("dns_config", "dnsConfig"),
@@ -125,7 +132,9 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )
 
-    os: V1PodOS = Field(default_factory=lambda: V1PodOS())
+    os: Annotated[V1PodOS, BeforeValidator(_default_if_none(V1PodOS))] = Field(
+        default_factory=lambda: V1PodOS()
+    )
 
     overhead: dict[str, str] = {}
 
@@ -155,9 +164,10 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("resource_claims", "resourceClaims"),
     )
 
-    resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements()
-    )
+    resources: Annotated[
+        V1ResourceRequirements,
+        BeforeValidator(_default_if_none(V1ResourceRequirements)),
+    ] = Field(default_factory=lambda: V1ResourceRequirements())
 
     restart_policy: str | None = Field(
         default=None,
@@ -183,7 +193,9 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("scheduling_gates", "schedulingGates"),
     )
 
-    security_context: V1PodSecurityContext = Field(
+    security_context: Annotated[
+        V1PodSecurityContext, BeforeValidator(_default_if_none(V1PodSecurityContext))
+    ] = Field(
         default_factory=lambda: V1PodSecurityContext(),
         serialization_alias="securityContext",
         validation_alias=AliasChoices("security_context", "securityContext"),

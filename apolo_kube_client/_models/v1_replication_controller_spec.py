@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_pod_template_spec import V1PodTemplateSpec
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ReplicationControllerSpec",)
 
@@ -15,4 +18,6 @@ class V1ReplicationControllerSpec(BaseModel):
 
     selector: dict[str, str] = {}
 
-    template: V1PodTemplateSpec = Field(default_factory=lambda: V1PodTemplateSpec())
+    template: Annotated[
+        V1PodTemplateSpec, BeforeValidator(_default_if_none(V1PodTemplateSpec))
+    ] = Field(default_factory=lambda: V1PodTemplateSpec())

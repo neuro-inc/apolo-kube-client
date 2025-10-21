@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_limit_range_spec import V1LimitRangeSpec
 from .v1_object_meta import V1ObjectMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1LimitRange",)
 
@@ -15,6 +18,10 @@ class V1LimitRange(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1LimitRangeSpec = Field(default_factory=lambda: V1LimitRangeSpec())
+    spec: Annotated[
+        V1LimitRangeSpec, BeforeValidator(_default_if_none(V1LimitRangeSpec))
+    ] = Field(default_factory=lambda: V1LimitRangeSpec())

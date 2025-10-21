@@ -1,21 +1,26 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CustomResourceDefinitionSpec",)
 
 
 class V1CustomResourceDefinitionSpec(BaseModel):
-    conversion: V1CustomResourceConversion = Field(
-        default_factory=lambda: V1CustomResourceConversion()
-    )
+    conversion: Annotated[
+        V1CustomResourceConversion,
+        BeforeValidator(_default_if_none(V1CustomResourceConversion)),
+    ] = Field(default_factory=lambda: V1CustomResourceConversion())
 
     group: str | None = None
 
-    names: V1CustomResourceDefinitionNames = Field(
-        default_factory=lambda: V1CustomResourceDefinitionNames()
-    )
+    names: Annotated[
+        V1CustomResourceDefinitionNames,
+        BeforeValidator(_default_if_none(V1CustomResourceDefinitionNames)),
+    ] = Field(default_factory=lambda: V1CustomResourceDefinitionNames())
 
     preserve_unknown_fields: bool | None = Field(
         default=None,

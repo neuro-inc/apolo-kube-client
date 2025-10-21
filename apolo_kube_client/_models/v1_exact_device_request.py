@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_capacity_requirements import V1CapacityRequirements
 from .v1_device_selector import V1DeviceSelector
 from .v1_device_toleration import V1DeviceToleration
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ExactDeviceRequest",)
 
@@ -19,9 +22,10 @@ class V1ExactDeviceRequest(BaseModel):
         validation_alias=AliasChoices("allocation_mode", "allocationMode"),
     )
 
-    capacity: V1CapacityRequirements = Field(
-        default_factory=lambda: V1CapacityRequirements()
-    )
+    capacity: Annotated[
+        V1CapacityRequirements,
+        BeforeValidator(_default_if_none(V1CapacityRequirements)),
+    ] = Field(default_factory=lambda: V1CapacityRequirements())
 
     count: int | None = None
 

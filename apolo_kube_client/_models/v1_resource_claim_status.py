@@ -1,13 +1,18 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_allocated_device_status import V1AllocatedDeviceStatus
 from .v1_allocation_result import V1AllocationResult
 from .v1_resource_claim_consumer_reference import V1ResourceClaimConsumerReference
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ResourceClaimStatus",)
 
 
 class V1ResourceClaimStatus(BaseModel):
-    allocation: V1AllocationResult = Field(default_factory=lambda: V1AllocationResult())
+    allocation: Annotated[
+        V1AllocationResult, BeforeValidator(_default_if_none(V1AllocationResult))
+    ] = Field(default_factory=lambda: V1AllocationResult())
 
     devices: list[V1AllocatedDeviceStatus] = []
 

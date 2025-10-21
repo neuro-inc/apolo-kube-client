@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_counter_set import V1beta2CounterSet
 from .v1beta2_device import V1beta2Device
 from .v1beta2_resource_pool import V1beta2ResourcePool
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta2ResourceSliceSpec",)
 
@@ -24,7 +27,9 @@ class V1beta2ResourceSliceSpec(BaseModel):
         validation_alias=AliasChoices("node_name", "nodeName"),
     )
 
-    node_selector: V1NodeSelector = Field(
+    node_selector: Annotated[
+        V1NodeSelector, BeforeValidator(_default_if_none(V1NodeSelector))
+    ] = Field(
         default_factory=lambda: V1NodeSelector(),
         serialization_alias="nodeSelector",
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
@@ -38,7 +43,9 @@ class V1beta2ResourceSliceSpec(BaseModel):
         ),
     )
 
-    pool: V1beta2ResourcePool = Field(default_factory=lambda: V1beta2ResourcePool())
+    pool: Annotated[
+        V1beta2ResourcePool, BeforeValidator(_default_if_none(V1beta2ResourcePool))
+    ] = Field(default_factory=lambda: V1beta2ResourcePool())
 
     shared_counters: list[V1beta2CounterSet] = Field(
         default=[],

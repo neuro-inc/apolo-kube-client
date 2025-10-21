@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_job_template_spec import V1JobTemplateSpec
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CronJobSpec",)
 
@@ -19,7 +22,9 @@ class V1CronJobSpec(BaseModel):
         ),
     )
 
-    job_template: V1JobTemplateSpec = Field(
+    job_template: Annotated[
+        V1JobTemplateSpec, BeforeValidator(_default_if_none(V1JobTemplateSpec))
+    ] = Field(
         default_factory=lambda: V1JobTemplateSpec(),
         serialization_alias="jobTemplate",
         validation_alias=AliasChoices("job_template", "jobTemplate"),

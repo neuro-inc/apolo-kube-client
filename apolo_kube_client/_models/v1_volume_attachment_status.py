@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_volume_error import V1VolumeError
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1VolumeAttachmentStatus",)
 
 
 class V1VolumeAttachmentStatus(BaseModel):
-    attach_error: V1VolumeError = Field(
+    attach_error: Annotated[
+        V1VolumeError, BeforeValidator(_default_if_none(V1VolumeError))
+    ] = Field(
         default_factory=lambda: V1VolumeError(),
         serialization_alias="attachError",
         validation_alias=AliasChoices("attach_error", "attachError"),
@@ -19,7 +24,9 @@ class V1VolumeAttachmentStatus(BaseModel):
         validation_alias=AliasChoices("attachment_metadata", "attachmentMetadata"),
     )
 
-    detach_error: V1VolumeError = Field(
+    detach_error: Annotated[
+        V1VolumeError, BeforeValidator(_default_if_none(V1VolumeError))
+    ] = Field(
         default_factory=lambda: V1VolumeError(),
         serialization_alias="detachError",
         validation_alias=AliasChoices("detach_error", "detachError"),

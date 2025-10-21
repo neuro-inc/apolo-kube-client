@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_label_selector import V1LabelSelector
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ClusterTrustBundleProjection",)
 
 
 class V1ClusterTrustBundleProjection(BaseModel):
-    label_selector: V1LabelSelector = Field(
+    label_selector: Annotated[
+        V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
+    ] = Field(
         default_factory=lambda: V1LabelSelector(),
         serialization_alias="labelSelector",
         validation_alias=AliasChoices("label_selector", "labelSelector"),

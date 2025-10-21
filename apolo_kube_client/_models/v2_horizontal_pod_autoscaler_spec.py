@@ -1,15 +1,19 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_horizontal_pod_autoscaler_behavior import V2HorizontalPodAutoscalerBehavior
 from .v2_metric_spec import V2MetricSpec
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V2HorizontalPodAutoscalerSpec",)
 
 
 class V2HorizontalPodAutoscalerSpec(BaseModel):
-    behavior: V2HorizontalPodAutoscalerBehavior = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerBehavior()
-    )
+    behavior: Annotated[
+        V2HorizontalPodAutoscalerBehavior,
+        BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerBehavior)),
+    ] = Field(default_factory=lambda: V2HorizontalPodAutoscalerBehavior())
 
     max_replicas: int | None = Field(
         default=None,
@@ -25,7 +29,10 @@ class V2HorizontalPodAutoscalerSpec(BaseModel):
         validation_alias=AliasChoices("min_replicas", "minReplicas"),
     )
 
-    scale_target_ref: V2CrossVersionObjectReference = Field(
+    scale_target_ref: Annotated[
+        V2CrossVersionObjectReference,
+        BeforeValidator(_default_if_none(V2CrossVersionObjectReference)),
+    ] = Field(
         default_factory=lambda: V2CrossVersionObjectReference(),
         serialization_alias="scaleTargetRef",
         validation_alias=AliasChoices("scale_target_ref", "scaleTargetRef"),

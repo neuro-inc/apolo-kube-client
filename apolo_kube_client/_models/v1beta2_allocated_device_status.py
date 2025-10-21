@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_condition import V1Condition
 from .v1beta2_network_device_data import V1beta2NetworkDeviceData
 from apolo_kube_client._typedefs import JsonType
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta2AllocatedDeviceStatus",)
 
@@ -15,7 +18,10 @@ class V1beta2AllocatedDeviceStatus(BaseModel):
 
     driver: str | None = None
 
-    network_data: V1beta2NetworkDeviceData = Field(
+    network_data: Annotated[
+        V1beta2NetworkDeviceData,
+        BeforeValidator(_default_if_none(V1beta2NetworkDeviceData)),
+    ] = Field(
         default_factory=lambda: V1beta2NetworkDeviceData(),
         serialization_alias="networkData",
         validation_alias=AliasChoices("network_data", "networkData"),

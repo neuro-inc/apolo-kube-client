@@ -1,12 +1,17 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_node_config_source import V1NodeConfigSource
 from .v1_taint import V1Taint
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1NodeSpec",)
 
 
 class V1NodeSpec(BaseModel):
-    config_source: V1NodeConfigSource = Field(
+    config_source: Annotated[
+        V1NodeConfigSource, BeforeValidator(_default_if_none(V1NodeConfigSource))
+    ] = Field(
         default_factory=lambda: V1NodeConfigSource(),
         serialization_alias="configSource",
         validation_alias=AliasChoices("config_source", "configSource"),

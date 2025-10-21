@@ -1,18 +1,25 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1beta1_match_resources import V1beta1MatchResources
 from .v1beta1_param_ref import V1beta1ParamRef
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta1MutatingAdmissionPolicyBindingSpec",)
 
 
 class V1beta1MutatingAdmissionPolicyBindingSpec(BaseModel):
-    match_resources: V1beta1MatchResources = Field(
+    match_resources: Annotated[
+        V1beta1MatchResources, BeforeValidator(_default_if_none(V1beta1MatchResources))
+    ] = Field(
         default_factory=lambda: V1beta1MatchResources(),
         serialization_alias="matchResources",
         validation_alias=AliasChoices("match_resources", "matchResources"),
     )
 
-    param_ref: V1beta1ParamRef = Field(
+    param_ref: Annotated[
+        V1beta1ParamRef, BeforeValidator(_default_if_none(V1beta1ParamRef))
+    ] = Field(
         default_factory=lambda: V1beta1ParamRef(),
         serialization_alias="paramRef",
         validation_alias=AliasChoices("param_ref", "paramRef"),

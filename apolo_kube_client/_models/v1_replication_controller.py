@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_replication_controller_spec import V1ReplicationControllerSpec
 from .v1_replication_controller_status import V1ReplicationControllerStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ReplicationController",)
 
@@ -16,12 +19,16 @@ class V1ReplicationController(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1ReplicationControllerSpec = Field(
-        default_factory=lambda: V1ReplicationControllerSpec()
-    )
+    spec: Annotated[
+        V1ReplicationControllerSpec,
+        BeforeValidator(_default_if_none(V1ReplicationControllerSpec)),
+    ] = Field(default_factory=lambda: V1ReplicationControllerSpec())
 
-    status: V1ReplicationControllerStatus = Field(
-        default_factory=lambda: V1ReplicationControllerStatus()
-    )
+    status: Annotated[
+        V1ReplicationControllerStatus,
+        BeforeValidator(_default_if_none(V1ReplicationControllerStatus)),
+    ] = Field(default_factory=lambda: V1ReplicationControllerStatus())

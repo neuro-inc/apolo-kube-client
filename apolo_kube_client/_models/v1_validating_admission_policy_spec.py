@@ -1,10 +1,13 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_audit_annotation import V1AuditAnnotation
 from .v1_match_condition import V1MatchCondition
 from .v1_match_resources import V1MatchResources
 from .v1_param_kind import V1ParamKind
 from .v1_validation import V1Validation
 from .v1_variable import V1Variable
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ValidatingAdmissionPolicySpec",)
 
@@ -28,13 +31,17 @@ class V1ValidatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
     )
 
-    match_constraints: V1MatchResources = Field(
+    match_constraints: Annotated[
+        V1MatchResources, BeforeValidator(_default_if_none(V1MatchResources))
+    ] = Field(
         default_factory=lambda: V1MatchResources(),
         serialization_alias="matchConstraints",
         validation_alias=AliasChoices("match_constraints", "matchConstraints"),
     )
 
-    param_kind: V1ParamKind = Field(
+    param_kind: Annotated[
+        V1ParamKind, BeforeValidator(_default_if_none(V1ParamKind))
+    ] = Field(
         default_factory=lambda: V1ParamKind(),
         serialization_alias="paramKind",
         validation_alias=AliasChoices("param_kind", "paramKind"),

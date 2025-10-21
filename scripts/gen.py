@@ -18,6 +18,7 @@ class {clsname}({base}):
 """
 
 BASE_MOD = """\
+from typing import Any, Callable
 from pydantic import BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_list_meta import V1ListMeta
@@ -29,6 +30,16 @@ class ResourceModel(BaseModel):
 
 class ListModel(BaseModel):
     metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+
+
+def _default_if_none[T](type_: type[T]) -> Callable[[Any], Any]:
+    def validator(arg: Any) -> Any:
+        if arg is None:
+            return type_()
+        else:
+            return arg
+
+    return validator
 """
 
 
@@ -47,13 +58,7 @@ class ParseTypeRes:
     type_: str
     imports: frozenset[str]
     default: str
-
-
-REQUIRED = {"V1ObjectMeta": {"name"}}
-REQUIRED_ALL = {"metadata"}
-
-REQUIRED = {}
-REQUIRED_ALL = set()
+    is_model: bool
 
 
 def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
@@ -64,60 +69,69 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                 f'"{descr} | None"',
                 frozenset(),
                 "default=None",  # avoid recursive ctor
+                True,
             )
         else:
             return ParseTypeRes(
-                f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()"
+                f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()", True
             )
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
             "default={}",
+            False,
         )
     elif match := DICT_RE.match(descr):
         key = parse_type(self_name, match.group("key"), nested=True)
         val = parse_type(self_name, match.group("val"), nested=True)
         return ParseTypeRes(
-            f"dict[{key.type_}, {val.type_}]", key.imports | val.imports, "default={}"
+            f"dict[{key.type_}, {val.type_}]",
+            key.imports | val.imports,
+            "default={}",
+            False,
         )
     elif match := LIST_RE.match(descr):
         item = parse_type(self_name, match.group("item"), nested=True)
-        return ParseTypeRes(f"list[{item.type_}]", item.imports, "default=[]")
+        return ParseTypeRes(f"list[{item.type_}]", item.imports, "default=[]", False)
     else:
         suffix = " | None" if not nested else ""
         match descr:
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "default=None")
+                return ParseTypeRes("int" + suffix, frozenset(), "default=None", False)
             case "bool":
-                return ParseTypeRes("bool" + suffix, frozenset(), "default=None")
+                return ParseTypeRes("bool" + suffix, frozenset(), "default=None", False)
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "default=None")
+                return ParseTypeRes("int" + suffix, frozenset(), "default=None", False)
             case "float":
-                return ParseTypeRes("float" + suffix, frozenset(), "default=None")
+                return ParseTypeRes(
+                    "float" + suffix, frozenset(), "default=None", False
+                )
             case "str":
-                return ParseTypeRes("str" + suffix, frozenset(), "default=None")
+                return ParseTypeRes("str" + suffix, frozenset(), "default=None", False)
             case "datetime":
                 return ParseTypeRes(
                     "datetime" + suffix,
                     frozenset(["from datetime import datetime"]),
                     "default=None",
+                    False,
                 )
             case _:
                 return ParseTypeRes(
                     descr,
                     frozenset([f"from .{mod_name(descr)} import {descr}"]),
                     f"default_factory=lambda: {descr}()",
+                    True,
                 )
 
 
-TYPES = {"bool", "int", "float", "str"}
+INVALID_NAMES = {"bool", "int", "float", "str"}
 
 
 def calc_attr_name(attr: str) -> str:
     if attr in dir(BaseModel) or keyword.iskeyword(attr):
         return attr + "_"
-    elif attr in TYPES:
+    elif attr in INVALID_NAMES:
         return attr + "_"
     elif attr.startswith("_"):
         return attr[1:] + "_"
@@ -155,18 +169,17 @@ def generate(
             )
         else:
             real_alias = ""
-        if attr in REQUIRED_ALL or attr in REQUIRED.get(name, set()):
-            if real_alias:
-                tail = f" = Field(...{real_alias})"
-            else:
-                tail = ""
-            field = f"{real_attr}: {res.type_.removesuffix(' | None')}{tail}"
+        if real_alias or "lambda" in res.default:
+            tail = f" = Field({res.default}{real_alias})"
         else:
-            if real_alias or "lambda" in res.default:
-                tail = f" = Field({res.default}{real_alias})"
-            else:
-                tail = f" = {res.default.removeprefix('default=')}"
-            field = f"{real_attr}: {res.type_}{tail}"
+            tail = f" = {res.default.removeprefix('default=')}"
+        type_ = res.type_
+        if res.is_model:
+            imports.add("from typing import Annotated")
+            imports.add("from pydantic import BeforeValidator")
+            imports.add("from .base import _default_if_none")
+            type_ = f"Annotated[{type_}, BeforeValidator(_default_if_none({type_}))]"
+        field = f"{real_attr}: {type_}{tail}"
         body.append(f"    {field}\n")
     mod = MOD.format(
         imports="\n".join(sorted(imports)),

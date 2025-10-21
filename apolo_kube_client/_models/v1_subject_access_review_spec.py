@@ -1,6 +1,9 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1SubjectAccessReviewSpec",)
 
@@ -10,7 +13,10 @@ class V1SubjectAccessReviewSpec(BaseModel):
 
     groups: list[str] = []
 
-    non_resource_attributes: V1NonResourceAttributes = Field(
+    non_resource_attributes: Annotated[
+        V1NonResourceAttributes,
+        BeforeValidator(_default_if_none(V1NonResourceAttributes)),
+    ] = Field(
         default_factory=lambda: V1NonResourceAttributes(),
         serialization_alias="nonResourceAttributes",
         validation_alias=AliasChoices(
@@ -18,7 +24,9 @@ class V1SubjectAccessReviewSpec(BaseModel):
         ),
     )
 
-    resource_attributes: V1ResourceAttributes = Field(
+    resource_attributes: Annotated[
+        V1ResourceAttributes, BeforeValidator(_default_if_none(V1ResourceAttributes))
+    ] = Field(
         default_factory=lambda: V1ResourceAttributes(),
         serialization_alias="resourceAttributes",
         validation_alias=AliasChoices("resource_attributes", "resourceAttributes"),

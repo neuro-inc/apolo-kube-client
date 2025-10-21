@@ -1,9 +1,12 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1beta1_mutating_admission_policy_binding_spec import (
     V1beta1MutatingAdmissionPolicyBindingSpec,
 )
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta1MutatingAdmissionPolicyBinding",)
 
@@ -17,8 +20,11 @@ class V1beta1MutatingAdmissionPolicyBinding(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1beta1MutatingAdmissionPolicyBindingSpec = Field(
-        default_factory=lambda: V1beta1MutatingAdmissionPolicyBindingSpec()
-    )
+    spec: Annotated[
+        V1beta1MutatingAdmissionPolicyBindingSpec,
+        BeforeValidator(_default_if_none(V1beta1MutatingAdmissionPolicyBindingSpec)),
+    ] = Field(default_factory=lambda: V1beta1MutatingAdmissionPolicyBindingSpec())

@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_preconditions import V1Preconditions
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1DeleteOptions",)
 
@@ -40,7 +43,9 @@ class V1DeleteOptions(BaseModel):
         validation_alias=AliasChoices("orphan_dependents", "orphanDependents"),
     )
 
-    preconditions: V1Preconditions = Field(default_factory=lambda: V1Preconditions())
+    preconditions: Annotated[
+        V1Preconditions, BeforeValidator(_default_if_none(V1Preconditions))
+    ] = Field(default_factory=lambda: V1Preconditions())
 
     propagation_policy: str | None = Field(
         default=None,

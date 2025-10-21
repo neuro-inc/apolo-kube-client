@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
+from .base import _default_if_none
 from .v1_certificate_signing_request import V1CertificateSigningRequest
 from .v1_list_meta import V1ListMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CertificateSigningRequestList",)
 
@@ -17,4 +20,6 @@ class V1CertificateSigningRequestList(ListModel):
 
     kind: str | None = None
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+    metadata: Annotated[V1ListMeta, BeforeValidator(_default_if_none(V1ListMeta))] = (
+        Field(default_factory=lambda: V1ListMeta())
+    )

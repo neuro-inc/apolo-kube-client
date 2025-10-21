@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_limit_response import V1LimitResponse
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1LimitedPriorityLevelConfiguration",)
 
@@ -19,7 +22,9 @@ class V1LimitedPriorityLevelConfiguration(BaseModel):
         validation_alias=AliasChoices("lendable_percent", "lendablePercent"),
     )
 
-    limit_response: V1LimitResponse = Field(
+    limit_response: Annotated[
+        V1LimitResponse, BeforeValidator(_default_if_none(V1LimitResponse))
+    ] = Field(
         default_factory=lambda: V1LimitResponse(),
         serialization_alias="limitResponse",
         validation_alias=AliasChoices("limit_response", "limitResponse"),

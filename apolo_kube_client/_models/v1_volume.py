@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_volume_source import V1AzureFileVolumeSource
@@ -31,12 +32,17 @@ from .v1_scale_io_volume_source import V1ScaleIOVolumeSource
 from .v1_secret_volume_source import V1SecretVolumeSource
 from .v1_storage_os_volume_source import V1StorageOSVolumeSource
 from .v1_vsphere_virtual_disk_volume_source import V1VsphereVirtualDiskVolumeSource
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Volume",)
 
 
 class V1Volume(BaseModel):
-    aws_elastic_block_store: V1AWSElasticBlockStoreVolumeSource = Field(
+    aws_elastic_block_store: Annotated[
+        V1AWSElasticBlockStoreVolumeSource,
+        BeforeValidator(_default_if_none(V1AWSElasticBlockStoreVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1AWSElasticBlockStoreVolumeSource(),
         serialization_alias="awsElasticBlockStore",
         validation_alias=AliasChoices(
@@ -44,89 +50,133 @@ class V1Volume(BaseModel):
         ),
     )
 
-    azure_disk: V1AzureDiskVolumeSource = Field(
+    azure_disk: Annotated[
+        V1AzureDiskVolumeSource,
+        BeforeValidator(_default_if_none(V1AzureDiskVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1AzureDiskVolumeSource(),
         serialization_alias="azureDisk",
         validation_alias=AliasChoices("azure_disk", "azureDisk"),
     )
 
-    azure_file: V1AzureFileVolumeSource = Field(
+    azure_file: Annotated[
+        V1AzureFileVolumeSource,
+        BeforeValidator(_default_if_none(V1AzureFileVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1AzureFileVolumeSource(),
         serialization_alias="azureFile",
         validation_alias=AliasChoices("azure_file", "azureFile"),
     )
 
-    cephfs: V1CephFSVolumeSource = Field(default_factory=lambda: V1CephFSVolumeSource())
+    cephfs: Annotated[
+        V1CephFSVolumeSource, BeforeValidator(_default_if_none(V1CephFSVolumeSource))
+    ] = Field(default_factory=lambda: V1CephFSVolumeSource())
 
-    cinder: V1CinderVolumeSource = Field(default_factory=lambda: V1CinderVolumeSource())
+    cinder: Annotated[
+        V1CinderVolumeSource, BeforeValidator(_default_if_none(V1CinderVolumeSource))
+    ] = Field(default_factory=lambda: V1CinderVolumeSource())
 
-    config_map: V1ConfigMapVolumeSource = Field(
+    config_map: Annotated[
+        V1ConfigMapVolumeSource,
+        BeforeValidator(_default_if_none(V1ConfigMapVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1ConfigMapVolumeSource(),
         serialization_alias="configMap",
         validation_alias=AliasChoices("config_map", "configMap"),
     )
 
-    csi: V1CSIVolumeSource = Field(default_factory=lambda: V1CSIVolumeSource())
+    csi: Annotated[
+        V1CSIVolumeSource, BeforeValidator(_default_if_none(V1CSIVolumeSource))
+    ] = Field(default_factory=lambda: V1CSIVolumeSource())
 
-    downward_api: V1DownwardAPIVolumeSource = Field(
+    downward_api: Annotated[
+        V1DownwardAPIVolumeSource,
+        BeforeValidator(_default_if_none(V1DownwardAPIVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1DownwardAPIVolumeSource(),
         serialization_alias="downwardAPI",
         validation_alias=AliasChoices("downward_api", "downwardAPI"),
     )
 
-    empty_dir: V1EmptyDirVolumeSource = Field(
+    empty_dir: Annotated[
+        V1EmptyDirVolumeSource,
+        BeforeValidator(_default_if_none(V1EmptyDirVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1EmptyDirVolumeSource(),
         serialization_alias="emptyDir",
         validation_alias=AliasChoices("empty_dir", "emptyDir"),
     )
 
-    ephemeral: V1EphemeralVolumeSource = Field(
-        default_factory=lambda: V1EphemeralVolumeSource()
-    )
+    ephemeral: Annotated[
+        V1EphemeralVolumeSource,
+        BeforeValidator(_default_if_none(V1EphemeralVolumeSource)),
+    ] = Field(default_factory=lambda: V1EphemeralVolumeSource())
 
-    fc: V1FCVolumeSource = Field(default_factory=lambda: V1FCVolumeSource())
+    fc: Annotated[
+        V1FCVolumeSource, BeforeValidator(_default_if_none(V1FCVolumeSource))
+    ] = Field(default_factory=lambda: V1FCVolumeSource())
 
-    flex_volume: V1FlexVolumeSource = Field(
+    flex_volume: Annotated[
+        V1FlexVolumeSource, BeforeValidator(_default_if_none(V1FlexVolumeSource))
+    ] = Field(
         default_factory=lambda: V1FlexVolumeSource(),
         serialization_alias="flexVolume",
         validation_alias=AliasChoices("flex_volume", "flexVolume"),
     )
 
-    flocker: V1FlockerVolumeSource = Field(
-        default_factory=lambda: V1FlockerVolumeSource()
-    )
+    flocker: Annotated[
+        V1FlockerVolumeSource, BeforeValidator(_default_if_none(V1FlockerVolumeSource))
+    ] = Field(default_factory=lambda: V1FlockerVolumeSource())
 
-    gce_persistent_disk: V1GCEPersistentDiskVolumeSource = Field(
+    gce_persistent_disk: Annotated[
+        V1GCEPersistentDiskVolumeSource,
+        BeforeValidator(_default_if_none(V1GCEPersistentDiskVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1GCEPersistentDiskVolumeSource(),
         serialization_alias="gcePersistentDisk",
         validation_alias=AliasChoices("gce_persistent_disk", "gcePersistentDisk"),
     )
 
-    git_repo: V1GitRepoVolumeSource = Field(
+    git_repo: Annotated[
+        V1GitRepoVolumeSource, BeforeValidator(_default_if_none(V1GitRepoVolumeSource))
+    ] = Field(
         default_factory=lambda: V1GitRepoVolumeSource(),
         serialization_alias="gitRepo",
         validation_alias=AliasChoices("git_repo", "gitRepo"),
     )
 
-    glusterfs: V1GlusterfsVolumeSource = Field(
-        default_factory=lambda: V1GlusterfsVolumeSource()
-    )
+    glusterfs: Annotated[
+        V1GlusterfsVolumeSource,
+        BeforeValidator(_default_if_none(V1GlusterfsVolumeSource)),
+    ] = Field(default_factory=lambda: V1GlusterfsVolumeSource())
 
-    host_path: V1HostPathVolumeSource = Field(
+    host_path: Annotated[
+        V1HostPathVolumeSource,
+        BeforeValidator(_default_if_none(V1HostPathVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1HostPathVolumeSource(),
         serialization_alias="hostPath",
         validation_alias=AliasChoices("host_path", "hostPath"),
     )
 
-    image: V1ImageVolumeSource = Field(default_factory=lambda: V1ImageVolumeSource())
+    image: Annotated[
+        V1ImageVolumeSource, BeforeValidator(_default_if_none(V1ImageVolumeSource))
+    ] = Field(default_factory=lambda: V1ImageVolumeSource())
 
-    iscsi: V1ISCSIVolumeSource = Field(default_factory=lambda: V1ISCSIVolumeSource())
+    iscsi: Annotated[
+        V1ISCSIVolumeSource, BeforeValidator(_default_if_none(V1ISCSIVolumeSource))
+    ] = Field(default_factory=lambda: V1ISCSIVolumeSource())
 
     name: str | None = None
 
-    nfs: V1NFSVolumeSource = Field(default_factory=lambda: V1NFSVolumeSource())
+    nfs: Annotated[
+        V1NFSVolumeSource, BeforeValidator(_default_if_none(V1NFSVolumeSource))
+    ] = Field(default_factory=lambda: V1NFSVolumeSource())
 
-    persistent_volume_claim: V1PersistentVolumeClaimVolumeSource = Field(
+    persistent_volume_claim: Annotated[
+        V1PersistentVolumeClaimVolumeSource,
+        BeforeValidator(_default_if_none(V1PersistentVolumeClaimVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1PersistentVolumeClaimVolumeSource(),
         serialization_alias="persistentVolumeClaim",
         validation_alias=AliasChoices(
@@ -134,41 +184,58 @@ class V1Volume(BaseModel):
         ),
     )
 
-    photon_persistent_disk: V1PhotonPersistentDiskVolumeSource = Field(
+    photon_persistent_disk: Annotated[
+        V1PhotonPersistentDiskVolumeSource,
+        BeforeValidator(_default_if_none(V1PhotonPersistentDiskVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1PhotonPersistentDiskVolumeSource(),
         serialization_alias="photonPersistentDisk",
         validation_alias=AliasChoices("photon_persistent_disk", "photonPersistentDisk"),
     )
 
-    portworx_volume: V1PortworxVolumeSource = Field(
+    portworx_volume: Annotated[
+        V1PortworxVolumeSource,
+        BeforeValidator(_default_if_none(V1PortworxVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1PortworxVolumeSource(),
         serialization_alias="portworxVolume",
         validation_alias=AliasChoices("portworx_volume", "portworxVolume"),
     )
 
-    projected: V1ProjectedVolumeSource = Field(
-        default_factory=lambda: V1ProjectedVolumeSource()
-    )
+    projected: Annotated[
+        V1ProjectedVolumeSource,
+        BeforeValidator(_default_if_none(V1ProjectedVolumeSource)),
+    ] = Field(default_factory=lambda: V1ProjectedVolumeSource())
 
-    quobyte: V1QuobyteVolumeSource = Field(
-        default_factory=lambda: V1QuobyteVolumeSource()
-    )
+    quobyte: Annotated[
+        V1QuobyteVolumeSource, BeforeValidator(_default_if_none(V1QuobyteVolumeSource))
+    ] = Field(default_factory=lambda: V1QuobyteVolumeSource())
 
-    rbd: V1RBDVolumeSource = Field(default_factory=lambda: V1RBDVolumeSource())
+    rbd: Annotated[
+        V1RBDVolumeSource, BeforeValidator(_default_if_none(V1RBDVolumeSource))
+    ] = Field(default_factory=lambda: V1RBDVolumeSource())
 
-    scale_io: V1ScaleIOVolumeSource = Field(
+    scale_io: Annotated[
+        V1ScaleIOVolumeSource, BeforeValidator(_default_if_none(V1ScaleIOVolumeSource))
+    ] = Field(
         default_factory=lambda: V1ScaleIOVolumeSource(),
         serialization_alias="scaleIO",
         validation_alias=AliasChoices("scale_io", "scaleIO"),
     )
 
-    secret: V1SecretVolumeSource = Field(default_factory=lambda: V1SecretVolumeSource())
+    secret: Annotated[
+        V1SecretVolumeSource, BeforeValidator(_default_if_none(V1SecretVolumeSource))
+    ] = Field(default_factory=lambda: V1SecretVolumeSource())
 
-    storageos: V1StorageOSVolumeSource = Field(
-        default_factory=lambda: V1StorageOSVolumeSource()
-    )
+    storageos: Annotated[
+        V1StorageOSVolumeSource,
+        BeforeValidator(_default_if_none(V1StorageOSVolumeSource)),
+    ] = Field(default_factory=lambda: V1StorageOSVolumeSource())
 
-    vsphere_volume: V1VsphereVirtualDiskVolumeSource = Field(
+    vsphere_volume: Annotated[
+        V1VsphereVirtualDiskVolumeSource,
+        BeforeValidator(_default_if_none(V1VsphereVirtualDiskVolumeSource)),
+    ] = Field(
         default_factory=lambda: V1VsphereVirtualDiskVolumeSource(),
         serialization_alias="vsphereVolume",
         validation_alias=AliasChoices("vsphere_volume", "vsphereVolume"),

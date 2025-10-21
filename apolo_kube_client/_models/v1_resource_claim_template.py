@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_resource_claim_template_spec import V1ResourceClaimTemplateSpec
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ResourceClaimTemplate",)
 
@@ -15,8 +18,11 @@ class V1ResourceClaimTemplate(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1ResourceClaimTemplateSpec = Field(
-        default_factory=lambda: V1ResourceClaimTemplateSpec()
-    )
+    spec: Annotated[
+        V1ResourceClaimTemplateSpec,
+        BeforeValidator(_default_if_none(V1ResourceClaimTemplateSpec)),
+    ] = Field(default_factory=lambda: V1ResourceClaimTemplateSpec())

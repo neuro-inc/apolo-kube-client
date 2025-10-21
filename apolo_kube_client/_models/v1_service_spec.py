@@ -1,6 +1,9 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_service_port import V1ServicePort
 from .v1_session_affinity_config import V1SessionAffinityConfig
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ServiceSpec",)
 
@@ -110,7 +113,10 @@ class V1ServiceSpec(BaseModel):
         validation_alias=AliasChoices("session_affinity", "sessionAffinity"),
     )
 
-    session_affinity_config: V1SessionAffinityConfig = Field(
+    session_affinity_config: Annotated[
+        V1SessionAffinityConfig,
+        BeforeValidator(_default_if_none(V1SessionAffinityConfig)),
+    ] = Field(
         default_factory=lambda: V1SessionAffinityConfig(),
         serialization_alias="sessionAffinityConfig",
         validation_alias=AliasChoices(

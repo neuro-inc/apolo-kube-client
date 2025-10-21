@@ -1,9 +1,12 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1alpha1_match_condition import V1alpha1MatchCondition
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_mutation import V1alpha1Mutation
 from .v1alpha1_param_kind import V1alpha1ParamKind
 from .v1alpha1_variable import V1alpha1Variable
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1alpha1MutatingAdmissionPolicySpec",)
 
@@ -21,7 +24,10 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
     )
 
-    match_constraints: V1alpha1MatchResources = Field(
+    match_constraints: Annotated[
+        V1alpha1MatchResources,
+        BeforeValidator(_default_if_none(V1alpha1MatchResources)),
+    ] = Field(
         default_factory=lambda: V1alpha1MatchResources(),
         serialization_alias="matchConstraints",
         validation_alias=AliasChoices("match_constraints", "matchConstraints"),
@@ -29,7 +35,9 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
 
     mutations: list[V1alpha1Mutation] = []
 
-    param_kind: V1alpha1ParamKind = Field(
+    param_kind: Annotated[
+        V1alpha1ParamKind, BeforeValidator(_default_if_none(V1alpha1ParamKind))
+    ] = Field(
         default_factory=lambda: V1alpha1ParamKind(),
         serialization_alias="paramKind",
         validation_alias=AliasChoices("param_kind", "paramKind"),

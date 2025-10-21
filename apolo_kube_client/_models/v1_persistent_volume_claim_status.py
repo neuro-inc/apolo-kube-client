@@ -1,6 +1,9 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PersistentVolumeClaimStatus",)
 
@@ -38,7 +41,9 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         ),
     )
 
-    modify_volume_status: V1ModifyVolumeStatus = Field(
+    modify_volume_status: Annotated[
+        V1ModifyVolumeStatus, BeforeValidator(_default_if_none(V1ModifyVolumeStatus))
+    ] = Field(
         default_factory=lambda: V1ModifyVolumeStatus(),
         serialization_alias="modifyVolumeStatus",
         validation_alias=AliasChoices("modify_volume_status", "modifyVolumeStatus"),

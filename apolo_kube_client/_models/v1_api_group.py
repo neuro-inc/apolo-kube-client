@@ -1,6 +1,9 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1APIGroup",)
 
@@ -16,7 +19,10 @@ class V1APIGroup(BaseModel):
 
     name: str | None = None
 
-    preferred_version: V1GroupVersionForDiscovery = Field(
+    preferred_version: Annotated[
+        V1GroupVersionForDiscovery,
+        BeforeValidator(_default_if_none(V1GroupVersionForDiscovery)),
+    ] = Field(
         default_factory=lambda: V1GroupVersionForDiscovery(),
         serialization_alias="preferredVersion",
         validation_alias=AliasChoices("preferred_version", "preferredVersion"),

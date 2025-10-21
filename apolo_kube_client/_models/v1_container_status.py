@@ -1,9 +1,12 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_container_state import V1ContainerState
 from .v1_container_user import V1ContainerUser
 from .v1_resource_requirements import V1ResourceRequirements
 from .v1_resource_status import V1ResourceStatus
 from .v1_volume_mount_status import V1VolumeMountStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ContainerStatus",)
 
@@ -37,7 +40,9 @@ class V1ContainerStatus(BaseModel):
         validation_alias=AliasChoices("image_id", "imageID"),
     )
 
-    last_state: V1ContainerState = Field(
+    last_state: Annotated[
+        V1ContainerState, BeforeValidator(_default_if_none(V1ContainerState))
+    ] = Field(
         default_factory=lambda: V1ContainerState(),
         serialization_alias="lastState",
         validation_alias=AliasChoices("last_state", "lastState"),
@@ -47,9 +52,10 @@ class V1ContainerStatus(BaseModel):
 
     ready: bool | None = None
 
-    resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements()
-    )
+    resources: Annotated[
+        V1ResourceRequirements,
+        BeforeValidator(_default_if_none(V1ResourceRequirements)),
+    ] = Field(default_factory=lambda: V1ResourceRequirements())
 
     restart_count: int | None = Field(
         default=None,
@@ -59,7 +65,9 @@ class V1ContainerStatus(BaseModel):
 
     started: bool | None = None
 
-    state: V1ContainerState = Field(default_factory=lambda: V1ContainerState())
+    state: Annotated[
+        V1ContainerState, BeforeValidator(_default_if_none(V1ContainerState))
+    ] = Field(default_factory=lambda: V1ContainerState())
 
     stop_signal: str | None = Field(
         default=None,
@@ -67,7 +75,9 @@ class V1ContainerStatus(BaseModel):
         validation_alias=AliasChoices("stop_signal", "stopSignal"),
     )
 
-    user: V1ContainerUser = Field(default_factory=lambda: V1ContainerUser())
+    user: Annotated[
+        V1ContainerUser, BeforeValidator(_default_if_none(V1ContainerUser))
+    ] = Field(default_factory=lambda: V1ContainerUser())
 
     volume_mounts: list[V1VolumeMountStatus] = Field(
         default=[],

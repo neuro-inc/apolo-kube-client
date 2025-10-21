@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_flow_schema_spec import V1FlowSchemaSpec
 from .v1_flow_schema_status import V1FlowSchemaStatus
 from .v1_object_meta import V1ObjectMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1FlowSchema",)
 
@@ -16,8 +19,14 @@ class V1FlowSchema(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1FlowSchemaSpec = Field(default_factory=lambda: V1FlowSchemaSpec())
+    spec: Annotated[
+        V1FlowSchemaSpec, BeforeValidator(_default_if_none(V1FlowSchemaSpec))
+    ] = Field(default_factory=lambda: V1FlowSchemaSpec())
 
-    status: V1FlowSchemaStatus = Field(default_factory=lambda: V1FlowSchemaStatus())
+    status: Annotated[
+        V1FlowSchemaStatus, BeforeValidator(_default_if_none(V1FlowSchemaStatus))
+    ] = Field(default_factory=lambda: V1FlowSchemaStatus())

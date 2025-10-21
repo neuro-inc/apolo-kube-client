@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_container_port import V1ContainerPort
 from .v1_container_resize_policy import V1ContainerResizePolicy
 from .v1_container_restart_rule import V1ContainerRestartRule
@@ -10,6 +11,8 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_security_context import V1SecurityContext
 from .v1_volume_device import V1VolumeDevice
 from .v1_volume_mount import V1VolumeMount
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Container",)
 
@@ -35,22 +38,28 @@ class V1Container(BaseModel):
         validation_alias=AliasChoices("image_pull_policy", "imagePullPolicy"),
     )
 
-    lifecycle: V1Lifecycle = Field(default_factory=lambda: V1Lifecycle())
+    lifecycle: Annotated[
+        V1Lifecycle, BeforeValidator(_default_if_none(V1Lifecycle))
+    ] = Field(default_factory=lambda: V1Lifecycle())
 
-    liveness_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(),
-        serialization_alias="livenessProbe",
-        validation_alias=AliasChoices("liveness_probe", "livenessProbe"),
+    liveness_probe: Annotated[V1Probe, BeforeValidator(_default_if_none(V1Probe))] = (
+        Field(
+            default_factory=lambda: V1Probe(),
+            serialization_alias="livenessProbe",
+            validation_alias=AliasChoices("liveness_probe", "livenessProbe"),
+        )
     )
 
     name: str | None = None
 
     ports: list[V1ContainerPort] = []
 
-    readiness_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(),
-        serialization_alias="readinessProbe",
-        validation_alias=AliasChoices("readiness_probe", "readinessProbe"),
+    readiness_probe: Annotated[V1Probe, BeforeValidator(_default_if_none(V1Probe))] = (
+        Field(
+            default_factory=lambda: V1Probe(),
+            serialization_alias="readinessProbe",
+            validation_alias=AliasChoices("readiness_probe", "readinessProbe"),
+        )
     )
 
     resize_policy: list[V1ContainerResizePolicy] = Field(
@@ -59,9 +68,10 @@ class V1Container(BaseModel):
         validation_alias=AliasChoices("resize_policy", "resizePolicy"),
     )
 
-    resources: V1ResourceRequirements = Field(
-        default_factory=lambda: V1ResourceRequirements()
-    )
+    resources: Annotated[
+        V1ResourceRequirements,
+        BeforeValidator(_default_if_none(V1ResourceRequirements)),
+    ] = Field(default_factory=lambda: V1ResourceRequirements())
 
     restart_policy: str | None = Field(
         default=None,
@@ -75,16 +85,20 @@ class V1Container(BaseModel):
         validation_alias=AliasChoices("restart_policy_rules", "restartPolicyRules"),
     )
 
-    security_context: V1SecurityContext = Field(
+    security_context: Annotated[
+        V1SecurityContext, BeforeValidator(_default_if_none(V1SecurityContext))
+    ] = Field(
         default_factory=lambda: V1SecurityContext(),
         serialization_alias="securityContext",
         validation_alias=AliasChoices("security_context", "securityContext"),
     )
 
-    startup_probe: V1Probe = Field(
-        default_factory=lambda: V1Probe(),
-        serialization_alias="startupProbe",
-        validation_alias=AliasChoices("startup_probe", "startupProbe"),
+    startup_probe: Annotated[V1Probe, BeforeValidator(_default_if_none(V1Probe))] = (
+        Field(
+            default_factory=lambda: V1Probe(),
+            serialization_alias="startupProbe",
+            validation_alias=AliasChoices("startup_probe", "startupProbe"),
+        )
     )
 
     stdin: bool | None = None

@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_deployment_spec import V1DeploymentSpec
 from .v1_deployment_status import V1DeploymentStatus
 from .v1_object_meta import V1ObjectMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Deployment",)
 
@@ -16,8 +19,14 @@ class V1Deployment(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1DeploymentSpec = Field(default_factory=lambda: V1DeploymentSpec())
+    spec: Annotated[
+        V1DeploymentSpec, BeforeValidator(_default_if_none(V1DeploymentSpec))
+    ] = Field(default_factory=lambda: V1DeploymentSpec())
 
-    status: V1DeploymentStatus = Field(default_factory=lambda: V1DeploymentStatus())
+    status: Annotated[
+        V1DeploymentStatus, BeforeValidator(_default_if_none(V1DeploymentStatus))
+    ] = Field(default_factory=lambda: V1DeploymentStatus())

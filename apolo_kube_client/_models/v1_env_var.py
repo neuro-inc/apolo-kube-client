@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_env_var_source import V1EnvVarSource
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1EnvVar",)
 
@@ -9,7 +12,9 @@ class V1EnvVar(BaseModel):
 
     value: str | None = None
 
-    value_from: V1EnvVarSource = Field(
+    value_from: Annotated[
+        V1EnvVarSource, BeforeValidator(_default_if_none(V1EnvVarSource))
+    ] = Field(
         default_factory=lambda: V1EnvVarSource(),
         serialization_alias="valueFrom",
         validation_alias=AliasChoices("value_from", "valueFrom"),

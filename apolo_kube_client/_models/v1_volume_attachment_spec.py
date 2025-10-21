@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1VolumeAttachmentSpec",)
 
@@ -13,6 +16,7 @@ class V1VolumeAttachmentSpec(BaseModel):
         validation_alias=AliasChoices("node_name", "nodeName"),
     )
 
-    source: V1VolumeAttachmentSource = Field(
-        default_factory=lambda: V1VolumeAttachmentSource()
-    )
+    source: Annotated[
+        V1VolumeAttachmentSource,
+        BeforeValidator(_default_if_none(V1VolumeAttachmentSource)),
+    ] = Field(default_factory=lambda: V1VolumeAttachmentSource())

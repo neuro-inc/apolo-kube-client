@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_node_swap_status import V1NodeSwapStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1NodeSystemInfo",)
 
@@ -57,7 +60,9 @@ class V1NodeSystemInfo(BaseModel):
         validation_alias=AliasChoices("os_image", "osImage"),
     )
 
-    swap: V1NodeSwapStatus = Field(default_factory=lambda: V1NodeSwapStatus())
+    swap: Annotated[
+        V1NodeSwapStatus, BeforeValidator(_default_if_none(V1NodeSwapStatus))
+    ] = Field(default_factory=lambda: V1NodeSwapStatus())
 
     system_uuid: str | None = Field(
         default=None,

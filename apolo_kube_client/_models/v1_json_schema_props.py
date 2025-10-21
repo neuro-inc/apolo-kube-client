@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
 from apolo_kube_client._typedefs import JsonType
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1JSONSchemaProps",)
 
@@ -67,7 +70,10 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("exclusive_minimum", "exclusiveMinimum"),
     )
 
-    external_docs: V1ExternalDocumentation = Field(
+    external_docs: Annotated[
+        V1ExternalDocumentation,
+        BeforeValidator(_default_if_none(V1ExternalDocumentation)),
+    ] = Field(
         default_factory=lambda: V1ExternalDocumentation(),
         serialization_alias="externalDocs",
         validation_alias=AliasChoices("external_docs", "externalDocs"),
@@ -125,7 +131,10 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("multiple_of", "multipleOf"),
     )
 
-    not_: "V1JSONSchemaProps | None" = Field(
+    not_: Annotated[
+        "V1JSONSchemaProps | None",
+        BeforeValidator(_default_if_none("V1JSONSchemaProps | None")),
+    ] = Field(
         default=None,
         serialization_alias="not",
         validation_alias=AliasChoices("not_", "not"),

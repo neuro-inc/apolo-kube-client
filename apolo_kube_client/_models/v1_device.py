@@ -1,9 +1,12 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_device_attribute import V1DeviceAttribute
 from .v1_device_capacity import V1DeviceCapacity
 from .v1_device_counter_consumption import V1DeviceCounterConsumption
 from .v1_device_taint import V1DeviceTaint
 from .v1_node_selector import V1NodeSelector
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Device",)
 
@@ -61,7 +64,9 @@ class V1Device(BaseModel):
         validation_alias=AliasChoices("node_name", "nodeName"),
     )
 
-    node_selector: V1NodeSelector = Field(
+    node_selector: Annotated[
+        V1NodeSelector, BeforeValidator(_default_if_none(V1NodeSelector))
+    ] = Field(
         default_factory=lambda: V1NodeSelector(),
         serialization_alias="nodeSelector",
         validation_alias=AliasChoices("node_selector", "nodeSelector"),

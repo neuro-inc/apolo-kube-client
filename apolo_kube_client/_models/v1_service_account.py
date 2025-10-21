@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_local_object_reference import V1LocalObjectReference
 from .v1_object_meta import V1ObjectMeta
 from .v1_object_reference import V1ObjectReference
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ServiceAccount",)
 
@@ -30,6 +33,8 @@ class V1ServiceAccount(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
     secrets: list[V1ObjectReference] = []

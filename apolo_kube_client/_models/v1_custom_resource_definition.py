@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_custom_resource_definition_spec import V1CustomResourceDefinitionSpec
 from .v1_custom_resource_definition_status import V1CustomResourceDefinitionStatus
 from .v1_object_meta import V1ObjectMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CustomResourceDefinition",)
 
@@ -16,12 +19,16 @@ class V1CustomResourceDefinition(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1CustomResourceDefinitionSpec = Field(
-        default_factory=lambda: V1CustomResourceDefinitionSpec()
-    )
+    spec: Annotated[
+        V1CustomResourceDefinitionSpec,
+        BeforeValidator(_default_if_none(V1CustomResourceDefinitionSpec)),
+    ] = Field(default_factory=lambda: V1CustomResourceDefinitionSpec())
 
-    status: V1CustomResourceDefinitionStatus = Field(
-        default_factory=lambda: V1CustomResourceDefinitionStatus()
-    )
+    status: Annotated[
+        V1CustomResourceDefinitionStatus,
+        BeforeValidator(_default_if_none(V1CustomResourceDefinitionStatus)),
+    ] = Field(default_factory=lambda: V1CustomResourceDefinitionStatus())

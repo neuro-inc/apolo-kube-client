@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_secret_reference import V1SecretReference
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CSIPersistentVolumeSource",)
 
 
 class V1CSIPersistentVolumeSource(BaseModel):
-    controller_expand_secret_ref: V1SecretReference = Field(
+    controller_expand_secret_ref: Annotated[
+        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
+    ] = Field(
         default_factory=lambda: V1SecretReference(),
         serialization_alias="controllerExpandSecretRef",
         validation_alias=AliasChoices(
@@ -13,7 +18,9 @@ class V1CSIPersistentVolumeSource(BaseModel):
         ),
     )
 
-    controller_publish_secret_ref: V1SecretReference = Field(
+    controller_publish_secret_ref: Annotated[
+        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
+    ] = Field(
         default_factory=lambda: V1SecretReference(),
         serialization_alias="controllerPublishSecretRef",
         validation_alias=AliasChoices(
@@ -29,13 +36,17 @@ class V1CSIPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    node_expand_secret_ref: V1SecretReference = Field(
+    node_expand_secret_ref: Annotated[
+        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
+    ] = Field(
         default_factory=lambda: V1SecretReference(),
         serialization_alias="nodeExpandSecretRef",
         validation_alias=AliasChoices("node_expand_secret_ref", "nodeExpandSecretRef"),
     )
 
-    node_publish_secret_ref: V1SecretReference = Field(
+    node_publish_secret_ref: Annotated[
+        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
+    ] = Field(
         default_factory=lambda: V1SecretReference(),
         serialization_alias="nodePublishSecretRef",
         validation_alias=AliasChoices(
@@ -43,7 +54,9 @@ class V1CSIPersistentVolumeSource(BaseModel):
         ),
     )
 
-    node_stage_secret_ref: V1SecretReference = Field(
+    node_stage_secret_ref: Annotated[
+        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
+    ] = Field(
         default_factory=lambda: V1SecretReference(),
         serialization_alias="nodeStageSecretRef",
         validation_alias=AliasChoices("node_stage_secret_ref", "nodeStageSecretRef"),

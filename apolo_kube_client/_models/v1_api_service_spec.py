@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
+from .base import _default_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1APIServiceSpec",)
 
@@ -27,9 +30,10 @@ class V1APIServiceSpec(BaseModel):
         ),
     )
 
-    service: ApiregistrationV1ServiceReference = Field(
-        default_factory=lambda: ApiregistrationV1ServiceReference()
-    )
+    service: Annotated[
+        ApiregistrationV1ServiceReference,
+        BeforeValidator(_default_if_none(ApiregistrationV1ServiceReference)),
+    ] = Field(default_factory=lambda: ApiregistrationV1ServiceReference())
 
     version: str | None = None
 

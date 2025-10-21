@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_label_selector import V1LabelSelector
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodAffinityTerm",)
 
 
 class V1PodAffinityTerm(BaseModel):
-    label_selector: V1LabelSelector = Field(
+    label_selector: Annotated[
+        V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
+    ] = Field(
         default_factory=lambda: V1LabelSelector(),
         serialization_alias="labelSelector",
         validation_alias=AliasChoices("label_selector", "labelSelector"),
@@ -23,7 +28,9 @@ class V1PodAffinityTerm(BaseModel):
         validation_alias=AliasChoices("mismatch_label_keys", "mismatchLabelKeys"),
     )
 
-    namespace_selector: V1LabelSelector = Field(
+    namespace_selector: Annotated[
+        V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
+    ] = Field(
         default_factory=lambda: V1LabelSelector(),
         serialization_alias="namespaceSelector",
         validation_alias=AliasChoices("namespace_selector", "namespaceSelector"),

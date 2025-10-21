@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v2_horizontal_pod_autoscaler_spec import V2HorizontalPodAutoscalerSpec
 from .v2_horizontal_pod_autoscaler_status import V2HorizontalPodAutoscalerStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V2HorizontalPodAutoscaler",)
 
@@ -16,12 +19,16 @@ class V2HorizontalPodAutoscaler(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V2HorizontalPodAutoscalerSpec = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerSpec()
-    )
+    spec: Annotated[
+        V2HorizontalPodAutoscalerSpec,
+        BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerSpec)),
+    ] = Field(default_factory=lambda: V2HorizontalPodAutoscalerSpec())
 
-    status: V2HorizontalPodAutoscalerStatus = Field(
-        default_factory=lambda: V2HorizontalPodAutoscalerStatus()
-    )
+    status: Annotated[
+        V2HorizontalPodAutoscalerStatus,
+        BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerStatus)),
+    ] = Field(default_factory=lambda: V2HorizontalPodAutoscalerStatus())

@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
 from .v1_pod_condition import V1PodCondition
@@ -6,6 +7,8 @@ from .v1_pod_extended_resource_claim_status import V1PodExtendedResourceClaimSta
 from .v1_pod_ip import V1PodIP
 from .v1_pod_resource_claim_status import V1PodResourceClaimStatus
 from datetime import datetime
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodStatus",)
 
@@ -27,7 +30,10 @@ class V1PodStatus(BaseModel):
         ),
     )
 
-    extended_resource_claim_status: V1PodExtendedResourceClaimStatus = Field(
+    extended_resource_claim_status: Annotated[
+        V1PodExtendedResourceClaimStatus,
+        BeforeValidator(_default_if_none(V1PodExtendedResourceClaimStatus)),
+    ] = Field(
         default_factory=lambda: V1PodExtendedResourceClaimStatus(),
         serialization_alias="extendedResourceClaimStatus",
         validation_alias=AliasChoices(

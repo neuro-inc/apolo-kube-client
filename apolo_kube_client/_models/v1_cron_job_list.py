@@ -1,7 +1,10 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
+from .base import _default_if_none
 from .v1_cron_job import V1CronJob
 from .v1_list_meta import V1ListMeta
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CronJobList",)
 
@@ -17,4 +20,6 @@ class V1CronJobList(ListModel):
 
     kind: str | None = None
 
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+    metadata: Annotated[V1ListMeta, BeforeValidator(_default_if_none(V1ListMeta))] = (
+        Field(default_factory=lambda: V1ListMeta())
+    )

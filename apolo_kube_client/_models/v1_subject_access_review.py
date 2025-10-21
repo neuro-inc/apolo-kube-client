@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_subject_access_review_spec import V1SubjectAccessReviewSpec
 from .v1_subject_access_review_status import V1SubjectAccessReviewStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1SubjectAccessReview",)
 
@@ -16,12 +19,16 @@ class V1SubjectAccessReview(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1SubjectAccessReviewSpec = Field(
-        default_factory=lambda: V1SubjectAccessReviewSpec()
-    )
+    spec: Annotated[
+        V1SubjectAccessReviewSpec,
+        BeforeValidator(_default_if_none(V1SubjectAccessReviewSpec)),
+    ] = Field(default_factory=lambda: V1SubjectAccessReviewSpec())
 
-    status: V1SubjectAccessReviewStatus = Field(
-        default_factory=lambda: V1SubjectAccessReviewStatus()
-    )
+    status: Annotated[
+        V1SubjectAccessReviewStatus,
+        BeforeValidator(_default_if_none(V1SubjectAccessReviewStatus)),
+    ] = Field(default_factory=lambda: V1SubjectAccessReviewStatus())

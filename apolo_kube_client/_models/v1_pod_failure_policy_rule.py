@@ -1,10 +1,13 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_pod_failure_policy_on_exit_codes_requirement import (
     V1PodFailurePolicyOnExitCodesRequirement,
 )
 from .v1_pod_failure_policy_on_pod_conditions_pattern import (
     V1PodFailurePolicyOnPodConditionsPattern,
 )
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodFailurePolicyRule",)
 
@@ -12,7 +15,10 @@ __all__ = ("V1PodFailurePolicyRule",)
 class V1PodFailurePolicyRule(BaseModel):
     action: str | None = None
 
-    on_exit_codes: V1PodFailurePolicyOnExitCodesRequirement = Field(
+    on_exit_codes: Annotated[
+        V1PodFailurePolicyOnExitCodesRequirement,
+        BeforeValidator(_default_if_none(V1PodFailurePolicyOnExitCodesRequirement)),
+    ] = Field(
         default_factory=lambda: V1PodFailurePolicyOnExitCodesRequirement(),
         serialization_alias="onExitCodes",
         validation_alias=AliasChoices("on_exit_codes", "onExitCodes"),

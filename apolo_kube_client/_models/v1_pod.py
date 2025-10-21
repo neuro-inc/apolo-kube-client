@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_pod_spec import V1PodSpec
 from .v1_pod_status import V1PodStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Pod",)
 
@@ -16,8 +19,14 @@ class V1Pod(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1PodSpec = Field(default_factory=lambda: V1PodSpec())
+    spec: Annotated[V1PodSpec, BeforeValidator(_default_if_none(V1PodSpec))] = Field(
+        default_factory=lambda: V1PodSpec()
+    )
 
-    status: V1PodStatus = Field(default_factory=lambda: V1PodStatus())
+    status: Annotated[V1PodStatus, BeforeValidator(_default_if_none(V1PodStatus))] = (
+        Field(default_factory=lambda: V1PodStatus())
+    )

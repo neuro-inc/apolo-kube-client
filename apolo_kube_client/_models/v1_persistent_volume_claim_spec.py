@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference
 from .v1_typed_object_reference import V1TypedObjectReference
 from .v1_volume_resource_requirements import V1VolumeResourceRequirements
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PersistentVolumeClaimSpec",)
 
@@ -14,23 +17,32 @@ class V1PersistentVolumeClaimSpec(BaseModel):
         validation_alias=AliasChoices("access_modes", "accessModes"),
     )
 
-    data_source: V1TypedLocalObjectReference = Field(
+    data_source: Annotated[
+        V1TypedLocalObjectReference,
+        BeforeValidator(_default_if_none(V1TypedLocalObjectReference)),
+    ] = Field(
         default_factory=lambda: V1TypedLocalObjectReference(),
         serialization_alias="dataSource",
         validation_alias=AliasChoices("data_source", "dataSource"),
     )
 
-    data_source_ref: V1TypedObjectReference = Field(
+    data_source_ref: Annotated[
+        V1TypedObjectReference,
+        BeforeValidator(_default_if_none(V1TypedObjectReference)),
+    ] = Field(
         default_factory=lambda: V1TypedObjectReference(),
         serialization_alias="dataSourceRef",
         validation_alias=AliasChoices("data_source_ref", "dataSourceRef"),
     )
 
-    resources: V1VolumeResourceRequirements = Field(
-        default_factory=lambda: V1VolumeResourceRequirements()
-    )
+    resources: Annotated[
+        V1VolumeResourceRequirements,
+        BeforeValidator(_default_if_none(V1VolumeResourceRequirements)),
+    ] = Field(default_factory=lambda: V1VolumeResourceRequirements())
 
-    selector: V1LabelSelector = Field(default_factory=lambda: V1LabelSelector())
+    selector: Annotated[
+        V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
+    ] = Field(default_factory=lambda: V1LabelSelector())
 
     storage_class_name: str | None = Field(
         default=None,

@@ -1,8 +1,11 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
+from .base import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_scale_spec import V1ScaleSpec
 from .v1_scale_status import V1ScaleStatus
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1Scale",)
 
@@ -16,8 +19,14 @@ class V1Scale(ResourceModel):
 
     kind: str | None = None
 
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: Annotated[
+        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
+    ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    spec: V1ScaleSpec = Field(default_factory=lambda: V1ScaleSpec())
+    spec: Annotated[V1ScaleSpec, BeforeValidator(_default_if_none(V1ScaleSpec))] = (
+        Field(default_factory=lambda: V1ScaleSpec())
+    )
 
-    status: V1ScaleStatus = Field(default_factory=lambda: V1ScaleStatus())
+    status: Annotated[
+        V1ScaleStatus, BeforeValidator(_default_if_none(V1ScaleStatus))
+    ] = Field(default_factory=lambda: V1ScaleStatus())

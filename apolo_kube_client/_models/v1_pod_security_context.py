@@ -1,15 +1,20 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .base import _default_if_none
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_se_linux_options import V1SELinuxOptions
 from .v1_seccomp_profile import V1SeccompProfile
 from .v1_sysctl import V1Sysctl
 from .v1_windows_security_context_options import V1WindowsSecurityContextOptions
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodSecurityContext",)
 
 
 class V1PodSecurityContext(BaseModel):
-    app_armor_profile: V1AppArmorProfile = Field(
+    app_armor_profile: Annotated[
+        V1AppArmorProfile, BeforeValidator(_default_if_none(V1AppArmorProfile))
+    ] = Field(
         default_factory=lambda: V1AppArmorProfile(),
         serialization_alias="appArmorProfile",
         validation_alias=AliasChoices("app_armor_profile", "appArmorProfile"),
@@ -51,13 +56,17 @@ class V1PodSecurityContext(BaseModel):
         validation_alias=AliasChoices("se_linux_change_policy", "seLinuxChangePolicy"),
     )
 
-    se_linux_options: V1SELinuxOptions = Field(
+    se_linux_options: Annotated[
+        V1SELinuxOptions, BeforeValidator(_default_if_none(V1SELinuxOptions))
+    ] = Field(
         default_factory=lambda: V1SELinuxOptions(),
         serialization_alias="seLinuxOptions",
         validation_alias=AliasChoices("se_linux_options", "seLinuxOptions"),
     )
 
-    seccomp_profile: V1SeccompProfile = Field(
+    seccomp_profile: Annotated[
+        V1SeccompProfile, BeforeValidator(_default_if_none(V1SeccompProfile))
+    ] = Field(
         default_factory=lambda: V1SeccompProfile(),
         serialization_alias="seccompProfile",
         validation_alias=AliasChoices("seccomp_profile", "seccompProfile"),
@@ -79,7 +88,10 @@ class V1PodSecurityContext(BaseModel):
 
     sysctls: list[V1Sysctl] = []
 
-    windows_options: V1WindowsSecurityContextOptions = Field(
+    windows_options: Annotated[
+        V1WindowsSecurityContextOptions,
+        BeforeValidator(_default_if_none(V1WindowsSecurityContextOptions)),
+    ] = Field(
         default_factory=lambda: V1WindowsSecurityContextOptions(),
         serialization_alias="windowsOptions",
         validation_alias=AliasChoices("windows_options", "windowsOptions"),
