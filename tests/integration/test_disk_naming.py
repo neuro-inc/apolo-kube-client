@@ -85,7 +85,10 @@ class TestDiskNaming:
         )
 
         # test creating the dn
-        dn_create = await kube_client.neuromation_io_v1.disk_naming.create(model=dn)
+        (
+            created,
+            dn_create,
+        ) = await kube_client.neuromation_io_v1.disk_naming.create_or_update(model=dn)
         assert dn_create.metadata.name == dn.metadata.name
 
         # test getting the dn
