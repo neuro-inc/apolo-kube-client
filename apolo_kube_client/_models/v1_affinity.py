@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_node_affinity import V1NodeAffinity
 from .v1_pod_affinity import V1PodAffinity
 from .v1_pod_anti_affinity import V1PodAntiAffinity

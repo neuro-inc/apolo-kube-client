@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
@@ -11,7 +12,10 @@ __all__ = ("V1CustomResourceDefinitionVersion",)
 
 
 class V1CustomResourceDefinitionVersion(BaseModel):
-    additional_printer_columns: list[V1CustomResourceColumnDefinition] = Field(
+    additional_printer_columns: Annotated[
+        list[V1CustomResourceColumnDefinition],
+        BeforeValidator(_collection_if_none("[]")),
+    ] = Field(
         default=[],
         serialization_alias="additionalPrinterColumns",
         validation_alias=AliasChoices(
@@ -38,7 +42,9 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         validation_alias=AliasChoices("schema_", "schema"),
     )
 
-    selectable_fields: list[V1SelectableField] = Field(
+    selectable_fields: Annotated[
+        list[V1SelectableField], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="selectableFields",
         validation_alias=AliasChoices("selectable_fields", "selectableFields"),

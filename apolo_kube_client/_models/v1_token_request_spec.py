@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_bound_object_reference import V1BoundObjectReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -8,7 +9,7 @@ __all__ = ("V1TokenRequestSpec",)
 
 
 class V1TokenRequestSpec(BaseModel):
-    audiences: list[str] = []
+    audiences: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     bound_object_ref: Annotated[
         V1BoundObjectReference,

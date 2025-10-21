@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_daemon_set_condition import V1DaemonSetCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1DaemonSetStatus",)
 
@@ -11,7 +14,9 @@ class V1DaemonSetStatus(BaseModel):
         validation_alias=AliasChoices("collision_count", "collisionCount"),
     )
 
-    conditions: list[V1DaemonSetCondition] = []
+    conditions: Annotated[
+        list[V1DaemonSetCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     current_number_scheduled: int | None = Field(
         default=None,

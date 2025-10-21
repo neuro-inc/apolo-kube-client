@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_status_cause import V1StatusCause
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1StatusDetails",)
 
 
 class V1StatusDetails(BaseModel):
-    causes: list[V1StatusCause] = []
+    causes: Annotated[
+        list[V1StatusCause], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     group: str | None = None
 

@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_http_ingress_rule_value import V1HTTPIngressRuleValue
 from pydantic import BeforeValidator
 from typing import Annotated

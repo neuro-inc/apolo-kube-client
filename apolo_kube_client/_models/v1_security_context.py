@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_capabilities import V1Capabilities
 from .v1_se_linux_options import V1SELinuxOptions

@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_object_field_selector import V1ObjectFieldSelector
 from .v1_resource_field_selector import V1ResourceFieldSelector
 from pydantic import BeforeValidator

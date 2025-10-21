@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_network_policy_egress_rule import V1NetworkPolicyEgressRule
 from .v1_network_policy_ingress_rule import V1NetworkPolicyIngressRule
@@ -10,9 +11,13 @@ __all__ = ("V1NetworkPolicySpec",)
 
 
 class V1NetworkPolicySpec(BaseModel):
-    egress: list[V1NetworkPolicyEgressRule] = []
+    egress: Annotated[
+        list[V1NetworkPolicyEgressRule], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    ingress: list[V1NetworkPolicyIngressRule] = []
+    ingress: Annotated[
+        list[V1NetworkPolicyIngressRule], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     pod_selector: Annotated[
         V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
@@ -22,8 +27,10 @@ class V1NetworkPolicySpec(BaseModel):
         validation_alias=AliasChoices("pod_selector", "podSelector"),
     )
 
-    policy_types: list[str] = Field(
-        default=[],
-        serialization_alias="policyTypes",
-        validation_alias=AliasChoices("policy_types", "policyTypes"),
+    policy_types: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="policyTypes",
+            validation_alias=AliasChoices("policy_types", "policyTypes"),
+        )
     )

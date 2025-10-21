@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_deployment_condition import V1DeploymentCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1DeploymentStatus",)
 
@@ -17,7 +20,9 @@ class V1DeploymentStatus(BaseModel):
         validation_alias=AliasChoices("collision_count", "collisionCount"),
     )
 
-    conditions: list[V1DeploymentCondition] = []
+    conditions: Annotated[
+        list[V1DeploymentCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     observed_generation: int | None = Field(
         default=None,

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_daemon_set import V1DaemonSet
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
@@ -16,7 +17,7 @@ class V1DaemonSetList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1DaemonSet] = []
+    items: Annotated[list[V1DaemonSet], BeforeValidator(_collection_if_none("[]"))] = []
 
     kind: str | None = None
 

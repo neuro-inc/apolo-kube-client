@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_config_map_node_config_source import V1ConfigMapNodeConfigSource
 from pydantic import BeforeValidator
 from typing import Annotated

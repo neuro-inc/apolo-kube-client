@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_group_subject import V1GroupSubject
 from .v1_service_account_subject import V1ServiceAccountSubject
 from .v1_user_subject import V1UserSubject

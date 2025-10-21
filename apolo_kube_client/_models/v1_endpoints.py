@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_endpoint_subset import V1EndpointSubset
 from .v1_object_meta import V1ObjectMeta
 from pydantic import BeforeValidator
@@ -22,4 +23,6 @@ class V1Endpoints(ResourceModel):
         V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
     ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    subsets: list[V1EndpointSubset] = []
+    subsets: Annotated[
+        list[V1EndpointSubset], BeforeValidator(_collection_if_none("[]"))
+    ] = []

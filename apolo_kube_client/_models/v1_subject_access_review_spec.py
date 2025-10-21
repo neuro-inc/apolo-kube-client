@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
 from pydantic import BeforeValidator
@@ -9,9 +10,11 @@ __all__ = ("V1SubjectAccessReviewSpec",)
 
 
 class V1SubjectAccessReviewSpec(BaseModel):
-    extra: dict[str, list[str]] = {}
+    extra: Annotated[
+        dict[str, list[str]], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    groups: list[str] = []
+    groups: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     non_resource_attributes: Annotated[
         V1NonResourceAttributes,

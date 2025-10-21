@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_pod_failure_policy_on_exit_codes_requirement import (
     V1PodFailurePolicyOnExitCodesRequirement,
 )
@@ -24,7 +25,10 @@ class V1PodFailurePolicyRule(BaseModel):
         validation_alias=AliasChoices("on_exit_codes", "onExitCodes"),
     )
 
-    on_pod_conditions: list[V1PodFailurePolicyOnPodConditionsPattern] = Field(
+    on_pod_conditions: Annotated[
+        list[V1PodFailurePolicyOnPodConditionsPattern],
+        BeforeValidator(_collection_if_none("[]")),
+    ] = Field(
         default=[],
         serialization_alias="onPodConditions",
         validation_alias=AliasChoices("on_pod_conditions", "onPodConditions"),

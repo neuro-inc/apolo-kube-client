@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_counter_set import V1beta1CounterSet
 from .v1beta1_device import V1beta1Device
@@ -17,7 +18,9 @@ class V1beta1ResourceSliceSpec(BaseModel):
         validation_alias=AliasChoices("all_nodes", "allNodes"),
     )
 
-    devices: list[V1beta1Device] = []
+    devices: Annotated[
+        list[V1beta1Device], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     driver: str | None = None
 
@@ -47,7 +50,9 @@ class V1beta1ResourceSliceSpec(BaseModel):
         V1beta1ResourcePool, BeforeValidator(_default_if_none(V1beta1ResourcePool))
     ] = Field(default_factory=lambda: V1beta1ResourcePool())
 
-    shared_counters: list[V1beta1CounterSet] = Field(
+    shared_counters: Annotated[
+        list[V1beta1CounterSet], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="sharedCounters",
         validation_alias=AliasChoices("shared_counters", "sharedCounters"),

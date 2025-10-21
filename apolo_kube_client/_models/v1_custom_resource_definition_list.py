@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_custom_resource_definition import V1CustomResourceDefinition
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1CustomResourceDefinitionList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1CustomResourceDefinition] = []
+    items: Annotated[
+        list[V1CustomResourceDefinition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

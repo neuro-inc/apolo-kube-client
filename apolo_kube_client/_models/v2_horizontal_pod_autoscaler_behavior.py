@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v2_hpa_scaling_rules import V2HPAScalingRules
 from pydantic import BeforeValidator
 from typing import Annotated

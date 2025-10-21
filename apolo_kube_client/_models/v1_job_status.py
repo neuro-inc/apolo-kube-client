@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_job_condition import V1JobCondition
 from .v1_uncounted_terminated_pods import V1UncountedTerminatedPods
 from datetime import datetime
@@ -24,7 +25,9 @@ class V1JobStatus(BaseModel):
         validation_alias=AliasChoices("completion_time", "completionTime"),
     )
 
-    conditions: list[V1JobCondition] = []
+    conditions: Annotated[
+        list[V1JobCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     failed: int | None = None
 

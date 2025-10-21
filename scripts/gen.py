@@ -18,7 +18,6 @@ class {clsname}({base}):
 """
 
 BASE_MOD = """\
-from typing import Any, Callable
 from pydantic import BaseModel, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_list_meta import V1ListMeta
@@ -30,12 +29,25 @@ class ResourceModel(BaseModel):
 
 class ListModel(BaseModel):
     metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+"""
 
+UTILS_MOD = """\
+from typing import Any, Callable
 
 def _default_if_none[T](type_: type[T]) -> Callable[[Any], Any]:
     def validator(arg: Any) -> Any:
         if arg is None:
             return type_()
+        else:
+            return arg
+
+    return validator
+
+
+def _collection_if_none(type_: str) -> Callable[[Any], Any]:
+    def validator(arg: Any) -> Any:
+        if arg is None:
+            return eval(type_)
         else:
             return arg
 
@@ -59,6 +71,7 @@ class ParseTypeRes:
     imports: frozenset[str]
     default: str
     is_model: bool
+    is_collection: bool
 
 
 def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
@@ -70,16 +83,22 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                 frozenset(),
                 "default=None",  # avoid recursive ctor
                 True,
+                False,
             )
         else:
             return ParseTypeRes(
-                f'"{descr}"', frozenset(), f"default_factory=lambda: {descr}()", True
+                f'"{descr}"',
+                frozenset(),
+                f"default_factory=lambda: {descr}()",
+                True,
+                False,
             )
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
             "default={}",
+            False,
             False,
         )
     elif match := DICT_RE.match(descr):
@@ -90,30 +109,42 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
             key.imports | val.imports,
             "default={}",
             False,
+            True,
         )
     elif match := LIST_RE.match(descr):
         item = parse_type(self_name, match.group("item"), nested=True)
-        return ParseTypeRes(f"list[{item.type_}]", item.imports, "default=[]", False)
+        return ParseTypeRes(
+            f"list[{item.type_}]", item.imports, "default=[]", False, True
+        )
     else:
         suffix = " | None" if not nested else ""
         match descr:
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "default=None", False)
+                return ParseTypeRes(
+                    "int" + suffix, frozenset(), "default=None", False, False
+                )
             case "bool":
-                return ParseTypeRes("bool" + suffix, frozenset(), "default=None", False)
+                return ParseTypeRes(
+                    "bool" + suffix, frozenset(), "default=None", False, False
+                )
             case "int":
-                return ParseTypeRes("int" + suffix, frozenset(), "default=None", False)
+                return ParseTypeRes(
+                    "int" + suffix, frozenset(), "default=None", False, False
+                )
             case "float":
                 return ParseTypeRes(
-                    "float" + suffix, frozenset(), "default=None", False
+                    "float" + suffix, frozenset(), "default=None", False, False
                 )
             case "str":
-                return ParseTypeRes("str" + suffix, frozenset(), "default=None", False)
+                return ParseTypeRes(
+                    "str" + suffix, frozenset(), "default=None", False, False
+                )
             case "datetime":
                 return ParseTypeRes(
                     "datetime" + suffix,
                     frozenset(["from datetime import datetime"]),
                     "default=None",
+                    False,
                     False,
                 )
             case _:
@@ -122,6 +153,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                     frozenset([f"from .{mod_name(descr)} import {descr}"]),
                     f"default_factory=lambda: {descr}()",
                     True,
+                    False,
                 )
 
 
@@ -177,8 +209,13 @@ def generate(
         if res.is_model:
             imports.add("from typing import Annotated")
             imports.add("from pydantic import BeforeValidator")
-            imports.add("from .base import _default_if_none")
+            imports.add("from .utils import _default_if_none")
             type_ = f"Annotated[{type_}, BeforeValidator(_default_if_none({type_}))]"
+        elif res.is_collection:
+            imports.add("from typing import Annotated")
+            imports.add("from pydantic import BeforeValidator")
+            imports.add("from .utils import _collection_if_none")
+            type_ = f'Annotated[{type_}, BeforeValidator(_collection_if_none("{res.default.removeprefix("default=")}"))]'
         field = f"{real_attr}: {type_}{tail}"
         body.append(f"    {field}\n")
     mod = MOD.format(
@@ -254,6 +291,7 @@ def main() -> None:
             generate(obj, target_dir, init_lines, all_names)
 
     (target_dir / "base.py").write_text(BASE_MOD)
+    (target_dir / "utils.py").write_text(UTILS_MOD)
     init_lines.append("from .base import ListModel, ResourceModel")
     all_names.extend(["ListModel", "ResourceModel"])
 

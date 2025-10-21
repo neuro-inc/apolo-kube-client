@@ -1,13 +1,18 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_managed_fields_entry import V1ManagedFieldsEntry
 from .v1_owner_reference import V1OwnerReference
 from datetime import datetime
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ObjectMeta",)
 
 
 class V1ObjectMeta(BaseModel):
-    annotations: dict[str, str] = {}
+    annotations: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
     creation_timestamp: datetime | None = Field(
         default=None,
@@ -29,7 +34,7 @@ class V1ObjectMeta(BaseModel):
         validation_alias=AliasChoices("deletion_timestamp", "deletionTimestamp"),
     )
 
-    finalizers: list[str] = []
+    finalizers: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     generate_name: str | None = Field(
         default=None,
@@ -39,9 +44,11 @@ class V1ObjectMeta(BaseModel):
 
     generation: int | None = None
 
-    labels: dict[str, str] = {}
+    labels: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
-    managed_fields: list[V1ManagedFieldsEntry] = Field(
+    managed_fields: Annotated[
+        list[V1ManagedFieldsEntry], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="managedFields",
         validation_alias=AliasChoices("managed_fields", "managedFields"),
@@ -51,7 +58,9 @@ class V1ObjectMeta(BaseModel):
 
     namespace: str | None = None
 
-    owner_references: list[V1OwnerReference] = Field(
+    owner_references: Annotated[
+        list[V1OwnerReference], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="ownerReferences",
         validation_alias=AliasChoices("owner_references", "ownerReferences"),

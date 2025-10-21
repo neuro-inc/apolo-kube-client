@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_volume_error import V1VolumeError
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -18,7 +19,9 @@ class V1VolumeAttachmentStatus(BaseModel):
 
     attached: bool | None = None
 
-    attachment_metadata: dict[str, str] = Field(
+    attachment_metadata: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="attachmentMetadata",
         validation_alias=AliasChoices("attachment_metadata", "attachmentMetadata"),

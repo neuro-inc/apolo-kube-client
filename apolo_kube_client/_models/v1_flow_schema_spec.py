@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_flow_distinguisher_method import V1FlowDistinguisherMethod
 from .v1_policy_rules_with_subjects import V1PolicyRulesWithSubjects
 from .v1_priority_level_configuration_reference import (
@@ -38,4 +39,6 @@ class V1FlowSchemaSpec(BaseModel):
         ),
     )
 
-    rules: list[V1PolicyRulesWithSubjects] = []
+    rules: Annotated[
+        list[V1PolicyRulesWithSubjects], BeforeValidator(_collection_if_none("[]"))
+    ] = []

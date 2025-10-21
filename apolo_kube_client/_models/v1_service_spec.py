@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_service_port import V1ServicePort
 from .v1_session_affinity_config import V1SessionAffinityConfig
 from pydantic import BeforeValidator
@@ -23,16 +24,20 @@ class V1ServiceSpec(BaseModel):
         validation_alias=AliasChoices("cluster_ip", "clusterIP"),
     )
 
-    cluster_i_ps: list[str] = Field(
-        default=[],
-        serialization_alias="clusterIPs",
-        validation_alias=AliasChoices("cluster_i_ps", "clusterIPs"),
+    cluster_i_ps: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="clusterIPs",
+            validation_alias=AliasChoices("cluster_i_ps", "clusterIPs"),
+        )
     )
 
-    external_i_ps: list[str] = Field(
-        default=[],
-        serialization_alias="externalIPs",
-        validation_alias=AliasChoices("external_i_ps", "externalIPs"),
+    external_i_ps: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="externalIPs",
+            validation_alias=AliasChoices("external_i_ps", "externalIPs"),
+        )
     )
 
     external_name: str | None = Field(
@@ -63,10 +68,12 @@ class V1ServiceSpec(BaseModel):
         ),
     )
 
-    ip_families: list[str] = Field(
-        default=[],
-        serialization_alias="ipFamilies",
-        validation_alias=AliasChoices("ip_families", "ipFamilies"),
+    ip_families: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="ipFamilies",
+            validation_alias=AliasChoices("ip_families", "ipFamilies"),
+        )
     )
 
     ip_family_policy: str | None = Field(
@@ -87,7 +94,9 @@ class V1ServiceSpec(BaseModel):
         validation_alias=AliasChoices("load_balancer_ip", "loadBalancerIP"),
     )
 
-    load_balancer_source_ranges: list[str] = Field(
+    load_balancer_source_ranges: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="loadBalancerSourceRanges",
         validation_alias=AliasChoices(
@@ -95,7 +104,9 @@ class V1ServiceSpec(BaseModel):
         ),
     )
 
-    ports: list[V1ServicePort] = []
+    ports: Annotated[
+        list[V1ServicePort], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     publish_not_ready_addresses: bool | None = Field(
         default=None,
@@ -105,7 +116,7 @@ class V1ServiceSpec(BaseModel):
         ),
     )
 
-    selector: dict[str, str] = {}
+    selector: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     session_affinity: str | None = Field(
         default=None,

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_condition import V1Condition
 from .v1beta2_network_device_data import V1beta2NetworkDeviceData
 from apolo_kube_client._typedefs import JsonType
@@ -10,7 +11,9 @@ __all__ = ("V1beta2AllocatedDeviceStatus",)
 
 
 class V1beta2AllocatedDeviceStatus(BaseModel):
-    conditions: list[V1Condition] = []
+    conditions: Annotated[
+        list[V1Condition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     data: JsonType = {}
 

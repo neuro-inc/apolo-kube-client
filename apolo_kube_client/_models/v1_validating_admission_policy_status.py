@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_condition import V1Condition
 from .v1_type_checking import V1TypeChecking
 from pydantic import BeforeValidator
@@ -9,7 +10,9 @@ __all__ = ("V1ValidatingAdmissionPolicyStatus",)
 
 
 class V1ValidatingAdmissionPolicyStatus(BaseModel):
-    conditions: list[V1Condition] = []
+    conditions: Annotated[
+        list[V1Condition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     observed_generation: int | None = Field(
         default=None,

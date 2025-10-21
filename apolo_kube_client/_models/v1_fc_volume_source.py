@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1FCVolumeSource",)
 
@@ -19,10 +21,12 @@ class V1FCVolumeSource(BaseModel):
         validation_alias=AliasChoices("read_only", "readOnly"),
     )
 
-    target_ww_ns: list[str] = Field(
-        default=[],
-        serialization_alias="targetWWNs",
-        validation_alias=AliasChoices("target_ww_ns", "targetWWNs"),
+    target_ww_ns: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="targetWWNs",
+            validation_alias=AliasChoices("target_ww_ns", "targetWWNs"),
+        )
     )
 
-    wwids: list[str] = []
+    wwids: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []

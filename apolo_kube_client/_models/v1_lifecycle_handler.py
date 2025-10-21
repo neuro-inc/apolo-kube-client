@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_exec_action import V1ExecAction
 from .v1_http_get_action import V1HTTPGetAction
 from .v1_sleep_action import V1SleepAction

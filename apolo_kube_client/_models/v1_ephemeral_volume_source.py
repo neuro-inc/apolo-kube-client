@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
 from pydantic import BeforeValidator
 from typing import Annotated

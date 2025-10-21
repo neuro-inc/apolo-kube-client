@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_api_resource import V1APIResource
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1APIResourceList",)
 
@@ -19,4 +22,6 @@ class V1APIResourceList(BaseModel):
 
     kind: str | None = None
 
-    resources: list[V1APIResource] = []
+    resources: Annotated[
+        list[V1APIResource], BeforeValidator(_collection_if_none("[]"))
+    ] = []

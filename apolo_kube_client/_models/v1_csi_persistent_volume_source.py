@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_secret_reference import V1SecretReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -68,7 +69,9 @@ class V1CSIPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices("read_only", "readOnly"),
     )
 
-    volume_attributes: dict[str, str] = Field(
+    volume_attributes: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="volumeAttributes",
         validation_alias=AliasChoices("volume_attributes", "volumeAttributes"),

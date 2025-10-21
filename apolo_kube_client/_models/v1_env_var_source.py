@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_config_map_key_selector import V1ConfigMapKeySelector
 from .v1_file_key_selector import V1FileKeySelector
 from .v1_object_field_selector import V1ObjectFieldSelector

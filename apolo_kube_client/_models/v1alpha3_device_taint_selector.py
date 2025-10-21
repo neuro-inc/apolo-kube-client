@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1alpha3_device_selector import V1alpha3DeviceSelector
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1alpha3DeviceTaintSelector",)
 
@@ -17,4 +20,6 @@ class V1alpha3DeviceTaintSelector(BaseModel):
 
     pool: str | None = None
 
-    selectors: list[V1alpha3DeviceSelector] = []
+    selectors: Annotated[
+        list[V1alpha3DeviceSelector], BeforeValidator(_collection_if_none("[]"))
+    ] = []

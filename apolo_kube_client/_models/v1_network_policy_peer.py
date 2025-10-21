@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_ip_block import V1IPBlock
 from .v1_label_selector import V1LabelSelector
 from pydantic import BeforeValidator

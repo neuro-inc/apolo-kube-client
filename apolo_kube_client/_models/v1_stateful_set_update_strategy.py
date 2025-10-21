@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_rolling_update_stateful_set_strategy import V1RollingUpdateStatefulSetStrategy
 from pydantic import BeforeValidator
 from typing import Annotated

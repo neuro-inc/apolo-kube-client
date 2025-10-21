@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_ingress_backend import V1IngressBackend
 from .v1_ingress_rule import V1IngressRule
 from .v1_ingress_tls import V1IngressTLS
@@ -24,6 +25,8 @@ class V1IngressSpec(BaseModel):
         validation_alias=AliasChoices("ingress_class_name", "ingressClassName"),
     )
 
-    rules: list[V1IngressRule] = []
+    rules: Annotated[
+        list[V1IngressRule], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    tls: list[V1IngressTLS] = []
+    tls: Annotated[list[V1IngressTLS], BeforeValidator(_collection_if_none("[]"))] = []

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_certificate_signing_request import V1CertificateSigningRequest
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1CertificateSigningRequestList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1CertificateSigningRequest] = []
+    items: Annotated[
+        list[V1CertificateSigningRequest], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

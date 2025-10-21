@@ -1,12 +1,17 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_condition import V1Condition
 from datetime import datetime
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodDisruptionBudgetStatus",)
 
 
 class V1PodDisruptionBudgetStatus(BaseModel):
-    conditions: list[V1Condition] = []
+    conditions: Annotated[
+        list[V1Condition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     current_healthy: int | None = Field(
         default=None,
@@ -20,7 +25,9 @@ class V1PodDisruptionBudgetStatus(BaseModel):
         validation_alias=AliasChoices("desired_healthy", "desiredHealthy"),
     )
 
-    disrupted_pods: dict[str, datetime] = Field(
+    disrupted_pods: Annotated[
+        dict[str, datetime], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="disruptedPods",
         validation_alias=AliasChoices("disrupted_pods", "disruptedPods"),

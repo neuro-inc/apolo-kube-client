@@ -1,11 +1,13 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1APIResource",)
 
 
 class V1APIResource(BaseModel):
-    categories: list[str] = []
+    categories: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     group: str | None = None
 
@@ -15,10 +17,12 @@ class V1APIResource(BaseModel):
 
     namespaced: bool | None = None
 
-    short_names: list[str] = Field(
-        default=[],
-        serialization_alias="shortNames",
-        validation_alias=AliasChoices("short_names", "shortNames"),
+    short_names: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="shortNames",
+            validation_alias=AliasChoices("short_names", "shortNames"),
+        )
     )
 
     singular_name: str | None = Field(
@@ -33,6 +37,6 @@ class V1APIResource(BaseModel):
         validation_alias=AliasChoices("storage_version_hash", "storageVersionHash"),
     )
 
-    verbs: list[str] = []
+    verbs: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     version: str | None = None

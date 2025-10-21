@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference
 from .v1_typed_object_reference import V1TypedObjectReference
@@ -11,10 +12,12 @@ __all__ = ("V1PersistentVolumeClaimSpec",)
 
 
 class V1PersistentVolumeClaimSpec(BaseModel):
-    access_modes: list[str] = Field(
-        default=[],
-        serialization_alias="accessModes",
-        validation_alias=AliasChoices("access_modes", "accessModes"),
+    access_modes: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="accessModes",
+            validation_alias=AliasChoices("access_modes", "accessModes"),
+        )
     )
 
     data_source: Annotated[

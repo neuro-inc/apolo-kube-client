@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -15,7 +16,7 @@ class V1Secret(ResourceModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    data: dict[str, str] = {}
+    data: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     immutable: bool | None = None
 
@@ -25,7 +26,9 @@ class V1Secret(ResourceModel):
         V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
     ] = Field(default_factory=lambda: V1ObjectMeta())
 
-    string_data: dict[str, str] = Field(
+    string_data: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="stringData",
         validation_alias=AliasChoices("string_data", "stringData"),

@@ -1,8 +1,13 @@
 from pydantic import BaseModel
+from .utils import _collection_if_none
 from .v1_api_service_condition import V1APIServiceCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1APIServiceStatus",)
 
 
 class V1APIServiceStatus(BaseModel):
-    conditions: list[V1APIServiceCondition] = []
+    conditions: Annotated[
+        list[V1APIServiceCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []

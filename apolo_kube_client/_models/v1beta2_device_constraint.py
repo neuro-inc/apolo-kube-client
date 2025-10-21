@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta2DeviceConstraint",)
 
@@ -17,4 +19,4 @@ class V1beta2DeviceConstraint(BaseModel):
         validation_alias=AliasChoices("match_attribute", "matchAttribute"),
     )
 
-    requests: list[str] = []
+    requests: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []

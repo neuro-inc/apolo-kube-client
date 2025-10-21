@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta1NetworkDeviceData",)
 
@@ -17,4 +19,4 @@ class V1beta1NetworkDeviceData(BaseModel):
         validation_alias=AliasChoices("interface_name", "interfaceName"),
     )
 
-    ips: list[str] = []
+    ips: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []

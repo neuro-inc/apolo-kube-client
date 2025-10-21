@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_local_object_reference import V1LocalObjectReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -16,7 +17,7 @@ class V1FlexVolumeSource(BaseModel):
         validation_alias=AliasChoices("fs_type", "fsType"),
     )
 
-    options: dict[str, str] = {}
+    options: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     read_only: bool | None = Field(
         default=None,

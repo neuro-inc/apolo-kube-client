@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_affinity import V1Affinity
 from .v1_container import V1Container
 from .v1_ephemeral_container import V1EphemeralContainer
@@ -42,7 +43,9 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    containers: list[V1Container] = []
+    containers: Annotated[
+        list[V1Container], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     dns_config: Annotated[
         V1PodDNSConfig, BeforeValidator(_default_if_none(V1PodDNSConfig))
@@ -64,13 +67,17 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("enable_service_links", "enableServiceLinks"),
     )
 
-    ephemeral_containers: list[V1EphemeralContainer] = Field(
+    ephemeral_containers: Annotated[
+        list[V1EphemeralContainer], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="ephemeralContainers",
         validation_alias=AliasChoices("ephemeral_containers", "ephemeralContainers"),
     )
 
-    host_aliases: list[V1HostAlias] = Field(
+    host_aliases: Annotated[
+        list[V1HostAlias], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="hostAliases",
         validation_alias=AliasChoices("host_aliases", "hostAliases"),
@@ -108,13 +115,17 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("hostname_override", "hostnameOverride"),
     )
 
-    image_pull_secrets: list[V1LocalObjectReference] = Field(
+    image_pull_secrets: Annotated[
+        list[V1LocalObjectReference], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="imagePullSecrets",
         validation_alias=AliasChoices("image_pull_secrets", "imagePullSecrets"),
     )
 
-    init_containers: list[V1Container] = Field(
+    init_containers: Annotated[
+        list[V1Container], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="initContainers",
         validation_alias=AliasChoices("init_containers", "initContainers"),
@@ -126,7 +137,9 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("node_name", "nodeName"),
     )
 
-    node_selector: dict[str, str] = Field(
+    node_selector: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="nodeSelector",
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
@@ -136,7 +149,7 @@ class V1PodSpec(BaseModel):
         default_factory=lambda: V1PodOS()
     )
 
-    overhead: dict[str, str] = {}
+    overhead: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     preemption_policy: str | None = Field(
         default=None,
@@ -152,13 +165,17 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("priority_class_name", "priorityClassName"),
     )
 
-    readiness_gates: list[V1PodReadinessGate] = Field(
+    readiness_gates: Annotated[
+        list[V1PodReadinessGate], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="readinessGates",
         validation_alias=AliasChoices("readiness_gates", "readinessGates"),
     )
 
-    resource_claims: list[V1PodResourceClaim] = Field(
+    resource_claims: Annotated[
+        list[V1PodResourceClaim], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="resourceClaims",
         validation_alias=AliasChoices("resource_claims", "resourceClaims"),
@@ -187,7 +204,9 @@ class V1PodSpec(BaseModel):
         validation_alias=AliasChoices("scheduler_name", "schedulerName"),
     )
 
-    scheduling_gates: list[V1PodSchedulingGate] = Field(
+    scheduling_gates: Annotated[
+        list[V1PodSchedulingGate], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="schedulingGates",
         validation_alias=AliasChoices("scheduling_gates", "schedulingGates"),
@@ -237,9 +256,13 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    tolerations: list[V1Toleration] = []
+    tolerations: Annotated[
+        list[V1Toleration], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    topology_spread_constraints: list[V1TopologySpreadConstraint] = Field(
+    topology_spread_constraints: Annotated[
+        list[V1TopologySpreadConstraint], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="topologySpreadConstraints",
         validation_alias=AliasChoices(
@@ -247,4 +270,4 @@ class V1PodSpec(BaseModel):
         ),
     )
 
-    volumes: list[V1Volume] = []
+    volumes: Annotated[list[V1Volume], BeforeValidator(_collection_if_none("[]"))] = []

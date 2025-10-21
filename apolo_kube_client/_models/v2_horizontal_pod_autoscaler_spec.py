@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_horizontal_pod_autoscaler_behavior import V2HorizontalPodAutoscalerBehavior
 from .v2_metric_spec import V2MetricSpec
@@ -21,7 +22,9 @@ class V2HorizontalPodAutoscalerSpec(BaseModel):
         validation_alias=AliasChoices("max_replicas", "maxReplicas"),
     )
 
-    metrics: list[V2MetricSpec] = []
+    metrics: Annotated[
+        list[V2MetricSpec], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     min_replicas: int | None = Field(
         default=None,

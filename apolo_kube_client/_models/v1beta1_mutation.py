@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1beta1_apply_configuration import V1beta1ApplyConfiguration
 from .v1beta1_json_patch import V1beta1JSONPatch
 from pydantic import BeforeValidator

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1beta1_device_claim import V1beta1DeviceClaim
 from pydantic import BeforeValidator
 from typing import Annotated

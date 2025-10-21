@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1beta1_device_toleration import V1beta1DeviceToleration
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1beta1DeviceRequestAllocationResult",)
 
@@ -11,13 +14,17 @@ class V1beta1DeviceRequestAllocationResult(BaseModel):
         validation_alias=AliasChoices("admin_access", "adminAccess"),
     )
 
-    binding_conditions: list[str] = Field(
+    binding_conditions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="bindingConditions",
         validation_alias=AliasChoices("binding_conditions", "bindingConditions"),
     )
 
-    binding_failure_conditions: list[str] = Field(
+    binding_failure_conditions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="bindingFailureConditions",
         validation_alias=AliasChoices(
@@ -25,7 +32,9 @@ class V1beta1DeviceRequestAllocationResult(BaseModel):
         ),
     )
 
-    consumed_capacity: dict[str, str] = Field(
+    consumed_capacity: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="consumedCapacity",
         validation_alias=AliasChoices("consumed_capacity", "consumedCapacity"),
@@ -45,4 +54,6 @@ class V1beta1DeviceRequestAllocationResult(BaseModel):
         validation_alias=AliasChoices("share_id", "shareID"),
     )
 
-    tolerations: list[V1beta1DeviceToleration] = []
+    tolerations: Annotated[
+        list[V1beta1DeviceToleration], BeforeValidator(_collection_if_none("[]"))
+    ] = []

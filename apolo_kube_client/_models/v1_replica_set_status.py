@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_replica_set_condition import V1ReplicaSetCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ReplicaSetStatus",)
 
@@ -11,7 +14,9 @@ class V1ReplicaSetStatus(BaseModel):
         validation_alias=AliasChoices("available_replicas", "availableReplicas"),
     )
 
-    conditions: list[V1ReplicaSetCondition] = []
+    conditions: Annotated[
+        list[V1ReplicaSetCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     fully_labeled_replicas: int | None = Field(
         default=None,

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_preconditions import V1Preconditions
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -14,7 +15,7 @@ class V1DeleteOptions(BaseModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    dry_run: list[str] = Field(
+    dry_run: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
         default=[],
         serialization_alias="dryRun",
         validation_alias=AliasChoices("dry_run", "dryRun"),

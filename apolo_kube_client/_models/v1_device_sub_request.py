@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_capacity_requirements import V1CapacityRequirements
 from .v1_device_selector import V1DeviceSelector
 from .v1_device_toleration import V1DeviceToleration
@@ -31,6 +32,10 @@ class V1DeviceSubRequest(BaseModel):
 
     name: str | None = None
 
-    selectors: list[V1DeviceSelector] = []
+    selectors: Annotated[
+        list[V1DeviceSelector], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    tolerations: list[V1DeviceToleration] = []
+    tolerations: Annotated[
+        list[V1DeviceToleration], BeforeValidator(_collection_if_none("[]"))
+    ] = []

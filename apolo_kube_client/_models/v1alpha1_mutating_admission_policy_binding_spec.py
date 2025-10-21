@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_param_ref import V1alpha1ParamRef
 from pydantic import BeforeValidator

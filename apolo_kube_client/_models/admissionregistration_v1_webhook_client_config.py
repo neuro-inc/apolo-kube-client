@@ -2,7 +2,7 @@ from pydantic import AliasChoices, BaseModel, Field
 from .admissionregistration_v1_service_reference import (
     AdmissionregistrationV1ServiceReference,
 )
-from .base import _default_if_none
+from .utils import _default_if_none
 from pydantic import BeforeValidator
 from typing import Annotated
 

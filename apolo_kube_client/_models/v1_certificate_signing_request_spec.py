@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CertificateSigningRequestSpec",)
 
@@ -11,9 +13,11 @@ class V1CertificateSigningRequestSpec(BaseModel):
         validation_alias=AliasChoices("expiration_seconds", "expirationSeconds"),
     )
 
-    extra: dict[str, list[str]] = {}
+    extra: Annotated[
+        dict[str, list[str]], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    groups: list[str] = []
+    groups: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     request: str | None = None
 
@@ -25,6 +29,6 @@ class V1CertificateSigningRequestSpec(BaseModel):
 
     uid: str | None = None
 
-    usages: list[str] = []
+    usages: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     username: str | None = None

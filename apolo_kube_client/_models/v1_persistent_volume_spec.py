@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_persistent_volume_source import V1AzureFilePersistentVolumeSource
@@ -31,10 +32,12 @@ __all__ = ("V1PersistentVolumeSpec",)
 
 
 class V1PersistentVolumeSpec(BaseModel):
-    access_modes: list[str] = Field(
-        default=[],
-        serialization_alias="accessModes",
-        validation_alias=AliasChoices("access_modes", "accessModes"),
+    access_modes: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="accessModes",
+            validation_alias=AliasChoices("access_modes", "accessModes"),
+        )
     )
 
     aws_elastic_block_store: Annotated[
@@ -66,7 +69,7 @@ class V1PersistentVolumeSpec(BaseModel):
         validation_alias=AliasChoices("azure_file", "azureFile"),
     )
 
-    capacity: dict[str, str] = {}
+    capacity: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     cephfs: Annotated[
         V1CephFSPersistentVolumeSource,
@@ -140,10 +143,12 @@ class V1PersistentVolumeSpec(BaseModel):
         V1LocalVolumeSource, BeforeValidator(_default_if_none(V1LocalVolumeSource))
     ] = Field(default_factory=lambda: V1LocalVolumeSource())
 
-    mount_options: list[str] = Field(
-        default=[],
-        serialization_alias="mountOptions",
-        validation_alias=AliasChoices("mount_options", "mountOptions"),
+    mount_options: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="mountOptions",
+            validation_alias=AliasChoices("mount_options", "mountOptions"),
+        )
     )
 
     nfs: Annotated[

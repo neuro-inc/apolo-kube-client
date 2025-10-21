@@ -1,7 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
 from .events_v1_event_series import EventsV1EventSeries
+from .utils import _default_if_none
 from .v1_event_source import V1EventSource
 from .v1_object_meta import V1ObjectMeta
 from .v1_object_reference import V1ObjectReference

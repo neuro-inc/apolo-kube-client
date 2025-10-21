@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_linux_container_user import V1LinuxContainerUser
 from pydantic import BeforeValidator
 from typing import Annotated

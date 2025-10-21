@@ -1,6 +1,6 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_custom_resource_definition_spec import V1CustomResourceDefinitionSpec
 from .v1_custom_resource_definition_status import V1CustomResourceDefinitionStatus
 from .v1_object_meta import V1ObjectMeta

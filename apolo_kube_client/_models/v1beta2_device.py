@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_attribute import V1beta2DeviceAttribute
 from .v1beta2_device_capacity import V1beta2DeviceCapacity
@@ -26,15 +27,21 @@ class V1beta2Device(BaseModel):
         ),
     )
 
-    attributes: dict[str, V1beta2DeviceAttribute] = {}
+    attributes: Annotated[
+        dict[str, V1beta2DeviceAttribute], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    binding_conditions: list[str] = Field(
+    binding_conditions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="bindingConditions",
         validation_alias=AliasChoices("binding_conditions", "bindingConditions"),
     )
 
-    binding_failure_conditions: list[str] = Field(
+    binding_failure_conditions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="bindingFailureConditions",
         validation_alias=AliasChoices(
@@ -48,9 +55,14 @@ class V1beta2Device(BaseModel):
         validation_alias=AliasChoices("binds_to_node", "bindsToNode"),
     )
 
-    capacity: dict[str, V1beta2DeviceCapacity] = {}
+    capacity: Annotated[
+        dict[str, V1beta2DeviceCapacity], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    consumes_counters: list[V1beta2DeviceCounterConsumption] = Field(
+    consumes_counters: Annotated[
+        list[V1beta2DeviceCounterConsumption],
+        BeforeValidator(_collection_if_none("[]")),
+    ] = Field(
         default=[],
         serialization_alias="consumesCounters",
         validation_alias=AliasChoices("consumes_counters", "consumesCounters"),
@@ -72,4 +84,6 @@ class V1beta2Device(BaseModel):
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
     )
 
-    taints: list[V1beta2DeviceTaint] = []
+    taints: Annotated[
+        list[V1beta2DeviceTaint], BeforeValidator(_collection_if_none("[]"))
+    ] = []

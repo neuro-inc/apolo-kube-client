@@ -1,12 +1,17 @@
 from pydantic import BaseModel
+from .utils import _collection_if_none
 from .v1_pod_dns_config_option import V1PodDNSConfigOption
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodDNSConfig",)
 
 
 class V1PodDNSConfig(BaseModel):
-    nameservers: list[str] = []
+    nameservers: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
-    options: list[V1PodDNSConfigOption] = []
+    options: Annotated[
+        list[V1PodDNSConfigOption], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    searches: list[str] = []
+    searches: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []

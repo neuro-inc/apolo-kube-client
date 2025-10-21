@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v2_container_resource_metric_source import V2ContainerResourceMetricSource
 from .v2_external_metric_source import V2ExternalMetricSource
 from .v2_object_metric_source import V2ObjectMetricSource

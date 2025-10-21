@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_pod_template_spec import V1PodTemplateSpec
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -16,7 +17,7 @@ class V1ReplicationControllerSpec(BaseModel):
 
     replicas: int | None = None
 
-    selector: dict[str, str] = {}
+    selector: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
     template: Annotated[
         V1PodTemplateSpec, BeforeValidator(_default_if_none(V1PodTemplateSpec))

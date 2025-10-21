@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_se_linux_options import V1SELinuxOptions
 from .v1_seccomp_profile import V1SeccompProfile
@@ -72,7 +73,9 @@ class V1PodSecurityContext(BaseModel):
         validation_alias=AliasChoices("seccomp_profile", "seccompProfile"),
     )
 
-    supplemental_groups: list[int] = Field(
+    supplemental_groups: Annotated[
+        list[int], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="supplementalGroups",
         validation_alias=AliasChoices("supplemental_groups", "supplementalGroups"),
@@ -86,7 +89,7 @@ class V1PodSecurityContext(BaseModel):
         ),
     )
 
-    sysctls: list[V1Sysctl] = []
+    sysctls: Annotated[list[V1Sysctl], BeforeValidator(_collection_if_none("[]"))] = []
 
     windows_options: Annotated[
         V1WindowsSecurityContextOptions,

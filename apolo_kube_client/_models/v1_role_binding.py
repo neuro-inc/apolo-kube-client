@@ -1,7 +1,8 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
 from .rbac_v1_subject import RbacV1Subject
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_role_ref import V1RoleRef
 from pydantic import BeforeValidator
@@ -31,4 +32,6 @@ class V1RoleBinding(ResourceModel):
         )
     )
 
-    subjects: list[RbacV1Subject] = []
+    subjects: Annotated[
+        list[RbacV1Subject], BeforeValidator(_collection_if_none("[]"))
+    ] = []

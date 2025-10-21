@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
 from .v1_pod_condition import V1PodCondition
@@ -14,15 +15,21 @@ __all__ = ("V1PodStatus",)
 
 
 class V1PodStatus(BaseModel):
-    conditions: list[V1PodCondition] = []
+    conditions: Annotated[
+        list[V1PodCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    container_statuses: list[V1ContainerStatus] = Field(
+    container_statuses: Annotated[
+        list[V1ContainerStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="containerStatuses",
         validation_alias=AliasChoices("container_statuses", "containerStatuses"),
     )
 
-    ephemeral_container_statuses: list[V1ContainerStatus] = Field(
+    ephemeral_container_statuses: Annotated[
+        list[V1ContainerStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="ephemeralContainerStatuses",
         validation_alias=AliasChoices(
@@ -47,13 +54,17 @@ class V1PodStatus(BaseModel):
         validation_alias=AliasChoices("host_ip", "hostIP"),
     )
 
-    host_i_ps: list[V1HostIP] = Field(
-        default=[],
-        serialization_alias="hostIPs",
-        validation_alias=AliasChoices("host_i_ps", "hostIPs"),
+    host_i_ps: Annotated[list[V1HostIP], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="hostIPs",
+            validation_alias=AliasChoices("host_i_ps", "hostIPs"),
+        )
     )
 
-    init_container_statuses: list[V1ContainerStatus] = Field(
+    init_container_statuses: Annotated[
+        list[V1ContainerStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="initContainerStatuses",
         validation_alias=AliasChoices(
@@ -83,10 +94,12 @@ class V1PodStatus(BaseModel):
         validation_alias=AliasChoices("pod_ip", "podIP"),
     )
 
-    pod_i_ps: list[V1PodIP] = Field(
-        default=[],
-        serialization_alias="podIPs",
-        validation_alias=AliasChoices("pod_i_ps", "podIPs"),
+    pod_i_ps: Annotated[list[V1PodIP], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="podIPs",
+            validation_alias=AliasChoices("pod_i_ps", "podIPs"),
+        )
     )
 
     qos_class: str | None = Field(
@@ -99,7 +112,9 @@ class V1PodStatus(BaseModel):
 
     resize: str | None = None
 
-    resource_claim_statuses: list[V1PodResourceClaimStatus] = Field(
+    resource_claim_statuses: Annotated[
+        list[V1PodResourceClaimStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="resourceClaimStatuses",
         validation_alias=AliasChoices(

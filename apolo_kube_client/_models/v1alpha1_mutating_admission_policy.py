@@ -1,6 +1,6 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha1_mutating_admission_policy_spec import V1alpha1MutatingAdmissionPolicySpec
 from pydantic import BeforeValidator

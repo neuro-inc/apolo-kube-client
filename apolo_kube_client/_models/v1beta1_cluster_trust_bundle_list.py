@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1beta1_cluster_trust_bundle import V1beta1ClusterTrustBundle
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1beta1ClusterTrustBundleList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1beta1ClusterTrustBundle] = []
+    items: Annotated[
+        list[V1beta1ClusterTrustBundle], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

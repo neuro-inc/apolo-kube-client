@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1alpha1_match_condition import V1alpha1MatchCondition
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_mutation import V1alpha1Mutation
@@ -18,7 +19,9 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("failure_policy", "failurePolicy"),
     )
 
-    match_conditions: list[V1alpha1MatchCondition] = Field(
+    match_conditions: Annotated[
+        list[V1alpha1MatchCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="matchConditions",
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
@@ -33,7 +36,9 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("match_constraints", "matchConstraints"),
     )
 
-    mutations: list[V1alpha1Mutation] = []
+    mutations: Annotated[
+        list[V1alpha1Mutation], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     param_kind: Annotated[
         V1alpha1ParamKind, BeforeValidator(_default_if_none(V1alpha1ParamKind))
@@ -49,4 +54,6 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("reinvocation_policy", "reinvocationPolicy"),
     )
 
-    variables: list[V1alpha1Variable] = []
+    variables: Annotated[
+        list[V1alpha1Variable], BeforeValidator(_collection_if_none("[]"))
+    ] = []

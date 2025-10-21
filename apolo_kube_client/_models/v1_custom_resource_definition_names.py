@@ -1,11 +1,13 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CustomResourceDefinitionNames",)
 
 
 class V1CustomResourceDefinitionNames(BaseModel):
-    categories: list[str] = []
+    categories: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     kind: str | None = None
 
@@ -17,10 +19,12 @@ class V1CustomResourceDefinitionNames(BaseModel):
 
     plural: str | None = None
 
-    short_names: list[str] = Field(
-        default=[],
-        serialization_alias="shortNames",
-        validation_alias=AliasChoices("short_names", "shortNames"),
+    short_names: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="shortNames",
+            validation_alias=AliasChoices("short_names", "shortNames"),
+        )
     )
 
     singular: str | None = None

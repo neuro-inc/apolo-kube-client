@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_stateful_set_condition import V1StatefulSetCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1StatefulSetStatus",)
 
@@ -17,7 +20,9 @@ class V1StatefulSetStatus(BaseModel):
         validation_alias=AliasChoices("collision_count", "collisionCount"),
     )
 
-    conditions: list[V1StatefulSetCondition] = []
+    conditions: Annotated[
+        list[V1StatefulSetCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     current_replicas: int | None = Field(
         default=None,

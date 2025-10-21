@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_audit_annotation import V1AuditAnnotation
 from .v1_match_condition import V1MatchCondition
 from .v1_match_resources import V1MatchResources
@@ -13,7 +14,9 @@ __all__ = ("V1ValidatingAdmissionPolicySpec",)
 
 
 class V1ValidatingAdmissionPolicySpec(BaseModel):
-    audit_annotations: list[V1AuditAnnotation] = Field(
+    audit_annotations: Annotated[
+        list[V1AuditAnnotation], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="auditAnnotations",
         validation_alias=AliasChoices("audit_annotations", "auditAnnotations"),
@@ -25,7 +28,9 @@ class V1ValidatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("failure_policy", "failurePolicy"),
     )
 
-    match_conditions: list[V1MatchCondition] = Field(
+    match_conditions: Annotated[
+        list[V1MatchCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="matchConditions",
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
@@ -47,6 +52,10 @@ class V1ValidatingAdmissionPolicySpec(BaseModel):
         validation_alias=AliasChoices("param_kind", "paramKind"),
     )
 
-    validations: list[V1Validation] = []
+    validations: Annotated[
+        list[V1Validation], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    variables: list[V1Variable] = []
+    variables: Annotated[
+        list[V1Variable], BeforeValidator(_collection_if_none("[]"))
+    ] = []

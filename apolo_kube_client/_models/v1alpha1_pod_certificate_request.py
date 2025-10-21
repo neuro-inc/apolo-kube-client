@@ -1,6 +1,6 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1alpha1_pod_certificate_request_spec import V1alpha1PodCertificateRequestSpec
 from .v1alpha1_pod_certificate_request_status import V1alpha1PodCertificateRequestStatus

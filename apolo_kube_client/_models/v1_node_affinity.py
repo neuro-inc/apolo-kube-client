@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
 from pydantic import BeforeValidator
@@ -9,8 +10,8 @@ __all__ = ("V1NodeAffinity",)
 
 
 class V1NodeAffinity(BaseModel):
-    preferred_during_scheduling_ignored_during_execution: list[
-        V1PreferredSchedulingTerm
+    preferred_during_scheduling_ignored_during_execution: Annotated[
+        list[V1PreferredSchedulingTerm], BeforeValidator(_collection_if_none("[]"))
     ] = Field(
         default=[],
         serialization_alias="preferredDuringSchedulingIgnoredDuringExecution",

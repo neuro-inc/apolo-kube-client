@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_persistent_volume_claim import V1PersistentVolumeClaim
 from .v1_pod_template_spec import V1PodTemplateSpec
@@ -76,7 +77,9 @@ class V1StatefulSetSpec(BaseModel):
         validation_alias=AliasChoices("update_strategy", "updateStrategy"),
     )
 
-    volume_claim_templates: list[V1PersistentVolumeClaim] = Field(
+    volume_claim_templates: Annotated[
+        list[V1PersistentVolumeClaim], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="volumeClaimTemplates",
         validation_alias=AliasChoices("volume_claim_templates", "volumeClaimTemplates"),

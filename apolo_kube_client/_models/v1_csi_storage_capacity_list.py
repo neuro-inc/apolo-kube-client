@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_csi_storage_capacity import V1CSIStorageCapacity
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1CSIStorageCapacityList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1CSIStorageCapacity] = []
+    items: Annotated[
+        list[V1CSIStorageCapacity], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

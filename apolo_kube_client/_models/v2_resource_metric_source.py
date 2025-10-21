@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v2_metric_target import V2MetricTarget
 from pydantic import BeforeValidator
 from typing import Annotated

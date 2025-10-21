@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v2_horizontal_pod_autoscaler import V2HorizontalPodAutoscaler
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V2HorizontalPodAutoscalerList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V2HorizontalPodAutoscaler] = []
+    items: Annotated[
+        list[V2HorizontalPodAutoscaler], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

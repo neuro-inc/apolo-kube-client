@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
 from pydantic import BeforeValidator
 from typing import Annotated

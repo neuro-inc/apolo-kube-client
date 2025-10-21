@@ -1,12 +1,17 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_device_class_configuration import V1DeviceClassConfiguration
 from .v1_device_selector import V1DeviceSelector
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1DeviceClassSpec",)
 
 
 class V1DeviceClassSpec(BaseModel):
-    config: list[V1DeviceClassConfiguration] = []
+    config: Annotated[
+        list[V1DeviceClassConfiguration], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     extended_resource_name: str | None = Field(
         default=None,
@@ -14,4 +19,6 @@ class V1DeviceClassSpec(BaseModel):
         validation_alias=AliasChoices("extended_resource_name", "extendedResourceName"),
     )
 
-    selectors: list[V1DeviceSelector] = []
+    selectors: Annotated[
+        list[V1DeviceSelector], BeforeValidator(_collection_if_none("[]"))
+    ] = []

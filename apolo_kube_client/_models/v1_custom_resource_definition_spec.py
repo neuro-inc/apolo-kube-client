@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
@@ -32,4 +33,7 @@ class V1CustomResourceDefinitionSpec(BaseModel):
 
     scope: str | None = None
 
-    versions: list[V1CustomResourceDefinitionVersion] = []
+    versions: Annotated[
+        list[V1CustomResourceDefinitionVersion],
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

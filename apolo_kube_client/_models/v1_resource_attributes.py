@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
 from pydantic import BeforeValidator

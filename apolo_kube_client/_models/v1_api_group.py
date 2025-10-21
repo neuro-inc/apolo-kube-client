@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 from pydantic import BeforeValidator
@@ -28,7 +29,9 @@ class V1APIGroup(BaseModel):
         validation_alias=AliasChoices("preferred_version", "preferredVersion"),
     )
 
-    server_address_by_client_cid_rs: list[V1ServerAddressByClientCIDR] = Field(
+    server_address_by_client_cid_rs: Annotated[
+        list[V1ServerAddressByClientCIDR], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="serverAddressByClientCIDRs",
         validation_alias=AliasChoices(
@@ -36,4 +39,6 @@ class V1APIGroup(BaseModel):
         ),
     )
 
-    versions: list[V1GroupVersionForDiscovery] = []
+    versions: Annotated[
+        list[V1GroupVersionForDiscovery], BeforeValidator(_collection_if_none("[]"))
+    ] = []

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_endpoint_conditions import V1EndpointConditions
 from .v1_endpoint_hints import V1EndpointHints
 from .v1_object_reference import V1ObjectReference
@@ -10,13 +11,15 @@ __all__ = ("V1Endpoint",)
 
 
 class V1Endpoint(BaseModel):
-    addresses: list[str] = []
+    addresses: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     conditions: Annotated[
         V1EndpointConditions, BeforeValidator(_default_if_none(V1EndpointConditions))
     ] = Field(default_factory=lambda: V1EndpointConditions())
 
-    deprecated_topology: dict[str, str] = Field(
+    deprecated_topology: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="deprecatedTopology",
         validation_alias=AliasChoices("deprecated_topology", "deprecatedTopology"),

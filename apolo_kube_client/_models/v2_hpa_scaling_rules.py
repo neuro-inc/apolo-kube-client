@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v2_hpa_scaling_policy import V2HPAScalingPolicy
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V2HPAScalingRules",)
 
 
 class V2HPAScalingRules(BaseModel):
-    policies: list[V2HPAScalingPolicy] = []
+    policies: Annotated[
+        list[V2HPAScalingPolicy], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     select_policy: str | None = Field(
         default=None,

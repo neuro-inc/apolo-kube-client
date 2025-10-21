@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1PodFailurePolicyOnExitCodesRequirement",)
 
@@ -13,4 +15,4 @@ class V1PodFailurePolicyOnExitCodesRequirement(BaseModel):
 
     operator: str | None = None
 
-    values: list[int] = []
+    values: Annotated[list[int], BeforeValidator(_collection_if_none("[]"))] = []

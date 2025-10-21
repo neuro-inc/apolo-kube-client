@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_node_config_source import V1NodeConfigSource
 from .v1_taint import V1Taint
 from pydantic import BeforeValidator
@@ -29,10 +30,12 @@ class V1NodeSpec(BaseModel):
         validation_alias=AliasChoices("pod_cidr", "podCIDR"),
     )
 
-    pod_cid_rs: list[str] = Field(
-        default=[],
-        serialization_alias="podCIDRs",
-        validation_alias=AliasChoices("pod_cid_rs", "podCIDRs"),
+    pod_cid_rs: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="podCIDRs",
+            validation_alias=AliasChoices("pod_cid_rs", "podCIDRs"),
+        )
     )
 
     provider_id: str | None = Field(
@@ -41,6 +44,6 @@ class V1NodeSpec(BaseModel):
         validation_alias=AliasChoices("provider_id", "providerID"),
     )
 
-    taints: list[V1Taint] = []
+    taints: Annotated[list[V1Taint], BeforeValidator(_collection_if_none("[]"))] = []
 
     unschedulable: bool | None = None

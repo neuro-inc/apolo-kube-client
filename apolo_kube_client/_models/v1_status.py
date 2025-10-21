@@ -1,6 +1,6 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_status_details import V1StatusDetails
 from pydantic import BeforeValidator

@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_parent_reference import V1ParentReference
 from pydantic import BeforeValidator
 from typing import Annotated

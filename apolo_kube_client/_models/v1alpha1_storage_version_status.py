@@ -1,6 +1,9 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1alpha1_server_storage_version import V1alpha1ServerStorageVersion
 from .v1alpha1_storage_version_condition import V1alpha1StorageVersionCondition
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1alpha1StorageVersionStatus",)
 
@@ -14,9 +17,14 @@ class V1alpha1StorageVersionStatus(BaseModel):
         ),
     )
 
-    conditions: list[V1alpha1StorageVersionCondition] = []
+    conditions: Annotated[
+        list[V1alpha1StorageVersionCondition],
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    storage_versions: list[V1alpha1ServerStorageVersion] = Field(
+    storage_versions: Annotated[
+        list[V1alpha1ServerStorageVersion], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="storageVersions",
         validation_alias=AliasChoices("storage_versions", "storageVersions"),

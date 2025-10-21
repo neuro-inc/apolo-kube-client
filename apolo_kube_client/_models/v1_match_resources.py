@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_named_rule_with_operations import V1NamedRuleWithOperations
 from pydantic import BeforeValidator
@@ -9,7 +10,9 @@ __all__ = ("V1MatchResources",)
 
 
 class V1MatchResources(BaseModel):
-    exclude_resource_rules: list[V1NamedRuleWithOperations] = Field(
+    exclude_resource_rules: Annotated[
+        list[V1NamedRuleWithOperations], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="excludeResourceRules",
         validation_alias=AliasChoices("exclude_resource_rules", "excludeResourceRules"),
@@ -37,7 +40,9 @@ class V1MatchResources(BaseModel):
         validation_alias=AliasChoices("object_selector", "objectSelector"),
     )
 
-    resource_rules: list[V1NamedRuleWithOperations] = Field(
+    resource_rules: Annotated[
+        list[V1NamedRuleWithOperations], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="resourceRules",
         validation_alias=AliasChoices("resource_rules", "resourceRules"),

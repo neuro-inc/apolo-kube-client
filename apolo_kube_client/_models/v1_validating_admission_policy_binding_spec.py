@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_match_resources import V1MatchResources
 from .v1_param_ref import V1ParamRef
 from pydantic import BeforeValidator
@@ -31,7 +32,9 @@ class V1ValidatingAdmissionPolicyBindingSpec(BaseModel):
         validation_alias=AliasChoices("policy_name", "policyName"),
     )
 
-    validation_actions: list[str] = Field(
+    validation_actions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="validationActions",
         validation_alias=AliasChoices("validation_actions", "validationActions"),

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
 from apolo_kube_client._typedefs import JsonType
@@ -34,13 +35,17 @@ class V1JSONSchemaProps(BaseModel):
         validation_alias=AliasChoices("additional_properties", "additionalProperties"),
     )
 
-    all_of: list["V1JSONSchemaProps"] = Field(
+    all_of: Annotated[
+        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="allOf",
         validation_alias=AliasChoices("all_of", "allOf"),
     )
 
-    any_of: list["V1JSONSchemaProps"] = Field(
+    any_of: Annotated[
+        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="anyOf",
         validation_alias=AliasChoices("any_of", "anyOf"),
@@ -48,13 +53,17 @@ class V1JSONSchemaProps(BaseModel):
 
     default: JsonType = {}
 
-    definitions: dict[str, "V1JSONSchemaProps"] = {}
+    definitions: Annotated[
+        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    dependencies: dict[str, JsonType] = {}
+    dependencies: Annotated[
+        dict[str, JsonType], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
     description: str | None = None
 
-    enum: list[JsonType] = []
+    enum: Annotated[list[JsonType], BeforeValidator(_collection_if_none("[]"))] = []
 
     example: JsonType = {}
 
@@ -142,7 +151,9 @@ class V1JSONSchemaProps(BaseModel):
 
     nullable: bool | None = None
 
-    one_of: list["V1JSONSchemaProps"] = Field(
+    one_of: Annotated[
+        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="oneOf",
         validation_alias=AliasChoices("one_of", "oneOf"),
@@ -150,15 +161,19 @@ class V1JSONSchemaProps(BaseModel):
 
     pattern: str | None = None
 
-    pattern_properties: dict[str, "V1JSONSchemaProps"] = Field(
+    pattern_properties: Annotated[
+        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="patternProperties",
         validation_alias=AliasChoices("pattern_properties", "patternProperties"),
     )
 
-    properties: dict[str, "V1JSONSchemaProps"] = {}
+    properties: Annotated[
+        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    required: list[str] = []
+    required: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     title: str | None = None
 
@@ -186,7 +201,9 @@ class V1JSONSchemaProps(BaseModel):
         ),
     )
 
-    x_kubernetes_list_map_keys: list[str] = Field(
+    x_kubernetes_list_map_keys: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="x-kubernetes-list-map-keys",
         validation_alias=AliasChoices(
@@ -217,7 +234,9 @@ class V1JSONSchemaProps(BaseModel):
         ),
     )
 
-    x_kubernetes_validations: list[V1ValidationRule] = Field(
+    x_kubernetes_validations: Annotated[
+        list[V1ValidationRule], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="x-kubernetes-validations",
         validation_alias=AliasChoices(

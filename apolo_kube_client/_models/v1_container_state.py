@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_container_state_running import V1ContainerStateRunning
 from .v1_container_state_terminated import V1ContainerStateTerminated
 from .v1_container_state_waiting import V1ContainerStateWaiting

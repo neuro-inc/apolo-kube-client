@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_attached_volume import V1AttachedVolume
 from .v1_container_image import V1ContainerImage
 from .v1_node_address import V1NodeAddress
@@ -16,13 +17,19 @@ __all__ = ("V1NodeStatus",)
 
 
 class V1NodeStatus(BaseModel):
-    addresses: list[V1NodeAddress] = []
+    addresses: Annotated[
+        list[V1NodeAddress], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
-    allocatable: dict[str, str] = {}
+    allocatable: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = {}
 
-    capacity: dict[str, str] = {}
+    capacity: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
 
-    conditions: list[V1NodeCondition] = []
+    conditions: Annotated[
+        list[V1NodeCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     config: Annotated[
         V1NodeConfigStatus, BeforeValidator(_default_if_none(V1NodeConfigStatus))
@@ -40,7 +47,9 @@ class V1NodeStatus(BaseModel):
         V1NodeFeatures, BeforeValidator(_default_if_none(V1NodeFeatures))
     ] = Field(default_factory=lambda: V1NodeFeatures())
 
-    images: list[V1ContainerImage] = []
+    images: Annotated[
+        list[V1ContainerImage], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     node_info: Annotated[
         V1NodeSystemInfo, BeforeValidator(_default_if_none(V1NodeSystemInfo))
@@ -52,20 +61,26 @@ class V1NodeStatus(BaseModel):
 
     phase: str | None = None
 
-    runtime_handlers: list[V1NodeRuntimeHandler] = Field(
+    runtime_handlers: Annotated[
+        list[V1NodeRuntimeHandler], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="runtimeHandlers",
         validation_alias=AliasChoices("runtime_handlers", "runtimeHandlers"),
     )
 
-    volumes_attached: list[V1AttachedVolume] = Field(
+    volumes_attached: Annotated[
+        list[V1AttachedVolume], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="volumesAttached",
         validation_alias=AliasChoices("volumes_attached", "volumesAttached"),
     )
 
-    volumes_in_use: list[str] = Field(
-        default=[],
-        serialization_alias="volumesInUse",
-        validation_alias=AliasChoices("volumes_in_use", "volumesInUse"),
+    volumes_in_use: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="volumesInUse",
+            validation_alias=AliasChoices("volumes_in_use", "volumesInUse"),
+        )
     )

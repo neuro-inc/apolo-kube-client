@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1alpha1ServerStorageVersion",)
 
@@ -11,7 +13,9 @@ class V1alpha1ServerStorageVersion(BaseModel):
         validation_alias=AliasChoices("api_server_id", "apiServerID"),
     )
 
-    decodable_versions: list[str] = Field(
+    decodable_versions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="decodableVersions",
         validation_alias=AliasChoices("decodable_versions", "decodableVersions"),
@@ -23,7 +27,9 @@ class V1alpha1ServerStorageVersion(BaseModel):
         validation_alias=AliasChoices("encoding_version", "encodingVersion"),
     )
 
-    served_versions: list[str] = Field(
+    served_versions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="servedVersions",
         validation_alias=AliasChoices("served_versions", "servedVersions"),

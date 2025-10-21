@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_network_policy import V1NetworkPolicy
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1NetworkPolicyList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1NetworkPolicy] = []
+    items: Annotated[
+        list[V1NetworkPolicy], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

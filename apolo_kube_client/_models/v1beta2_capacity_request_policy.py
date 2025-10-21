@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1beta2_capacity_request_policy_range import V1beta2CapacityRequestPolicyRange
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -19,8 +20,10 @@ class V1beta2CapacityRequestPolicy(BaseModel):
         validation_alias=AliasChoices("valid_range", "validRange"),
     )
 
-    valid_values: list[str] = Field(
-        default=[],
-        serialization_alias="validValues",
-        validation_alias=AliasChoices("valid_values", "validValues"),
+    valid_values: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        Field(
+            default=[],
+            serialization_alias="validValues",
+            validation_alias=AliasChoices("valid_values", "validValues"),
+        )
     )

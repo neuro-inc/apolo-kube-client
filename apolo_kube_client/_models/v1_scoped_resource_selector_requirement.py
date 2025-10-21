@@ -1,5 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1ScopedResourceSelectorRequirement",)
 
@@ -13,4 +15,4 @@ class V1ScopedResourceSelectorRequirement(BaseModel):
         validation_alias=AliasChoices("scope_name", "scopeName"),
     )
 
-    values: list[str] = []
+    values: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []

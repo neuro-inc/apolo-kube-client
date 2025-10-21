@@ -153,7 +153,9 @@ class _KubeCore:
         logger.info("%s: kube token was refreshed", self)
 
     def serialize[ModelT: BaseModel](self, obj: BaseModel) -> JsonType:
-        return cast(JsonType, obj.model_dump(by_alias=True, exclude_defaults=True))
+        return cast(
+            JsonType, obj.model_dump(mode="json", by_alias=True, exclude_defaults=True)
+        )
 
     def deserialize[ModelT: BaseModel](
         self, data: JsonType, klass: type[ModelT]

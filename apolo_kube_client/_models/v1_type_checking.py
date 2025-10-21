@@ -1,11 +1,16 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _collection_if_none
 from .v1_expression_warning import V1ExpressionWarning
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1TypeChecking",)
 
 
 class V1TypeChecking(BaseModel):
-    expression_warnings: list[V1ExpressionWarning] = Field(
+    expression_warnings: Annotated[
+        list[V1ExpressionWarning], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="expressionWarnings",
         validation_alias=AliasChoices("expression_warnings", "expressionWarnings"),

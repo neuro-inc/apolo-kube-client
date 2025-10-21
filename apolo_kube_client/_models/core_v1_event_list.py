@@ -1,7 +1,8 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
 from .core_v1_event import CoreV1Event
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -16,7 +17,7 @@ class CoreV1EventList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[CoreV1Event] = []
+    items: Annotated[list[CoreV1Event], BeforeValidator(_collection_if_none("[]"))] = []
 
     kind: str | None = None
 

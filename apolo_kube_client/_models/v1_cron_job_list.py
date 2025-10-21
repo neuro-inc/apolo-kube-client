@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_cron_job import V1CronJob
 from .v1_list_meta import V1ListMeta
 from pydantic import BeforeValidator
@@ -16,7 +17,7 @@ class V1CronJobList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1CronJob] = []
+    items: Annotated[list[V1CronJob], BeforeValidator(_collection_if_none("[]"))] = []
 
     kind: str | None = None
 

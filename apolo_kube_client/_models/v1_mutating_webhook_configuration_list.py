@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ListModel
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_mutating_webhook_configuration import V1MutatingWebhookConfiguration
 from pydantic import BeforeValidator
@@ -16,7 +17,9 @@ class V1MutatingWebhookConfigurationList(ListModel):
         validation_alias=AliasChoices("api_version", "apiVersion"),
     )
 
-    items: list[V1MutatingWebhookConfiguration] = []
+    items: Annotated[
+        list[V1MutatingWebhookConfiguration], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     kind: str | None = None
 

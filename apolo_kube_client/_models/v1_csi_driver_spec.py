@@ -1,5 +1,8 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .storage_v1_token_request import StorageV1TokenRequest
+from .utils import _collection_if_none
+from pydantic import BeforeValidator
+from typing import Annotated
 
 __all__ = ("V1CSIDriverSpec",)
 
@@ -50,13 +53,17 @@ class V1CSIDriverSpec(BaseModel):
         validation_alias=AliasChoices("storage_capacity", "storageCapacity"),
     )
 
-    token_requests: list[StorageV1TokenRequest] = Field(
+    token_requests: Annotated[
+        list[StorageV1TokenRequest], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="tokenRequests",
         validation_alias=AliasChoices("token_requests", "tokenRequests"),
     )
 
-    volume_lifecycle_modes: list[str] = Field(
+    volume_lifecycle_modes: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="volumeLifecycleModes",
         validation_alias=AliasChoices("volume_lifecycle_modes", "volumeLifecycleModes"),

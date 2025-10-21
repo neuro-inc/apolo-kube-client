@@ -2,7 +2,8 @@ from pydantic import AliasChoices, BaseModel, Field
 from .admissionregistration_v1_webhook_client_config import (
     AdmissionregistrationV1WebhookClientConfig,
 )
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_match_condition import V1MatchCondition
 from .v1_rule_with_operations import V1RuleWithOperations
@@ -13,7 +14,9 @@ __all__ = ("V1MutatingWebhook",)
 
 
 class V1MutatingWebhook(BaseModel):
-    admission_review_versions: list[str] = Field(
+    admission_review_versions: Annotated[
+        list[str], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="admissionReviewVersions",
         validation_alias=AliasChoices(
@@ -36,7 +39,9 @@ class V1MutatingWebhook(BaseModel):
         validation_alias=AliasChoices("failure_policy", "failurePolicy"),
     )
 
-    match_conditions: list[V1MatchCondition] = Field(
+    match_conditions: Annotated[
+        list[V1MatchCondition], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="matchConditions",
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
@@ -72,7 +77,9 @@ class V1MutatingWebhook(BaseModel):
         validation_alias=AliasChoices("reinvocation_policy", "reinvocationPolicy"),
     )
 
-    rules: list[V1RuleWithOperations] = []
+    rules: Annotated[
+        list[V1RuleWithOperations], BeforeValidator(_collection_if_none("[]"))
+    ] = []
 
     side_effects: str | None = Field(
         default=None,

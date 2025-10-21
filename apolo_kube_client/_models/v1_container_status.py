@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_container_state import V1ContainerState
 from .v1_container_user import V1ContainerUser
 from .v1_resource_requirements import V1ResourceRequirements
@@ -12,13 +13,17 @@ __all__ = ("V1ContainerStatus",)
 
 
 class V1ContainerStatus(BaseModel):
-    allocated_resources: dict[str, str] = Field(
+    allocated_resources: Annotated[
+        dict[str, str], BeforeValidator(_collection_if_none("{}"))
+    ] = Field(
         default={},
         serialization_alias="allocatedResources",
         validation_alias=AliasChoices("allocated_resources", "allocatedResources"),
     )
 
-    allocated_resources_status: list[V1ResourceStatus] = Field(
+    allocated_resources_status: Annotated[
+        list[V1ResourceStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="allocatedResourcesStatus",
         validation_alias=AliasChoices(
@@ -79,7 +84,9 @@ class V1ContainerStatus(BaseModel):
         V1ContainerUser, BeforeValidator(_default_if_none(V1ContainerUser))
     ] = Field(default_factory=lambda: V1ContainerUser())
 
-    volume_mounts: list[V1VolumeMountStatus] = Field(
+    volume_mounts: Annotated[
+        list[V1VolumeMountStatus], BeforeValidator(_collection_if_none("[]"))
+    ] = Field(
         default=[],
         serialization_alias="volumeMounts",
         validation_alias=AliasChoices("volume_mounts", "volumeMounts"),

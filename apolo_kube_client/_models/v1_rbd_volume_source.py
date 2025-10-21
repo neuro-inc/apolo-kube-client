@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
-from .base import _default_if_none
+from .utils import _collection_if_none
+from .utils import _default_if_none
 from .v1_local_object_reference import V1LocalObjectReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -18,7 +19,7 @@ class V1RBDVolumeSource(BaseModel):
 
     keyring: str | None = None
 
-    monitors: list[str] = []
+    monitors: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
 
     pool: str | None = None
 

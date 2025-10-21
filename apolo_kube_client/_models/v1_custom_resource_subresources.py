@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
 from apolo_kube_client._typedefs import JsonType
 from pydantic import BeforeValidator

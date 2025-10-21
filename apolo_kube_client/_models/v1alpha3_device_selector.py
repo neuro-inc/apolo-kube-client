@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from .base import _default_if_none
+from .utils import _default_if_none
 from .v1alpha3_cel_device_selector import V1alpha3CELDeviceSelector
 from pydantic import BeforeValidator
 from typing import Annotated
