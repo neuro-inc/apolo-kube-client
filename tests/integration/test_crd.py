@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import pytest
 from kubernetes.client import (
@@ -65,7 +66,10 @@ class TestCRD:
         self, crd: V1CustomResourceDefinition, kube_client: KubeClient
     ) -> None:
         # test creating the crd
-        crd_create = await kube_client.extensions_k8s_io_v1.crd.create(model=crd)
+        (
+            created,
+            crd_create,
+        ) = await kube_client.extensions_k8s_io_v1.crd.create_or_update(model=crd)
         assert crd_create.metadata.name == crd.metadata.name
 
         # test getting the crd
@@ -80,7 +84,12 @@ class TestCRD:
 
         # test deleting the crd
         await kube_client.extensions_k8s_io_v1.crd.delete(name=crd.metadata.name)
-        await asyncio.sleep(1)
 
         with pytest.raises(ResourceNotFound):
-            await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)
+            t0 = time.monotonic()
+            delta = 0.1
+            while time.monotonic() - t0 < 10.0:
+                await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)
+                await asyncio.sleep(min(delta, 1))
+                delta *= 2
+            raise TimeoutError
