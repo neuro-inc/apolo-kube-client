@@ -1,9 +1,8 @@
 from unittest.mock import AsyncMock, Mock
 
-from kubernetes.client.models import V1Job
-
 from apolo_kube_client._batch_v1 import BatchV1Api
 from apolo_kube_client._vcluster._batch_v1_proxy import BatchV1ApiProxy
+from apolo_kube_client import V1Job
 
 
 async def test_virtual_proxy() -> None:

@@ -1,6 +1,5 @@
-from kubernetes.client import V1ObjectMeta, V1StorageClass
-
 from apolo_kube_client import KubeClient
+from apolo_kube_client import V1ObjectMeta, V1StorageClass
 
 
 class TestStorageClass:
@@ -19,6 +18,7 @@ class TestStorageClass:
             model=storage_class
         )
         assert storage_class_create.metadata.name == storage_class.metadata.name
+        assert storage_class.metadata.name is not None
 
         # test getting the storage_class
         storage_class_get = await kube_client.storage_k8s_io_v1.storage_class.get(

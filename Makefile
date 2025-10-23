@@ -38,5 +38,8 @@ test_unit:
 test_integration:
 	poetry run pytest -vv --cov-config=pyproject.toml --cov-report xml:.coverage-unit.xml tests/integration
 
+.PHONY: gen_source
+gen_source:
+	poetry run python ./scripts/gen.py
 
 include k8s.mk

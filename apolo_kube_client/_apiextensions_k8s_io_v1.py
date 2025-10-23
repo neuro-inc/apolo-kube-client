@@ -1,10 +1,9 @@
-from kubernetes.client.models import (
+from ._attr import _Attr
+from ._base_resource import Base, ClusterScopedResource
+from ._models import (
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionList,
 )
-
-from ._attr import _Attr
-from ._base_resource import Base, ClusterScopedResource
 
 
 class CustomResourceDefinition(

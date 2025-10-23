@@ -1,10 +1,8 @@
-from kubernetes.client.models import V1Status
-
 from ._attr import _Attr
 from ._base_resource import Base, NamespacedResource
+from ._crd_models import V1DiskNamingCRD, V1DiskNamingCRDList
+from ._models import V1Status
 from ._crd_models import (
-    V1DiskNamingCRD,
-    V1DiskNamingCRDList,
     V1PersistentBucketCredentialCRD,
     V1PersistentBucketCredentialCRDList,
     V1UserBucketCRD,

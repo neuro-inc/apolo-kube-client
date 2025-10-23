@@ -1,4 +1,5 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client import (
     V1Container,
     V1LabelSelector,
     V1ObjectMeta,
@@ -7,8 +8,6 @@ from kubernetes.client import (
     V1StatefulSet,
     V1StatefulSetSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestStatefulSet:
@@ -39,6 +38,7 @@ class TestStatefulSet:
             model=statefulset, namespace="default"
         )
         assert statefulset_create.metadata.name == statefulset.metadata.name
+        assert statefulset.metadata.name is not None
 
         # test getting the statefulset
         statefulset_get = await kube_client.apps_v1.statefulset.get(

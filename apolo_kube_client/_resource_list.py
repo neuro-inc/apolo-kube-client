@@ -1,6 +1,5 @@
-from kubernetes.client.models import V1APIResource, V1APIResourceList
-
 from ._core import _KubeCore
+from ._models import V1APIResource, V1APIResourceList
 
 
 class ResourceListApi:
@@ -26,6 +25,7 @@ class ResourceListApi:
         resource_list = await self.get_list(resource_list_path)
         resource: V1APIResource
         for resource in resource_list.resources:
+            assert resource.name is not None, resource.name
             if (
                 resource.kind == kind and "/" not in resource.name
             ):  # Ensure it's not a subresource

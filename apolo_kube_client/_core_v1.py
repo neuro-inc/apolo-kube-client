@@ -1,4 +1,8 @@
-from kubernetes.client.models import (
+from ._attr import _Attr
+from ._base_resource import Base, ClusterScopedResource, NamespacedResource
+from ._typedefs import JsonType
+from ._utils import base64_encode, escape_json_pointer
+from ._models import (
     CoreV1Event,
     CoreV1EventList,
     V1Endpoints,
@@ -19,16 +23,11 @@ from kubernetes.client.models import (
     V1ServiceList,
     V1Status,
 )
+from collections.abc import Collection
 
-from ._attr import _Attr
 from ._base_resource import (
-    Base,
-    ClusterScopedResource,
-    NamespacedResource,
     NestedResource,
 )
-from ._typedefs import JsonType
-from ._utils import base64_encode, escape_json_pointer
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
@@ -44,7 +43,8 @@ class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
         )
 
 
-class PodStatus(NestedResource[V1Pod, V1Pod, V1Pod]):
+# list operations are not really supported for pod statuses
+class PodStatus(NestedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "status"
 
 
@@ -66,7 +66,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         encode: bool = True,
     ) -> V1Secret:
         secret = await self.get(name=name, namespace=self._get_ns(namespace))
-        patch_json_list = []
+        patch_json_list: list[dict[str, str | Collection[str]]] = []
         if secret.data is None:
             patch_json_list.append({"op": "add", "path": "/data", "value": {}})
         patch_json_list.append(

@@ -1,7 +1,8 @@
 import functools
 from collections.abc import AsyncIterator, Collection
 from contextlib import asynccontextmanager
-from typing import ClassVar, Protocol, Self, cast, get_args
+from typing import ClassVar, cast, get_args
+from typing import Self
 
 import aiohttp
 from yarl import URL
@@ -10,6 +11,7 @@ from ._core import _KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
+from ._models import ResourceModel, ListModel
 
 
 class Base:
@@ -17,18 +19,10 @@ class Base:
         self._core = core
 
 
-class MetadataModel(Protocol):
-    name: str
-
-
-class KubeResourceModel(Protocol):
-    metadata: MetadataModel
-
-
 class BaseResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ]:
     """
     Base class for Kubernetes resources
@@ -102,9 +96,9 @@ class BaseResource[
 
 
 class ClusterScopedResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are not namespaced (cluster scoped).
@@ -189,12 +183,14 @@ class ClusterScopedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             return False, await self.get(name=model.metadata.name)
         except ResourceNotFound:
             return True, await self.create(model)
 
     async def update(self, model: ModelT) -> ModelT:
+        assert model.metadata.name is not None
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name),
@@ -208,6 +204,7 @@ class ClusterScopedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             await self.get(name=model.metadata.name)
             async with self._core.request(
@@ -239,9 +236,9 @@ class ClusterScopedResource[
 
 
 class NamespacedResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are namespaced.
@@ -364,12 +361,14 @@ class NamespacedResource[
         Get a resource by name, or create it if it does not exist.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             return False, await self.get(name=model.metadata.name, namespace=namespace)
         except ResourceNotFound:
             return True, await self.create(model, namespace=namespace)
 
     async def update(self, model: ModelT, namespace: str | None = None) -> ModelT:
+        assert model.metadata.name is not None
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name, self._get_ns(namespace)),
@@ -385,6 +384,7 @@ class NamespacedResource[
         If the resource exists, it will be updated.
         Returns a tuple (created, model).
         """
+        assert model.metadata.name is not None, model.metadata.name
         try:
             await self.get(name=model.metadata.name, namespace=namespace)
             async with self._core.request(
@@ -419,9 +419,9 @@ class NamespacedResource[
 
 
 class NestedResource[
-    ModelT: KubeResourceModel,
-    ListModelT: KubeResourceModel,
-    DeleteModelT: KubeResourceModel,
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     is_nested_resource = True  # marker
     query_path: ClassVar[str]

@@ -1,4 +1,5 @@
-from kubernetes.client.models import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client import (
     V1LabelSelector,
     V1NetworkPolicy,
     V1NetworkPolicyEgressRule,
@@ -7,8 +8,6 @@ from kubernetes.client.models import (
     V1NetworkPolicySpec,
     V1ObjectMeta,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestNetworkPolicy:
@@ -21,9 +20,11 @@ class TestNetworkPolicy:
                 pod_selector=V1LabelSelector(match_labels={}),
                 ingress=[
                     V1NetworkPolicyIngressRule(
-                        _from=[
+                        from_=[
                             V1NetworkPolicyPeer(
-                                pod_selector=V1LabelSelector(match_labels={})
+                                pod_selector=V1LabelSelector(
+                                    match_labels={"label1": "val1"}
+                                )
                             )
                         ],
                     )
@@ -32,7 +33,9 @@ class TestNetworkPolicy:
                     V1NetworkPolicyEgressRule(
                         to=[
                             V1NetworkPolicyPeer(
-                                pod_selector=V1LabelSelector(match_labels={})
+                                pod_selector=V1LabelSelector(
+                                    match_labels={"label1": "val1"}
+                                )
                             )
                         ],
                     )
@@ -46,6 +49,7 @@ class TestNetworkPolicy:
             model=np, namespace="default"
         )
         assert np_create.metadata.name == np.metadata.name
+        assert np.metadata.name is not None
 
         # test getting the network policy
         np_get = await kube_client.networking_k8s_io_v1.network_policy.get(

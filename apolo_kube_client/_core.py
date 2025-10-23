@@ -1,20 +1,16 @@
 import asyncio
-import json
 import logging
 import ssl
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
-from dataclasses import dataclass
 from pathlib import Path
 from ssl import SSLContext
 from types import TracebackType
-from typing import Self, TypeVar, cast
+from typing import Self, cast
+from pydantic import BaseModel
 
 import aiohttp
-import kubernetes
 from aiohttp.hdrs import METH_DELETE, METH_GET, METH_PATCH, METH_POST, METH_PUT
-from kubernetes.client import ApiClient
-from pydantic import BaseModel
 from yarl import URL, Query
 
 from ._config import KubeClientAuthType, KubeConfig
@@ -22,13 +18,6 @@ from ._transport import KubeTransport
 from ._typedefs import JsonType
 
 logger = logging.getLogger(__name__)
-
-ModelT = TypeVar("ModelT")
-
-
-@dataclass
-class _KubeResponse:
-    data: bytes
 
 
 class _KubeCore:
@@ -68,10 +57,6 @@ class _KubeCore:
 
         self._transport = transport
         self._token_updater_task: asyncio.Task[None] | None = None
-
-        # Initialize the 3d party Official Kubernetes API client,
-        # this is used only for deserialization raw responses for models
-        self._api_client = ApiClient()
 
     def __str__(self) -> str:
         return self.__class__.__name__
@@ -167,33 +152,24 @@ class _KubeCore:
         self._token = token
         logger.info("%s: kube token was refreshed", self)
 
-    def serialize(self, obj: ModelT) -> JsonType:
-        if isinstance(obj, BaseModel):
-            # for crd resources we use pydantic models
-            return cast(JsonType, obj.model_dump())
-        return cast(JsonType, self._api_client.sanitize_for_serialization(obj))
+    def serialize[ModelT: BaseModel](self, obj: BaseModel) -> JsonType:
+        return cast(
+            JsonType,
+            obj.model_dump(mode="json", by_alias=True),
+        )
 
-    def deserialize(self, data: JsonType, klass: type[ModelT]) -> ModelT:
-        if issubclass(klass, BaseModel):
-            # for crd resources we use pydantic models
-            return klass.model_validate(data)
-        kube_response = _KubeResponse(data=json.dumps(data).encode("utf-8"))
-        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
+    def deserialize[ModelT: BaseModel](
+        self, data: JsonType, klass: type[ModelT]
+    ) -> ModelT:
+        return klass.model_validate(data)
 
-    async def deserialize_response(
+    async def deserialize_response[ModelT: BaseModel](
         self,
         response: aiohttp.ClientResponse,
         klass: type[ModelT],
     ) -> ModelT:
-        if issubclass(klass, BaseModel):
-            # for crd resources we use pydantic models
-            data = await response.json()
-            return klass.model_validate(data)
-        if not hasattr(kubernetes.client.models, klass.__name__):
-            raise ValueError(f"Unsupported response type: {klass}")
-        data = await response.read()
-        kube_response = _KubeResponse(data=data)
-        return cast(ModelT, self._api_client.deserialize(kube_response, klass))
+        data = await response.json()
+        return klass.model_validate(data)
 
     @asynccontextmanager
     async def request(

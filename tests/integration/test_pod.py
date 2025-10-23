@@ -1,11 +1,10 @@
-from kubernetes.client import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client import (
     V1Container,
     V1ObjectMeta,
     V1Pod,
     V1PodSpec,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestPod:
@@ -33,6 +32,7 @@ class TestPod:
             model=pod, namespace="default"
         )
         assert pod_create.metadata.name == pod.metadata.name
+        assert pod.metadata.name is not None
 
         # test getting the pod
         pod_get = await kube_client.core_v1.pod.get(name=pod.metadata.name)

@@ -1,4 +1,15 @@
-from kubernetes.client.models import (
+from .._core_v1 import (
+    CoreV1Api,
+    Endpoint,
+    Event,
+    PersistentVolumeClaim,
+    Pod,
+    Secret,
+    Service,
+)
+from ._attr_proxy import attr
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy
+from .._models import (
     CoreV1Event,
     CoreV1EventList,
     V1Endpoints,
@@ -15,20 +26,12 @@ from kubernetes.client.models import (
 )
 
 from .._core_v1 import (
-    CoreV1Api,
-    Endpoint,
-    Event,
-    PersistentVolumeClaim,
-    Pod,
     PodStatus,
-    Secret,
-    Service,
 )
-from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy, NestedResourceProxy
+from ._resource_proxy import NestedResourceProxy
 
 
-class PodStatusProxy(NestedResourceProxy[V1Pod, V1Pod, V1Pod, PodStatus]):
+class PodStatusProxy(NestedResourceProxy[V1Pod, V1PodList, V1Pod, PodStatus]):
     pass
 
 

@@ -1,13 +1,4 @@
-from unittest import mock
-
 import pytest
-from kubernetes.client.models import (
-    V1IPBlock,
-    V1LabelSelector,
-    V1NetworkPolicyEgressRule,
-    V1NetworkPolicyPeer,
-    V1NetworkPolicyPort,
-)
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client.apolo import (
@@ -17,6 +8,13 @@ from apolo_kube_client.apolo import (
     create_namespace,
     generate_hash,
     normalize_name,
+)
+from apolo_kube_client import (
+    V1IPBlock,
+    V1LabelSelector,
+    V1NetworkPolicyEgressRule,
+    V1NetworkPolicyPeer,
+    V1NetworkPolicyPort,
 )
 
 
@@ -60,6 +58,7 @@ class TestApoloNamespace:
         assert np.metadata.namespace == namespace.metadata.name
 
         assert np.spec.policy_types == ["Egress"]
+        assert np.spec.egress[-1].to[0].ip_block is not None
 
         assert np.spec.egress == [
             V1NetworkPolicyEgressRule(
@@ -80,7 +79,7 @@ class TestApoloNamespace:
                     V1NetworkPolicyPeer(
                         ip_block=V1IPBlock(
                             cidr="0.0.0.0/0",
-                            _except=[
+                            except_=[
                                 "10.0.0.0/8",
                                 "172.16.0.0/12",
                                 "192.168.0.0/16",
@@ -111,8 +110,16 @@ class TestApoloNamespace:
                 ],
             ),
             V1NetworkPolicyEgressRule(
-                to=[V1NetworkPolicyPeer(ip_block=V1IPBlock(cidr=mock.ANY))],
-                ports=[V1NetworkPolicyPort(port=mock.ANY, protocol="TCP")],
+                to=[
+                    V1NetworkPolicyPeer(
+                        ip_block=V1IPBlock(cidr=np.spec.egress[-1].to[0].ip_block.cidr)
+                    )
+                ],
+                ports=[
+                    V1NetworkPolicyPort(
+                        port=np.spec.egress[-1].ports[0].port, protocol="TCP"
+                    )
+                ],
             ),
         ]
 

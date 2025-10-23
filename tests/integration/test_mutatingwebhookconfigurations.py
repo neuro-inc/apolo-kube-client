@@ -1,6 +1,8 @@
 from typing import Callable
 
-from kubernetes.client.models import (
+from apolo_kube_client import KubeClient
+from apolo_kube_client._utils import base64_encode
+from apolo_kube_client import (
     AdmissionregistrationV1ServiceReference,
     AdmissionregistrationV1WebhookClientConfig,
     V1LabelSelector,
@@ -10,9 +12,6 @@ from kubernetes.client.models import (
     V1ObjectMeta,
     V1RuleWithOperations,
 )
-
-from apolo_kube_client import KubeClient
-from apolo_kube_client._utils import base64_encode
 
 
 class TestMutatingWebhookConfigurations:
@@ -39,7 +38,7 @@ class TestMutatingWebhookConfigurations:
                     admission_review_versions=["v1", "v1beta1"],
                     side_effects="None",
                     client_config=client_config,
-                    object_selector={},
+                    object_selector=V1LabelSelector(),
                     namespace_selector=V1LabelSelector(
                         match_labels={},
                         match_expressions=[
@@ -71,6 +70,7 @@ class TestMutatingWebhookConfigurations:
         )
         assert mvc_create.metadata.name == mvc_create.metadata.name
 
+        assert mvc.metadata.name is not None
         # test getting the mutating_webhook_configuration
         mvc_get = await kube_client.admission_registration_k8s_io_v1.mutating_webhook_configuration.get(
             name=mvc.metadata.name

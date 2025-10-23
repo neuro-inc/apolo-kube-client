@@ -6,6 +6,7 @@ class TestNode:
         # test getting all nodes
         node_list = await kube_client.core_v1.node.get_list()
         assert len(node_list.items) > 0
+        assert node_list.items[0].metadata.name is not None
 
         # test getting the node by name
         await kube_client.core_v1.node.get(name=node_list.items[0].metadata.name)

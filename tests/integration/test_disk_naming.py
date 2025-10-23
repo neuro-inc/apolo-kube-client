@@ -2,7 +2,14 @@ import asyncio
 from collections.abc import AsyncGenerator
 
 import pytest
-from kubernetes.client import (
+
+from apolo_kube_client import KubeClient
+from apolo_kube_client._crd_models import (
+    V1DiskNamingCRD,
+    V1DiskNamingCRDMetadata,
+    V1DiskNamingCRDSpec,
+)
+from apolo_kube_client import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,
@@ -11,13 +18,6 @@ from kubernetes.client import (
     V1CustomResourceValidation,
     V1JSONSchemaProps,
     V1ObjectMeta,
-)
-
-from apolo_kube_client import KubeClient
-from apolo_kube_client._crd_models import (
-    V1DiskNamingCRD,
-    V1DiskNamingCRDMetadata,
-    V1DiskNamingCRDSpec,
 )
 
 
@@ -34,7 +34,7 @@ async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[Non
                     name="v1",
                     served=True,
                     storage=True,
-                    schema=V1CustomResourceValidation(
+                    schema_=V1CustomResourceValidation(
                         open_apiv3_schema=V1JSONSchemaProps(
                             type="object",
                             properties={
@@ -68,6 +68,7 @@ async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[Non
     await kube_client.extensions_k8s_io_v1.crd.create(model=dn_crd)
     await asyncio.sleep(1)
     yield
+    assert dn_crd.metadata.name is not None
     await kube_client.extensions_k8s_io_v1.crd.delete(name=dn_crd.metadata.name)
 
 

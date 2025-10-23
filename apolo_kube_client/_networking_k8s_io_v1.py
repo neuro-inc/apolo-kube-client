@@ -1,13 +1,12 @@
-from kubernetes.client.models import (
+from ._attr import _Attr
+from ._base_resource import Base, NamespacedResource
+from ._models import (
     V1Ingress,
     V1IngressList,
     V1NetworkPolicy,
     V1NetworkPolicyList,
     V1Status,
 )
-
-from ._attr import _Attr
-from ._base_resource import Base, NamespacedResource
 
 
 class NetworkPolicy(NamespacedResource[V1NetworkPolicy, V1NetworkPolicyList, V1Status]):

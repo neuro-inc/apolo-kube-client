@@ -1,8 +1,7 @@
-from kubernetes.client.models import V1Job, V1JobList
-
 from .._batch_v1 import BatchV1Api, Job
 from ._attr_proxy import attr
 from ._resource_proxy import BaseProxy, NamespacedResourceProxy
+from .._models import V1Job, V1JobList
 
 
 class JobProxy(NamespacedResourceProxy[V1Job, V1JobList, V1Job, Job]):

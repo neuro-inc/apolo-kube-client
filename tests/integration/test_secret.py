@@ -2,13 +2,13 @@ from collections.abc import AsyncGenerator, Callable
 from uuid import uuid4
 
 import pytest
-from kubernetes.client.models import (
-    V1ObjectMeta,
-    V1Secret,
-)
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client._utils import base64_encode
+from apolo_kube_client import (
+    V1ObjectMeta,
+    V1Secret,
+)
 
 
 @pytest.fixture
@@ -33,6 +33,7 @@ async def secret(
 ) -> AsyncGenerator[V1Secret]:
     secret = secret_model_factory(f"test-secret-{uuid4().hex[:8]}", {"key": "value"})
     yield await kube_client.core_v1.secret.create(model=secret, namespace="default")
+    assert secret.metadata.name
     await kube_client.core_v1.secret.delete(
         name=secret.metadata.name, namespace="default"
     )
@@ -51,6 +52,7 @@ class TestSecret:
             model=secret, namespace="default"
         )
         assert secret_create.metadata.name == secret.metadata.name
+        assert secret.metadata.name
 
         # test getting the secret
         secret_get = await kube_client.core_v1.secret.get(name=secret.metadata.name)
@@ -70,6 +72,7 @@ class TestSecret:
         secret: V1Secret,
         kube_client: KubeClient,
     ) -> None:
+        assert secret.metadata.name
         secret_with_new_key = await kube_client.core_v1.secret.add_key(
             name=secret.metadata.name,
             key="password",

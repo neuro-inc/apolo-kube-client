@@ -6,12 +6,13 @@ import tempfile
 from pathlib import Path
 
 import yaml
-from kubernetes.client.models import V1Secret
 
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._config import KubeClientAuthType, KubeConfig
 from apolo_kube_client._transport import KubeTransport
 from apolo_kube_client._utils import base64_decode
+
+from .._models import V1Secret
 
 logger = logging.getLogger(__name__)
 

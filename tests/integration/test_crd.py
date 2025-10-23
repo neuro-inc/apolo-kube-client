@@ -2,7 +2,9 @@ import asyncio
 import time
 
 import pytest
-from kubernetes.client import (
+
+from apolo_kube_client import KubeClient, ResourceNotFound
+from apolo_kube_client import (
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,
@@ -12,8 +14,6 @@ from kubernetes.client import (
     V1JSONSchemaProps,
     V1ObjectMeta,
 )
-
-from apolo_kube_client import KubeClient, ResourceNotFound
 
 
 @pytest.fixture
@@ -29,7 +29,7 @@ def crd() -> V1CustomResourceDefinition:
                     name="v1",
                     served=True,
                     storage=True,
-                    schema=V1CustomResourceValidation(
+                    schema_=V1CustomResourceValidation(
                         open_apiv3_schema=V1JSONSchemaProps(
                             type="object",
                             properties={
@@ -71,6 +71,8 @@ class TestCRD:
             crd_create,
         ) = await kube_client.extensions_k8s_io_v1.crd.create_or_update(model=crd)
         assert crd_create.metadata.name == crd.metadata.name
+
+        assert crd.metadata.name is not None
 
         # test getting the crd
         crd_get = await kube_client.extensions_k8s_io_v1.crd.get(name=crd.metadata.name)

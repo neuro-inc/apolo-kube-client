@@ -1,10 +1,9 @@
-from kubernetes.client.models import (
+from ._attr import _Attr
+from ._base_resource import Base, NamespacedResource
+from ._models import (
     V1EndpointSlice,
     V1EndpointSliceList,
 )
-
-from ._attr import _Attr
-from ._base_resource import Base, NamespacedResource
 
 
 class EndpointSlice(
