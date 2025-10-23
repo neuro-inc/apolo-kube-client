@@ -77,11 +77,24 @@ def mod_name(cls_name: str) -> str:
     return mod_name
 
 
+@dataclass(frozen=True, kw_only=True)
+class Default:
+    value: str | None = None
+    factory_type: str | None = None
+
+    @property
+    def text(self) -> str:
+        if self.value is not None:
+            return f"default={self.value}"
+        else:
+            return f"default_factory=lambda: {self.factory_type}()"
+
+
 @dataclass(frozen=True)
 class ParseTypeRes:
     type_: str
     imports: frozenset[str]
-    default: str
+    default: Default | None
     is_model: bool
     is_collection: bool
 
@@ -93,7 +106,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
             return ParseTypeRes(
                 f'"{descr} | None"',
                 frozenset(),
-                "default=None",  # avoid recursive ctor
+                Default(value="None"),  # avoid recursive ctor
                 True,
                 False,
             )
@@ -101,7 +114,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
             return ParseTypeRes(
                 f'"{descr}"',
                 frozenset(),
-                f"default_factory=lambda: {descr}()",
+                Default(factory_type=descr),
                 True,
                 False,
             )
@@ -109,7 +122,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
-            "default={}",
+            Default(value="{}"),
             False,
             False,
         )
@@ -119,43 +132,43 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
         return ParseTypeRes(
             f"dict[{key.type_}, {val.type_}]",
             key.imports | val.imports,
-            "default={}",
+            Default(value="{}"),
             False,
             True,
         )
     elif match := LIST_RE.match(descr):
         item = parse_type(self_name, match.group("item"), nested=True)
         return ParseTypeRes(
-            f"list[{item.type_}]", item.imports, "default=[]", False, True
+            f"list[{item.type_}]", item.imports, Default(value="[]"), False, True
         )
     else:
         suffix = " | None" if not nested else ""
         match descr:
             case "int":
                 return ParseTypeRes(
-                    "int" + suffix, frozenset(), "default=None", False, False
+                    "int" + suffix, frozenset(), Default(value="None"), False, False
                 )
             case "bool":
                 return ParseTypeRes(
-                    "bool" + suffix, frozenset(), "default=None", False, False
+                    "bool" + suffix, frozenset(), Default(value="None"), False, False
                 )
             case "int":
                 return ParseTypeRes(
-                    "int" + suffix, frozenset(), "default=None", False, False
+                    "int" + suffix, frozenset(), Default(value="None"), False, False
                 )
             case "float":
                 return ParseTypeRes(
-                    "float" + suffix, frozenset(), "default=None", False, False
+                    "float" + suffix, frozenset(), Default(value="None"), False, False
                 )
             case "str":
                 return ParseTypeRes(
-                    "str" + suffix, frozenset(), "default=None", False, False
+                    "str" + suffix, frozenset(), Default(value="None"), False, False
                 )
             case "datetime":
                 return ParseTypeRes(
                     "datetime" + suffix,
                     frozenset(["from datetime import datetime"]),
-                    "default=None",
+                    Default(value="None"),
                     False,
                     False,
                 )
@@ -163,7 +176,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                 return ParseTypeRes(
                     descr,
                     frozenset([f"from .{mod_name(descr)} import {descr}"]),
-                    f"default_factory=lambda: {descr}()",
+                    Default(factory_type=descr),
                     True,
                     False,
                 )
@@ -215,7 +228,7 @@ def generate(
         imports.add("from .utils import _exclude_if")
 
         field_str = ", ".join(f"{k}={v}" for k, v in field_args.items())
-        tail = f" = Field({res.default}, {field_str})"
+        tail = f" = Field({res.default.text}, {field_str})"
 
         type_ = res.type_
         if res.is_model:
@@ -224,10 +237,11 @@ def generate(
             imports.add("from .utils import _default_if_none")
             type_ = f"Annotated[{type_}, BeforeValidator(_default_if_none({type_}))]"
         elif res.is_collection:
+            assert res.default.value is not None
             imports.add("from typing import Annotated")
             imports.add("from pydantic import BeforeValidator")
             imports.add("from .utils import _collection_if_none")
-            type_ = f'Annotated[{type_}, BeforeValidator(_collection_if_none("{res.default.removeprefix("default=")}"))]'
+            type_ = f'Annotated[{type_}, BeforeValidator(_collection_if_none("{res.default.value}"))]'
         field = f"{real_attr}: {type_}{tail}"
         body.append(f"    {field}\n")
     mod = MOD.format(
