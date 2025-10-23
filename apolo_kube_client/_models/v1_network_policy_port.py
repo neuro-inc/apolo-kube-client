@@ -8,7 +8,9 @@ __all__ = ("V1NetworkPolicyPort",)
 class V1NetworkPolicyPort(BaseModel):
     """NetworkPolicyPort describes a port to allow traffic on"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicyPort"
 

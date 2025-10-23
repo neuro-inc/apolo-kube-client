@@ -8,7 +8,9 @@ __all__ = ("V1ServiceAccountSubject",)
 class V1ServiceAccountSubject(BaseModel):
     """ServiceAccountSubject holds detailed information for service-account-kind subject."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.flowcontrol.v1.ServiceAccountSubject"

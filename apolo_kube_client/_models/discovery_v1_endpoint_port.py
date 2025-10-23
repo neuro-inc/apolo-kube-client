@@ -8,7 +8,9 @@ __all__ = ("DiscoveryV1EndpointPort",)
 class DiscoveryV1EndpointPort(BaseModel):
     """EndpointPort represents a Port used by an EndpointSlice"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.discovery.v1.EndpointPort"
 

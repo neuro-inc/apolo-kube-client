@@ -10,7 +10,9 @@ __all__ = ("V1beta1Device",)
 class V1beta1Device(BaseModel):
     """Device represents one individual hardware instance that can be selected based on its attributes. Besides the name, exactly one field must be set."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.Device"
 

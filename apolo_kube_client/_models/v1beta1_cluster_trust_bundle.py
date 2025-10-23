@@ -17,7 +17,9 @@ class V1beta1ClusterTrustBundle(ResourceModel):
 
     It can be optionally associated with a particular assigner, in which case it contains one valid set of trust anchors for that signer. Signers may have multiple associated ClusterTrustBundles; each is an independent set of trust anchors for that signer. Admission control is used to enforce that only users with permissions on the signer can create or modify the corresponding bundle."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.certificates.v1beta1.ClusterTrustBundle"

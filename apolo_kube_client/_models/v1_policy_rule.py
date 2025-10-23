@@ -9,7 +9,9 @@ __all__ = ("V1PolicyRule",)
 class V1PolicyRule(BaseModel):
     """PolicyRule holds information that describes a policy rule, but does not contain information about who the rule applies to or which namespace the rule applies to."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.PolicyRule"
 

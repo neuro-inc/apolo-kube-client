@@ -10,7 +10,9 @@ __all__ = ("V1PodDNSConfig",)
 class V1PodDNSConfig(BaseModel):
     """PodDNSConfig defines the DNS parameters of a pod in addition to those generated from DNSPolicy."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodDNSConfig"
 

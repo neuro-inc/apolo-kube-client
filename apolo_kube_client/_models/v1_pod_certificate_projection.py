@@ -8,7 +8,9 @@ __all__ = ("V1PodCertificateProjection",)
 class V1PodCertificateProjection(BaseModel):
     """PodCertificateProjection provides a private key and X.509 certificate in the pod filesystem."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodCertificateProjection"
 

@@ -8,7 +8,9 @@ __all__ = ("V1beta2Counter",)
 class V1beta2Counter(BaseModel):
     """Counter describes a quantity associated with a device."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta2.Counter"
 

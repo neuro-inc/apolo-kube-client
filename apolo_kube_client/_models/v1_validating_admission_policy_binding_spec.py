@@ -12,7 +12,9 @@ __all__ = ("V1ValidatingAdmissionPolicyBindingSpec",)
 class V1ValidatingAdmissionPolicyBindingSpec(BaseModel):
     """ValidatingAdmissionPolicyBindingSpec is the specification of the ValidatingAdmissionPolicyBinding."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingSpec"

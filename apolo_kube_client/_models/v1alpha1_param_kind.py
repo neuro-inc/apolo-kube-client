@@ -8,7 +8,9 @@ __all__ = ("V1alpha1ParamKind",)
 class V1alpha1ParamKind(BaseModel):
     """ParamKind is a tuple of Group Kind and Version."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.ParamKind"

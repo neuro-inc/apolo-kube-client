@@ -9,7 +9,9 @@ __all__ = ("V1CustomResourceDefinitionNames",)
 class V1CustomResourceDefinitionNames(BaseModel):
     """CustomResourceDefinitionNames indicates the names to serve this CustomResourceDefinition"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionNames"

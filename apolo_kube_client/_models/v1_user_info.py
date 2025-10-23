@@ -9,7 +9,9 @@ __all__ = ("V1UserInfo",)
 class V1UserInfo(BaseModel):
     """UserInfo holds the information about the user needed to implement the user.Info interface."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.authentication.v1.UserInfo"
 

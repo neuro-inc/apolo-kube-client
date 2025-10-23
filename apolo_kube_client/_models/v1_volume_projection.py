@@ -15,7 +15,9 @@ __all__ = ("V1VolumeProjection",)
 class V1VolumeProjection(BaseModel):
     """Projection that may be projected along with other supported volume types. Exactly one of these fields must be set."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeProjection"
 

@@ -8,7 +8,9 @@ __all__ = ("V1LocalVolumeSource",)
 class V1LocalVolumeSource(BaseModel):
     """Local represents directly-attached storage with node affinity"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LocalVolumeSource"
 

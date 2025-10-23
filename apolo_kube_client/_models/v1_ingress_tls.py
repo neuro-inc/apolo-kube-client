@@ -9,7 +9,9 @@ __all__ = ("V1IngressTLS",)
 class V1IngressTLS(BaseModel):
     """IngressTLS describes the transport layer security associated with an ingress."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressTLS"
 

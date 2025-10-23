@@ -14,7 +14,9 @@ __all__ = ("V1CustomResourceDefinitionVersion",)
 class V1CustomResourceDefinitionVersion(BaseModel):
     """CustomResourceDefinitionVersion describes a version for CRD."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionVersion"

@@ -9,7 +9,9 @@ __all__ = ("V1beta2CapacityRequirements",)
 class V1beta2CapacityRequirements(BaseModel):
     """CapacityRequirements defines the capacity requirements for a specific device request."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.CapacityRequirements"

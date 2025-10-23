@@ -8,7 +8,9 @@ __all__ = ("V1KeyToPath",)
 class V1KeyToPath(BaseModel):
     """Maps a string key to a path within a volume."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.KeyToPath"
 

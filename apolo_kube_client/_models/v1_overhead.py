@@ -9,7 +9,9 @@ __all__ = ("V1Overhead",)
 class V1Overhead(BaseModel):
     """Overhead structure represents the resource overhead associated with running a pod."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.node.v1.Overhead"
 

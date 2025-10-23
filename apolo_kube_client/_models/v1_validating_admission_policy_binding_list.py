@@ -13,7 +13,9 @@ __all__ = ("V1ValidatingAdmissionPolicyBindingList",)
 class V1ValidatingAdmissionPolicyBindingList(ListModel):
     """ValidatingAdmissionPolicyBindingList is a list of ValidatingAdmissionPolicyBinding."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingList"

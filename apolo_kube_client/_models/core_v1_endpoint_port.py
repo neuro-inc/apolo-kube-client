@@ -8,7 +8,9 @@ __all__ = ("CoreV1EndpointPort",)
 class CoreV1EndpointPort(BaseModel):
     """EndpointPort is a tuple that describes a single port. Deprecated: This API is deprecated in v1.33+."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EndpointPort"
 

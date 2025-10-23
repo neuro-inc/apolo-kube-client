@@ -8,7 +8,9 @@ __all__ = ("V1GlusterfsVolumeSource",)
 class V1GlusterfsVolumeSource(BaseModel):
     """Represents a Glusterfs mount that lasts the lifetime of a pod. Glusterfs volumes do not support ownership management or SELinux relabeling."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.GlusterfsVolumeSource"
 

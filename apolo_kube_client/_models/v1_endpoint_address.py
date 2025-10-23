@@ -10,7 +10,9 @@ __all__ = ("V1EndpointAddress",)
 class V1EndpointAddress(BaseModel):
     """EndpointAddress is a tuple that describes single IP address. Deprecated: This API is deprecated in v1.33+."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EndpointAddress"
 

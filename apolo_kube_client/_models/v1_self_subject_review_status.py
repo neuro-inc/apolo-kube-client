@@ -10,7 +10,9 @@ __all__ = ("V1SelfSubjectReviewStatus",)
 class V1SelfSubjectReviewStatus(BaseModel):
     """SelfSubjectReviewStatus is filled by the kube-apiserver and sent back to a user."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authentication.v1.SelfSubjectReviewStatus"

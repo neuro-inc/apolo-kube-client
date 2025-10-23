@@ -13,7 +13,9 @@ __all__ = ("V1APIServiceList",)
 class V1APIServiceList(ListModel):
     """APIServiceList is a list of APIService objects."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIServiceList"

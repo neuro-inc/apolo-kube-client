@@ -14,7 +14,9 @@ __all__ = ("V1ValidatingWebhookConfiguration",)
 class V1ValidatingWebhookConfiguration(ResourceModel):
     """ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingWebhookConfiguration"

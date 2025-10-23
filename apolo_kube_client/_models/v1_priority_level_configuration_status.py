@@ -12,7 +12,9 @@ __all__ = ("V1PriorityLevelConfigurationStatus",)
 class V1PriorityLevelConfigurationStatus(BaseModel):
     """PriorityLevelConfigurationStatus represents the current state of a "request-priority"."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.flowcontrol.v1.PriorityLevelConfigurationStatus"

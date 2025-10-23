@@ -14,7 +14,9 @@ __all__ = ("V1Role",)
 class V1Role(ResourceModel):
     """Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.Role"
 

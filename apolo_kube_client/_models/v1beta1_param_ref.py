@@ -10,7 +10,9 @@ __all__ = ("V1beta1ParamRef",)
 class V1beta1ParamRef(BaseModel):
     """ParamRef describes how to locate the params to be used as input to expressions of rules applied by a policy binding."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1beta1.ParamRef"

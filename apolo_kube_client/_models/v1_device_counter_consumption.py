@@ -8,7 +8,9 @@ __all__ = ("V1DeviceCounterConsumption",)
 class V1DeviceCounterConsumption(BaseModel):
     """DeviceCounterConsumption defines a set of counters that a device will consume from a CounterSet."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1.DeviceCounterConsumption"

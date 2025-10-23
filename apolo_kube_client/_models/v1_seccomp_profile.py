@@ -8,7 +8,9 @@ __all__ = ("V1SeccompProfile",)
 class V1SeccompProfile(BaseModel):
     """SeccompProfile defines a pod/container's seccomp profile settings. Only one profile source may be set."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SeccompProfile"
 

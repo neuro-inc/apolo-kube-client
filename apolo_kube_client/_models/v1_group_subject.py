@@ -8,7 +8,9 @@ __all__ = ("V1GroupSubject",)
 class V1GroupSubject(BaseModel):
     """GroupSubject holds detailed information for group-kind subject."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.flowcontrol.v1.GroupSubject"
 

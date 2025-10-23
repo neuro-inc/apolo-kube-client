@@ -14,7 +14,9 @@ __all__ = ("V1beta1DeviceRequest",)
 class V1beta1DeviceRequest(BaseModel):
     """DeviceRequest is a request for devices required for a claim. This is typically a request for a single resource like a device, but can also ask for several identical devices."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.DeviceRequest"
 

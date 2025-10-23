@@ -10,7 +10,9 @@ __all__ = ("V1IngressLoadBalancerStatus",)
 class V1IngressLoadBalancerStatus(BaseModel):
     """IngressLoadBalancerStatus represents the status of a load-balancer."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.networking.v1.IngressLoadBalancerStatus"

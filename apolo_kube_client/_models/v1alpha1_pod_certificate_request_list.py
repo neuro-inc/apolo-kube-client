@@ -13,7 +13,9 @@ __all__ = ("V1alpha1PodCertificateRequestList",)
 class V1alpha1PodCertificateRequestList(ListModel):
     """PodCertificateRequestList is a collection of PodCertificateRequest objects"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.certificates.v1alpha1.PodCertificateRequestList"

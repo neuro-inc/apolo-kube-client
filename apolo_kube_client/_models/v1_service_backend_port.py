@@ -8,7 +8,9 @@ __all__ = ("V1ServiceBackendPort",)
 class V1ServiceBackendPort(BaseModel):
     """ServiceBackendPort is the service port being referenced."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.ServiceBackendPort"
 

@@ -13,7 +13,9 @@ __all__ = ("V1JobStatus",)
 class V1JobStatus(BaseModel):
     """JobStatus represents the current state of a Job."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobStatus"
 

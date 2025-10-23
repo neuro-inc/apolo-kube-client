@@ -8,7 +8,9 @@ __all__ = ("V1PodExtendedResourceClaimStatus",)
 class V1PodExtendedResourceClaimStatus(BaseModel):
     """PodExtendedResourceClaimStatus is stored in the PodStatus for the extended resource requests backed by DRA. It stores the generated name for the corresponding special ResourceClaim created by the scheduler."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.PodExtendedResourceClaimStatus"

@@ -8,7 +8,9 @@ __all__ = ("V1alpha1GroupVersionResource",)
 class V1alpha1GroupVersionResource(BaseModel):
     """The names of the group, the version, and the resource."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.storagemigration.v1alpha1.GroupVersionResource"

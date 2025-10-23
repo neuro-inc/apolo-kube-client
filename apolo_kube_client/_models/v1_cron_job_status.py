@@ -11,7 +11,9 @@ __all__ = ("V1CronJobStatus",)
 class V1CronJobStatus(BaseModel):
     """CronJobStatus represents the current state of a cron job."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.CronJobStatus"
 

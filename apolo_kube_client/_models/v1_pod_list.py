@@ -13,7 +13,9 @@ __all__ = ("V1PodList",)
 class V1PodList(ListModel):
     """PodList is a list of Pods."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodList"
 

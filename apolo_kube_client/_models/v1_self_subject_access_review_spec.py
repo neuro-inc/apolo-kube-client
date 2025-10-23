@@ -11,7 +11,9 @@ __all__ = ("V1SelfSubjectAccessReviewSpec",)
 class V1SelfSubjectAccessReviewSpec(BaseModel):
     """SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes and NonResourceAuthorizationAttributes must be set"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authorization.v1.SelfSubjectAccessReviewSpec"

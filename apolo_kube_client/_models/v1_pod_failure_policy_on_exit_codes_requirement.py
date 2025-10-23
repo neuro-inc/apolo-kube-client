@@ -8,7 +8,9 @@ __all__ = ("V1PodFailurePolicyOnExitCodesRequirement",)
 class V1PodFailurePolicyOnExitCodesRequirement(BaseModel):
     """PodFailurePolicyOnExitCodesRequirement describes the requirement for handling a failed pod based on its container exit codes. In particular, it lookups the .state.terminated.exitCode for each app container and init container status, represented by the .status.containerStatuses and .status.initContainerStatuses fields in the Pod status, respectively. Containers completed with success (exit code 0) are excluded from the requirement check."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.batch.v1.PodFailurePolicyOnExitCodesRequirement"

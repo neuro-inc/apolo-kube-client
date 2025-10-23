@@ -15,7 +15,9 @@ class V1beta2CapacityRequestPolicyRange(BaseModel):
     - If the requested or rounded amount exceeds Max (if set), the request does not satisfy the policy,
       and the device cannot be allocated."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.CapacityRequestPolicyRange"

@@ -13,7 +13,9 @@ __all__ = ("V1Status",)
 class V1Status(ListModel):
     """Status is a return value for calls that don't return other objects."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.apimachinery.pkg.apis.meta.v1.Status"
 

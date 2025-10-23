@@ -9,7 +9,9 @@ __all__ = ("V2ExternalMetricStatus",)
 class V2ExternalMetricStatus(BaseModel):
     """ExternalMetricStatus indicates the current value of a global metric not associated with any Kubernetes object."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v2.ExternalMetricStatus"

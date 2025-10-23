@@ -9,7 +9,9 @@ __all__ = ("V1ScopedResourceSelectorRequirement",)
 class V1ScopedResourceSelectorRequirement(BaseModel):
     """A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator that relates the scope name and values."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.ScopedResourceSelectorRequirement"

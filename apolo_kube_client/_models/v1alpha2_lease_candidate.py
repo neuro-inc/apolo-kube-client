@@ -13,7 +13,9 @@ __all__ = ("V1alpha2LeaseCandidate",)
 class V1alpha2LeaseCandidate(ResourceModel):
     """LeaseCandidate defines a candidate for a Lease object. Candidates are created such that coordinated leader election will pick the best leader from the list of candidates."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.coordination.v1alpha2.LeaseCandidate"

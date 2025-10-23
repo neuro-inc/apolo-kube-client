@@ -10,7 +10,9 @@ __all__ = ("V1DeploymentStatus",)
 class V1DeploymentStatus(BaseModel):
     """DeploymentStatus is the most recently observed status of the Deployment."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentStatus"
 

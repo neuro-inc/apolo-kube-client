@@ -8,7 +8,9 @@ __all__ = ("V1SELinuxOptions",)
 class V1SELinuxOptions(BaseModel):
     """SELinuxOptions are the labels to be applied to the container"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SELinuxOptions"
 

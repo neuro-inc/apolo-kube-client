@@ -12,7 +12,9 @@ __all__ = ("V1JobTemplateSpec",)
 class V1JobTemplateSpec(ResourceModel):
     """JobTemplateSpec describes the data a Job should have when created from a template"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobTemplateSpec"
 

@@ -13,7 +13,9 @@ __all__ = ("V1ResourceClaimStatus",)
 class V1ResourceClaimStatus(BaseModel):
     """ResourceClaimStatus tracks whether the resource has been allocated and what the result of that was."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceClaimStatus"
 

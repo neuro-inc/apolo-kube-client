@@ -8,7 +8,9 @@ __all__ = ("V1alpha1ApplyConfiguration",)
 class V1alpha1ApplyConfiguration(BaseModel):
     """ApplyConfiguration defines the desired configuration values of an object."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.ApplyConfiguration"

@@ -12,7 +12,9 @@ __all__ = ("AdmissionregistrationV1WebhookClientConfig",)
 class AdmissionregistrationV1WebhookClientConfig(BaseModel):
     """WebhookClientConfig contains the information to make a TLS connection with the webhook"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.WebhookClientConfig"

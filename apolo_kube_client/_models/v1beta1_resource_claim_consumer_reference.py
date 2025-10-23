@@ -8,7 +8,9 @@ __all__ = ("V1beta1ResourceClaimConsumerReference",)
 class V1beta1ResourceClaimConsumerReference(BaseModel):
     """ResourceClaimConsumerReference contains enough information to let you locate the consumer of a ResourceClaim. The user must be a resource in the same namespace as the ResourceClaim."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta1.ResourceClaimConsumerReference"

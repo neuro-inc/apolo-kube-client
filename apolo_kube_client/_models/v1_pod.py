@@ -14,7 +14,9 @@ __all__ = ("V1Pod",)
 class V1Pod(ResourceModel):
     """Pod is a collection of containers that can run on a host. This resource is created by clients and scheduled onto hosts."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Pod"
 

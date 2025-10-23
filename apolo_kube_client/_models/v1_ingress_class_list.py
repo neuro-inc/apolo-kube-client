@@ -13,7 +13,9 @@ __all__ = ("V1IngressClassList",)
 class V1IngressClassList(ListModel):
     """IngressClassList is a collection of IngressClasses."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressClassList"
 

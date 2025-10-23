@@ -8,7 +8,9 @@ __all__ = ("V1HorizontalPodAutoscalerSpec",)
 class V1HorizontalPodAutoscalerSpec(BaseModel):
     """specification of a horizontal pod autoscaler."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v1.HorizontalPodAutoscalerSpec"

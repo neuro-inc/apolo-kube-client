@@ -9,7 +9,9 @@ __all__ = ("V1ContainerRestartRuleOnExitCodes",)
 class V1ContainerRestartRuleOnExitCodes(BaseModel):
     """ContainerRestartRuleOnExitCodes describes the condition for handling an exited container based on its exit codes."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.ContainerRestartRuleOnExitCodes"

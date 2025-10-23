@@ -11,7 +11,9 @@ __all__ = ("V1ISCSIPersistentVolumeSource",)
 class V1ISCSIPersistentVolumeSource(BaseModel):
     """ISCSIPersistentVolumeSource represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.ISCSIPersistentVolumeSource"

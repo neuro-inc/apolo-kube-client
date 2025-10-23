@@ -12,7 +12,9 @@ __all__ = ("V1PodTemplateSpec",)
 class V1PodTemplateSpec(ResourceModel):
     """PodTemplateSpec describes the data a pod should have when created from a template"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodTemplateSpec"
 

@@ -9,7 +9,9 @@ __all__ = ("V1LimitRangeItem",)
 class V1LimitRangeItem(BaseModel):
     """LimitRangeItem defines a min/max usage limit for any resource that matches on kind."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LimitRangeItem"
 

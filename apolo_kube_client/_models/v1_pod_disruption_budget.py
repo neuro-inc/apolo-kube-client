@@ -14,7 +14,9 @@ __all__ = ("V1PodDisruptionBudget",)
 class V1PodDisruptionBudget(ResourceModel):
     """PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.policy.v1.PodDisruptionBudget"
 

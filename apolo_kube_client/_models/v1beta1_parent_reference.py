@@ -8,7 +8,9 @@ __all__ = ("V1beta1ParentReference",)
 class V1beta1ParentReference(BaseModel):
     """ParentReference describes a reference to a parent object."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.networking.v1beta1.ParentReference"

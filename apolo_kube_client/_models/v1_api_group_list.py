@@ -9,7 +9,9 @@ __all__ = ("V1APIGroupList",)
 class V1APIGroupList(BaseModel):
     """APIGroupList is a list of APIGroup, to allow clients to discover the API at /apis."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.APIGroupList"

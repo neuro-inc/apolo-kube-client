@@ -11,7 +11,9 @@ __all__ = ("V1CSINodeDriver",)
 class V1CSINodeDriver(BaseModel):
     """CSINodeDriver holds information about the specification of one CSI driver installed on a node"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.CSINodeDriver"
 

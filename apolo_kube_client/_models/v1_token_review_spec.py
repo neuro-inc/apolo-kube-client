@@ -9,7 +9,9 @@ __all__ = ("V1TokenReviewSpec",)
 class V1TokenReviewSpec(BaseModel):
     """TokenReviewSpec is a description of the token authentication request."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authentication.v1.TokenReviewSpec"

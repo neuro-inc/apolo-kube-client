@@ -11,7 +11,9 @@ __all__ = ("V1TopologySpreadConstraint",)
 class V1TopologySpreadConstraint(BaseModel):
     """TopologySpreadConstraint specifies how to spread matching pods among the given topology."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.TopologySpreadConstraint"
 

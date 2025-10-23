@@ -14,7 +14,9 @@ __all__ = ("V1Node",)
 class V1Node(ResourceModel):
     """Node is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd)."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Node"
 

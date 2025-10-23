@@ -10,7 +10,9 @@ __all__ = ("V1APIServiceStatus",)
 class V1APIServiceStatus(BaseModel):
     """APIServiceStatus contains derived information about an API server"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIServiceStatus"

@@ -12,7 +12,9 @@ __all__ = ("V1CertificateSigningRequestStatus",)
 class V1CertificateSigningRequestStatus(BaseModel):
     """CertificateSigningRequestStatus contains conditions used to indicate approved/denied/failed status of the request, and the issued certificate."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.certificates.v1.CertificateSigningRequestStatus"

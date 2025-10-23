@@ -8,7 +8,9 @@ __all__ = ("V1ContainerStateTerminated",)
 class V1ContainerStateTerminated(BaseModel):
     """ContainerStateTerminated is a terminated state of a container."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerStateTerminated"
 

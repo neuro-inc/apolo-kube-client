@@ -8,7 +8,9 @@ __all__ = ("V1StatefulSetOrdinals",)
 class V1StatefulSetOrdinals(BaseModel):
     """StatefulSetOrdinals describes the policy used for replica ordinal assignment in this StatefulSet."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSetOrdinals"
 

@@ -11,7 +11,9 @@ __all__ = ("V1beta2DeviceClassSpec",)
 class V1beta2DeviceClassSpec(BaseModel):
     """DeviceClassSpec is used in a [DeviceClass] to define what can be allocated and how to configure it."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta2.DeviceClassSpec"
 

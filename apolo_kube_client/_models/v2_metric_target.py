@@ -8,7 +8,9 @@ __all__ = ("V2MetricTarget",)
 class V2MetricTarget(BaseModel):
     """MetricTarget defines the target value, average value, or average utilization of a specific metric"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricTarget"
 

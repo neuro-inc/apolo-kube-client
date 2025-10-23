@@ -12,7 +12,9 @@ __all__ = ("V1Affinity",)
 class V1Affinity(BaseModel):
     """Affinity is a group of affinity scheduling rules."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Affinity"
 

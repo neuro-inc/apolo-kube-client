@@ -13,7 +13,9 @@ __all__ = ("V1beta1VolumeAttributesClass",)
 class V1beta1VolumeAttributesClass(ResourceModel):
     """VolumeAttributesClass represents a specification of mutable volume attributes defined by the CSI driver. The class can be specified during dynamic provisioning of PersistentVolumeClaims, and changed in the PersistentVolumeClaim spec after provisioning."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.storage.v1beta1.VolumeAttributesClass"

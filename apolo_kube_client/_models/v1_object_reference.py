@@ -8,7 +8,9 @@ __all__ = ("V1ObjectReference",)
 class V1ObjectReference(BaseModel):
     """ObjectReference contains enough information to let you inspect or modify the referred object."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ObjectReference"
 

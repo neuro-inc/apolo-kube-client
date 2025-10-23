@@ -13,7 +13,9 @@ __all__ = ("V1RuntimeClassList",)
 class V1RuntimeClassList(ListModel):
     """RuntimeClassList is a list of RuntimeClass objects."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.node.v1.RuntimeClassList"
 

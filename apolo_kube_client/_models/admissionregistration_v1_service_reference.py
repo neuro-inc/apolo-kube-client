@@ -8,7 +8,9 @@ __all__ = ("AdmissionregistrationV1ServiceReference",)
 class AdmissionregistrationV1ServiceReference(BaseModel):
     """ServiceReference holds a reference to Service.legacy.k8s.io"""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ServiceReference"

@@ -8,7 +8,9 @@ __all__ = ("V1beta1JSONPatch",)
 class V1beta1JSONPatch(BaseModel):
     """JSONPatch defines a JSON Patch."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1beta1.JSONPatch"

@@ -16,7 +16,9 @@ __all__ = ("V1ValidatingWebhook",)
 class V1ValidatingWebhook(BaseModel):
     """ValidatingWebhook describes an admission webhook and the resources and operations it applies to."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingWebhook"

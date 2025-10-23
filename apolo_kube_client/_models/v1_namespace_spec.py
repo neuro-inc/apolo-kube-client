@@ -9,7 +9,9 @@ __all__ = ("V1NamespaceSpec",)
 class V1NamespaceSpec(BaseModel):
     """NamespaceSpec describes the attributes on a Namespace."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NamespaceSpec"
 

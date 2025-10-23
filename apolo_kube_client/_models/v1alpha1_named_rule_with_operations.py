@@ -9,7 +9,9 @@ __all__ = ("V1alpha1NamedRuleWithOperations",)
 class V1alpha1NamedRuleWithOperations(BaseModel):
     """NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.NamedRuleWithOperations"

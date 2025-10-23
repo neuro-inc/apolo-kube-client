@@ -11,7 +11,9 @@ __all__ = ("V1ReplicaSetSpec",)
 class V1ReplicaSetSpec(BaseModel):
     """ReplicaSetSpec is the specification of a ReplicaSet."""
 
-    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", validate_by_alias=True, validate_by_name=True
+    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.ReplicaSetSpec"
 
