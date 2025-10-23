@@ -1,6 +1,7 @@
 from pydantic import Field
 from .base import ResourceModel
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_pod_spec import V1PodSpec
 from pydantic import BeforeValidator
@@ -12,8 +13,8 @@ __all__ = ("V1PodTemplateSpec",)
 class V1PodTemplateSpec(ResourceModel):
     metadata: Annotated[
         V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta())
+    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
 
     spec: Annotated[V1PodSpec, BeforeValidator(_default_if_none(V1PodSpec))] = Field(
-        default_factory=lambda: V1PodSpec()
+        default_factory=lambda: V1PodSpec(), exclude_if=_exclude_if
     )

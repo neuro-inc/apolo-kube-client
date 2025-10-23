@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
 from pydantic import BeforeValidator
@@ -16,9 +17,10 @@ class V1ResourceAttributes(BaseModel):
         default_factory=lambda: V1FieldSelectorAttributes(),
         serialization_alias="fieldSelector",
         validation_alias=AliasChoices("field_selector", "fieldSelector"),
+        exclude_if=_exclude_if,
     )
 
-    group: str | None = None
+    group: str | None = Field(default=None, exclude_if=_exclude_if)
 
     label_selector: Annotated[
         V1LabelSelectorAttributes,
@@ -27,16 +29,17 @@ class V1ResourceAttributes(BaseModel):
         default_factory=lambda: V1LabelSelectorAttributes(),
         serialization_alias="labelSelector",
         validation_alias=AliasChoices("label_selector", "labelSelector"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    namespace: str | None = None
+    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    resource: str | None = None
+    resource: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    subresource: str | None = None
+    subresource: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    verb: str | None = None
+    verb: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    version: str | None = None
+    version: str | None = Field(default=None, exclude_if=_exclude_if)

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1beta2_device_sub_request import V1beta2DeviceSubRequest
 from .v1beta2_exact_device_request import V1beta2ExactDeviceRequest
 from pydantic import BeforeValidator
@@ -13,7 +14,9 @@ class V1beta2DeviceRequest(BaseModel):
     exactly: Annotated[
         V1beta2ExactDeviceRequest,
         BeforeValidator(_default_if_none(V1beta2ExactDeviceRequest)),
-    ] = Field(default_factory=lambda: V1beta2ExactDeviceRequest())
+    ] = Field(
+        default_factory=lambda: V1beta2ExactDeviceRequest(), exclude_if=_exclude_if
+    )
 
     first_available: Annotated[
         list[V1beta2DeviceSubRequest], BeforeValidator(_collection_if_none("[]"))
@@ -21,6 +24,7 @@ class V1beta2DeviceRequest(BaseModel):
         default=[],
         serialization_alias="firstAvailable",
         validation_alias=AliasChoices("first_available", "firstAvailable"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)

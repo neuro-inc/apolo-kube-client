@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_json_schema_props import V1JSONSchemaProps
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -14,4 +15,5 @@ class V1CustomResourceValidation(BaseModel):
         default_factory=lambda: V1JSONSchemaProps(),
         serialization_alias="openAPIV3Schema",
         validation_alias=AliasChoices("open_apiv3_schema", "openAPIV3Schema"),
+        exclude_if=_exclude_if,
     )

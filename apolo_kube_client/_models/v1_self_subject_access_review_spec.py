@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
 from pydantic import BeforeValidator
@@ -18,6 +19,7 @@ class V1SelfSubjectAccessReviewSpec(BaseModel):
         validation_alias=AliasChoices(
             "non_resource_attributes", "nonResourceAttributes"
         ),
+        exclude_if=_exclude_if,
     )
 
     resource_attributes: Annotated[
@@ -26,4 +28,5 @@ class V1SelfSubjectAccessReviewSpec(BaseModel):
         default_factory=lambda: V1ResourceAttributes(),
         serialization_alias="resourceAttributes",
         validation_alias=AliasChoices("resource_attributes", "resourceAttributes"),
+        exclude_if=_exclude_if,
     )

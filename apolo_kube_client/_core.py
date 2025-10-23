@@ -154,7 +154,8 @@ class _KubeCore:
 
     def serialize[ModelT: BaseModel](self, obj: BaseModel) -> JsonType:
         return cast(
-            JsonType, obj.model_dump(mode="json", by_alias=True, exclude_defaults=True)
+            JsonType,
+            obj.model_dump(mode="json", by_alias=True),
         )
 
     def deserialize[ModelT: BaseModel](

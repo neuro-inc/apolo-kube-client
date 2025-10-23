@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _exclude_if
 from datetime import datetime
 
 __all__ = ("V1PersistentVolumeStatus",)
@@ -11,10 +12,11 @@ class V1PersistentVolumeStatus(BaseModel):
         validation_alias=AliasChoices(
             "last_phase_transition_time", "lastPhaseTransitionTime"
         ),
+        exclude_if=_exclude_if,
     )
 
-    message: str | None = None
+    message: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    phase: str | None = None
+    phase: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    reason: str | None = None
+    reason: str | None = Field(default=None, exclude_if=_exclude_if)

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_exec_action import V1ExecAction
 from .v1_grpc_action import V1GRPCAction
 from .v1_http_get_action import V1HTTPGetAction
@@ -16,6 +17,7 @@ class V1Probe(BaseModel):
             default_factory=lambda: V1ExecAction(),
             serialization_alias="exec",
             validation_alias=AliasChoices("exec_", "exec"),
+            exclude_if=_exclude_if,
         )
     )
 
@@ -23,10 +25,11 @@ class V1Probe(BaseModel):
         default=None,
         serialization_alias="failureThreshold",
         validation_alias=AliasChoices("failure_threshold", "failureThreshold"),
+        exclude_if=_exclude_if,
     )
 
     grpc: Annotated[V1GRPCAction, BeforeValidator(_default_if_none(V1GRPCAction))] = (
-        Field(default_factory=lambda: V1GRPCAction())
+        Field(default_factory=lambda: V1GRPCAction(), exclude_if=_exclude_if)
     )
 
     http_get: Annotated[
@@ -35,24 +38,28 @@ class V1Probe(BaseModel):
         default_factory=lambda: V1HTTPGetAction(),
         serialization_alias="httpGet",
         validation_alias=AliasChoices("http_get", "httpGet"),
+        exclude_if=_exclude_if,
     )
 
     initial_delay_seconds: int | None = Field(
         default=None,
         serialization_alias="initialDelaySeconds",
         validation_alias=AliasChoices("initial_delay_seconds", "initialDelaySeconds"),
+        exclude_if=_exclude_if,
     )
 
     period_seconds: int | None = Field(
         default=None,
         serialization_alias="periodSeconds",
         validation_alias=AliasChoices("period_seconds", "periodSeconds"),
+        exclude_if=_exclude_if,
     )
 
     success_threshold: int | None = Field(
         default=None,
         serialization_alias="successThreshold",
         validation_alias=AliasChoices("success_threshold", "successThreshold"),
+        exclude_if=_exclude_if,
     )
 
     tcp_socket: Annotated[
@@ -61,6 +68,7 @@ class V1Probe(BaseModel):
         default_factory=lambda: V1TCPSocketAction(),
         serialization_alias="tcpSocket",
         validation_alias=AliasChoices("tcp_socket", "tcpSocket"),
+        exclude_if=_exclude_if,
     )
 
     termination_grace_period_seconds: int | None = Field(
@@ -69,10 +77,12 @@ class V1Probe(BaseModel):
         validation_alias=AliasChoices(
             "termination_grace_period_seconds", "terminationGracePeriodSeconds"
         ),
+        exclude_if=_exclude_if,
     )
 
     timeout_seconds: int | None = Field(
         default=None,
         serialization_alias="timeoutSeconds",
         validation_alias=AliasChoices("timeout_seconds", "timeoutSeconds"),
+        exclude_if=_exclude_if,
     )

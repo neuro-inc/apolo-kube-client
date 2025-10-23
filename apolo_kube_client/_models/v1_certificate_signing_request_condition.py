@@ -1,4 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
+from .utils import _exclude_if
 from datetime import datetime
 
 __all__ = ("V1CertificateSigningRequestCondition",)
@@ -9,18 +10,20 @@ class V1CertificateSigningRequestCondition(BaseModel):
         default=None,
         serialization_alias="lastTransitionTime",
         validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
+        exclude_if=_exclude_if,
     )
 
     last_update_time: datetime | None = Field(
         default=None,
         serialization_alias="lastUpdateTime",
         validation_alias=AliasChoices("last_update_time", "lastUpdateTime"),
+        exclude_if=_exclude_if,
     )
 
-    message: str | None = None
+    message: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    reason: str | None = None
+    reason: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    status: str | None = None
+    status: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    type: str | None = None
+    type: str | None = Field(default=None, exclude_if=_exclude_if)

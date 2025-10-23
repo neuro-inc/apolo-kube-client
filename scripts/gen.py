@@ -33,6 +33,8 @@ class ListModel(BaseModel):
 
 UTILS_MOD = """\
 from typing import Any, Callable
+from pydantic import BaseModel
+
 
 def _default_if_none[T](type_: type[T]) -> Callable[[Any], Any]:
     def validator(arg: Any) -> Any:
@@ -52,6 +54,16 @@ def _collection_if_none(type_: str) -> Callable[[Any], Any]:
             return arg
 
     return validator
+
+
+def _exclude_if(v: Any) -> bool:
+    if v is None:
+        return True
+    if isinstance(v, BaseModel):
+        return v.model_dump() == v.__class__().model_dump()
+    if isinstance(v, (list, dict)):
+        return not v
+    return False
 """
 
 
@@ -192,19 +204,19 @@ def generate(
         res = parse_type(name, typ)
         imports |= res.imports
         real_attr = calc_attr_name(attr)
+        field_args: dict[str, str] = {}
         if alias != real_attr:
+            field_args["serialization_alias"] = f'"{alias}"'
             choices = [real_attr, alias]
             choices_str = ", ".join(f'"{item}"' for item in choices)
-            real_alias = (
-                f', serialization_alias="{alias}", '
-                f"validation_alias=AliasChoices({choices_str})"
-            )
-        else:
-            real_alias = ""
-        if real_alias or "lambda" in res.default:
-            tail = f" = Field({res.default}{real_alias})"
-        else:
-            tail = f" = {res.default.removeprefix('default=')}"
+            field_args["validation_alias"] = f"AliasChoices({choices_str})"
+
+        field_args["exclude_if"] = "_exclude_if"
+        imports.add("from .utils import _exclude_if")
+
+        field_str = ", ".join(f"{k}={v}" for k, v in field_args.items())
+        tail = f" = Field({res.default}, {field_str})"
+
         type_ = res.type_
         if res.is_model:
             imports.add("from typing import Annotated")

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
 from pydantic import BeforeValidator
@@ -19,6 +20,7 @@ class V1NodeAffinity(BaseModel):
             "preferred_during_scheduling_ignored_during_execution",
             "preferredDuringSchedulingIgnoredDuringExecution",
         ),
+        exclude_if=_exclude_if,
     )
 
     required_during_scheduling_ignored_during_execution: Annotated[
@@ -30,4 +32,5 @@ class V1NodeAffinity(BaseModel):
             "required_during_scheduling_ignored_during_execution",
             "requiredDuringSchedulingIgnoredDuringExecution",
         ),
+        exclude_if=_exclude_if,
     )

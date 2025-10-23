@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_token_request_spec import V1TokenRequestSpec
 from .v1_token_request_status import V1TokenRequestStatus
@@ -15,18 +16,19 @@ class AuthenticationV1TokenRequest(ResourceModel):
         default=None,
         serialization_alias="apiVersion",
         validation_alias=AliasChoices("api_version", "apiVersion"),
+        exclude_if=_exclude_if,
     )
 
-    kind: str | None = None
+    kind: str | None = Field(default=None, exclude_if=_exclude_if)
 
     metadata: Annotated[
         V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta())
+    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
 
     spec: Annotated[
         V1TokenRequestSpec, BeforeValidator(_default_if_none(V1TokenRequestSpec))
-    ] = Field(default_factory=lambda: V1TokenRequestSpec())
+    ] = Field(default_factory=lambda: V1TokenRequestSpec(), exclude_if=_exclude_if)
 
     status: Annotated[
         V1TokenRequestStatus, BeforeValidator(_default_if_none(V1TokenRequestStatus))
-    ] = Field(default_factory=lambda: V1TokenRequestStatus())
+    ] = Field(default_factory=lambda: V1TokenRequestStatus(), exclude_if=_exclude_if)

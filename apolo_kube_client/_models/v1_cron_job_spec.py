@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_job_template_spec import V1JobTemplateSpec
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -12,6 +13,7 @@ class V1CronJobSpec(BaseModel):
         default=None,
         serialization_alias="concurrencyPolicy",
         validation_alias=AliasChoices("concurrency_policy", "concurrencyPolicy"),
+        exclude_if=_exclude_if,
     )
 
     failed_jobs_history_limit: int | None = Field(
@@ -20,6 +22,7 @@ class V1CronJobSpec(BaseModel):
         validation_alias=AliasChoices(
             "failed_jobs_history_limit", "failedJobsHistoryLimit"
         ),
+        exclude_if=_exclude_if,
     )
 
     job_template: Annotated[
@@ -28,9 +31,10 @@ class V1CronJobSpec(BaseModel):
         default_factory=lambda: V1JobTemplateSpec(),
         serialization_alias="jobTemplate",
         validation_alias=AliasChoices("job_template", "jobTemplate"),
+        exclude_if=_exclude_if,
     )
 
-    schedule: str | None = None
+    schedule: str | None = Field(default=None, exclude_if=_exclude_if)
 
     starting_deadline_seconds: int | None = Field(
         default=None,
@@ -38,6 +42,7 @@ class V1CronJobSpec(BaseModel):
         validation_alias=AliasChoices(
             "starting_deadline_seconds", "startingDeadlineSeconds"
         ),
+        exclude_if=_exclude_if,
     )
 
     successful_jobs_history_limit: int | None = Field(
@@ -46,12 +51,14 @@ class V1CronJobSpec(BaseModel):
         validation_alias=AliasChoices(
             "successful_jobs_history_limit", "successfulJobsHistoryLimit"
         ),
+        exclude_if=_exclude_if,
     )
 
-    suspend: bool | None = None
+    suspend: bool | None = Field(default=None, exclude_if=_exclude_if)
 
     time_zone: str | None = Field(
         default=None,
         serialization_alias="timeZone",
         validation_alias=AliasChoices("time_zone", "timeZone"),
+        exclude_if=_exclude_if,
     )

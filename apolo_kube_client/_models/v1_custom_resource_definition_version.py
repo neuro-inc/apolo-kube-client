@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
@@ -21,17 +22,19 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         validation_alias=AliasChoices(
             "additional_printer_columns", "additionalPrinterColumns"
         ),
+        exclude_if=_exclude_if,
     )
 
-    deprecated: bool | None = None
+    deprecated: bool | None = Field(default=None, exclude_if=_exclude_if)
 
     deprecation_warning: str | None = Field(
         default=None,
         serialization_alias="deprecationWarning",
         validation_alias=AliasChoices("deprecation_warning", "deprecationWarning"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)
 
     schema_: Annotated[
         V1CustomResourceValidation,
@@ -40,6 +43,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         default_factory=lambda: V1CustomResourceValidation(),
         serialization_alias="schema",
         validation_alias=AliasChoices("schema_", "schema"),
+        exclude_if=_exclude_if,
     )
 
     selectable_fields: Annotated[
@@ -48,13 +52,16 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         default=[],
         serialization_alias="selectableFields",
         validation_alias=AliasChoices("selectable_fields", "selectableFields"),
+        exclude_if=_exclude_if,
     )
 
-    served: bool | None = None
+    served: bool | None = Field(default=None, exclude_if=_exclude_if)
 
-    storage: bool | None = None
+    storage: bool | None = Field(default=None, exclude_if=_exclude_if)
 
     subresources: Annotated[
         V1CustomResourceSubresources,
         BeforeValidator(_default_if_none(V1CustomResourceSubresources)),
-    ] = Field(default_factory=lambda: V1CustomResourceSubresources())
+    ] = Field(
+        default_factory=lambda: V1CustomResourceSubresources(), exclude_if=_exclude_if
+    )

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, Field
 from .base import ResourceModel
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_validating_admission_policy_spec import V1ValidatingAdmissionPolicySpec
 from .v1_validating_admission_policy_status import V1ValidatingAdmissionPolicyStatus
@@ -15,20 +16,27 @@ class V1ValidatingAdmissionPolicy(ResourceModel):
         default=None,
         serialization_alias="apiVersion",
         validation_alias=AliasChoices("api_version", "apiVersion"),
+        exclude_if=_exclude_if,
     )
 
-    kind: str | None = None
+    kind: str | None = Field(default=None, exclude_if=_exclude_if)
 
     metadata: Annotated[
         V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta())
+    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
 
     spec: Annotated[
         V1ValidatingAdmissionPolicySpec,
         BeforeValidator(_default_if_none(V1ValidatingAdmissionPolicySpec)),
-    ] = Field(default_factory=lambda: V1ValidatingAdmissionPolicySpec())
+    ] = Field(
+        default_factory=lambda: V1ValidatingAdmissionPolicySpec(),
+        exclude_if=_exclude_if,
+    )
 
     status: Annotated[
         V1ValidatingAdmissionPolicyStatus,
         BeforeValidator(_default_if_none(V1ValidatingAdmissionPolicyStatus)),
-    ] = Field(default_factory=lambda: V1ValidatingAdmissionPolicyStatus())
+    ] = Field(
+        default_factory=lambda: V1ValidatingAdmissionPolicyStatus(),
+        exclude_if=_exclude_if,
+    )

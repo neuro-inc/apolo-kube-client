@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .flowcontrol_v1_subject import FlowcontrolV1Subject
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_non_resource_policy_rule import V1NonResourcePolicyRule
 from .v1_resource_policy_rule import V1ResourcePolicyRule
 from pydantic import BeforeValidator
@@ -16,6 +17,7 @@ class V1PolicyRulesWithSubjects(BaseModel):
         default=[],
         serialization_alias="nonResourceRules",
         validation_alias=AliasChoices("non_resource_rules", "nonResourceRules"),
+        exclude_if=_exclude_if,
     )
 
     resource_rules: Annotated[
@@ -24,8 +26,9 @@ class V1PolicyRulesWithSubjects(BaseModel):
         default=[],
         serialization_alias="resourceRules",
         validation_alias=AliasChoices("resource_rules", "resourceRules"),
+        exclude_if=_exclude_if,
     )
 
     subjects: Annotated[
         list[FlowcontrolV1Subject], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

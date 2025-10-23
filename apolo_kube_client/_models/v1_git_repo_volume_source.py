@@ -1,12 +1,12 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from .utils import _exclude_if
 
 __all__ = ("V1GitRepoVolumeSource",)
 
 
 class V1GitRepoVolumeSource(BaseModel):
-    directory: str | None = None
+    directory: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    repository: str | None = None
+    repository: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    revision: str | None = None
+    revision: str | None = Field(default=None, exclude_if=_exclude_if)

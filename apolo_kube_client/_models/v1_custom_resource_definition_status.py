@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_custom_resource_definition_condition import V1CustomResourceDefinitionCondition
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from pydantic import BeforeValidator
@@ -17,12 +18,13 @@ class V1CustomResourceDefinitionStatus(BaseModel):
         default_factory=lambda: V1CustomResourceDefinitionNames(),
         serialization_alias="acceptedNames",
         validation_alias=AliasChoices("accepted_names", "acceptedNames"),
+        exclude_if=_exclude_if,
     )
 
     conditions: Annotated[
         list[V1CustomResourceDefinitionCondition],
         BeforeValidator(_collection_if_none("[]")),
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
     stored_versions: Annotated[
         list[str], BeforeValidator(_collection_if_none("[]"))
@@ -30,4 +32,5 @@ class V1CustomResourceDefinitionStatus(BaseModel):
         default=[],
         serialization_alias="storedVersions",
         validation_alias=AliasChoices("stored_versions", "storedVersions"),
+        exclude_if=_exclude_if,
     )

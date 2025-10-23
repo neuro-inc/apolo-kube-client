@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1beta2_capacity_requirements import V1beta2CapacityRequirements
 from .v1beta2_device_selector import V1beta2DeviceSelector
 from .v1beta2_device_toleration import V1beta2DeviceToleration
@@ -15,31 +16,36 @@ class V1beta2ExactDeviceRequest(BaseModel):
         default=None,
         serialization_alias="adminAccess",
         validation_alias=AliasChoices("admin_access", "adminAccess"),
+        exclude_if=_exclude_if,
     )
 
     allocation_mode: str | None = Field(
         default=None,
         serialization_alias="allocationMode",
         validation_alias=AliasChoices("allocation_mode", "allocationMode"),
+        exclude_if=_exclude_if,
     )
 
     capacity: Annotated[
         V1beta2CapacityRequirements,
         BeforeValidator(_default_if_none(V1beta2CapacityRequirements)),
-    ] = Field(default_factory=lambda: V1beta2CapacityRequirements())
+    ] = Field(
+        default_factory=lambda: V1beta2CapacityRequirements(), exclude_if=_exclude_if
+    )
 
-    count: int | None = None
+    count: int | None = Field(default=None, exclude_if=_exclude_if)
 
     device_class_name: str | None = Field(
         default=None,
         serialization_alias="deviceClassName",
         validation_alias=AliasChoices("device_class_name", "deviceClassName"),
+        exclude_if=_exclude_if,
     )
 
     selectors: Annotated[
         list[V1beta2DeviceSelector], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
     tolerations: Annotated[
         list[V1beta2DeviceToleration], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

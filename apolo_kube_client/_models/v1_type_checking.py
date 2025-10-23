@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_expression_warning import V1ExpressionWarning
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -14,4 +15,5 @@ class V1TypeChecking(BaseModel):
         default=[],
         serialization_alias="expressionWarnings",
         validation_alias=AliasChoices("expression_warnings", "expressionWarnings"),
+        exclude_if=_exclude_if,
     )

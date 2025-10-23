@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from pydantic import BeforeValidator
 from typing import Annotated
 
@@ -9,10 +10,12 @@ __all__ = ("V1UserInfo",)
 class V1UserInfo(BaseModel):
     extra: Annotated[
         dict[str, list[str]], BeforeValidator(_collection_if_none("{}"))
-    ] = {}
+    ] = Field(default={}, exclude_if=_exclude_if)
 
-    groups: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = []
+    groups: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
+        default=[], exclude_if=_exclude_if
+    )
 
-    uid: str | None = None
+    uid: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    username: str | None = None
+    username: str | None = Field(default=None, exclude_if=_exclude_if)

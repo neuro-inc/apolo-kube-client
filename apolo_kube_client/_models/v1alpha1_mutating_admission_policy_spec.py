@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1alpha1_match_condition import V1alpha1MatchCondition
 from .v1alpha1_match_resources import V1alpha1MatchResources
 from .v1alpha1_mutation import V1alpha1Mutation
@@ -17,6 +18,7 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default=None,
         serialization_alias="failurePolicy",
         validation_alias=AliasChoices("failure_policy", "failurePolicy"),
+        exclude_if=_exclude_if,
     )
 
     match_conditions: Annotated[
@@ -25,6 +27,7 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default=[],
         serialization_alias="matchConditions",
         validation_alias=AliasChoices("match_conditions", "matchConditions"),
+        exclude_if=_exclude_if,
     )
 
     match_constraints: Annotated[
@@ -34,11 +37,12 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default_factory=lambda: V1alpha1MatchResources(),
         serialization_alias="matchConstraints",
         validation_alias=AliasChoices("match_constraints", "matchConstraints"),
+        exclude_if=_exclude_if,
     )
 
     mutations: Annotated[
         list[V1alpha1Mutation], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
     param_kind: Annotated[
         V1alpha1ParamKind, BeforeValidator(_default_if_none(V1alpha1ParamKind))
@@ -46,14 +50,16 @@ class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
         default_factory=lambda: V1alpha1ParamKind(),
         serialization_alias="paramKind",
         validation_alias=AliasChoices("param_kind", "paramKind"),
+        exclude_if=_exclude_if,
     )
 
     reinvocation_policy: str | None = Field(
         default=None,
         serialization_alias="reinvocationPolicy",
         validation_alias=AliasChoices("reinvocation_policy", "reinvocationPolicy"),
+        exclude_if=_exclude_if,
     )
 
     variables: Annotated[
         list[V1alpha1Variable], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_device_attribute import V1DeviceAttribute
 from .v1_device_capacity import V1DeviceCapacity
 from .v1_device_counter_consumption import V1DeviceCounterConsumption
@@ -17,6 +18,7 @@ class V1Device(BaseModel):
         default=None,
         serialization_alias="allNodes",
         validation_alias=AliasChoices("all_nodes", "allNodes"),
+        exclude_if=_exclude_if,
     )
 
     allow_multiple_allocations: bool | None = Field(
@@ -25,11 +27,12 @@ class V1Device(BaseModel):
         validation_alias=AliasChoices(
             "allow_multiple_allocations", "allowMultipleAllocations"
         ),
+        exclude_if=_exclude_if,
     )
 
     attributes: Annotated[
         dict[str, V1DeviceAttribute], BeforeValidator(_collection_if_none("{}"))
-    ] = {}
+    ] = Field(default={}, exclude_if=_exclude_if)
 
     binding_conditions: Annotated[
         list[str], BeforeValidator(_collection_if_none("[]"))
@@ -37,6 +40,7 @@ class V1Device(BaseModel):
         default=[],
         serialization_alias="bindingConditions",
         validation_alias=AliasChoices("binding_conditions", "bindingConditions"),
+        exclude_if=_exclude_if,
     )
 
     binding_failure_conditions: Annotated[
@@ -47,17 +51,19 @@ class V1Device(BaseModel):
         validation_alias=AliasChoices(
             "binding_failure_conditions", "bindingFailureConditions"
         ),
+        exclude_if=_exclude_if,
     )
 
     binds_to_node: bool | None = Field(
         default=None,
         serialization_alias="bindsToNode",
         validation_alias=AliasChoices("binds_to_node", "bindsToNode"),
+        exclude_if=_exclude_if,
     )
 
     capacity: Annotated[
         dict[str, V1DeviceCapacity], BeforeValidator(_collection_if_none("{}"))
-    ] = {}
+    ] = Field(default={}, exclude_if=_exclude_if)
 
     consumes_counters: Annotated[
         list[V1DeviceCounterConsumption], BeforeValidator(_collection_if_none("[]"))
@@ -65,14 +71,16 @@ class V1Device(BaseModel):
         default=[],
         serialization_alias="consumesCounters",
         validation_alias=AliasChoices("consumes_counters", "consumesCounters"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)
 
     node_name: str | None = Field(
         default=None,
         serialization_alias="nodeName",
         validation_alias=AliasChoices("node_name", "nodeName"),
+        exclude_if=_exclude_if,
     )
 
     node_selector: Annotated[
@@ -81,8 +89,9 @@ class V1Device(BaseModel):
         default_factory=lambda: V1NodeSelector(),
         serialization_alias="nodeSelector",
         validation_alias=AliasChoices("node_selector", "nodeSelector"),
+        exclude_if=_exclude_if,
     )
 
     taints: Annotated[
         list[V1DeviceTaint], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

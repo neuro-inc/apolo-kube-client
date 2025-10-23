@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_node_selector_term import V1NodeSelectorTerm
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -14,4 +15,5 @@ class V1NodeSelector(BaseModel):
         default=[],
         serialization_alias="nodeSelectorTerms",
         validation_alias=AliasChoices("node_selector_terms", "nodeSelectorTerms"),
+        exclude_if=_exclude_if,
     )

@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_container_restart_rule_on_exit_codes import V1ContainerRestartRuleOnExitCodes
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -8,7 +9,7 @@ __all__ = ("V1ContainerRestartRule",)
 
 
 class V1ContainerRestartRule(BaseModel):
-    action: str | None = None
+    action: str | None = Field(default=None, exclude_if=_exclude_if)
 
     exit_codes: Annotated[
         V1ContainerRestartRuleOnExitCodes,
@@ -17,4 +18,5 @@ class V1ContainerRestartRule(BaseModel):
         default_factory=lambda: V1ContainerRestartRuleOnExitCodes(),
         serialization_alias="exitCodes",
         validation_alias=AliasChoices("exit_codes", "exitCodes"),
+        exclude_if=_exclude_if,
     )

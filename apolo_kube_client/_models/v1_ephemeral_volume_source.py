@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -15,4 +16,5 @@ class V1EphemeralVolumeSource(BaseModel):
         default_factory=lambda: V1PersistentVolumeClaimTemplate(),
         serialization_alias="volumeClaimTemplate",
         validation_alias=AliasChoices("volume_claim_template", "volumeClaimTemplate"),
+        exclude_if=_exclude_if,
     )

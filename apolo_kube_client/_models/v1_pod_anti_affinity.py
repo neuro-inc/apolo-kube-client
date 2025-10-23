@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_pod_affinity_term import V1PodAffinityTerm
 from .v1_weighted_pod_affinity_term import V1WeightedPodAffinityTerm
 from pydantic import BeforeValidator
@@ -18,6 +19,7 @@ class V1PodAntiAffinity(BaseModel):
             "preferred_during_scheduling_ignored_during_execution",
             "preferredDuringSchedulingIgnoredDuringExecution",
         ),
+        exclude_if=_exclude_if,
     )
 
     required_during_scheduling_ignored_during_execution: Annotated[
@@ -29,4 +31,5 @@ class V1PodAntiAffinity(BaseModel):
             "required_during_scheduling_ignored_during_execution",
             "requiredDuringSchedulingIgnoredDuringExecution",
         ),
+        exclude_if=_exclude_if,
     )

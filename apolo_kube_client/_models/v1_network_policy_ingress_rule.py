@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_network_policy_peer import V1NetworkPolicyPeer
 from .v1_network_policy_port import V1NetworkPolicyPort
 from pydantic import BeforeValidator
@@ -15,8 +16,9 @@ class V1NetworkPolicyIngressRule(BaseModel):
         default=[],
         serialization_alias="from",
         validation_alias=AliasChoices("from_", "from"),
+        exclude_if=_exclude_if,
     )
 
     ports: Annotated[
         list[V1NetworkPolicyPort], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

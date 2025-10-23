@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _exclude_if
 
 __all__ = ("V1ClientIPConfig",)
 
@@ -9,4 +9,5 @@ class V1ClientIPConfig(BaseModel):
         default=None,
         serialization_alias="timeoutSeconds",
         validation_alias=AliasChoices("timeout_seconds", "timeoutSeconds"),
+        exclude_if=_exclude_if,
     )

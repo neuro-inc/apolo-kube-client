@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_user_info import V1UserInfo
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -13,5 +14,6 @@ class V1SelfSubjectReviewStatus(BaseModel):
             default_factory=lambda: V1UserInfo(),
             serialization_alias="userInfo",
             validation_alias=AliasChoices("user_info", "userInfo"),
+            exclude_if=_exclude_if,
         )
     )

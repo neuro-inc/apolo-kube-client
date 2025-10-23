@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1beta2_device_allocation_configuration import (
     V1beta2DeviceAllocationConfiguration,
 )
@@ -16,9 +17,9 @@ class V1beta2DeviceAllocationResult(BaseModel):
     config: Annotated[
         list[V1beta2DeviceAllocationConfiguration],
         BeforeValidator(_collection_if_none("[]")),
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
     results: Annotated[
         list[V1beta2DeviceRequestAllocationResult],
         BeforeValidator(_collection_if_none("[]")),
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)

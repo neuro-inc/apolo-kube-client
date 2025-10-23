@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _exclude_if
 
 __all__ = ("V1AzureFileVolumeSource",)
 
@@ -9,16 +9,19 @@ class V1AzureFileVolumeSource(BaseModel):
         default=None,
         serialization_alias="readOnly",
         validation_alias=AliasChoices("read_only", "readOnly"),
+        exclude_if=_exclude_if,
     )
 
     secret_name: str | None = Field(
         default=None,
         serialization_alias="secretName",
         validation_alias=AliasChoices("secret_name", "secretName"),
+        exclude_if=_exclude_if,
     )
 
     share_name: str | None = Field(
         default=None,
         serialization_alias="shareName",
         validation_alias=AliasChoices("share_name", "shareName"),
+        exclude_if=_exclude_if,
     )

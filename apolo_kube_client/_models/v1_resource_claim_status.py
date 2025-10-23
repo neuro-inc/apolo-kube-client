@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_allocated_device_status import V1AllocatedDeviceStatus
 from .v1_allocation_result import V1AllocationResult
 from .v1_resource_claim_consumer_reference import V1ResourceClaimConsumerReference
@@ -13,11 +14,11 @@ __all__ = ("V1ResourceClaimStatus",)
 class V1ResourceClaimStatus(BaseModel):
     allocation: Annotated[
         V1AllocationResult, BeforeValidator(_default_if_none(V1AllocationResult))
-    ] = Field(default_factory=lambda: V1AllocationResult())
+    ] = Field(default_factory=lambda: V1AllocationResult(), exclude_if=_exclude_if)
 
     devices: Annotated[
         list[V1AllocatedDeviceStatus], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
     reserved_for: Annotated[
         list[V1ResourceClaimConsumerReference],
@@ -26,4 +27,5 @@ class V1ResourceClaimStatus(BaseModel):
         default=[],
         serialization_alias="reservedFor",
         validation_alias=AliasChoices("reserved_for", "reservedFor"),
+        exclude_if=_exclude_if,
     )

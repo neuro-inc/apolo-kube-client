@@ -1,12 +1,12 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from .utils import _exclude_if
 
 __all__ = ("V1PortStatus",)
 
 
 class V1PortStatus(BaseModel):
-    error: str | None = None
+    error: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    port: int | None = None
+    port: int | None = Field(default=None, exclude_if=_exclude_if)
 
-    protocol: str | None = None
+    protocol: str | None = Field(default=None, exclude_if=_exclude_if)

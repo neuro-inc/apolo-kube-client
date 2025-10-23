@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1beta1_parent_reference import V1beta1ParentReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -15,4 +16,5 @@ class V1beta1IPAddressSpec(BaseModel):
         default_factory=lambda: V1beta1ParentReference(),
         serialization_alias="parentRef",
         validation_alias=AliasChoices("parent_ref", "parentRef"),
+        exclude_if=_exclude_if,
     )

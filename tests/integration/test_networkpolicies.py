@@ -22,7 +22,9 @@ class TestNetworkPolicy:
                     V1NetworkPolicyIngressRule(
                         from_=[
                             V1NetworkPolicyPeer(
-                                pod_selector=V1LabelSelector(match_labels={})
+                                pod_selector=V1LabelSelector(
+                                    match_labels={"label1": "val1"}
+                                )
                             )
                         ],
                     )
@@ -31,7 +33,9 @@ class TestNetworkPolicy:
                     V1NetworkPolicyEgressRule(
                         to=[
                             V1NetworkPolicyPeer(
-                                pod_selector=V1LabelSelector(match_labels={})
+                                pod_selector=V1LabelSelector(
+                                    match_labels={"label1": "val1"}
+                                )
                             )
                         ],
                     )

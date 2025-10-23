@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_topology_selector_label_requirement import V1TopologySelectorLabelRequirement
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -17,4 +18,5 @@ class V1TopologySelectorTerm(BaseModel):
         validation_alias=AliasChoices(
             "match_label_expressions", "matchLabelExpressions"
         ),
+        exclude_if=_exclude_if,
     )

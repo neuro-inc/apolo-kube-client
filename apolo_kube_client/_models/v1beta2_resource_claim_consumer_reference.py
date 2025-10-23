@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _exclude_if
 
 __all__ = ("V1beta2ResourceClaimConsumerReference",)
 
@@ -9,10 +9,11 @@ class V1beta2ResourceClaimConsumerReference(BaseModel):
         default=None,
         serialization_alias="apiGroup",
         validation_alias=AliasChoices("api_group", "apiGroup"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    resource: str | None = None
+    resource: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    uid: str | None = None
+    uid: str | None = Field(default=None, exclude_if=_exclude_if)

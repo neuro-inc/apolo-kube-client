@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_ingress_load_balancer_status import V1IngressLoadBalancerStatus
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -15,4 +16,5 @@ class V1IngressStatus(BaseModel):
         default_factory=lambda: V1IngressLoadBalancerStatus(),
         serialization_alias="loadBalancer",
         validation_alias=AliasChoices("load_balancer", "loadBalancer"),
+        exclude_if=_exclude_if,
     )

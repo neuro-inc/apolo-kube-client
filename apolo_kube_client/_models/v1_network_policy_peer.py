@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_ip_block import V1IPBlock
 from .v1_label_selector import V1LabelSelector
 from pydantic import BeforeValidator
@@ -14,6 +15,7 @@ class V1NetworkPolicyPeer(BaseModel):
             default_factory=lambda: V1IPBlock(),
             serialization_alias="ipBlock",
             validation_alias=AliasChoices("ip_block", "ipBlock"),
+            exclude_if=_exclude_if,
         )
     )
 
@@ -23,6 +25,7 @@ class V1NetworkPolicyPeer(BaseModel):
         default_factory=lambda: V1LabelSelector(),
         serialization_alias="namespaceSelector",
         validation_alias=AliasChoices("namespace_selector", "namespaceSelector"),
+        exclude_if=_exclude_if,
     )
 
     pod_selector: Annotated[
@@ -31,4 +34,5 @@ class V1NetworkPolicyPeer(BaseModel):
         default_factory=lambda: V1LabelSelector(),
         serialization_alias="podSelector",
         validation_alias=AliasChoices("pod_selector", "podSelector"),
+        exclude_if=_exclude_if,
     )

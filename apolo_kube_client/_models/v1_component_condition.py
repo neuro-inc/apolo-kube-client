@@ -1,14 +1,14 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from .utils import _exclude_if
 
 __all__ = ("V1ComponentCondition",)
 
 
 class V1ComponentCondition(BaseModel):
-    error: str | None = None
+    error: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    message: str | None = None
+    message: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    status: str | None = None
+    status: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    type: str | None = None
+    type: str | None = Field(default=None, exclude_if=_exclude_if)

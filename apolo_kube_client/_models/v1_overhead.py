@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from pydantic import BeforeValidator
 from typing import Annotated
 
@@ -12,5 +13,6 @@ class V1Overhead(BaseModel):
             default={},
             serialization_alias="podFixed",
             validation_alias=AliasChoices("pod_fixed", "podFixed"),
+            exclude_if=_exclude_if,
         )
     )

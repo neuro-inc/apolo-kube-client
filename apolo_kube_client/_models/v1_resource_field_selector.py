@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _exclude_if
 
 __all__ = ("V1ResourceFieldSelector",)
 
@@ -9,8 +9,9 @@ class V1ResourceFieldSelector(BaseModel):
         default=None,
         serialization_alias="containerName",
         validation_alias=AliasChoices("container_name", "containerName"),
+        exclude_if=_exclude_if,
     )
 
-    divisor: str | None = None
+    divisor: str | None = Field(default=None, exclude_if=_exclude_if)
 
-    resource: str | None = None
+    resource: str | None = Field(default=None, exclude_if=_exclude_if)

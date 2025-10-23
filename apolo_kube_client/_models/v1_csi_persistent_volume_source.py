@@ -1,6 +1,7 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
+from .utils import _exclude_if
 from .v1_secret_reference import V1SecretReference
 from pydantic import BeforeValidator
 from typing import Annotated
@@ -17,6 +18,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices(
             "controller_expand_secret_ref", "controllerExpandSecretRef"
         ),
+        exclude_if=_exclude_if,
     )
 
     controller_publish_secret_ref: Annotated[
@@ -27,14 +29,16 @@ class V1CSIPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices(
             "controller_publish_secret_ref", "controllerPublishSecretRef"
         ),
+        exclude_if=_exclude_if,
     )
 
-    driver: str | None = None
+    driver: str | None = Field(default=None, exclude_if=_exclude_if)
 
     fs_type: str | None = Field(
         default=None,
         serialization_alias="fsType",
         validation_alias=AliasChoices("fs_type", "fsType"),
+        exclude_if=_exclude_if,
     )
 
     node_expand_secret_ref: Annotated[
@@ -43,6 +47,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         default_factory=lambda: V1SecretReference(),
         serialization_alias="nodeExpandSecretRef",
         validation_alias=AliasChoices("node_expand_secret_ref", "nodeExpandSecretRef"),
+        exclude_if=_exclude_if,
     )
 
     node_publish_secret_ref: Annotated[
@@ -53,6 +58,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         validation_alias=AliasChoices(
             "node_publish_secret_ref", "nodePublishSecretRef"
         ),
+        exclude_if=_exclude_if,
     )
 
     node_stage_secret_ref: Annotated[
@@ -61,12 +67,14 @@ class V1CSIPersistentVolumeSource(BaseModel):
         default_factory=lambda: V1SecretReference(),
         serialization_alias="nodeStageSecretRef",
         validation_alias=AliasChoices("node_stage_secret_ref", "nodeStageSecretRef"),
+        exclude_if=_exclude_if,
     )
 
     read_only: bool | None = Field(
         default=None,
         serialization_alias="readOnly",
         validation_alias=AliasChoices("read_only", "readOnly"),
+        exclude_if=_exclude_if,
     )
 
     volume_attributes: Annotated[
@@ -75,10 +83,12 @@ class V1CSIPersistentVolumeSource(BaseModel):
         default={},
         serialization_alias="volumeAttributes",
         validation_alias=AliasChoices("volume_attributes", "volumeAttributes"),
+        exclude_if=_exclude_if,
     )
 
     volume_handle: str | None = Field(
         default=None,
         serialization_alias="volumeHandle",
         validation_alias=AliasChoices("volume_handle", "volumeHandle"),
+        exclude_if=_exclude_if,
     )

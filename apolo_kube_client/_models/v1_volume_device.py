@@ -1,5 +1,5 @@
 from pydantic import AliasChoices, BaseModel, Field
-
+from .utils import _exclude_if
 
 __all__ = ("V1VolumeDevice",)
 
@@ -9,6 +9,7 @@ class V1VolumeDevice(BaseModel):
         default=None,
         serialization_alias="devicePath",
         validation_alias=AliasChoices("device_path", "devicePath"),
+        exclude_if=_exclude_if,
     )
 
-    name: str | None = None
+    name: str | None = Field(default=None, exclude_if=_exclude_if)

@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from .core_v1_resource_claim import CoreV1ResourceClaim
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from pydantic import BeforeValidator
 from typing import Annotated
 
@@ -10,8 +11,12 @@ __all__ = ("V1ResourceRequirements",)
 class V1ResourceRequirements(BaseModel):
     claims: Annotated[
         list[CoreV1ResourceClaim], BeforeValidator(_collection_if_none("[]"))
-    ] = []
+    ] = Field(default=[], exclude_if=_exclude_if)
 
-    limits: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
+    limits: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = (
+        Field(default={}, exclude_if=_exclude_if)
+    )
 
-    requests: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = {}
+    requests: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = (
+        Field(default={}, exclude_if=_exclude_if)
+    )

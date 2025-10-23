@@ -1,5 +1,6 @@
 from pydantic import AliasChoices, BaseModel, Field
 from .utils import _collection_if_none
+from .utils import _exclude_if
 from .v1_for_node import V1ForNode
 from .v1_for_zone import V1ForZone
 from pydantic import BeforeValidator
@@ -15,6 +16,7 @@ class V1EndpointHints(BaseModel):
         default=[],
         serialization_alias="forNodes",
         validation_alias=AliasChoices("for_nodes", "forNodes"),
+        exclude_if=_exclude_if,
     )
 
     for_zones: Annotated[
@@ -23,4 +25,5 @@ class V1EndpointHints(BaseModel):
         default=[],
         serialization_alias="forZones",
         validation_alias=AliasChoices("for_zones", "forZones"),
+        exclude_if=_exclude_if,
     )
