@@ -4,6 +4,8 @@ from .._core_v1 import (
     Event,
     PersistentVolumeClaim,
     Pod,
+    PodLog,
+    PodStatus,
     Secret,
     Service,
 )
@@ -25,13 +27,14 @@ from .._models import (
     V1Status,
 )
 
-from .._core_v1 import (
-    PodStatus,
-)
 from ._resource_proxy import NestedResourceProxy
 
 
-class PodStatusProxy(NestedResourceProxy[V1Pod, V1PodList, V1Pod, PodStatus]):
+class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
+    pass
+
+
+class PodLogProxy(NestedResourceProxy[str, PodLog]):
     pass
 
 
@@ -39,6 +42,10 @@ class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
     @attr(PodStatusProxy)
     def status(self) -> PodStatus:
         return self._origin.status
+
+    @attr(PodLogProxy)
+    def log(self) -> PodLog:
+        return self._origin.log
 
 
 class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secret]):

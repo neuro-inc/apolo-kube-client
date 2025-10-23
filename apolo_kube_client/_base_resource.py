@@ -19,11 +19,41 @@ class Base:
         self._core = core
 
 
+class ModelClassMixin[
+    ModelT: ResourceModel | str | None,
+    ListModelT: ListModel | str | None,
+    DeleteModelT: ListModel | ResourceModel | str | None,
+]:
+    @property
+    def _model_class(self) -> type[ModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[ModelT], get_args(self.__orig_class__)[0])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[ModelT], get_args(self.__orig_bases__[0])[0])
+        raise ValueError("Model class not found")
+
+    @property
+    def _list_model_class(self) -> type[ListModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[ListModelT], get_args(self.__orig_class__)[1])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
+        raise ValueError("ListModel class not found")
+
+    @property
+    def _delete_model_class(self) -> type[DeleteModelT]:
+        if hasattr(self, "__orig_class__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_class__)[2])
+        if hasattr(self, "__orig_bases__"):
+            return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
+        raise ValueError("DeleteModel class not found")
+
+
 class BaseResource[
     ModelT: ResourceModel,
     ListModelT: ListModel,
     DeleteModelT: ListModel | ResourceModel,
-]:
+](ModelClassMixin[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources
     Uses models from the official Kubernetes API client.
@@ -54,30 +84,6 @@ class BaseResource[
         if self._resource_id is not None:
             raise ValueError(f"kube client was already bound to {self._resource_id}")
         return self.__class__(self._core, self._group_api_query_path, resource_id)
-
-    @property
-    def _model_class(self) -> type[ModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[ModelT], get_args(self.__orig_class__)[0])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[ModelT], get_args(self.__orig_bases__[0])[0])
-        raise ValueError("Model class not found")
-
-    @property
-    def _list_model_class(self) -> type[ListModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[ListModelT], get_args(self.__orig_class__)[1])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
-        raise ValueError("ListModel class not found")
-
-    @property
-    def _delete_model_class(self) -> type[DeleteModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[DeleteModelT], get_args(self.__orig_class__)[2])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
-        raise ValueError("DeleteModel class not found")
 
     async def get(self, name: str) -> ModelT:
         raise NotImplementedError
@@ -419,21 +425,19 @@ class NamespacedResource[
 
 
 class NestedResource[
-    ModelT: ResourceModel,
-    ListModelT: ListModel,
-    DeleteModelT: ListModel | ResourceModel,
-](BaseResource[ModelT, ListModelT, DeleteModelT]):
+    ModelT: ResourceModel | str | None,
+](ModelClassMixin[ModelT, None, None]):
     is_nested_resource = True  # marker
     query_path: ClassVar[str]
 
     def __init__(
         self,
-        parent: (
-            NamespacedResource[ModelT, ListModelT, DeleteModelT]
-            | ClusterScopedResource[ModelT, ListModelT, DeleteModelT]
+        parent: (  # type: ignore[type-var]
+            NamespacedResource[ModelT, None, None]
+            | ClusterScopedResource[ModelT, None, None]
         ),
     ):
-        super().__init__(parent._core, parent._group_api_query_path)
+        self._core = parent._core
         self._group_api_query_path = parent._group_api_query_path
         self._parent = parent
         rid = getattr(parent, "_resource_id", None)
@@ -441,27 +445,18 @@ class NestedResource[
             raise ValueError("Nested resource requires parent resource_id")
         self._parent_resource_id: str = rid
 
-    def _build_url_list(self) -> URL:
+    def _build_url(self) -> URL:
         assert self.query_path, "query_path must be set"
         parent = self._parent
-        # Use parent's _build_url to construct the base URL to the parent resource
         if isinstance(parent, NamespacedResource):
             base = parent._build_url(self._parent_resource_id, parent._get_ns())
         else:
             base = parent._build_url(self._parent_resource_id)
         return base / self.query_path
 
-    def _build_url(self, name: str | None = None) -> URL:
-        list_url = self._build_url_list()
-        return list_url / name if name else list_url
-
-    async def get(self, name: str) -> ModelT:
+    async def get(self) -> ModelT:
         async with self._core.request(method="GET", url=self._build_url()) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
-
-    async def get_list(self) -> ListModelT:
-        async with self._core.request(method="GET", url=self._build_url_list()) as resp:
-            return await self._core.deserialize_response(resp, self._list_model_class)
 
     async def update(self, model: ModelT) -> ModelT:
         async with self._core.request(
