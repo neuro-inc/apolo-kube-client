@@ -1,43 +1,66 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _collection_if_none
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_local_object_reference import V1LocalObjectReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CephFSVolumeSource",)
 
 
 class V1CephFSVolumeSource(BaseModel):
-    monitors: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    """Represents a Ceph Filesystem mount that lasts the lifetime of a pod Cephfs volumes do not support ownership management or SELinux relabeling."""
 
-    path: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.CephFSVolumeSource"
 
-    secret_file: str | None = Field(
-        default=None,
-        serialization_alias="secretFile",
-        validation_alias=AliasChoices("secret_file", "secretFile"),
-        exclude_if=_exclude_if,
-    )
+    monitors: Annotated[
+        list[str],
+        Field(
+            description="""monitors is Required: Monitors is a collection of Ceph monitors More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it"""
+        ),
+    ]
+
+    path: Annotated[
+        str | None,
+        Field(
+            description="""path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly is Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    secret_file: Annotated[
+        str | None,
+        Field(
+            alias="secretFile",
+            description="""secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     secret_ref: Annotated[
         V1LocalObjectReference,
+        Field(
+            alias="secretRef",
+            description="""secretRef is Optional: SecretRef is reference to the authentication secret for User, default is empty. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it""",
+            exclude_if=lambda v: v == V1LocalObjectReference(),
+        ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
-    ] = Field(
-        default_factory=lambda: V1LocalObjectReference(),
-        serialization_alias="secretRef",
-        validation_alias=AliasChoices("secret_ref", "secretRef"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1LocalObjectReference()
 
-    user: str | None = Field(default=None, exclude_if=_exclude_if)
+    user: Annotated[
+        str | None,
+        Field(
+            description="""user is optional: User is the rados user name, default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

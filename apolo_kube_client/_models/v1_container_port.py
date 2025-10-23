@@ -1,31 +1,55 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ContainerPort",)
 
 
 class V1ContainerPort(BaseModel):
-    container_port: int | None = Field(
-        default=None,
-        serialization_alias="containerPort",
-        validation_alias=AliasChoices("container_port", "containerPort"),
-        exclude_if=_exclude_if,
-    )
+    """ContainerPort represents a network port in a single container."""
 
-    host_ip: str | None = Field(
-        default=None,
-        serialization_alias="hostIP",
-        validation_alias=AliasChoices("host_ip", "hostIP"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    host_port: int | None = Field(
-        default=None,
-        serialization_alias="hostPort",
-        validation_alias=AliasChoices("host_port", "hostPort"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerPort"
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    container_port: Annotated[
+        int,
+        Field(
+            alias="containerPort",
+            description="""Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.""",
+        ),
+    ]
 
-    protocol: str | None = Field(default=None, exclude_if=_exclude_if)
+    host_ip: Annotated[
+        str | None,
+        Field(
+            alias="hostIP",
+            description="""What host IP to bind the external port to.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    host_port: Annotated[
+        int | None,
+        Field(
+            alias="hostPort",
+            description="""Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    name: Annotated[
+        str | None,
+        Field(
+            description="""If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    protocol: Annotated[
+        str | None,
+        Field(
+            description="""Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

@@ -1,22 +1,49 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1APIServiceCondition",)
 
 
 class V1APIServiceCondition(BaseModel):
-    last_transition_time: datetime | None = Field(
-        default=None,
-        serialization_alias="lastTransitionTime",
-        validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
-        exclude_if=_exclude_if,
+    """APIServiceCondition describes the state of an APIService at a particular point"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIServiceCondition"
     )
 
-    message: str | None = Field(default=None, exclude_if=_exclude_if)
+    last_transition_time: Annotated[
+        datetime | None,
+        Field(
+            alias="lastTransitionTime",
+            description="""Last time the condition transitioned from one status to another.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    reason: str | None = Field(default=None, exclude_if=_exclude_if)
+    message: Annotated[
+        str | None,
+        Field(
+            description="""Human-readable message indicating details about last transition.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    status: str | None = Field(default=None, exclude_if=_exclude_if)
+    reason: Annotated[
+        str | None,
+        Field(
+            description="""Unique, one-word, CamelCase reason for the condition's last transition.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    status: Annotated[
+        str,
+        Field(
+            description="""Status is the status of the condition. Can be True, False, Unknown."""
+        ),
+    ]
+
+    type: Annotated[str, Field(description="""Type is the type of the condition.""")]

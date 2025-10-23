@@ -1,94 +1,111 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_secret_reference import V1SecretReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CSIPersistentVolumeSource",)
 
 
 class V1CSIPersistentVolumeSource(BaseModel):
-    controller_expand_secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="controllerExpandSecretRef",
-        validation_alias=AliasChoices(
-            "controller_expand_secret_ref", "controllerExpandSecretRef"
-        ),
-        exclude_if=_exclude_if,
+    """Represents storage that is managed by an external CSI volume driver"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.CSIPersistentVolumeSource"
     )
+
+    controller_expand_secret_ref: Annotated[
+        V1SecretReference,
+        Field(
+            alias="controllerExpandSecretRef",
+            description="""controllerExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerExpandVolume call. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
+            exclude_if=lambda v: v == V1SecretReference(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
     controller_publish_secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="controllerPublishSecretRef",
-        validation_alias=AliasChoices(
-            "controller_publish_secret_ref", "controllerPublishSecretRef"
+        V1SecretReference,
+        Field(
+            alias="controllerPublishSecretRef",
+            description="""controllerPublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerPublishVolume and ControllerUnpublishVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
+            exclude_if=lambda v: v == V1SecretReference(),
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
-    driver: str | None = Field(default=None, exclude_if=_exclude_if)
+    driver: Annotated[
+        str,
+        Field(
+            description="""driver is the name of the driver to use for this volume. Required."""
+        ),
+    ]
 
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
-    )
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs".""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     node_expand_secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="nodeExpandSecretRef",
-        validation_alias=AliasChoices("node_expand_secret_ref", "nodeExpandSecretRef"),
-        exclude_if=_exclude_if,
-    )
+        V1SecretReference,
+        Field(
+            alias="nodeExpandSecretRef",
+            description="""nodeExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodeExpandVolume call. This field is optional, may be omitted if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
+            exclude_if=lambda v: v == V1SecretReference(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
     node_publish_secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="nodePublishSecretRef",
-        validation_alias=AliasChoices(
-            "node_publish_secret_ref", "nodePublishSecretRef"
+        V1SecretReference,
+        Field(
+            alias="nodePublishSecretRef",
+            description="""nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
+            exclude_if=lambda v: v == V1SecretReference(),
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
     node_stage_secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="nodeStageSecretRef",
-        validation_alias=AliasChoices("node_stage_secret_ref", "nodeStageSecretRef"),
-        exclude_if=_exclude_if,
-    )
+        V1SecretReference,
+        Field(
+            alias="nodeStageSecretRef",
+            description="""nodeStageSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodeStageVolume and NodeStageVolume and NodeUnstageVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
+            exclude_if=lambda v: v == V1SecretReference(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly value to pass to ControllerPublishVolumeRequest. Defaults to false (read/write).""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     volume_attributes: Annotated[
-        dict[str, str], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(
-        default={},
-        serialization_alias="volumeAttributes",
-        validation_alias=AliasChoices("volume_attributes", "volumeAttributes"),
-        exclude_if=_exclude_if,
-    )
+        dict[str, str],
+        Field(
+            alias="volumeAttributes",
+            description="""volumeAttributes of the volume to publish.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
-    volume_handle: str | None = Field(
-        default=None,
-        serialization_alias="volumeHandle",
-        validation_alias=AliasChoices("volume_handle", "volumeHandle"),
-        exclude_if=_exclude_if,
-    )
+    volume_handle: Annotated[
+        str,
+        Field(
+            alias="volumeHandle",
+            description="""volumeHandle is the unique volume name returned by the CSI volume plugin’s CreateVolume to refer to the volume on all subsequent calls. Required.""",
+        ),
+    ]

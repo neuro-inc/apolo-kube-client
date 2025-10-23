@@ -1,34 +1,50 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1VsphereVirtualDiskVolumeSource",)
 
 
 class V1VsphereVirtualDiskVolumeSource(BaseModel):
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
+    """Represents a vSphere volume resource."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
     )
 
-    storage_policy_id: str | None = Field(
-        default=None,
-        serialization_alias="storagePolicyID",
-        validation_alias=AliasChoices("storage_policy_id", "storagePolicyID"),
-        exclude_if=_exclude_if,
-    )
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType is filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    storage_policy_name: str | None = Field(
-        default=None,
-        serialization_alias="storagePolicyName",
-        validation_alias=AliasChoices("storage_policy_name", "storagePolicyName"),
-        exclude_if=_exclude_if,
-    )
+    storage_policy_id: Annotated[
+        str | None,
+        Field(
+            alias="storagePolicyID",
+            description="""storagePolicyID is the storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    volume_path: str | None = Field(
-        default=None,
-        serialization_alias="volumePath",
-        validation_alias=AliasChoices("volume_path", "volumePath"),
-        exclude_if=_exclude_if,
-    )
+    storage_policy_name: Annotated[
+        str | None,
+        Field(
+            alias="storagePolicyName",
+            description="""storagePolicyName is the storage Policy Based Management (SPBM) profile name.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    volume_path: Annotated[
+        str,
+        Field(
+            alias="volumePath",
+            description="""volumePath is the path that identifies vSphere volume vmdk""",
+        ),
+    ]

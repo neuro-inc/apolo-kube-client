@@ -1,46 +1,76 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_match_resources import V1MatchResources
 from .v1_param_ref import V1ParamRef
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1ValidatingAdmissionPolicyBindingSpec",)
 
 
 class V1ValidatingAdmissionPolicyBindingSpec(BaseModel):
+    """ValidatingAdmissionPolicyBindingSpec is the specification of the ValidatingAdmissionPolicyBinding."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingSpec"
+    )
+
     match_resources: Annotated[
-        V1MatchResources, BeforeValidator(_default_if_none(V1MatchResources))
-    ] = Field(
-        default_factory=lambda: V1MatchResources(),
-        serialization_alias="matchResources",
-        validation_alias=AliasChoices("match_resources", "matchResources"),
-        exclude_if=_exclude_if,
-    )
-
-    param_ref: Annotated[V1ParamRef, BeforeValidator(_default_if_none(V1ParamRef))] = (
+        V1MatchResources,
         Field(
-            default_factory=lambda: V1ParamRef(),
-            serialization_alias="paramRef",
-            validation_alias=AliasChoices("param_ref", "paramRef"),
-            exclude_if=_exclude_if,
-        )
-    )
+            alias="matchResources",
+            description="""MatchResources declares what resources match this binding and will be validated by it. Note that this is intersected with the policy's matchConstraints, so only requests that are matched by the policy can be selected by this. If this is unset, all resources matched by the policy are validated by this binding When resourceRules is unset, it does not constrain resource matching. If a resource is matched by the other fields of this object, it will be validated. Note that this is differs from ValidatingAdmissionPolicy matchConstraints, where resourceRules are required.""",
+            exclude_if=lambda v: v == V1MatchResources(),
+        ),
+        BeforeValidator(_default_if_none(V1MatchResources)),
+    ] = V1MatchResources()
 
-    policy_name: str | None = Field(
-        default=None,
-        serialization_alias="policyName",
-        validation_alias=AliasChoices("policy_name", "policyName"),
-        exclude_if=_exclude_if,
-    )
+    param_ref: Annotated[
+        V1ParamRef,
+        Field(
+            alias="paramRef",
+            description="""paramRef specifies the parameter resource used to configure the admission control policy. It should point to a resource of the type specified in ParamKind of the bound ValidatingAdmissionPolicy. If the policy specifies a ParamKind and the resource referred to by ParamRef does not exist, this binding is considered mis-configured and the FailurePolicy of the ValidatingAdmissionPolicy applied. If the policy does not specify a ParamKind then this field is ignored, and the rules are evaluated without a param.""",
+            exclude_if=lambda v: v == V1ParamRef(),
+        ),
+        BeforeValidator(_default_if_none(V1ParamRef)),
+    ] = V1ParamRef()
+
+    policy_name: Annotated[
+        str | None,
+        Field(
+            alias="policyName",
+            description="""PolicyName references a ValidatingAdmissionPolicy name which the ValidatingAdmissionPolicyBinding binds to. If the referenced resource does not exist, this binding is considered invalid and will be ignored Required.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     validation_actions: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="validationActions",
-        validation_alias=AliasChoices("validation_actions", "validationActions"),
-        exclude_if=_exclude_if,
-    )
+        list[str],
+        Field(
+            alias="validationActions",
+            description="""validationActions declares how Validations of the referenced ValidatingAdmissionPolicy are enforced. If a validation evaluates to false it is always enforced according to these actions.
+
+Failures defined by the ValidatingAdmissionPolicy's FailurePolicy are enforced according to these actions only if the FailurePolicy is set to Fail, otherwise the failures are ignored. This includes compilation errors, runtime errors and misconfigurations of the policy.
+
+validationActions is declared as a set of action values. Order does not matter. validationActions may not contain duplicates of the same action.
+
+The supported actions values are:
+
+"Deny" specifies that a validation failure results in a denied request.
+
+"Warn" specifies that a validation failure is reported to the request client in HTTP Warning headers, with a warning code of 299. Warnings can be sent both for allowed or denied admission responses.
+
+"Audit" specifies that a validation failure is included in the published audit event for the request. The audit event will contain a `validation.policy.admission.k8s.io/validation_failure` audit annotation with a value containing the details of the validation failures, formatted as a JSON list of objects, each with the following fields: - message: The validation failure message string - policy: The resource name of the ValidatingAdmissionPolicy - binding: The resource name of the ValidatingAdmissionPolicyBinding - expressionIndex: The index of the failed validations in the ValidatingAdmissionPolicy - validationActions: The enforcement actions enacted for the validation failure Example audit annotation: `"validation.policy.admission.k8s.io/validation_failure": "[{\"message\": \"Invalid value\", {\"policy\": \"policy.example.com\", {\"binding\": \"policybinding.example.com\", {\"expressionIndex\": \"1\", {\"validationActions\": [\"Audit\"]}]"`
+
+Clients should expect to handle additional values by ignoring any values not recognized.
+
+"Deny" and "Warn" may not be used together since this combination needlessly duplicates the validation failure both in the API response body and the HTTP warning headers.
+
+Required.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

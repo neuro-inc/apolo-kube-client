@@ -1,18 +1,31 @@
-from pydantic import BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v2_metric_target import V2MetricTarget
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V2ContainerResourceMetricSource",)
 
 
 class V2ContainerResourceMetricSource(BaseModel):
-    container: str | None = Field(default=None, exclude_if=_exclude_if)
+    """ContainerResourceMetricSource indicates how to scale on a resource metric known to Kubernetes, as specified in requests and limits, describing each pod in the current scale target (e.g. CPU or memory).  The values will be averaged together before being compared to the target.  Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the "pods" source.  Only one "target" type should be set."""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.autoscaling.v2.ContainerResourceMetricSource"
+    )
+
+    container: Annotated[
+        str,
+        Field(
+            description="""container is the name of the container in the pods of the scaling target"""
+        ),
+    ]
+
+    name: Annotated[
+        str, Field(description="""name is the name of the resource in question.""")
+    ]
 
     target: Annotated[
-        V2MetricTarget, BeforeValidator(_default_if_none(V2MetricTarget))
-    ] = Field(default_factory=lambda: V2MetricTarget(), exclude_if=_exclude_if)
+        V2MetricTarget,
+        Field(description="""target specifies the target value for the given metric"""),
+    ]

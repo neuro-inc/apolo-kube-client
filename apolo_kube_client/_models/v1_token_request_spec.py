@@ -1,32 +1,43 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _collection_if_none
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_bound_object_reference import V1BoundObjectReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1TokenRequestSpec",)
 
 
 class V1TokenRequestSpec(BaseModel):
-    audiences: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
+    """TokenRequestSpec contains client provided parameters of a token request."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authentication.v1.TokenRequestSpec"
     )
+
+    audiences: Annotated[
+        list[str],
+        Field(
+            description="""Audiences are the intendend audiences of the token. A recipient of a token must identify themself with an identifier in the list of audiences of the token, and otherwise should reject the token. A token issued for multiple audiences may be used to authenticate against any of the audiences listed but implies a high degree of trust between the target audiences."""
+        ),
+    ]
 
     bound_object_ref: Annotated[
         V1BoundObjectReference,
+        Field(
+            alias="boundObjectRef",
+            description="""BoundObjectRef is a reference to an object that the token will be bound to. The token will only be valid for as long as the bound object exists. NOTE: The API server's TokenReview endpoint will validate the BoundObjectRef, but other audiences may not. Keep ExpirationSeconds small if you want prompt revocation.""",
+            exclude_if=lambda v: v == V1BoundObjectReference(),
+        ),
         BeforeValidator(_default_if_none(V1BoundObjectReference)),
-    ] = Field(
-        default_factory=lambda: V1BoundObjectReference(),
-        serialization_alias="boundObjectRef",
-        validation_alias=AliasChoices("bound_object_ref", "boundObjectRef"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1BoundObjectReference()
 
-    expiration_seconds: int | None = Field(
-        default=None,
-        serialization_alias="expirationSeconds",
-        validation_alias=AliasChoices("expiration_seconds", "expirationSeconds"),
-        exclude_if=_exclude_if,
-    )
+    expiration_seconds: Annotated[
+        int | None,
+        Field(
+            alias="expirationSeconds",
+            description="""ExpirationSeconds is the requested duration of validity of the request. The token issuer may return a token with a different validity duration so a client needs to check the 'expiration' field in a response.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

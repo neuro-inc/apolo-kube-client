@@ -1,36 +1,70 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1PodCondition",)
 
 
 class V1PodCondition(BaseModel):
-    last_probe_time: datetime | None = Field(
-        default=None,
-        serialization_alias="lastProbeTime",
-        validation_alias=AliasChoices("last_probe_time", "lastProbeTime"),
-        exclude_if=_exclude_if,
-    )
+    """PodCondition contains details for the current condition of this pod."""
 
-    last_transition_time: datetime | None = Field(
-        default=None,
-        serialization_alias="lastTransitionTime",
-        validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    message: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodCondition"
 
-    observed_generation: int | None = Field(
-        default=None,
-        serialization_alias="observedGeneration",
-        validation_alias=AliasChoices("observed_generation", "observedGeneration"),
-        exclude_if=_exclude_if,
-    )
+    last_probe_time: Annotated[
+        datetime | None,
+        Field(
+            alias="lastProbeTime",
+            description="""Last time we probed the condition.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    reason: str | None = Field(default=None, exclude_if=_exclude_if)
+    last_transition_time: Annotated[
+        datetime | None,
+        Field(
+            alias="lastTransitionTime",
+            description="""Last time the condition transitioned from one status to another.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    status: str | None = Field(default=None, exclude_if=_exclude_if)
+    message: Annotated[
+        str | None,
+        Field(
+            description="""Human-readable message indicating details about last transition.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    observed_generation: Annotated[
+        int | None,
+        Field(
+            alias="observedGeneration",
+            description="""If set, this represents the .metadata.generation that the pod condition was set based upon. This is an alpha field. Enable PodObservedGenerationTracking to be able to use this field.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    reason: Annotated[
+        str | None,
+        Field(
+            description="""Unique, one-word, CamelCase reason for the condition's last transition.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    status: Annotated[
+        str,
+        Field(
+            description="""Status is the status of the condition. Can be True, False, Unknown. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions"""
+        ),
+    ]
+
+    type: Annotated[
+        str,
+        Field(
+            description="""Type is the type of the condition. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions"""
+        ),
+    ]

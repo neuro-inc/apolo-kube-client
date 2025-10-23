@@ -1,16 +1,31 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1beta1_basic_device import V1beta1BasicDevice
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1beta1Device",)
 
 
 class V1beta1Device(BaseModel):
-    basic: Annotated[
-        V1beta1BasicDevice, BeforeValidator(_default_if_none(V1beta1BasicDevice))
-    ] = Field(default_factory=lambda: V1beta1BasicDevice(), exclude_if=_exclude_if)
+    """Device represents one individual hardware instance that can be selected based on its attributes. Besides the name, exactly one field must be set."""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.Device"
+
+    basic: Annotated[
+        V1beta1BasicDevice,
+        Field(
+            description="""Basic defines one device instance.""",
+            exclude_if=lambda v: v == V1beta1BasicDevice(),
+        ),
+        BeforeValidator(_default_if_none(V1beta1BasicDevice)),
+    ] = V1beta1BasicDevice()
+
+    name: Annotated[
+        str,
+        Field(
+            description="""Name is unique identifier among all devices managed by the driver in the pool. It must be a DNS label."""
+        ),
+    ]

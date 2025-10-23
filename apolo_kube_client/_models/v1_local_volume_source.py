@@ -1,15 +1,29 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1LocalVolumeSource",)
 
 
 class V1LocalVolumeSource(BaseModel):
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
-    )
+    """Local represents directly-attached storage with node affinity"""
 
-    path: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LocalVolumeSource"
+
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType is the filesystem type to mount. It applies only when the Path is a block device. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". The default value is to auto-select a filesystem if unspecified.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    path: Annotated[
+        str,
+        Field(
+            description="""path of the full path to the volume on the node. It can be either a directory or block device (disk, partition, ...)."""
+        ),
+    ]

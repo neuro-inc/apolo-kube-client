@@ -1,27 +1,39 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1PortworxVolumeSource",)
 
 
 class V1PortworxVolumeSource(BaseModel):
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
-    )
+    """PortworxVolumeSource represents a Portworx volume resource."""
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    volume_id: str | None = Field(
-        default=None,
-        serialization_alias="volumeID",
-        validation_alias=AliasChoices("volume_id", "volumeID"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PortworxVolumeSource"
+
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fSType represents the filesystem type to mount Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    volume_id: Annotated[
+        str,
+        Field(
+            alias="volumeID",
+            description="""volumeID uniquely identifies a Portworx volume""",
+        ),
+    ]

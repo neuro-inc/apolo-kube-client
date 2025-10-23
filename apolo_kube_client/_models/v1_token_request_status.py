@@ -1,16 +1,25 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1TokenRequestStatus",)
 
 
 class V1TokenRequestStatus(BaseModel):
-    expiration_timestamp: datetime | None = Field(
-        default=None,
-        serialization_alias="expirationTimestamp",
-        validation_alias=AliasChoices("expiration_timestamp", "expirationTimestamp"),
-        exclude_if=_exclude_if,
+    """TokenRequestStatus is the result of a token request."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authentication.v1.TokenRequestStatus"
     )
 
-    token: str | None = Field(default=None, exclude_if=_exclude_if)
+    expiration_timestamp: Annotated[
+        datetime,
+        Field(
+            alias="expirationTimestamp",
+            description="""ExpirationTimestamp is the time of expiration of the returned token.""",
+        ),
+    ]
+
+    token: Annotated[str, Field(description="""Token is the opaque bearer token.""")]

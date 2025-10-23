@@ -1,71 +1,111 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_topology_selector_term import V1TopologySelectorTerm
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1StorageClass",)
 
 
 class V1StorageClass(ResourceModel):
-    allow_volume_expansion: bool | None = Field(
-        default=None,
-        serialization_alias="allowVolumeExpansion",
-        validation_alias=AliasChoices("allow_volume_expansion", "allowVolumeExpansion"),
-        exclude_if=_exclude_if,
+    """StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned.
+
+    StorageClasses are non-namespaced; the name of the storage class according to etcd is in ObjectMeta.Name."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.StorageClass"
+
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="storage.k8s.io", kind="StorageClass", version="v1"
     )
+
+    allow_volume_expansion: Annotated[
+        bool | None,
+        Field(
+            alias="allowVolumeExpansion",
+            description="""allowVolumeExpansion shows whether the storage class allow volume expand.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     allowed_topologies: Annotated[
-        list[V1TopologySelectorTerm], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="allowedTopologies",
-        validation_alias=AliasChoices("allowed_topologies", "allowedTopologies"),
-        exclude_if=_exclude_if,
-    )
+        list[V1TopologySelectorTerm],
+        Field(
+            alias="allowedTopologies",
+            description="""allowedTopologies restrict the node topologies where volumes can be dynamically provisioned. Each volume plugin defines its own supported topology specifications. An empty TopologySelectorTerm list means there is no topology restriction. This field is only honored by servers that enable the VolumeScheduling feature.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
-    )
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
-
-    mount_options: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        V1ObjectMeta,
         Field(
-            default=[],
-            serialization_alias="mountOptions",
-            validation_alias=AliasChoices("mount_options", "mountOptions"),
-            exclude_if=_exclude_if,
-        )
-    )
+            description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
+
+    mount_options: Annotated[
+        list[str],
+        Field(
+            alias="mountOptions",
+            description="""mountOptions controls the mountOptions for dynamically provisioned PersistentVolumes of this storage class. e.g. ["ro", "soft"]. Not validated - mount of the PVs will simply fail if one is invalid.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
     parameters: Annotated[
-        dict[str, str], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(default={}, exclude_if=_exclude_if)
+        dict[str, str],
+        Field(
+            description="""parameters holds the parameters for the provisioner that should create volumes of this storage class.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
-    provisioner: str | None = Field(default=None, exclude_if=_exclude_if)
+    provisioner: Annotated[
+        str, Field(description="""provisioner indicates the type of the provisioner.""")
+    ]
 
-    reclaim_policy: str | None = Field(
-        default=None,
-        serialization_alias="reclaimPolicy",
-        validation_alias=AliasChoices("reclaim_policy", "reclaimPolicy"),
-        exclude_if=_exclude_if,
-    )
+    reclaim_policy: Annotated[
+        str | None,
+        Field(
+            alias="reclaimPolicy",
+            description="""reclaimPolicy controls the reclaimPolicy for dynamically provisioned PersistentVolumes of this storage class. Defaults to Delete.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    volume_binding_mode: str | None = Field(
-        default=None,
-        serialization_alias="volumeBindingMode",
-        validation_alias=AliasChoices("volume_binding_mode", "volumeBindingMode"),
-        exclude_if=_exclude_if,
-    )
+    volume_binding_mode: Annotated[
+        str | None,
+        Field(
+            alias="volumeBindingMode",
+            description="""volumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

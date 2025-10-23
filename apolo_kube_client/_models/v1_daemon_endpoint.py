@@ -1,13 +1,17 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1DaemonEndpoint",)
 
 
 class V1DaemonEndpoint(BaseModel):
-    port: int | None = Field(
-        default=None,
-        serialization_alias="Port",
-        validation_alias=AliasChoices("port", "Port"),
-        exclude_if=_exclude_if,
-    )
+    """DaemonEndpoint contains information about a single Daemon endpoint."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.DaemonEndpoint"
+
+    port: Annotated[
+        int, Field(alias="Port", description="""Port number of the given endpoint.""")
+    ]

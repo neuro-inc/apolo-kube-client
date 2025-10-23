@@ -1,8 +1,21 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1NodeSwapStatus",)
 
 
 class V1NodeSwapStatus(BaseModel):
-    capacity: int | None = Field(default=None, exclude_if=_exclude_if)
+    """NodeSwapStatus represents swap memory information."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSwapStatus"
+
+    capacity: Annotated[
+        int | None,
+        Field(
+            description="""Total amount of swap memory in bytes.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

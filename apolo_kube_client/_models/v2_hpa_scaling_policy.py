@@ -1,17 +1,32 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V2HPAScalingPolicy",)
 
 
 class V2HPAScalingPolicy(BaseModel):
-    period_seconds: int | None = Field(
-        default=None,
-        serialization_alias="periodSeconds",
-        validation_alias=AliasChoices("period_seconds", "periodSeconds"),
-        exclude_if=_exclude_if,
-    )
+    """HPAScalingPolicy is a single policy which must hold true for a specified past interval."""
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    value: int | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.HPAScalingPolicy"
+
+    period_seconds: Annotated[
+        int,
+        Field(
+            alias="periodSeconds",
+            description="""periodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).""",
+        ),
+    ]
+
+    type: Annotated[
+        str, Field(description="""type is used to specify the scaling policy.""")
+    ]
+
+    value: Annotated[
+        int,
+        Field(
+            description="""value contains the amount of change which is permitted by the policy. It must be greater than zero"""
+        ),
+    ]

@@ -1,10 +1,29 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ServiceAccountSubject",)
 
 
 class V1ServiceAccountSubject(BaseModel):
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    """ServiceAccountSubject holds detailed information for service-account-kind subject."""
 
-    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.flowcontrol.v1.ServiceAccountSubject"
+    )
+
+    name: Annotated[
+        str,
+        Field(
+            description="""`name` is the name of matching ServiceAccount objects, or "*" to match regardless of name. Required."""
+        ),
+    ]
+
+    namespace: Annotated[
+        str,
+        Field(
+            description="""`namespace` is the namespace of matching ServiceAccount objects. Required."""
+        ),
+    ]

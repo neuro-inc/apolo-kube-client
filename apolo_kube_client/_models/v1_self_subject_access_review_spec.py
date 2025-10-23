@@ -1,32 +1,38 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_non_resource_attributes import V1NonResourceAttributes
 from .v1_resource_attributes import V1ResourceAttributes
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1SelfSubjectAccessReviewSpec",)
 
 
 class V1SelfSubjectAccessReviewSpec(BaseModel):
-    non_resource_attributes: Annotated[
-        V1NonResourceAttributes,
-        BeforeValidator(_default_if_none(V1NonResourceAttributes)),
-    ] = Field(
-        default_factory=lambda: V1NonResourceAttributes(),
-        serialization_alias="nonResourceAttributes",
-        validation_alias=AliasChoices(
-            "non_resource_attributes", "nonResourceAttributes"
-        ),
-        exclude_if=_exclude_if,
+    """SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes and NonResourceAuthorizationAttributes must be set"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authorization.v1.SelfSubjectAccessReviewSpec"
     )
 
+    non_resource_attributes: Annotated[
+        V1NonResourceAttributes,
+        Field(
+            alias="nonResourceAttributes",
+            description="""NonResourceAttributes describes information for a non-resource access request""",
+            exclude_if=lambda v: v == V1NonResourceAttributes(),
+        ),
+        BeforeValidator(_default_if_none(V1NonResourceAttributes)),
+    ] = V1NonResourceAttributes()
+
     resource_attributes: Annotated[
-        V1ResourceAttributes, BeforeValidator(_default_if_none(V1ResourceAttributes))
-    ] = Field(
-        default_factory=lambda: V1ResourceAttributes(),
-        serialization_alias="resourceAttributes",
-        validation_alias=AliasChoices("resource_attributes", "resourceAttributes"),
-        exclude_if=_exclude_if,
-    )
+        V1ResourceAttributes,
+        Field(
+            alias="resourceAttributes",
+            description="""ResourceAuthorizationAttributes describes information for a resource access request""",
+            exclude_if=lambda v: v == V1ResourceAttributes(),
+        ),
+        BeforeValidator(_default_if_none(V1ResourceAttributes)),
+    ] = V1ResourceAttributes()

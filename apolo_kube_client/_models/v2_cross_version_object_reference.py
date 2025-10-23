@@ -1,17 +1,38 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V2CrossVersionObjectReference",)
 
 
 class V2CrossVersionObjectReference(BaseModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """CrossVersionObjectReference contains enough information to let you identify the referred resource."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.autoscaling.v2.CrossVersionObjectReference"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""apiVersion is the API version of the referent""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    kind: Annotated[
+        str,
+        Field(
+            description="""kind is the kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"""
+        ),
+    ]
+
+    name: Annotated[
+        str,
+        Field(
+            description="""name is the name of the referent; More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"""
+        ),
+    ]

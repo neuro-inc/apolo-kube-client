@@ -1,41 +1,60 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_local_object_reference import V1LocalObjectReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1FlexVolumeSource",)
 
 
 class V1FlexVolumeSource(BaseModel):
-    driver: str | None = Field(default=None, exclude_if=_exclude_if)
+    """FlexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin."""
 
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    options: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = (
-        Field(default={}, exclude_if=_exclude_if)
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.FlexVolumeSource"
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    driver: Annotated[
+        str,
+        Field(
+            description="""driver is the name of the driver to use for this volume."""
+        ),
+    ]
+
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    options: Annotated[
+        dict[str, str],
+        Field(
+            description="""options is Optional: this field holds extra command options if any.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly is Optional: defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     secret_ref: Annotated[
         V1LocalObjectReference,
+        Field(
+            alias="secretRef",
+            description="""secretRef is Optional: secretRef is reference to the secret object containing sensitive information to pass to the plugin scripts. This may be empty if no secret object is specified. If the secret object contains more than one secret, all secrets are passed to the plugin scripts.""",
+            exclude_if=lambda v: v == V1LocalObjectReference(),
+        ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
-    ] = Field(
-        default_factory=lambda: V1LocalObjectReference(),
-        serialization_alias="secretRef",
-        validation_alias=AliasChoices("secret_ref", "secretRef"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1LocalObjectReference()

@@ -1,19 +1,38 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1TypedObjectReference",)
 
 
 class V1TypedObjectReference(BaseModel):
-    api_group: str | None = Field(
-        default=None,
-        serialization_alias="apiGroup",
-        validation_alias=AliasChoices("api_group", "apiGroup"),
-        exclude_if=_exclude_if,
-    )
+    """TypedObjectReference contains enough information to let you locate the typed referenced object"""
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.TypedObjectReference"
 
-    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_group: Annotated[
+        str | None,
+        Field(
+            alias="apiGroup",
+            description="""APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str, Field(description="""Kind is the type of resource being referenced""")
+    ]
+
+    name: Annotated[
+        str, Field(description="""Name is the name of resource being referenced""")
+    ]
+
+    namespace: Annotated[
+        str | None,
+        Field(
+            description="""Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details. (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

@@ -1,27 +1,31 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _collection_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_container_extended_resource_request import V1ContainerExtendedResourceRequest
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1PodExtendedResourceClaimStatus",)
 
 
 class V1PodExtendedResourceClaimStatus(BaseModel):
-    request_mappings: Annotated[
-        list[V1ContainerExtendedResourceRequest],
-        BeforeValidator(_collection_if_none("[]")),
-    ] = Field(
-        default=[],
-        serialization_alias="requestMappings",
-        validation_alias=AliasChoices("request_mappings", "requestMappings"),
-        exclude_if=_exclude_if,
+    """PodExtendedResourceClaimStatus is stored in the PodStatus for the extended resource requests backed by DRA. It stores the generated name for the corresponding special ResourceClaim created by the scheduler."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.PodExtendedResourceClaimStatus"
     )
 
-    resource_claim_name: str | None = Field(
-        default=None,
-        serialization_alias="resourceClaimName",
-        validation_alias=AliasChoices("resource_claim_name", "resourceClaimName"),
-        exclude_if=_exclude_if,
-    )
+    request_mappings: Annotated[
+        list[V1ContainerExtendedResourceRequest],
+        Field(
+            alias="requestMappings",
+            description="""RequestMappings identifies the mapping of <container, extended resource backed by DRA> to  device request in the generated ResourceClaim.""",
+        ),
+    ]
+
+    resource_claim_name: Annotated[
+        str,
+        Field(
+            alias="resourceClaimName",
+            description="""ResourceClaimName is the name of the ResourceClaim that was generated for the Pod in the namespace of the Pod.""",
+        ),
+    ]

@@ -1,14 +1,26 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from .v1_api_service_condition import V1APIServiceCondition
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1APIServiceStatus",)
 
 
 class V1APIServiceStatus(BaseModel):
+    """APIServiceStatus contains derived information about an API server"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIServiceStatus"
+    )
+
     conditions: Annotated[
-        list[V1APIServiceCondition], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1APIServiceCondition],
+        Field(
+            description="""Current service state of apiService.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

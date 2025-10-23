@@ -1,44 +1,60 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1PolicyRule",)
 
 
 class V1PolicyRule(BaseModel):
-    api_groups: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+    """PolicyRule holds information that describes a policy rule, but does not contain information about who the rule applies to or which namespace the rule applies to."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.PolicyRule"
+
+    api_groups: Annotated[
+        list[str],
         Field(
-            default=[],
-            serialization_alias="apiGroups",
-            validation_alias=AliasChoices("api_groups", "apiGroups"),
-            exclude_if=_exclude_if,
-        )
-    )
+            alias="apiGroups",
+            description="""APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
     non_resource_ur_ls: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="nonResourceURLs",
-        validation_alias=AliasChoices("non_resource_ur_ls", "nonResourceURLs"),
-        exclude_if=_exclude_if,
-    )
-
-    resource_names: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
+        list[str],
         Field(
-            default=[],
-            serialization_alias="resourceNames",
-            validation_alias=AliasChoices("resource_names", "resourceNames"),
-            exclude_if=_exclude_if,
-        )
-    )
+            alias="nonResourceURLs",
+            description="""NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    resources: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    resource_names: Annotated[
+        list[str],
+        Field(
+            alias="resourceNames",
+            description="""ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    verbs: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    resources: Annotated[
+        list[str],
+        Field(
+            description="""Resources is a list of resources this rule applies to. '*' represents all resources.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
+    verbs: Annotated[
+        list[str],
+        Field(
+            description="""Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs."""
+        ),
+    ]

@@ -1,38 +1,67 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 from .v1_persistent_volume_status import V1PersistentVolumeStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1PersistentVolume",)
 
 
 class V1PersistentVolume(ResourceModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """PersistentVolume (PV) is a storage resource provisioned by an administrator. It is analogous to a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PersistentVolume"
+
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="", kind="PersistentVolume", version="v1"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
     spec: Annotated[
         V1PersistentVolumeSpec,
+        Field(
+            description="""spec defines a specification of a persistent volume owned by the cluster. Provisioned by an administrator. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes""",
+            exclude_if=lambda v: v == V1PersistentVolumeSpec(),
+        ),
         BeforeValidator(_default_if_none(V1PersistentVolumeSpec)),
-    ] = Field(default_factory=lambda: V1PersistentVolumeSpec(), exclude_if=_exclude_if)
+    ] = V1PersistentVolumeSpec()
 
     status: Annotated[
         V1PersistentVolumeStatus,
+        Field(
+            description="""status represents the current information/status for the persistent volume. Populated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes""",
+            exclude_if=lambda v: v == V1PersistentVolumeStatus(),
+        ),
         BeforeValidator(_default_if_none(V1PersistentVolumeStatus)),
-    ] = Field(
-        default_factory=lambda: V1PersistentVolumeStatus(), exclude_if=_exclude_if
-    )
+    ] = V1PersistentVolumeStatus()

@@ -1,19 +1,30 @@
+import json
 import keyword
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from operator import itemgetter
 import libcst
-
 from kubernetes.client import models
 from pydantic import BaseModel
+from typing import Any
+from copy import replace
+
 
 MOD = """\
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 {imports}
 
 __all__ = ("{clsname}",)
 
 class {clsname}({base}):
+    '''{doc}'''
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "{ref}"
+
 {body}
 """
 
@@ -24,16 +35,24 @@ from .v1_list_meta import V1ListMeta
 
 
 class ResourceModel(BaseModel):
-    metadata: V1ObjectMeta = Field(default_factory=lambda: V1ObjectMeta())
+    metadata: V1ObjectMeta = V1ObjectMeta()
 
 
 class ListModel(BaseModel):
-    metadata: V1ListMeta = Field(default_factory=lambda: V1ListMeta())
+    metadata: V1ListMeta = V1ListMeta()
 """
 
 UTILS_MOD = """\
+from dataclasses import dataclass
 from typing import Any, Callable
 from pydantic import BaseModel
+
+
+@dataclass(frozen=True)
+class KubeMeta:
+    group: str
+    kind: str
+    version: str
 
 
 def _default_if_none[T](type_: type[T]) -> Callable[[Any], Any]:
@@ -60,7 +79,11 @@ def _exclude_if(v: Any) -> bool:
     if v is None:
         return True
     if isinstance(v, BaseModel):
-        return v.model_dump() == v.__class__().model_dump()
+        type_ = type(v)
+        required = any(f.is_required() for f in type_.model_fields.values())
+        if required:
+            return False
+        return v.model_dump() == type_().model_dump()
     if isinstance(v, (list, dict)):
         return not v
     return False
@@ -77,98 +100,101 @@ def mod_name(cls_name: str) -> str:
     return mod_name
 
 
-@dataclass(frozen=True, kw_only=True)
-class Default:
-    value: str | None = None
-    factory_type: str | None = None
-
-    @property
-    def text(self) -> str:
-        if self.value is not None:
-            return f"default={self.value}"
-        else:
-            return f"default_factory=lambda: {self.factory_type}()"
-
-
 @dataclass(frozen=True)
 class ParseTypeRes:
     type_: str
     imports: frozenset[str]
-    default: Default | None
+    default: str | None
     is_model: bool
     is_collection: bool
+    self_ref: bool = False
 
 
-def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseTypeRes:
+def parse_type(self_name: str, descr: str) -> ParseTypeRes:
     descr = descr.strip()
     if descr == self_name:
-        if not nested:
-            return ParseTypeRes(
-                f'"{descr} | None"',
-                frozenset(),
-                Default(value="None"),  # avoid recursive ctor
-                True,
-                False,
-            )
-        else:
-            return ParseTypeRes(
-                f'"{descr}"',
-                frozenset(),
-                Default(factory_type=descr),
-                True,
-                False,
-            )
+        return ParseTypeRes(
+            f'"{descr} | None"',
+            frozenset(),
+            "None",  # avoid recursive ctor
+            True,
+            False,
+            True,
+        )
     elif descr == "object":
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
-            Default(value="{}"),
+            "{}",
             False,
             False,
         )
     elif match := DICT_RE.match(descr):
-        key = parse_type(self_name, match.group("key"), nested=True)
-        val = parse_type(self_name, match.group("val"), nested=True)
+        key = parse_type(self_name, match.group("key"))
+        val = parse_type(self_name, match.group("val"))
         return ParseTypeRes(
             f"dict[{key.type_}, {val.type_}]",
             key.imports | val.imports,
-            Default(value="{}"),
+            "{}",
             False,
             True,
         )
     elif match := LIST_RE.match(descr):
-        item = parse_type(self_name, match.group("item"), nested=True)
+        item = parse_type(self_name, match.group("item"))
         return ParseTypeRes(
-            f"list[{item.type_}]", item.imports, Default(value="[]"), False, True
+            f"list[{item.type_}]",
+            item.imports,
+            "[]",
+            False,
+            True,
         )
     else:
-        suffix = " | None" if not nested else ""
         match descr:
             case "int":
                 return ParseTypeRes(
-                    "int" + suffix, frozenset(), Default(value="None"), False, False
+                    "int",
+                    frozenset(),
+                    "None",
+                    False,
+                    False,
                 )
             case "bool":
                 return ParseTypeRes(
-                    "bool" + suffix, frozenset(), Default(value="None"), False, False
+                    "bool",
+                    frozenset(),
+                    "None",
+                    False,
+                    False,
                 )
             case "int":
                 return ParseTypeRes(
-                    "int" + suffix, frozenset(), Default(value="None"), False, False
+                    "int",
+                    frozenset(),
+                    "None",
+                    False,
+                    False,
                 )
             case "float":
                 return ParseTypeRes(
-                    "float" + suffix, frozenset(), Default(value="None"), False, False
+                    "float",
+                    frozenset(),
+                    "None",
+                    False,
+                    False,
                 )
             case "str":
                 return ParseTypeRes(
-                    "str" + suffix, frozenset(), Default(value="None"), False, False
+                    "str",
+                    frozenset(),
+                    "None",
+                    False,
+                    False,
                 )
             case "datetime":
                 return ParseTypeRes(
-                    "datetime" + suffix,
+                    "datetime",
                     frozenset(["from datetime import datetime"]),
-                    Default(value="None"),
+                    "None",
                     False,
                     False,
                 )
@@ -176,7 +202,7 @@ def parse_type(self_name: str, descr: str, *, nested: bool = False) -> ParseType
                 return ParseTypeRes(
                     descr,
                     frozenset([f"from .{mod_name(descr)} import {descr}"]),
-                    Default(factory_type=descr),
+                    f"{descr}()",
                     True,
                     False,
                 )
@@ -196,13 +222,71 @@ def calc_attr_name(attr: str) -> str:
         return attr
 
 
+def find_def(swagger: Any, name: str) -> tuple[str, Any]:
+    prefixes = ("V1", "V1alpha1", "V1alpha2", "V1alpha3", "V1beta1", "V1beta2", "V2")
+    found = []
+    if name == "VersionInfo":
+        tail = "version.Info"
+    else:
+        for prefix in reversed(prefixes):
+            parts = name.split(prefix)
+            if len(parts) == 1:
+                continue
+            assert len(parts) == 2, parts
+            assert parts[-1] != ""
+            if parts[0] != "":
+                tail = f"{parts[0].lower()}.{prefix.lower()}.{parts[1]}"
+            else:
+                tail = f"{prefix.lower()}.{parts[1]}"
+            break
+        else:
+            tail = name
+    for ref in swagger["definitions"]:
+        if ref == tail or ref.endswith("." + tail):
+            found.append(ref)
+
+    if not found:
+        raise Exception(f"Cannot find definition for {name}")
+    elif len(found) > 1:
+        raise Exception(f"Found multiple definitions for {name}: {found}")
+
+    return found[0], swagger["definitions"][found[0]]
+
+
 def generate(
-    cls: type, target_dir: Path, init_lines: list[str], all_names: list[str]
+    cls: type,
+    swagger: Any,
+    target_dir: Path,
+    visited: dict[str, bool],
+    init_lines: list[str],
+    all_names: list[str],
 ) -> None:
     _, _, modname = cls.__module__.rpartition(".")
     name = cls.__name__
+    if name in visited:
+        return
+    print(f"Generate {name}")
     imports: set[str] = set()
     body: list[str] = []
+    ref, definition = find_def(swagger, name)
+
+    if "x-kubernetes-group-version-kind" in definition:
+        meta: list[str] = []
+        for group_version_kind in sorted(
+            definition["x-kubernetes-group-version-kind"], key=itemgetter("group")
+        ):
+            meta.append(
+                f'KubeMeta(group="{group_version_kind["group"]}", kind="{group_version_kind["kind"]}", version="{group_version_kind["version"]}")'
+            )
+
+        meta_str = ", ".join(meta)
+        body.append(
+            f"    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = ({meta_str})\n"
+        )
+        imports.add("from .utils import KubeMeta")
+
+    required: set[str] = set(definition.get("required", []))
+
     match cls.openapi_types.get("metadata"):
         case None:
             base = "BaseModel"
@@ -212,47 +296,102 @@ def generate(
         case "V1ListMeta":
             base = "ListModel"
             imports.add("from .base import ListModel")
+    has_required = False
     for attr, typ in cls.openapi_types.items():
         alias = cls.attribute_map[attr]
+        is_required = alias in required
+        has_required |= is_required
         res = parse_type(name, typ)
         imports |= res.imports
         real_attr = calc_attr_name(attr)
         field_args: dict[str, str] = {}
         if alias != real_attr:
-            field_args["serialization_alias"] = f'"{alias}"'
-            choices = [real_attr, alias]
-            choices_str = ", ".join(f'"{item}"' for item in choices)
-            field_args["validation_alias"] = f"AliasChoices({choices_str})"
+            field_args["alias"] = f'"{alias}"'
 
-        field_args["exclude_if"] = "_exclude_if"
-        imports.add("from .utils import _exclude_if")
+        attr_def = definition["properties"][alias]
+
+        attr_descr = attr_def.get("description")
+        if attr_descr:
+            quota = (
+                '"""'
+                if not attr_descr.startswith('"') and not attr_descr.endswith('"')
+                else "'''"
+            )
+            field_args["description"] = quota + attr_descr + quota
+
+        annotations = []
+
+        if is_required:
+            res = replace(res, default=None)
+        else:
+            # field_args["exclude_if"] = "_exclude_if"
+            # imports.add("from .utils import _exclude_if")
+
+            if res.is_model:
+                imports.add("from pydantic import BeforeValidator")
+                imports.add("from .utils import _default_if_none")
+                annotations.append(f"BeforeValidator(_default_if_none({res.type_}))")
+                if not res.self_ref:
+                    if res.type_ not in visited:
+                        generate(
+                            getattr(models, res.type_),
+                            swagger,
+                            target_dir,
+                            visited,
+                            init_lines,
+                            all_names,
+                        )
+                    if visited[res.type_]:
+                        res = replace(
+                            res,
+                            default="None",
+                            type_=res.type_ + " | None",
+                        )
+            elif res.is_collection:
+                imports.add("from pydantic import BeforeValidator")
+                imports.add("from .utils import _collection_if_none")
+                annotations.append(
+                    f'BeforeValidator(_collection_if_none("{res.default}"))'
+                )
+            else:
+                if res.type_ != "JsonType":
+                    res = replace(
+                        res,
+                        default="None",
+                        type_=res.type_ + " | None",
+                    )
+            field_args["exclude_if"] = (
+                f"lambda v: v=={res.default}"
+                if res.default != "None"
+                else "lambda v: v is None"
+            )
 
         field_str = ", ".join(f"{k}={v}" for k, v in field_args.items())
-        tail = f" = Field({res.default.text}, {field_str})"
+        annotations.insert(0, f"Field({field_str})")
 
-        type_ = res.type_
-        if res.is_model:
-            imports.add("from typing import Annotated")
-            imports.add("from pydantic import BeforeValidator")
-            imports.add("from .utils import _default_if_none")
-            type_ = f"Annotated[{type_}, BeforeValidator(_default_if_none({type_}))]"
-        elif res.is_collection:
-            assert res.default.value is not None
-            imports.add("from typing import Annotated")
-            imports.add("from pydantic import BeforeValidator")
-            imports.add("from .utils import _collection_if_none")
-            type_ = f'Annotated[{type_}, BeforeValidator(_collection_if_none("{res.default.value}"))]'
-        field = f"{real_attr}: {type_}{tail}"
+        annotations_str = ", ".join(annotations)
+        field = f"{real_attr}: Annotated[{res.type_}, {annotations_str}]"
+        if res.default is not None:
+            field += f" = {res.default}"
+
         body.append(f"    {field}\n")
+
+    if "description" in definition:
+        doc = definition["description"]
+    else:
+        doc = ""
     mod = MOD.format(
         imports="\n".join(sorted(imports)),
         clsname=name,
         base=base,
+        doc=doc,
+        ref=ref,
         body="\n".join(body),
     )
     (target_dir / modname).with_suffix(".py").write_text(mod)
     init_lines.append(f"from .{modname} import {name}")
     all_names.append(name)
+    visited[name] = has_required
 
 
 class Transformer(libcst.CSTTransformer):
@@ -310,11 +449,13 @@ def main() -> None:
     target_dir.mkdir(exist_ok=True)
     init_lines: list[str] = []
     all_names: list[str] = []
+    with (here.parent / "swagger.json").open() as swagger_file:
+        swagger = json.load(swagger_file)
+    visited: dict[str, bool] = {}
     for name in dir(models):
         obj = getattr(models, name)
         if isinstance(obj, type):
-            print(f"Generate {name}")
-            generate(obj, target_dir, init_lines, all_names)
+            generate(obj, swagger, target_dir, visited, init_lines, all_names)
 
     (target_dir / "base.py").write_text(BASE_MOD)
     (target_dir / "utils.py").write_text(UTILS_MOD)

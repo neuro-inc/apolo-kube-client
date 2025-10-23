@@ -1,37 +1,55 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_ingress_backend import V1IngressBackend
 from .v1_ingress_rule import V1IngressRule
 from .v1_ingress_tls import V1IngressTLS
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1IngressSpec",)
 
 
 class V1IngressSpec(BaseModel):
-    default_backend: Annotated[
-        V1IngressBackend, BeforeValidator(_default_if_none(V1IngressBackend))
-    ] = Field(
-        default_factory=lambda: V1IngressBackend(),
-        serialization_alias="defaultBackend",
-        validation_alias=AliasChoices("default_backend", "defaultBackend"),
-        exclude_if=_exclude_if,
-    )
+    """IngressSpec describes the Ingress the user wishes to exist."""
 
-    ingress_class_name: str | None = Field(
-        default=None,
-        serialization_alias="ingressClassName",
-        validation_alias=AliasChoices("ingress_class_name", "ingressClassName"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressSpec"
+
+    default_backend: Annotated[
+        V1IngressBackend,
+        Field(
+            alias="defaultBackend",
+            description="""defaultBackend is the backend that should handle requests that don't match any rule. If Rules are not specified, DefaultBackend must be specified. If DefaultBackend is not set, the handling of requests that do not match any of the rules will be up to the Ingress controller.""",
+            exclude_if=lambda v: v == V1IngressBackend(),
+        ),
+        BeforeValidator(_default_if_none(V1IngressBackend)),
+    ] = V1IngressBackend()
+
+    ingress_class_name: Annotated[
+        str | None,
+        Field(
+            alias="ingressClassName",
+            description="""ingressClassName is the name of an IngressClass cluster resource. Ingress controller implementations use this field to know whether they should be serving this Ingress resource, by a transitive connection (controller -> IngressClass -> Ingress resource). Although the `kubernetes.io/ingress.class` annotation (simple constant name) was never formally defined, it was widely supported by Ingress controllers to create a direct binding between Ingress controller and Ingress resources. Newly created Ingress resources should prefer using the field. However, even though the annotation is officially deprecated, for backwards compatibility reasons, ingress controllers should still honor that annotation if present.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     rules: Annotated[
-        list[V1IngressRule], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1IngressRule],
+        Field(
+            description="""rules is a list of host rules used to configure the Ingress. If unspecified, or no rule matches, all traffic is sent to the default backend.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    tls: Annotated[list[V1IngressTLS], BeforeValidator(_collection_if_none("[]"))] = (
-        Field(default=[], exclude_if=_exclude_if)
-    )
+    tls: Annotated[
+        list[V1IngressTLS],
+        Field(
+            description="""tls represents the TLS configuration. Currently the Ingress only supports a single TLS port, 443. If multiple members of this list specify different hosts, they will be multiplexed on the same port according to the hostname specified through the SNI TLS extension, if the ingress controller fulfilling the ingress supports SNI.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

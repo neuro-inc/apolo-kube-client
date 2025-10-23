@@ -1,14 +1,45 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1SELinuxOptions",)
 
 
 class V1SELinuxOptions(BaseModel):
-    level: str | None = Field(default=None, exclude_if=_exclude_if)
+    """SELinuxOptions are the labels to be applied to the container"""
 
-    role: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SELinuxOptions"
 
-    user: str | None = Field(default=None, exclude_if=_exclude_if)
+    level: Annotated[
+        str | None,
+        Field(
+            description="""Level is SELinux level label that applies to the container.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    role: Annotated[
+        str | None,
+        Field(
+            description="""Role is a SELinux role label that applies to the container.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    type: Annotated[
+        str | None,
+        Field(
+            description="""Type is a SELinux type label that applies to the container.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    user: Annotated[
+        str | None,
+        Field(
+            description="""User is a SELinux user label that applies to the container.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

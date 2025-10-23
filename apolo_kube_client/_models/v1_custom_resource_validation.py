@@ -1,19 +1,27 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_json_schema_props import V1JSONSchemaProps
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CustomResourceValidation",)
 
 
 class V1CustomResourceValidation(BaseModel):
-    open_apiv3_schema: Annotated[
-        V1JSONSchemaProps, BeforeValidator(_default_if_none(V1JSONSchemaProps))
-    ] = Field(
-        default_factory=lambda: V1JSONSchemaProps(),
-        serialization_alias="openAPIV3Schema",
-        validation_alias=AliasChoices("open_apiv3_schema", "openAPIV3Schema"),
-        exclude_if=_exclude_if,
+    """CustomResourceValidation is a list of validation methods for CustomResources."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceValidation"
     )
+
+    open_apiv3_schema: Annotated[
+        V1JSONSchemaProps,
+        Field(
+            alias="openAPIV3Schema",
+            description="""openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.""",
+            exclude_if=lambda v: v == V1JSONSchemaProps(),
+        ),
+        BeforeValidator(_default_if_none(V1JSONSchemaProps)),
+    ] = V1JSONSchemaProps()

@@ -1,13 +1,23 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1NamespaceSpec",)
 
 
 class V1NamespaceSpec(BaseModel):
-    finalizers: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
-        Field(default=[], exclude_if=_exclude_if)
-    )
+    """NamespaceSpec describes the attributes on a Namespace."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NamespaceSpec"
+
+    finalizers: Annotated[
+        list[str],
+        Field(
+            description="""Finalizers is an opaque list of values that must be empty to permanently remove object from storage. More info: https://kubernetes.io/docs/tasks/administer-cluster/namespaces/""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

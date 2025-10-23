@@ -1,22 +1,31 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1NonResourceRule",)
 
 
 class V1NonResourceRule(BaseModel):
-    non_resource_ur_ls: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="nonResourceURLs",
-        validation_alias=AliasChoices("non_resource_ur_ls", "nonResourceURLs"),
-        exclude_if=_exclude_if,
-    )
+    """NonResourceRule holds information that describes a rule for the non-resource"""
 
-    verbs: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.authorization.v1.NonResourceRule"
+
+    non_resource_ur_ls: Annotated[
+        list[str],
+        Field(
+            alias="nonResourceURLs",
+            description="""NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path.  "*" means all.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
+    verbs: Annotated[
+        list[str],
+        Field(
+            description="""Verb is a list of kubernetes non-resource API verbs, like: get, post, put, delete, patch, head, options.  "*" means all."""
+        ),
+    ]

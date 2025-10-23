@@ -1,17 +1,32 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1UncountedTerminatedPods",)
 
 
 class V1UncountedTerminatedPods(BaseModel):
-    failed: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    """UncountedTerminatedPods holds UIDs of Pods that have terminated but haven't been accounted in Job status counters."""
 
-    succeeded: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.UncountedTerminatedPods"
+
+    failed: Annotated[
+        list[str],
+        Field(
+            description="""failed holds UIDs of failed Pods.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
+    succeeded: Annotated[
+        list[str],
+        Field(
+            description="""succeeded holds UIDs of succeeded Pods.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

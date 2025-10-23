@@ -1,22 +1,33 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_rolling_update_daemon_set import V1RollingUpdateDaemonSet
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1DaemonSetUpdateStrategy",)
 
 
 class V1DaemonSetUpdateStrategy(BaseModel):
+    """DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DaemonSetUpdateStrategy"
+
     rolling_update: Annotated[
         V1RollingUpdateDaemonSet,
+        Field(
+            alias="rollingUpdate",
+            description="""Rolling update config params. Present only if type = "RollingUpdate".""",
+            exclude_if=lambda v: v == V1RollingUpdateDaemonSet(),
+        ),
         BeforeValidator(_default_if_none(V1RollingUpdateDaemonSet)),
-    ] = Field(
-        default_factory=lambda: V1RollingUpdateDaemonSet(),
-        serialization_alias="rollingUpdate",
-        validation_alias=AliasChoices("rolling_update", "rollingUpdate"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1RollingUpdateDaemonSet()
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    type: Annotated[
+        str | None,
+        Field(
+            description="""Type of daemon set update. Can be "RollingUpdate" or "OnDelete". Default is RollingUpdate.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

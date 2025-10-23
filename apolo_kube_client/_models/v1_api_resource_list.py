@@ -1,30 +1,52 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _collection_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+from .utils import KubeMeta
 from .v1_api_resource import V1APIResource
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1APIResourceList",)
 
 
 class V1APIResourceList(BaseModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """APIResourceList is a list of APIResource, it is used to expose the name of the resources supported in a specific group and version, and if the resource is namespaced."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"
     )
 
-    group_version: str | None = Field(
-        default=None,
-        serialization_alias="groupVersion",
-        validation_alias=AliasChoices("group_version", "groupVersion"),
-        exclude_if=_exclude_if,
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="", kind="APIResourceList", version="v1"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    group_version: Annotated[
+        str,
+        Field(
+            alias="groupVersion",
+            description="""groupVersion is the group and version this APIResourceList is for.""",
+        ),
+    ]
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     resources: Annotated[
-        list[V1APIResource], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1APIResource],
+        Field(
+            description="""resources contains the name of the resources and if they are namespaced."""
+        ),
+    ]

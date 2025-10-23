@@ -1,20 +1,31 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ServerAddressByClientCIDR",)
 
 
 class V1ServerAddressByClientCIDR(BaseModel):
-    client_cidr: str | None = Field(
-        default=None,
-        serialization_alias="clientCIDR",
-        validation_alias=AliasChoices("client_cidr", "clientCIDR"),
-        exclude_if=_exclude_if,
+    """ServerAddressByClientCIDR helps the client to determine the server address that they should use, depending on the clientCIDR that they match."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apimachinery.pkg.apis.meta.v1.ServerAddressByClientCIDR"
     )
 
-    server_address: str | None = Field(
-        default=None,
-        serialization_alias="serverAddress",
-        validation_alias=AliasChoices("server_address", "serverAddress"),
-        exclude_if=_exclude_if,
-    )
+    client_cidr: Annotated[
+        str,
+        Field(
+            alias="clientCIDR",
+            description="""The CIDR with which clients can match their IP to figure out the server address that they should use.""",
+        ),
+    ]
+
+    server_address: Annotated[
+        str,
+        Field(
+            alias="serverAddress",
+            description="""Address of this server, suitable for a client that matches the above CIDR. This can be a hostname, hostname:port, IP or IP:port.""",
+        ),
+    ]

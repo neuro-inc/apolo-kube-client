@@ -1,28 +1,37 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from .v1_label_selector_requirement import V1LabelSelectorRequirement
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1LabelSelector",)
 
 
 class V1LabelSelector(BaseModel):
-    match_expressions: Annotated[
-        list[V1LabelSelectorRequirement], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="matchExpressions",
-        validation_alias=AliasChoices("match_expressions", "matchExpressions"),
-        exclude_if=_exclude_if,
+    """A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
     )
 
+    match_expressions: Annotated[
+        list[V1LabelSelectorRequirement],
+        Field(
+            alias="matchExpressions",
+            description="""matchExpressions is a list of label selector requirements. The requirements are ANDed.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
     match_labels: Annotated[
-        dict[str, str], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(
-        default={},
-        serialization_alias="matchLabels",
-        validation_alias=AliasChoices("match_labels", "matchLabels"),
-        exclude_if=_exclude_if,
-    )
+        dict[str, str],
+        Field(
+            alias="matchLabels",
+            description="""matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}

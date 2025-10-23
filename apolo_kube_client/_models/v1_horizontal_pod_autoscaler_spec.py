@@ -1,43 +1,49 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_cross_version_object_reference import V1CrossVersionObjectReference
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1HorizontalPodAutoscalerSpec",)
 
 
 class V1HorizontalPodAutoscalerSpec(BaseModel):
-    max_replicas: int | None = Field(
-        default=None,
-        serialization_alias="maxReplicas",
-        validation_alias=AliasChoices("max_replicas", "maxReplicas"),
-        exclude_if=_exclude_if,
+    """specification of a horizontal pod autoscaler."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.autoscaling.v1.HorizontalPodAutoscalerSpec"
     )
 
-    min_replicas: int | None = Field(
-        default=None,
-        serialization_alias="minReplicas",
-        validation_alias=AliasChoices("min_replicas", "minReplicas"),
-        exclude_if=_exclude_if,
-    )
+    max_replicas: Annotated[
+        int,
+        Field(
+            alias="maxReplicas",
+            description="""maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.""",
+        ),
+    ]
+
+    min_replicas: Annotated[
+        int | None,
+        Field(
+            alias="minReplicas",
+            description="""minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     scale_target_ref: Annotated[
         V1CrossVersionObjectReference,
-        BeforeValidator(_default_if_none(V1CrossVersionObjectReference)),
-    ] = Field(
-        default_factory=lambda: V1CrossVersionObjectReference(),
-        serialization_alias="scaleTargetRef",
-        validation_alias=AliasChoices("scale_target_ref", "scaleTargetRef"),
-        exclude_if=_exclude_if,
-    )
-
-    target_cpu_utilization_percentage: int | None = Field(
-        default=None,
-        serialization_alias="targetCPUUtilizationPercentage",
-        validation_alias=AliasChoices(
-            "target_cpu_utilization_percentage", "targetCPUUtilizationPercentage"
+        Field(
+            alias="scaleTargetRef",
+            description="""reference to scaled resource; horizontal pod autoscaler will learn the current resource consumption and will set the desired number of pods by using its Scale subresource.""",
         ),
-        exclude_if=_exclude_if,
-    )
+    ]
+
+    target_cpu_utilization_percentage: Annotated[
+        int | None,
+        Field(
+            alias="targetCPUUtilizationPercentage",
+            description="""targetCPUUtilizationPercentage is the target average CPU utilization (represented as a percentage of requested CPU) over all the pods; if not specified the default autoscaling policy will be used.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

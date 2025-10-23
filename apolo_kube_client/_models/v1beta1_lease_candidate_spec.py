@@ -1,44 +1,65 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1beta1LeaseCandidateSpec",)
 
 
 class V1beta1LeaseCandidateSpec(BaseModel):
-    binary_version: str | None = Field(
-        default=None,
-        serialization_alias="binaryVersion",
-        validation_alias=AliasChoices("binary_version", "binaryVersion"),
-        exclude_if=_exclude_if,
+    """LeaseCandidateSpec is a specification of a Lease."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.coordination.v1beta1.LeaseCandidateSpec"
     )
 
-    emulation_version: str | None = Field(
-        default=None,
-        serialization_alias="emulationVersion",
-        validation_alias=AliasChoices("emulation_version", "emulationVersion"),
-        exclude_if=_exclude_if,
-    )
+    binary_version: Annotated[
+        str,
+        Field(
+            alias="binaryVersion",
+            description="""BinaryVersion is the binary version. It must be in a semver format without leading `v`. This field is required.""",
+        ),
+    ]
 
-    lease_name: str | None = Field(
-        default=None,
-        serialization_alias="leaseName",
-        validation_alias=AliasChoices("lease_name", "leaseName"),
-        exclude_if=_exclude_if,
-    )
+    emulation_version: Annotated[
+        str | None,
+        Field(
+            alias="emulationVersion",
+            description='''EmulationVersion is the emulation version. It must be in a semver format without leading `v`. EmulationVersion must be less than or equal to BinaryVersion. This field is required when strategy is "OldestEmulationVersion"''',
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    ping_time: datetime | None = Field(
-        default=None,
-        serialization_alias="pingTime",
-        validation_alias=AliasChoices("ping_time", "pingTime"),
-        exclude_if=_exclude_if,
-    )
+    lease_name: Annotated[
+        str,
+        Field(
+            alias="leaseName",
+            description="""LeaseName is the name of the lease for which this candidate is contending. The limits on this field are the same as on Lease.name. Multiple lease candidates may reference the same Lease.name. This field is immutable.""",
+        ),
+    ]
 
-    renew_time: datetime | None = Field(
-        default=None,
-        serialization_alias="renewTime",
-        validation_alias=AliasChoices("renew_time", "renewTime"),
-        exclude_if=_exclude_if,
-    )
+    ping_time: Annotated[
+        datetime | None,
+        Field(
+            alias="pingTime",
+            description="""PingTime is the last time that the server has requested the LeaseCandidate to renew. It is only done during leader election to check if any LeaseCandidates have become ineligible. When PingTime is updated, the LeaseCandidate will respond by updating RenewTime.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    strategy: str | None = Field(default=None, exclude_if=_exclude_if)
+    renew_time: Annotated[
+        datetime | None,
+        Field(
+            alias="renewTime",
+            description="""RenewTime is the time that the LeaseCandidate was last updated. Any time a Lease needs to do leader election, the PingTime field is updated to signal to the LeaseCandidate that they should update the RenewTime. Old LeaseCandidate objects are also garbage collected if it has been hours since the last renew. The PingTime field is updated regularly to prevent garbage collection for still active LeaseCandidates.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    strategy: Annotated[
+        str,
+        Field(
+            description="""Strategy is the strategy that coordinated leader election will use for picking the leader. If multiple candidates for the same Lease return different strategies, the strategy provided by the candidate with the latest BinaryVersion will be used. If there is still conflict, this is a user error and coordinated leader election will not operate the Lease until resolved."""
+        ),
+    ]

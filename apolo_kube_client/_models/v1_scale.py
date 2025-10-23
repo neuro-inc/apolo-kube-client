@@ -1,34 +1,67 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_scale_spec import V1ScaleSpec
 from .v1_scale_status import V1ScaleStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1Scale",)
 
 
 class V1Scale(ResourceModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """Scale represents a scaling request for a resource."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v1.Scale"
+
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="autoscaling", kind="Scale", version="v1"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata.""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
-    spec: Annotated[V1ScaleSpec, BeforeValidator(_default_if_none(V1ScaleSpec))] = (
-        Field(default_factory=lambda: V1ScaleSpec(), exclude_if=_exclude_if)
-    )
+    spec: Annotated[
+        V1ScaleSpec,
+        Field(
+            description="""spec defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.""",
+            exclude_if=lambda v: v == V1ScaleSpec(),
+        ),
+        BeforeValidator(_default_if_none(V1ScaleSpec)),
+    ] = V1ScaleSpec()
 
     status: Annotated[
-        V1ScaleStatus, BeforeValidator(_default_if_none(V1ScaleStatus))
-    ] = Field(default_factory=lambda: V1ScaleStatus(), exclude_if=_exclude_if)
+        V1ScaleStatus | None,
+        Field(
+            description="""status is the current status of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status. Read-only.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1ScaleStatus)),
+    ] = None

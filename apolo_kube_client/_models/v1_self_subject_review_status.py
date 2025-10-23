@@ -1,19 +1,27 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_user_info import V1UserInfo
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1SelfSubjectReviewStatus",)
 
 
 class V1SelfSubjectReviewStatus(BaseModel):
-    user_info: Annotated[V1UserInfo, BeforeValidator(_default_if_none(V1UserInfo))] = (
-        Field(
-            default_factory=lambda: V1UserInfo(),
-            serialization_alias="userInfo",
-            validation_alias=AliasChoices("user_info", "userInfo"),
-            exclude_if=_exclude_if,
-        )
+    """SelfSubjectReviewStatus is filled by the kube-apiserver and sent back to a user."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authentication.v1.SelfSubjectReviewStatus"
     )
+
+    user_info: Annotated[
+        V1UserInfo,
+        Field(
+            alias="userInfo",
+            description="""User attributes of the user making this request.""",
+            exclude_if=lambda v: v == V1UserInfo(),
+        ),
+        BeforeValidator(_default_if_none(V1UserInfo)),
+    ] = V1UserInfo()

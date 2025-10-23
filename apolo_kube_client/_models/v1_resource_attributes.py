@@ -1,45 +1,94 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1ResourceAttributes",)
 
 
 class V1ResourceAttributes(BaseModel):
-    field_selector: Annotated[
-        V1FieldSelectorAttributes,
-        BeforeValidator(_default_if_none(V1FieldSelectorAttributes)),
-    ] = Field(
-        default_factory=lambda: V1FieldSelectorAttributes(),
-        serialization_alias="fieldSelector",
-        validation_alias=AliasChoices("field_selector", "fieldSelector"),
-        exclude_if=_exclude_if,
+    """ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authorization.v1.ResourceAttributes"
     )
 
-    group: str | None = Field(default=None, exclude_if=_exclude_if)
+    field_selector: Annotated[
+        V1FieldSelectorAttributes,
+        Field(
+            alias="fieldSelector",
+            description="""fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.""",
+            exclude_if=lambda v: v == V1FieldSelectorAttributes(),
+        ),
+        BeforeValidator(_default_if_none(V1FieldSelectorAttributes)),
+    ] = V1FieldSelectorAttributes()
+
+    group: Annotated[
+        str | None,
+        Field(
+            description="""Group is the API Group of the Resource.  "*" means all.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     label_selector: Annotated[
         V1LabelSelectorAttributes,
+        Field(
+            alias="labelSelector",
+            description="""labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.""",
+            exclude_if=lambda v: v == V1LabelSelectorAttributes(),
+        ),
         BeforeValidator(_default_if_none(V1LabelSelectorAttributes)),
-    ] = Field(
-        default_factory=lambda: V1LabelSelectorAttributes(),
-        serialization_alias="labelSelector",
-        validation_alias=AliasChoices("label_selector", "labelSelector"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1LabelSelectorAttributes()
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    name: Annotated[
+        str | None,
+        Field(
+            description="""Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
+    namespace: Annotated[
+        str | None,
+        Field(
+            description="""Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces "" (empty) is defaulted for LocalSubjectAccessReviews "" (empty) is empty for cluster-scoped resources "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    resource: str | None = Field(default=None, exclude_if=_exclude_if)
+    resource: Annotated[
+        str | None,
+        Field(
+            description="""Resource is one of the existing resource types.  "*" means all.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    subresource: str | None = Field(default=None, exclude_if=_exclude_if)
+    subresource: Annotated[
+        str | None,
+        Field(
+            description="""Subresource is one of the existing resource types.  "" means none.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    verb: str | None = Field(default=None, exclude_if=_exclude_if)
+    verb: Annotated[
+        str | None,
+        Field(
+            description="""Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    version: str | None = Field(default=None, exclude_if=_exclude_if)
+    version: Annotated[
+        str | None,
+        Field(
+            description="""Version is the API Version of the Resource.  "*" means all.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

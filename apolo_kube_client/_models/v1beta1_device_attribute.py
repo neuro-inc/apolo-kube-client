@@ -1,24 +1,47 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1beta1DeviceAttribute",)
 
 
 class V1beta1DeviceAttribute(BaseModel):
-    bool_: bool | None = Field(
-        default=None,
-        serialization_alias="bool",
-        validation_alias=AliasChoices("bool_", "bool"),
-        exclude_if=_exclude_if,
-    )
+    """DeviceAttribute must have exactly one field set."""
 
-    int_: int | None = Field(
-        default=None,
-        serialization_alias="int",
-        validation_alias=AliasChoices("int_", "int"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    string: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.DeviceAttribute"
 
-    version: str | None = Field(default=None, exclude_if=_exclude_if)
+    bool_: Annotated[
+        bool | None,
+        Field(
+            alias="bool",
+            description="""BoolValue is a true/false value.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    int_: Annotated[
+        int | None,
+        Field(
+            alias="int",
+            description="""IntValue is a number.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    string: Annotated[
+        str | None,
+        Field(
+            description="""StringValue is a string. Must not be longer than 64 characters.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    version: Annotated[
+        str | None,
+        Field(
+            description="""VersionValue is a semantic version according to semver.org spec 2.0.0. Must not be longer than 64 characters.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

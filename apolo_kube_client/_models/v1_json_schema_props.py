@@ -1,277 +1,280 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
 from apolo_kube_client._typedefs import JsonType
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1JSONSchemaProps",)
 
 
 class V1JSONSchemaProps(BaseModel):
-    ref: str | None = Field(
-        default=None,
-        serialization_alias="$ref",
-        validation_alias=AliasChoices("ref", "$ref"),
-        exclude_if=_exclude_if,
+    """JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/)."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSONSchemaProps"
     )
 
-    schema_: str | None = Field(
-        default=None,
-        serialization_alias="$schema",
-        validation_alias=AliasChoices("schema_", "$schema"),
-        exclude_if=_exclude_if,
+    ref: Annotated[str | None, Field(alias="$ref", exclude_if=lambda v: v is None)] = (
+        None
     )
 
-    additional_items: JsonType = Field(
-        default={},
-        serialization_alias="additionalItems",
-        validation_alias=AliasChoices("additional_items", "additionalItems"),
-        exclude_if=_exclude_if,
-    )
+    schema_: Annotated[
+        str | None, Field(alias="$schema", exclude_if=lambda v: v is None)
+    ] = None
 
-    additional_properties: JsonType = Field(
-        default={},
-        serialization_alias="additionalProperties",
-        validation_alias=AliasChoices("additional_properties", "additionalProperties"),
-        exclude_if=_exclude_if,
-    )
+    additional_items: Annotated[
+        JsonType, Field(alias="additionalItems", exclude_if=lambda v: v == {})
+    ] = {}
+
+    additional_properties: Annotated[
+        JsonType, Field(alias="additionalProperties", exclude_if=lambda v: v == {})
+    ] = {}
 
     all_of: Annotated[
-        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="allOf",
-        validation_alias=AliasChoices("all_of", "allOf"),
-        exclude_if=_exclude_if,
-    )
+        list["V1JSONSchemaProps | None"],
+        Field(alias="allOf", exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
     any_of: Annotated[
-        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="anyOf",
-        validation_alias=AliasChoices("any_of", "anyOf"),
-        exclude_if=_exclude_if,
-    )
+        list["V1JSONSchemaProps | None"],
+        Field(alias="anyOf", exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    default: JsonType = Field(default={}, exclude_if=_exclude_if)
+    default: Annotated[
+        JsonType,
+        Field(
+            description="""default is a default value for undefined object fields. Defaulting is a beta feature under the CustomResourceDefaulting feature gate. Defaulting requires spec.preserveUnknownFields to be false.""",
+            exclude_if=lambda v: v == {},
+        ),
+    ] = {}
 
     definitions: Annotated[
-        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(default={}, exclude_if=_exclude_if)
+        dict[str, "V1JSONSchemaProps | None"],
+        Field(exclude_if=lambda v: v == {}),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
     dependencies: Annotated[
-        dict[str, JsonType], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(default={}, exclude_if=_exclude_if)
+        dict[str, JsonType],
+        Field(exclude_if=lambda v: v == {}),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
-    description: str | None = Field(default=None, exclude_if=_exclude_if)
+    description: Annotated[str | None, Field(exclude_if=lambda v: v is None)] = None
 
-    enum: Annotated[list[JsonType], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    enum: Annotated[
+        list[JsonType],
+        Field(exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    example: JsonType = Field(default={}, exclude_if=_exclude_if)
+    example: Annotated[JsonType, Field(exclude_if=lambda v: v == {})] = {}
 
-    exclusive_maximum: bool | None = Field(
-        default=None,
-        serialization_alias="exclusiveMaximum",
-        validation_alias=AliasChoices("exclusive_maximum", "exclusiveMaximum"),
-        exclude_if=_exclude_if,
-    )
+    exclusive_maximum: Annotated[
+        bool | None, Field(alias="exclusiveMaximum", exclude_if=lambda v: v is None)
+    ] = None
 
-    exclusive_minimum: bool | None = Field(
-        default=None,
-        serialization_alias="exclusiveMinimum",
-        validation_alias=AliasChoices("exclusive_minimum", "exclusiveMinimum"),
-        exclude_if=_exclude_if,
-    )
+    exclusive_minimum: Annotated[
+        bool | None, Field(alias="exclusiveMinimum", exclude_if=lambda v: v is None)
+    ] = None
 
     external_docs: Annotated[
         V1ExternalDocumentation,
+        Field(
+            alias="externalDocs", exclude_if=lambda v: v == V1ExternalDocumentation()
+        ),
         BeforeValidator(_default_if_none(V1ExternalDocumentation)),
-    ] = Field(
-        default_factory=lambda: V1ExternalDocumentation(),
-        serialization_alias="externalDocs",
-        validation_alias=AliasChoices("external_docs", "externalDocs"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1ExternalDocumentation()
 
-    format: str | None = Field(default=None, exclude_if=_exclude_if)
+    format: Annotated[
+        str | None,
+        Field(
+            description="""format is an OpenAPI v3 format string. Unknown formats are ignored. The following formats are validated:
 
-    id: str | None = Field(default=None, exclude_if=_exclude_if)
+- bsonobjectid: a bson object ID, i.e. a 24 characters hex string - uri: an URI as parsed by Golang net/url.ParseRequestURI - email: an email address as parsed by Golang net/mail.ParseAddress - hostname: a valid representation for an Internet host name, as defined by RFC 1034, section 3.1 [RFC1034]. - ipv4: an IPv4 IP as parsed by Golang net.ParseIP - ipv6: an IPv6 IP as parsed by Golang net.ParseIP - cidr: a CIDR as parsed by Golang net.ParseCIDR - mac: a MAC address as parsed by Golang net.ParseMAC - uuid: an UUID that allows uppercase defined by the regex (?i)^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$ - uuid3: an UUID3 that allows uppercase defined by the regex (?i)^[0-9a-f]{8}-?[0-9a-f]{4}-?3[0-9a-f]{3}-?[0-9a-f]{4}-?[0-9a-f]{12}$ - uuid4: an UUID4 that allows uppercase defined by the regex (?i)^[0-9a-f]{8}-?[0-9a-f]{4}-?4[0-9a-f]{3}-?[89ab][0-9a-f]{3}-?[0-9a-f]{12}$ - uuid5: an UUID5 that allows uppercase defined by the regex (?i)^[0-9a-f]{8}-?[0-9a-f]{4}-?5[0-9a-f]{3}-?[89ab][0-9a-f]{3}-?[0-9a-f]{12}$ - isbn: an ISBN10 or ISBN13 number string like "0321751043" or "978-0321751041" - isbn10: an ISBN10 number string like "0321751043" - isbn13: an ISBN13 number string like "978-0321751041" - creditcard: a credit card number defined by the regex ^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$ with any non digit characters mixed in - ssn: a U.S. social security number following the regex ^\\d{3}[- ]?\\d{2}[- ]?\\d{4}$ - hexcolor: an hexadecimal color code like "#FFFFFF: following the regex ^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$ - rgbcolor: an RGB color code like rgb like "rgb(255,255,2559" - byte: base64 encoded binary data - password: any kind of string - date: a date string like "2006-01-02" as defined by full-date in RFC3339 - duration: a duration string like "22 ns" as parsed by Golang time.ParseDuration or compatible with Scala duration format - datetime: a date time string like "2014-12-15T19:30:20.000Z" as defined by date-time in RFC3339.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    items: JsonType = Field(default={}, exclude_if=_exclude_if)
+    id: Annotated[str | None, Field(exclude_if=lambda v: v is None)] = None
 
-    max_items: int | None = Field(
-        default=None,
-        serialization_alias="maxItems",
-        validation_alias=AliasChoices("max_items", "maxItems"),
-        exclude_if=_exclude_if,
-    )
+    items: Annotated[JsonType, Field(exclude_if=lambda v: v == {})] = {}
 
-    max_length: int | None = Field(
-        default=None,
-        serialization_alias="maxLength",
-        validation_alias=AliasChoices("max_length", "maxLength"),
-        exclude_if=_exclude_if,
-    )
+    max_items: Annotated[
+        int | None, Field(alias="maxItems", exclude_if=lambda v: v is None)
+    ] = None
 
-    max_properties: int | None = Field(
-        default=None,
-        serialization_alias="maxProperties",
-        validation_alias=AliasChoices("max_properties", "maxProperties"),
-        exclude_if=_exclude_if,
-    )
+    max_length: Annotated[
+        int | None, Field(alias="maxLength", exclude_if=lambda v: v is None)
+    ] = None
 
-    maximum: float | None = Field(default=None, exclude_if=_exclude_if)
+    max_properties: Annotated[
+        int | None, Field(alias="maxProperties", exclude_if=lambda v: v is None)
+    ] = None
 
-    min_items: int | None = Field(
-        default=None,
-        serialization_alias="minItems",
-        validation_alias=AliasChoices("min_items", "minItems"),
-        exclude_if=_exclude_if,
-    )
+    maximum: Annotated[float | None, Field(exclude_if=lambda v: v is None)] = None
 
-    min_length: int | None = Field(
-        default=None,
-        serialization_alias="minLength",
-        validation_alias=AliasChoices("min_length", "minLength"),
-        exclude_if=_exclude_if,
-    )
+    min_items: Annotated[
+        int | None, Field(alias="minItems", exclude_if=lambda v: v is None)
+    ] = None
 
-    min_properties: int | None = Field(
-        default=None,
-        serialization_alias="minProperties",
-        validation_alias=AliasChoices("min_properties", "minProperties"),
-        exclude_if=_exclude_if,
-    )
+    min_length: Annotated[
+        int | None, Field(alias="minLength", exclude_if=lambda v: v is None)
+    ] = None
 
-    minimum: float | None = Field(default=None, exclude_if=_exclude_if)
+    min_properties: Annotated[
+        int | None, Field(alias="minProperties", exclude_if=lambda v: v is None)
+    ] = None
 
-    multiple_of: float | None = Field(
-        default=None,
-        serialization_alias="multipleOf",
-        validation_alias=AliasChoices("multiple_of", "multipleOf"),
-        exclude_if=_exclude_if,
-    )
+    minimum: Annotated[float | None, Field(exclude_if=lambda v: v is None)] = None
+
+    multiple_of: Annotated[
+        float | None, Field(alias="multipleOf", exclude_if=lambda v: v is None)
+    ] = None
 
     not_: Annotated[
         "V1JSONSchemaProps | None",
+        Field(alias="not", exclude_if=lambda v: v is None),
         BeforeValidator(_default_if_none("V1JSONSchemaProps | None")),
-    ] = Field(
-        default=None,
-        serialization_alias="not",
-        validation_alias=AliasChoices("not_", "not"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
-    nullable: bool | None = Field(default=None, exclude_if=_exclude_if)
+    nullable: Annotated[bool | None, Field(exclude_if=lambda v: v is None)] = None
 
     one_of: Annotated[
-        list["V1JSONSchemaProps"], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="oneOf",
-        validation_alias=AliasChoices("one_of", "oneOf"),
-        exclude_if=_exclude_if,
-    )
+        list["V1JSONSchemaProps | None"],
+        Field(alias="oneOf", exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    pattern: str | None = Field(default=None, exclude_if=_exclude_if)
+    pattern: Annotated[str | None, Field(exclude_if=lambda v: v is None)] = None
 
     pattern_properties: Annotated[
-        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(
-        default={},
-        serialization_alias="patternProperties",
-        validation_alias=AliasChoices("pattern_properties", "patternProperties"),
-        exclude_if=_exclude_if,
-    )
+        dict[str, "V1JSONSchemaProps | None"],
+        Field(alias="patternProperties", exclude_if=lambda v: v == {}),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
     properties: Annotated[
-        dict[str, "V1JSONSchemaProps"], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(default={}, exclude_if=_exclude_if)
+        dict[str, "V1JSONSchemaProps | None"],
+        Field(exclude_if=lambda v: v == {}),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
-    required: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    required: Annotated[
+        list[str],
+        Field(exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    title: str | None = Field(default=None, exclude_if=_exclude_if)
+    title: Annotated[str | None, Field(exclude_if=lambda v: v is None)] = None
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    type: Annotated[str | None, Field(exclude_if=lambda v: v is None)] = None
 
-    unique_items: bool | None = Field(
-        default=None,
-        serialization_alias="uniqueItems",
-        validation_alias=AliasChoices("unique_items", "uniqueItems"),
-        exclude_if=_exclude_if,
-    )
+    unique_items: Annotated[
+        bool | None, Field(alias="uniqueItems", exclude_if=lambda v: v is None)
+    ] = None
 
-    x_kubernetes_embedded_resource: bool | None = Field(
-        default=None,
-        serialization_alias="x-kubernetes-embedded-resource",
-        validation_alias=AliasChoices(
-            "x_kubernetes_embedded_resource", "x-kubernetes-embedded-resource"
+    x_kubernetes_embedded_resource: Annotated[
+        bool | None,
+        Field(
+            alias="x-kubernetes-embedded-resource",
+            description="""x-kubernetes-embedded-resource defines that the value is an embedded Kubernetes runtime.Object, with TypeMeta and ObjectMeta. The type must be object. It is allowed to further restrict the embedded object. kind, apiVersion and metadata are validated automatically. x-kubernetes-preserve-unknown-fields is allowed to be true, but does not have to be if the object is fully specified (up to kind, apiVersion, metadata).""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
-    x_kubernetes_int_or_string: bool | None = Field(
-        default=None,
-        serialization_alias="x-kubernetes-int-or-string",
-        validation_alias=AliasChoices(
-            "x_kubernetes_int_or_string", "x-kubernetes-int-or-string"
+    x_kubernetes_int_or_string: Annotated[
+        bool | None,
+        Field(
+            alias="x-kubernetes-int-or-string",
+            description="""x-kubernetes-int-or-string specifies that this value is either an integer or a string. If this is true, an empty type is allowed and type as child of anyOf is permitted if following one of the following patterns:
+
+1) anyOf:
+   - type: integer
+   - type: string
+2) allOf:
+   - anyOf:
+     - type: integer
+     - type: string
+   - ... zero or more""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     x_kubernetes_list_map_keys: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="x-kubernetes-list-map-keys",
-        validation_alias=AliasChoices(
-            "x_kubernetes_list_map_keys", "x-kubernetes-list-map-keys"
-        ),
-        exclude_if=_exclude_if,
-    )
+        list[str],
+        Field(
+            alias="x-kubernetes-list-map-keys",
+            description="""x-kubernetes-list-map-keys annotates an array with the x-kubernetes-list-type `map` by specifying the keys used as the index of the map.
 
-    x_kubernetes_list_type: str | None = Field(
-        default=None,
-        serialization_alias="x-kubernetes-list-type",
-        validation_alias=AliasChoices(
-            "x_kubernetes_list_type", "x-kubernetes-list-type"
-        ),
-        exclude_if=_exclude_if,
-    )
+This tag MUST only be used on lists that have the "x-kubernetes-list-type" extension set to "map". Also, the values specified for this attribute must be a scalar typed field of the child structure (no nesting is supported).
 
-    x_kubernetes_map_type: str | None = Field(
-        default=None,
-        serialization_alias="x-kubernetes-map-type",
-        validation_alias=AliasChoices("x_kubernetes_map_type", "x-kubernetes-map-type"),
-        exclude_if=_exclude_if,
-    )
-
-    x_kubernetes_preserve_unknown_fields: bool | None = Field(
-        default=None,
-        serialization_alias="x-kubernetes-preserve-unknown-fields",
-        validation_alias=AliasChoices(
-            "x_kubernetes_preserve_unknown_fields",
-            "x-kubernetes-preserve-unknown-fields",
+The properties specified must either be required or have a default value, to ensure those properties are present for all list items.""",
+            exclude_if=lambda v: v == [],
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
+    x_kubernetes_list_type: Annotated[
+        str | None,
+        Field(
+            alias="x-kubernetes-list-type",
+            description="""x-kubernetes-list-type annotates an array to further describe its topology. This extension must only be used on lists and may have 3 possible values:
+
+1) `atomic`: the list is treated as a single entity, like a scalar.
+     Atomic lists will be entirely replaced when updated. This extension
+     may be used on any type of list (struct, scalar, ...).
+2) `set`:
+     Sets are lists that must not have multiple items with the same value. Each
+     value must be a scalar, an object with x-kubernetes-map-type `atomic` or an
+     array with x-kubernetes-list-type `atomic`.
+3) `map`:
+     These lists are like maps in that their elements have a non-index key
+     used to identify them. Order is preserved upon merge. The map tag
+     must only be used on a list with elements of type object.
+Defaults to atomic for arrays.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    x_kubernetes_map_type: Annotated[
+        str | None,
+        Field(
+            alias="x-kubernetes-map-type",
+            description="""x-kubernetes-map-type annotates an object to further describe its topology. This extension must only be used when type is object and may have 2 possible values:
+
+1) `granular`:
+     These maps are actual maps (key-value pairs) and each fields are independent
+     from each other (they can each be manipulated by separate actors). This is
+     the default behaviour for all maps.
+2) `atomic`: the list is treated as a single entity, like a scalar.
+     Atomic maps will be entirely replaced when updated.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    x_kubernetes_preserve_unknown_fields: Annotated[
+        bool | None,
+        Field(
+            alias="x-kubernetes-preserve-unknown-fields",
+            description="""x-kubernetes-preserve-unknown-fields stops the API server decoding step from pruning fields which are not specified in the validation schema. This affects fields recursively, but switches back to normal pruning behaviour if nested properties or additionalProperties are specified in the schema. This can either be true or undefined. False is forbidden.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     x_kubernetes_validations: Annotated[
-        list[V1ValidationRule], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="x-kubernetes-validations",
-        validation_alias=AliasChoices(
-            "x_kubernetes_validations", "x-kubernetes-validations"
+        list[V1ValidationRule],
+        Field(
+            alias="x-kubernetes-validations",
+            description="""x-kubernetes-validations describes a list of validation rules written in the CEL expression language.""",
+            exclude_if=lambda v: v == [],
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

@@ -1,29 +1,44 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_container_state_running import V1ContainerStateRunning
 from .v1_container_state_terminated import V1ContainerStateTerminated
 from .v1_container_state_waiting import V1ContainerStateWaiting
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1ContainerState",)
 
 
 class V1ContainerState(BaseModel):
+    """ContainerState holds a possible state of container. Only one of its members may be specified. If none of them is specified, the default one is ContainerStateWaiting."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerState"
+
     running: Annotated[
         V1ContainerStateRunning,
+        Field(
+            description="""Details about a running container""",
+            exclude_if=lambda v: v == V1ContainerStateRunning(),
+        ),
         BeforeValidator(_default_if_none(V1ContainerStateRunning)),
-    ] = Field(default_factory=lambda: V1ContainerStateRunning(), exclude_if=_exclude_if)
+    ] = V1ContainerStateRunning()
 
     terminated: Annotated[
-        V1ContainerStateTerminated,
+        V1ContainerStateTerminated | None,
+        Field(
+            description="""Details about a terminated container""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1ContainerStateTerminated)),
-    ] = Field(
-        default_factory=lambda: V1ContainerStateTerminated(), exclude_if=_exclude_if
-    )
+    ] = None
 
     waiting: Annotated[
         V1ContainerStateWaiting,
+        Field(
+            description="""Details about a waiting container""",
+            exclude_if=lambda v: v == V1ContainerStateWaiting(),
+        ),
         BeforeValidator(_default_if_none(V1ContainerStateWaiting)),
-    ] = Field(default_factory=lambda: V1ContainerStateWaiting(), exclude_if=_exclude_if)
+    ] = V1ContainerStateWaiting()

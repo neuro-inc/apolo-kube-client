@@ -1,20 +1,30 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ObjectFieldSelector",)
 
 
 class V1ObjectFieldSelector(BaseModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
-    )
+    """ObjectFieldSelector selects an APIVersioned field of an object."""
 
-    field_path: str | None = Field(
-        default=None,
-        serialization_alias="fieldPath",
-        validation_alias=AliasChoices("field_path", "fieldPath"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ObjectFieldSelector"
+
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""Version of the schema the FieldPath is written in terms of, defaults to "v1".""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    field_path: Annotated[
+        str,
+        Field(
+            alias="fieldPath",
+            description="""Path of the field to select in the specified API version.""",
+        ),
+    ]

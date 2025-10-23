@@ -1,41 +1,54 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1alpha1ServerStorageVersion",)
 
 
 class V1alpha1ServerStorageVersion(BaseModel):
-    api_server_id: str | None = Field(
-        default=None,
-        serialization_alias="apiServerID",
-        validation_alias=AliasChoices("api_server_id", "apiServerID"),
-        exclude_if=_exclude_if,
+    """An API server instance reports the version it can decode and the version it encodes objects to when persisting objects in the backend."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.apiserverinternal.v1alpha1.ServerStorageVersion"
     )
+
+    api_server_id: Annotated[
+        str | None,
+        Field(
+            alias="apiServerID",
+            description="""The ID of the reporting API server.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     decodable_versions: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="decodableVersions",
-        validation_alias=AliasChoices("decodable_versions", "decodableVersions"),
-        exclude_if=_exclude_if,
-    )
+        list[str],
+        Field(
+            alias="decodableVersions",
+            description="""The API server can decode objects encoded in these versions. The encodingVersion must be included in the decodableVersions.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    encoding_version: str | None = Field(
-        default=None,
-        serialization_alias="encodingVersion",
-        validation_alias=AliasChoices("encoding_version", "encodingVersion"),
-        exclude_if=_exclude_if,
-    )
+    encoding_version: Annotated[
+        str | None,
+        Field(
+            alias="encodingVersion",
+            description="""The API server encodes the object to this version when persisting it in the backend (e.g., etcd).""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     served_versions: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="servedVersions",
-        validation_alias=AliasChoices("served_versions", "servedVersions"),
-        exclude_if=_exclude_if,
-    )
+        list[str],
+        Field(
+            alias="servedVersions",
+            description="""The API server can serve these versions. DecodableVersions must include all ServedVersions.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

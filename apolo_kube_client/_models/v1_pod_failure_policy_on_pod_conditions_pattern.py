@@ -1,10 +1,29 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1PodFailurePolicyOnPodConditionsPattern",)
 
 
 class V1PodFailurePolicyOnPodConditionsPattern(BaseModel):
-    status: str | None = Field(default=None, exclude_if=_exclude_if)
+    """PodFailurePolicyOnPodConditionsPattern describes a pattern for matching an actual pod condition type."""
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.batch.v1.PodFailurePolicyOnPodConditionsPattern"
+    )
+
+    status: Annotated[
+        str,
+        Field(
+            description="""Specifies the required Pod condition status. To match a pod condition it is required that the specified status equals the pod condition status. Defaults to True."""
+        ),
+    ]
+
+    type: Annotated[
+        str,
+        Field(
+            description="""Specifies the required Pod condition type. To match a pod condition it is required that specified type equals the pod condition type."""
+        ),
+    ]

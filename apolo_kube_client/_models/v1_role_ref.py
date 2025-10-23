@@ -1,17 +1,29 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1RoleRef",)
 
 
 class V1RoleRef(BaseModel):
-    api_group: str | None = Field(
-        default=None,
-        serialization_alias="apiGroup",
-        validation_alias=AliasChoices("api_group", "apiGroup"),
-        exclude_if=_exclude_if,
-    )
+    """RoleRef contains information that points to the role being used"""
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.RoleRef"
+
+    api_group: Annotated[
+        str,
+        Field(
+            alias="apiGroup",
+            description="""APIGroup is the group for the resource being referenced""",
+        ),
+    ]
+
+    kind: Annotated[
+        str, Field(description="""Kind is the type of resource being referenced""")
+    ]
+
+    name: Annotated[
+        str, Field(description="""Name is the name of resource being referenced""")
+    ]

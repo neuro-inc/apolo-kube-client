@@ -1,18 +1,40 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1VolumeError",)
 
 
 class V1VolumeError(BaseModel):
-    error_code: int | None = Field(
-        default=None,
-        serialization_alias="errorCode",
-        validation_alias=AliasChoices("error_code", "errorCode"),
-        exclude_if=_exclude_if,
-    )
+    """VolumeError captures an error encountered during a volume operation."""
 
-    message: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    time: datetime | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.VolumeError"
+
+    error_code: Annotated[
+        int | None,
+        Field(
+            alias="errorCode",
+            description="""errorCode is a numeric gRPC code representing the error encountered during Attach or Detach operations.
+
+This is an optional, beta field that requires the MutableCSINodeAllocatableCount feature gate being enabled to be set.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    message: Annotated[
+        str | None,
+        Field(
+            description="""message represents the error encountered during Attach or Detach operation. This string may be logged, so it should not contain sensitive information.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    time: Annotated[
+        datetime | None,
+        Field(
+            description="""time represents the time the error was encountered.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

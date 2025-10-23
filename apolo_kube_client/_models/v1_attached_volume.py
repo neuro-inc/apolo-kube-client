@@ -1,15 +1,23 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1AttachedVolume",)
 
 
 class V1AttachedVolume(BaseModel):
-    device_path: str | None = Field(
-        default=None,
-        serialization_alias="devicePath",
-        validation_alias=AliasChoices("device_path", "devicePath"),
-        exclude_if=_exclude_if,
-    )
+    """AttachedVolume describes a volume attached to a node"""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.AttachedVolume"
+
+    device_path: Annotated[
+        str,
+        Field(
+            alias="devicePath",
+            description="""DevicePath represents the device path where the volume should be available""",
+        ),
+    ]
+
+    name: Annotated[str, Field(description="""Name of the attached volume""")]

@@ -1,19 +1,42 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1BoundObjectReference",)
 
 
 class V1BoundObjectReference(BaseModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """BoundObjectReference is a reference to an object that a token is bound to."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.authentication.v1.BoundObjectReference"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""API version of the referent.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind of the referent. Valid kinds are 'Pod' and 'Secret'.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    uid: str | None = Field(default=None, exclude_if=_exclude_if)
+    name: Annotated[
+        str | None,
+        Field(description="""Name of the referent.""", exclude_if=lambda v: v is None),
+    ] = None
+
+    uid: Annotated[
+        str | None,
+        Field(description="""UID of the referent.""", exclude_if=lambda v: v is None),
+    ] = None

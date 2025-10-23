@@ -1,31 +1,44 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_config_map_env_source import V1ConfigMapEnvSource
 from .v1_secret_env_source import V1SecretEnvSource
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1EnvFromSource",)
 
 
 class V1EnvFromSource(BaseModel):
-    config_map_ref: Annotated[
-        V1ConfigMapEnvSource, BeforeValidator(_default_if_none(V1ConfigMapEnvSource))
-    ] = Field(
-        default_factory=lambda: V1ConfigMapEnvSource(),
-        serialization_alias="configMapRef",
-        validation_alias=AliasChoices("config_map_ref", "configMapRef"),
-        exclude_if=_exclude_if,
-    )
+    """EnvFromSource represents the source of a set of ConfigMaps or Secrets"""
 
-    prefix: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EnvFromSource"
+
+    config_map_ref: Annotated[
+        V1ConfigMapEnvSource,
+        Field(
+            alias="configMapRef",
+            description="""The ConfigMap to select from""",
+            exclude_if=lambda v: v == V1ConfigMapEnvSource(),
+        ),
+        BeforeValidator(_default_if_none(V1ConfigMapEnvSource)),
+    ] = V1ConfigMapEnvSource()
+
+    prefix: Annotated[
+        str | None,
+        Field(
+            description="""Optional text to prepend to the name of each environment variable. May consist of any printable ASCII characters except '='.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     secret_ref: Annotated[
-        V1SecretEnvSource, BeforeValidator(_default_if_none(V1SecretEnvSource))
-    ] = Field(
-        default_factory=lambda: V1SecretEnvSource(),
-        serialization_alias="secretRef",
-        validation_alias=AliasChoices("secret_ref", "secretRef"),
-        exclude_if=_exclude_if,
-    )
+        V1SecretEnvSource,
+        Field(
+            alias="secretRef",
+            description="""The Secret to select from""",
+            exclude_if=lambda v: v == V1SecretEnvSource(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretEnvSource)),
+    ] = V1SecretEnvSource()

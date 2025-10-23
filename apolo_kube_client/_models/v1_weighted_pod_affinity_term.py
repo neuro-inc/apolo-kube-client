@@ -1,21 +1,28 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_pod_affinity_term import V1PodAffinityTerm
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1WeightedPodAffinityTerm",)
 
 
 class V1WeightedPodAffinityTerm(BaseModel):
-    pod_affinity_term: Annotated[
-        V1PodAffinityTerm, BeforeValidator(_default_if_none(V1PodAffinityTerm))
-    ] = Field(
-        default_factory=lambda: V1PodAffinityTerm(),
-        serialization_alias="podAffinityTerm",
-        validation_alias=AliasChoices("pod_affinity_term", "podAffinityTerm"),
-        exclude_if=_exclude_if,
-    )
+    """The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)"""
 
-    weight: int | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.WeightedPodAffinityTerm"
+
+    pod_affinity_term: Annotated[
+        V1PodAffinityTerm,
+        Field(
+            alias="podAffinityTerm",
+            description="""Required. A pod affinity term, associated with the corresponding weight.""",
+        ),
+    ]
+
+    weight: Annotated[
+        int,
+        Field(
+            description="""weight associated with matching the corresponding podAffinityTerm, in the range 1-100."""
+        ),
+    ]

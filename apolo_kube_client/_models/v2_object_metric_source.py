@@ -1,30 +1,37 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_metric_identifier import V2MetricIdentifier
 from .v2_metric_target import V2MetricTarget
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V2ObjectMetricSource",)
 
 
 class V2ObjectMetricSource(BaseModel):
-    described_object: Annotated[
-        V2CrossVersionObjectReference,
-        BeforeValidator(_default_if_none(V2CrossVersionObjectReference)),
-    ] = Field(
-        default_factory=lambda: V2CrossVersionObjectReference(),
-        serialization_alias="describedObject",
-        validation_alias=AliasChoices("described_object", "describedObject"),
-        exclude_if=_exclude_if,
+    """ObjectMetricSource indicates how to scale on a metric describing a kubernetes object (for example, hits-per-second on an Ingress object)."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.autoscaling.v2.ObjectMetricSource"
     )
 
+    described_object: Annotated[
+        V2CrossVersionObjectReference,
+        Field(
+            alias="describedObject",
+            description="""describedObject specifies the descriptions of a object,such as kind,name apiVersion""",
+        ),
+    ]
+
     metric: Annotated[
-        V2MetricIdentifier, BeforeValidator(_default_if_none(V2MetricIdentifier))
-    ] = Field(default_factory=lambda: V2MetricIdentifier(), exclude_if=_exclude_if)
+        V2MetricIdentifier,
+        Field(
+            description="""metric identifies the target metric by name and selector"""
+        ),
+    ]
 
     target: Annotated[
-        V2MetricTarget, BeforeValidator(_default_if_none(V2MetricTarget))
-    ] = Field(default_factory=lambda: V2MetricTarget(), exclude_if=_exclude_if)
+        V2MetricTarget,
+        Field(description="""target specifies the target value for the given metric"""),
+    ]

@@ -1,6 +1,6 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
 from .v1_azure_file_volume_source import V1AzureFileVolumeSource
@@ -34,225 +34,322 @@ from .v1_secret_volume_source import V1SecretVolumeSource
 from .v1_storage_os_volume_source import V1StorageOSVolumeSource
 from .v1_vsphere_virtual_disk_volume_source import V1VsphereVirtualDiskVolumeSource
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1Volume",)
 
 
 class V1Volume(BaseModel):
+    """Volume represents a named volume in a pod that may be accessed by any container in the pod."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Volume"
+
     aws_elastic_block_store: Annotated[
-        V1AWSElasticBlockStoreVolumeSource,
-        BeforeValidator(_default_if_none(V1AWSElasticBlockStoreVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1AWSElasticBlockStoreVolumeSource(),
-        serialization_alias="awsElasticBlockStore",
-        validation_alias=AliasChoices(
-            "aws_elastic_block_store", "awsElasticBlockStore"
+        V1AWSElasticBlockStoreVolumeSource | None,
+        Field(
+            alias="awsElasticBlockStore",
+            description="""awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(V1AWSElasticBlockStoreVolumeSource)),
+    ] = None
 
     azure_disk: Annotated[
-        V1AzureDiskVolumeSource,
+        V1AzureDiskVolumeSource | None,
+        Field(
+            alias="azureDisk",
+            description="""azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1AzureDiskVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1AzureDiskVolumeSource(),
-        serialization_alias="azureDisk",
-        validation_alias=AliasChoices("azure_disk", "azureDisk"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     azure_file: Annotated[
-        V1AzureFileVolumeSource,
+        V1AzureFileVolumeSource | None,
+        Field(
+            alias="azureFile",
+            description="""azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1AzureFileVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1AzureFileVolumeSource(),
-        serialization_alias="azureFile",
-        validation_alias=AliasChoices("azure_file", "azureFile"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     cephfs: Annotated[
-        V1CephFSVolumeSource, BeforeValidator(_default_if_none(V1CephFSVolumeSource))
-    ] = Field(default_factory=lambda: V1CephFSVolumeSource(), exclude_if=_exclude_if)
+        V1CephFSVolumeSource | None,
+        Field(
+            description="""cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1CephFSVolumeSource)),
+    ] = None
 
     cinder: Annotated[
-        V1CinderVolumeSource, BeforeValidator(_default_if_none(V1CinderVolumeSource))
-    ] = Field(default_factory=lambda: V1CinderVolumeSource(), exclude_if=_exclude_if)
+        V1CinderVolumeSource | None,
+        Field(
+            description="""cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1CinderVolumeSource)),
+    ] = None
 
     config_map: Annotated[
         V1ConfigMapVolumeSource,
+        Field(
+            alias="configMap",
+            description="""configMap represents a configMap that should populate this volume""",
+            exclude_if=lambda v: v == V1ConfigMapVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1ConfigMapVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1ConfigMapVolumeSource(),
-        serialization_alias="configMap",
-        validation_alias=AliasChoices("config_map", "configMap"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1ConfigMapVolumeSource()
 
     csi: Annotated[
-        V1CSIVolumeSource, BeforeValidator(_default_if_none(V1CSIVolumeSource))
-    ] = Field(default_factory=lambda: V1CSIVolumeSource(), exclude_if=_exclude_if)
+        V1CSIVolumeSource | None,
+        Field(
+            description="""csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1CSIVolumeSource)),
+    ] = None
 
     downward_api: Annotated[
         V1DownwardAPIVolumeSource,
+        Field(
+            alias="downwardAPI",
+            description="""downwardAPI represents downward API about the pod that should populate this volume""",
+            exclude_if=lambda v: v == V1DownwardAPIVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1DownwardAPIVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1DownwardAPIVolumeSource(),
-        serialization_alias="downwardAPI",
-        validation_alias=AliasChoices("downward_api", "downwardAPI"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1DownwardAPIVolumeSource()
 
     empty_dir: Annotated[
         V1EmptyDirVolumeSource,
+        Field(
+            alias="emptyDir",
+            description="""emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir""",
+            exclude_if=lambda v: v == V1EmptyDirVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1EmptyDirVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1EmptyDirVolumeSource(),
-        serialization_alias="emptyDir",
-        validation_alias=AliasChoices("empty_dir", "emptyDir"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1EmptyDirVolumeSource()
 
     ephemeral: Annotated[
         V1EphemeralVolumeSource,
+        Field(
+            description="""ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.
+
+Use this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity
+   tracking are needed,
+c) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through
+   a PersistentVolumeClaim (see EphemeralVolumeSource for more
+   information on the connection between this volume type
+   and PersistentVolumeClaim).
+
+Use PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.
+
+Use CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.
+
+A pod can use both types of ephemeral volumes and persistent volumes at the same time.""",
+            exclude_if=lambda v: v == V1EphemeralVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1EphemeralVolumeSource)),
-    ] = Field(default_factory=lambda: V1EphemeralVolumeSource(), exclude_if=_exclude_if)
+    ] = V1EphemeralVolumeSource()
 
     fc: Annotated[
-        V1FCVolumeSource, BeforeValidator(_default_if_none(V1FCVolumeSource))
-    ] = Field(default_factory=lambda: V1FCVolumeSource(), exclude_if=_exclude_if)
+        V1FCVolumeSource,
+        Field(
+            description="""fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.""",
+            exclude_if=lambda v: v == V1FCVolumeSource(),
+        ),
+        BeforeValidator(_default_if_none(V1FCVolumeSource)),
+    ] = V1FCVolumeSource()
 
     flex_volume: Annotated[
-        V1FlexVolumeSource, BeforeValidator(_default_if_none(V1FlexVolumeSource))
-    ] = Field(
-        default_factory=lambda: V1FlexVolumeSource(),
-        serialization_alias="flexVolume",
-        validation_alias=AliasChoices("flex_volume", "flexVolume"),
-        exclude_if=_exclude_if,
-    )
+        V1FlexVolumeSource | None,
+        Field(
+            alias="flexVolume",
+            description="""flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1FlexVolumeSource)),
+    ] = None
 
     flocker: Annotated[
-        V1FlockerVolumeSource, BeforeValidator(_default_if_none(V1FlockerVolumeSource))
-    ] = Field(default_factory=lambda: V1FlockerVolumeSource(), exclude_if=_exclude_if)
+        V1FlockerVolumeSource,
+        Field(
+            description="""flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.""",
+            exclude_if=lambda v: v == V1FlockerVolumeSource(),
+        ),
+        BeforeValidator(_default_if_none(V1FlockerVolumeSource)),
+    ] = V1FlockerVolumeSource()
 
     gce_persistent_disk: Annotated[
-        V1GCEPersistentDiskVolumeSource,
+        V1GCEPersistentDiskVolumeSource | None,
+        Field(
+            alias="gcePersistentDisk",
+            description="""gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1GCEPersistentDiskVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1GCEPersistentDiskVolumeSource(),
-        serialization_alias="gcePersistentDisk",
-        validation_alias=AliasChoices("gce_persistent_disk", "gcePersistentDisk"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     git_repo: Annotated[
-        V1GitRepoVolumeSource, BeforeValidator(_default_if_none(V1GitRepoVolumeSource))
-    ] = Field(
-        default_factory=lambda: V1GitRepoVolumeSource(),
-        serialization_alias="gitRepo",
-        validation_alias=AliasChoices("git_repo", "gitRepo"),
-        exclude_if=_exclude_if,
-    )
+        V1GitRepoVolumeSource | None,
+        Field(
+            alias="gitRepo",
+            description="""gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1GitRepoVolumeSource)),
+    ] = None
 
     glusterfs: Annotated[
-        V1GlusterfsVolumeSource,
+        V1GlusterfsVolumeSource | None,
+        Field(
+            description="""glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1GlusterfsVolumeSource)),
-    ] = Field(default_factory=lambda: V1GlusterfsVolumeSource(), exclude_if=_exclude_if)
+    ] = None
 
     host_path: Annotated[
-        V1HostPathVolumeSource,
+        V1HostPathVolumeSource | None,
+        Field(
+            alias="hostPath",
+            description="""hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1HostPathVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1HostPathVolumeSource(),
-        serialization_alias="hostPath",
-        validation_alias=AliasChoices("host_path", "hostPath"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     image: Annotated[
-        V1ImageVolumeSource, BeforeValidator(_default_if_none(V1ImageVolumeSource))
-    ] = Field(default_factory=lambda: V1ImageVolumeSource(), exclude_if=_exclude_if)
+        V1ImageVolumeSource,
+        Field(
+            description="""image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:
+
+- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
+
+The volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33. The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.""",
+            exclude_if=lambda v: v == V1ImageVolumeSource(),
+        ),
+        BeforeValidator(_default_if_none(V1ImageVolumeSource)),
+    ] = V1ImageVolumeSource()
 
     iscsi: Annotated[
-        V1ISCSIVolumeSource, BeforeValidator(_default_if_none(V1ISCSIVolumeSource))
-    ] = Field(default_factory=lambda: V1ISCSIVolumeSource(), exclude_if=_exclude_if)
+        V1ISCSIVolumeSource | None,
+        Field(
+            description="""iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes/#iscsi""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1ISCSIVolumeSource)),
+    ] = None
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    name: Annotated[
+        str,
+        Field(
+            description="""name of the volume. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"""
+        ),
+    ]
 
     nfs: Annotated[
-        V1NFSVolumeSource, BeforeValidator(_default_if_none(V1NFSVolumeSource))
-    ] = Field(default_factory=lambda: V1NFSVolumeSource(), exclude_if=_exclude_if)
+        V1NFSVolumeSource | None,
+        Field(
+            description="""nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1NFSVolumeSource)),
+    ] = None
 
     persistent_volume_claim: Annotated[
-        V1PersistentVolumeClaimVolumeSource,
-        BeforeValidator(_default_if_none(V1PersistentVolumeClaimVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1PersistentVolumeClaimVolumeSource(),
-        serialization_alias="persistentVolumeClaim",
-        validation_alias=AliasChoices(
-            "persistent_volume_claim", "persistentVolumeClaim"
+        V1PersistentVolumeClaimVolumeSource | None,
+        Field(
+            alias="persistentVolumeClaim",
+            description="""persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(V1PersistentVolumeClaimVolumeSource)),
+    ] = None
 
     photon_persistent_disk: Annotated[
-        V1PhotonPersistentDiskVolumeSource,
+        V1PhotonPersistentDiskVolumeSource | None,
+        Field(
+            alias="photonPersistentDisk",
+            description="""photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1PhotonPersistentDiskVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1PhotonPersistentDiskVolumeSource(),
-        serialization_alias="photonPersistentDisk",
-        validation_alias=AliasChoices("photon_persistent_disk", "photonPersistentDisk"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     portworx_volume: Annotated[
-        V1PortworxVolumeSource,
+        V1PortworxVolumeSource | None,
+        Field(
+            alias="portworxVolume",
+            description="""portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1PortworxVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1PortworxVolumeSource(),
-        serialization_alias="portworxVolume",
-        validation_alias=AliasChoices("portworx_volume", "portworxVolume"),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
     projected: Annotated[
         V1ProjectedVolumeSource,
+        Field(
+            description="""projected items for all in one resources secrets, configmaps, and downward API""",
+            exclude_if=lambda v: v == V1ProjectedVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1ProjectedVolumeSource)),
-    ] = Field(default_factory=lambda: V1ProjectedVolumeSource(), exclude_if=_exclude_if)
+    ] = V1ProjectedVolumeSource()
 
     quobyte: Annotated[
-        V1QuobyteVolumeSource, BeforeValidator(_default_if_none(V1QuobyteVolumeSource))
-    ] = Field(default_factory=lambda: V1QuobyteVolumeSource(), exclude_if=_exclude_if)
+        V1QuobyteVolumeSource | None,
+        Field(
+            description="""quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1QuobyteVolumeSource)),
+    ] = None
 
     rbd: Annotated[
-        V1RBDVolumeSource, BeforeValidator(_default_if_none(V1RBDVolumeSource))
-    ] = Field(default_factory=lambda: V1RBDVolumeSource(), exclude_if=_exclude_if)
+        V1RBDVolumeSource | None,
+        Field(
+            description="""rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1RBDVolumeSource)),
+    ] = None
 
     scale_io: Annotated[
-        V1ScaleIOVolumeSource, BeforeValidator(_default_if_none(V1ScaleIOVolumeSource))
-    ] = Field(
-        default_factory=lambda: V1ScaleIOVolumeSource(),
-        serialization_alias="scaleIO",
-        validation_alias=AliasChoices("scale_io", "scaleIO"),
-        exclude_if=_exclude_if,
-    )
+        V1ScaleIOVolumeSource | None,
+        Field(
+            alias="scaleIO",
+            description="""scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1ScaleIOVolumeSource)),
+    ] = None
 
     secret: Annotated[
-        V1SecretVolumeSource, BeforeValidator(_default_if_none(V1SecretVolumeSource))
-    ] = Field(default_factory=lambda: V1SecretVolumeSource(), exclude_if=_exclude_if)
+        V1SecretVolumeSource,
+        Field(
+            description="""secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret""",
+            exclude_if=lambda v: v == V1SecretVolumeSource(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretVolumeSource)),
+    ] = V1SecretVolumeSource()
 
     storageos: Annotated[
         V1StorageOSVolumeSource,
+        Field(
+            description="""storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.""",
+            exclude_if=lambda v: v == V1StorageOSVolumeSource(),
+        ),
         BeforeValidator(_default_if_none(V1StorageOSVolumeSource)),
-    ] = Field(default_factory=lambda: V1StorageOSVolumeSource(), exclude_if=_exclude_if)
+    ] = V1StorageOSVolumeSource()
 
     vsphere_volume: Annotated[
-        V1VsphereVirtualDiskVolumeSource,
+        V1VsphereVirtualDiskVolumeSource | None,
+        Field(
+            alias="vsphereVolume",
+            description="""vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.""",
+            exclude_if=lambda v: v is None,
+        ),
         BeforeValidator(_default_if_none(V1VsphereVirtualDiskVolumeSource)),
-    ] = Field(
-        default_factory=lambda: V1VsphereVirtualDiskVolumeSource(),
-        serialization_alias="vsphereVolume",
-        validation_alias=AliasChoices("vsphere_volume", "vsphereVolume"),
-        exclude_if=_exclude_if,
-    )
+    ] = None

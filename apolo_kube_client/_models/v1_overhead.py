@@ -1,18 +1,24 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1Overhead",)
 
 
 class V1Overhead(BaseModel):
-    pod_fixed: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = (
+    """Overhead structure represents the resource overhead associated with running a pod."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.node.v1.Overhead"
+
+    pod_fixed: Annotated[
+        dict[str, str],
         Field(
-            default={},
-            serialization_alias="podFixed",
-            validation_alias=AliasChoices("pod_fixed", "podFixed"),
-            exclude_if=_exclude_if,
-        )
-    )
+            alias="podFixed",
+            description="""podFixed represents the fixed resource overhead associated with running a pod.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}

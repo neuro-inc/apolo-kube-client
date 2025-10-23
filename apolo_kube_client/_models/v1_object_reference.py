@@ -1,35 +1,72 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ObjectReference",)
 
 
 class V1ObjectReference(BaseModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
-    )
+    """ObjectReference contains enough information to let you inspect or modify the referred object."""
 
-    field_path: str | None = Field(
-        default=None,
-        serialization_alias="fieldPath",
-        validation_alias=AliasChoices("field_path", "fieldPath"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ObjectReference"
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""API version of the referent.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
+    field_path: Annotated[
+        str | None,
+        Field(
+            alias="fieldPath",
+            description="""If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    resource_version: str | None = Field(
-        default=None,
-        serialization_alias="resourceVersion",
-        validation_alias=AliasChoices("resource_version", "resourceVersion"),
-        exclude_if=_exclude_if,
-    )
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    uid: str | None = Field(default=None, exclude_if=_exclude_if)
+    name: Annotated[
+        str | None,
+        Field(
+            description="""Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    namespace: Annotated[
+        str | None,
+        Field(
+            description="""Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    resource_version: Annotated[
+        str | None,
+        Field(
+            alias="resourceVersion",
+            description="""Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    uid: Annotated[
+        str | None,
+        Field(
+            description="""UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

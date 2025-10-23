@@ -1,15 +1,31 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1Preconditions",)
 
 
 class V1Preconditions(BaseModel):
-    resource_version: str | None = Field(
-        default=None,
-        serialization_alias="resourceVersion",
-        validation_alias=AliasChoices("resource_version", "resourceVersion"),
-        exclude_if=_exclude_if,
+    """Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions"
     )
 
-    uid: str | None = Field(default=None, exclude_if=_exclude_if)
+    resource_version: Annotated[
+        str | None,
+        Field(
+            alias="resourceVersion",
+            description="""Specifies the target ResourceVersion""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    uid: Annotated[
+        str | None,
+        Field(
+            description="""Specifies the target UID.""", exclude_if=lambda v: v is None
+        ),
+    ] = None

@@ -1,27 +1,39 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ContainerExtendedResourceRequest",)
 
 
 class V1ContainerExtendedResourceRequest(BaseModel):
-    container_name: str | None = Field(
-        default=None,
-        serialization_alias="containerName",
-        validation_alias=AliasChoices("container_name", "containerName"),
-        exclude_if=_exclude_if,
+    """ContainerExtendedResourceRequest has the mapping of container name, extended resource name to the device request name."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.ContainerExtendedResourceRequest"
     )
 
-    request_name: str | None = Field(
-        default=None,
-        serialization_alias="requestName",
-        validation_alias=AliasChoices("request_name", "requestName"),
-        exclude_if=_exclude_if,
-    )
+    container_name: Annotated[
+        str,
+        Field(
+            alias="containerName",
+            description="""The name of the container requesting resources.""",
+        ),
+    ]
 
-    resource_name: str | None = Field(
-        default=None,
-        serialization_alias="resourceName",
-        validation_alias=AliasChoices("resource_name", "resourceName"),
-        exclude_if=_exclude_if,
-    )
+    request_name: Annotated[
+        str,
+        Field(
+            alias="requestName",
+            description="""The name of the request in the special ResourceClaim which corresponds to the extended resource.""",
+        ),
+    ]
+
+    resource_name: Annotated[
+        str,
+        Field(
+            alias="resourceName",
+            description="""The name of the extended resource in that container which gets backed by DRA.""",
+        ),
+    ]

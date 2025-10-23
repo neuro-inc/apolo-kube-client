@@ -1,16 +1,34 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_webhook_conversion import V1WebhookConversion
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CustomResourceConversion",)
 
 
 class V1CustomResourceConversion(BaseModel):
-    strategy: str | None = Field(default=None, exclude_if=_exclude_if)
+    """CustomResourceConversion describes how to convert different versions of a CR."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceConversion"
+    )
+
+    strategy: Annotated[
+        str,
+        Field(
+            description="""strategy specifies how custom resources are converted between versions. Allowed values are: - `"None"`: The converter only change the apiVersion and would not touch any other field in the custom resource. - `"Webhook"`: API Server will call to an external webhook to do the conversion. Additional information
+  is needed for this option. This requires spec.preserveUnknownFields to be false, and spec.conversion.webhook to be set."""
+        ),
+    ]
 
     webhook: Annotated[
-        V1WebhookConversion, BeforeValidator(_default_if_none(V1WebhookConversion))
-    ] = Field(default_factory=lambda: V1WebhookConversion(), exclude_if=_exclude_if)
+        V1WebhookConversion | None,
+        Field(
+            description="""webhook describes how to call the conversion webhook. Required when `strategy` is set to `"Webhook"`.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1WebhookConversion)),
+    ] = None

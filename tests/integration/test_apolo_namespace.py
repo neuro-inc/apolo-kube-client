@@ -58,6 +58,7 @@ class TestApoloNamespace:
         assert np.metadata.namespace == namespace.metadata.name
 
         assert np.spec.policy_types == ["Egress"]
+        assert np.spec.egress[-1].to[0].ip_block is not None
 
         assert np.spec.egress == [
             V1NetworkPolicyEgressRule(

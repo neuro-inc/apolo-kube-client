@@ -1,25 +1,49 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _exclude_if
 from .v1_port_status import V1PortStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1LoadBalancerIngress",)
 
 
 class V1LoadBalancerIngress(BaseModel):
-    hostname: str | None = Field(default=None, exclude_if=_exclude_if)
+    """LoadBalancerIngress represents the status of a load-balancer ingress point: traffic intended for the service should be sent to an ingress point."""
 
-    ip: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    ip_mode: str | None = Field(
-        default=None,
-        serialization_alias="ipMode",
-        validation_alias=AliasChoices("ip_mode", "ipMode"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LoadBalancerIngress"
 
-    ports: Annotated[list[V1PortStatus], BeforeValidator(_collection_if_none("[]"))] = (
-        Field(default=[], exclude_if=_exclude_if)
-    )
+    hostname: Annotated[
+        str | None,
+        Field(
+            description="""Hostname is set for load-balancer ingress points that are DNS based (typically AWS load-balancers)""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    ip: Annotated[
+        str | None,
+        Field(
+            description="""IP is set for load-balancer ingress points that are IP based (typically GCE or OpenStack load-balancers)""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    ip_mode: Annotated[
+        str | None,
+        Field(
+            alias="ipMode",
+            description="""IPMode specifies how the load-balancer IP behaves, and may only be specified when the ip field is specified. Setting this to "VIP" indicates that traffic is delivered to the node with the destination set to the load-balancer's IP and port. Setting this to "Proxy" indicates that traffic is delivered to the node or pod with the destination set to the node's IP and node port or the pod's IP and port. Service implementations may use this information to adjust traffic routing.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    ports: Annotated[
+        list[V1PortStatus],
+        Field(
+            description="""Ports is a list of records of service ports If used, every port defined in the service should have an entry in it""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []

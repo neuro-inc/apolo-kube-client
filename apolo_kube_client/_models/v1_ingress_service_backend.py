@@ -1,16 +1,33 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_service_backend_port import V1ServiceBackendPort
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1IngressServiceBackend",)
 
 
 class V1IngressServiceBackend(BaseModel):
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    """IngressServiceBackend references a Kubernetes Service as a Backend."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.networking.v1.IngressServiceBackend"
+    )
+
+    name: Annotated[
+        str,
+        Field(
+            description="""name is the referenced service. The service must exist in the same namespace as the Ingress object."""
+        ),
+    ]
 
     port: Annotated[
-        V1ServiceBackendPort, BeforeValidator(_default_if_none(V1ServiceBackendPort))
-    ] = Field(default_factory=lambda: V1ServiceBackendPort(), exclude_if=_exclude_if)
+        V1ServiceBackendPort,
+        Field(
+            description="""port of the referenced service. A port name or port number is required for a IngressServiceBackend.""",
+            exclude_if=lambda v: v == V1ServiceBackendPort(),
+        ),
+        BeforeValidator(_default_if_none(V1ServiceBackendPort)),
+    ] = V1ServiceBackendPort()

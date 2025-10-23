@@ -1,41 +1,51 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_local_object_reference import V1LocalObjectReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CinderVolumeSource",)
 
 
 class V1CinderVolumeSource(BaseModel):
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
-    )
+    """Represents a cinder volume resource in Openstack. A Cinder volume must exist before mounting to a container. The volume must also be in the same region as the kubelet. Cinder volumes support ownership management and SELinux relabeling."""
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.CinderVolumeSource"
+
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     secret_ref: Annotated[
         V1LocalObjectReference,
+        Field(
+            alias="secretRef",
+            description="""secretRef is optional: points to a secret object containing parameters used to connect to OpenStack.""",
+            exclude_if=lambda v: v == V1LocalObjectReference(),
+        ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
-    ] = Field(
-        default_factory=lambda: V1LocalObjectReference(),
-        serialization_alias="secretRef",
-        validation_alias=AliasChoices("secret_ref", "secretRef"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1LocalObjectReference()
 
-    volume_id: str | None = Field(
-        default=None,
-        serialization_alias="volumeID",
-        validation_alias=AliasChoices("volume_id", "volumeID"),
-        exclude_if=_exclude_if,
-    )
+    volume_id: Annotated[
+        str,
+        Field(
+            alias="volumeID",
+            description="""volumeID used to identify the volume in cinder. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
+        ),
+    ]

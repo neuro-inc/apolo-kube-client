@@ -1,70 +1,133 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1PersistentVolumeClaimStatus",)
 
 
 class V1PersistentVolumeClaimStatus(BaseModel):
-    access_modes: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = (
-        Field(
-            default=[],
-            serialization_alias="accessModes",
-            validation_alias=AliasChoices("access_modes", "accessModes"),
-            exclude_if=_exclude_if,
-        )
+    """PersistentVolumeClaimStatus is the current status of a persistent volume claim."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.PersistentVolumeClaimStatus"
     )
+
+    access_modes: Annotated[
+        list[str],
+        Field(
+            alias="accessModes",
+            description="""accessModes contains the actual access modes the volume backing the PVC has. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
     allocated_resource_statuses: Annotated[
-        dict[str, str], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(
-        default={},
-        serialization_alias="allocatedResourceStatuses",
-        validation_alias=AliasChoices(
-            "allocated_resource_statuses", "allocatedResourceStatuses"
+        dict[str, str],
+        Field(
+            alias="allocatedResourceStatuses",
+            description="""allocatedResourceStatuses stores status of resource being resized for the given PVC. Key names follow standard Kubernetes label syntax. Valid values are either:
+	* Un-prefixed keys:
+		- storage - the capacity of the volume.
+	* Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
+Apart from above values - keys that are unprefixed or have kubernetes.io prefix are considered reserved and hence may not be used.
+
+ClaimResourceStatus can be in any of following states:
+	- ControllerResizeInProgress:
+		State set when resize controller starts resizing the volume in control-plane.
+	- ControllerResizeFailed:
+		State set when resize has failed in resize controller with a terminal error.
+	- NodeResizePending:
+		State set when resize controller has finished resizing the volume but further resizing of
+		volume is needed on the node.
+	- NodeResizeInProgress:
+		State set when kubelet starts resizing the volume.
+	- NodeResizeFailed:
+		State set when resizing has failed in kubelet with a terminal error. Transient errors don't set
+		NodeResizeFailed.
+For example: if expanding a PVC for more capacity - this field can be one of the following states:
+	- pvc.status.allocatedResourceStatus['storage'] = "ControllerResizeInProgress"
+     - pvc.status.allocatedResourceStatus['storage'] = "ControllerResizeFailed"
+     - pvc.status.allocatedResourceStatus['storage'] = "NodeResizePending"
+     - pvc.status.allocatedResourceStatus['storage'] = "NodeResizeInProgress"
+     - pvc.status.allocatedResourceStatus['storage'] = "NodeResizeFailed"
+When this field is not set, it means that no resize operation is in progress for the given PVC.
+
+A controller that receives PVC update with previously unknown resourceName or ClaimResourceStatus should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
+
+This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.""",
+            exclude_if=lambda v: v == {},
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
     allocated_resources: Annotated[
-        dict[str, str], BeforeValidator(_collection_if_none("{}"))
-    ] = Field(
-        default={},
-        serialization_alias="allocatedResources",
-        validation_alias=AliasChoices("allocated_resources", "allocatedResources"),
-        exclude_if=_exclude_if,
-    )
+        dict[str, str],
+        Field(
+            alias="allocatedResources",
+            description="""allocatedResources tracks the resources allocated to a PVC including its capacity. Key names follow standard Kubernetes label syntax. Valid values are either:
+	* Un-prefixed keys:
+		- storage - the capacity of the volume.
+	* Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
+Apart from above values - keys that are unprefixed or have kubernetes.io prefix are considered reserved and hence may not be used.
 
-    capacity: Annotated[dict[str, str], BeforeValidator(_collection_if_none("{}"))] = (
-        Field(default={}, exclude_if=_exclude_if)
-    )
+Capacity reported here may be larger than the actual capacity when a volume expansion operation is requested. For storage quota, the larger value from allocatedResources and PVC.spec.resources is used. If allocatedResources is not set, PVC.spec.resources alone is used for quota calculation. If a volume expansion capacity request is lowered, allocatedResources is only lowered if there are no expansion operations in progress and if the actual volume capacity is equal or lower than the requested capacity.
+
+A controller that receives PVC update with previously unknown resourceName should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
+
+This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
+
+    capacity: Annotated[
+        dict[str, str],
+        Field(
+            description="""capacity represents the actual resources of the underlying volume.""",
+            exclude_if=lambda v: v == {},
+        ),
+        BeforeValidator(_collection_if_none("{}")),
+    ] = {}
 
     conditions: Annotated[
         list[V1PersistentVolumeClaimCondition],
-        BeforeValidator(_collection_if_none("[]")),
-    ] = Field(default=[], exclude_if=_exclude_if)
-
-    current_volume_attributes_class_name: str | None = Field(
-        default=None,
-        serialization_alias="currentVolumeAttributesClassName",
-        validation_alias=AliasChoices(
-            "current_volume_attributes_class_name", "currentVolumeAttributesClassName"
+        Field(
+            description="""conditions is the current Condition of persistent volume claim. If underlying persistent volume is being resized then the Condition will be set to 'Resizing'.""",
+            exclude_if=lambda v: v == [],
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
+
+    current_volume_attributes_class_name: Annotated[
+        str | None,
+        Field(
+            alias="currentVolumeAttributesClassName",
+            description="""currentVolumeAttributesClassName is the current name of the VolumeAttributesClass the PVC is using. When unset, there is no VolumeAttributeClass applied to this PersistentVolumeClaim""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     modify_volume_status: Annotated[
-        V1ModifyVolumeStatus, BeforeValidator(_default_if_none(V1ModifyVolumeStatus))
-    ] = Field(
-        default_factory=lambda: V1ModifyVolumeStatus(),
-        serialization_alias="modifyVolumeStatus",
-        validation_alias=AliasChoices("modify_volume_status", "modifyVolumeStatus"),
-        exclude_if=_exclude_if,
-    )
+        V1ModifyVolumeStatus | None,
+        Field(
+            alias="modifyVolumeStatus",
+            description="""ModifyVolumeStatus represents the status object of ControllerModifyVolume operation. When this is unset, there is no ModifyVolume operation being attempted.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1ModifyVolumeStatus)),
+    ] = None
 
-    phase: str | None = Field(default=None, exclude_if=_exclude_if)
+    phase: Annotated[
+        str | None,
+        Field(
+            description="""phase represents the current phase of PersistentVolumeClaim.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

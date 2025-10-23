@@ -1,51 +1,83 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1DeploymentSpec",)
 
 
 class V1DeploymentSpec(BaseModel):
-    min_ready_seconds: int | None = Field(
-        default=None,
-        serialization_alias="minReadySeconds",
-        validation_alias=AliasChoices("min_ready_seconds", "minReadySeconds"),
-        exclude_if=_exclude_if,
-    )
+    """DeploymentSpec is the specification of the desired behavior of the Deployment."""
 
-    paused: bool | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    progress_deadline_seconds: int | None = Field(
-        default=None,
-        serialization_alias="progressDeadlineSeconds",
-        validation_alias=AliasChoices(
-            "progress_deadline_seconds", "progressDeadlineSeconds"
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentSpec"
+
+    min_ready_seconds: Annotated[
+        int | None,
+        Field(
+            alias="minReadySeconds",
+            description="""Minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available. Defaults to 0 (pod will be considered available as soon as it is ready)""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
-    replicas: int | None = Field(default=None, exclude_if=_exclude_if)
+    paused: Annotated[
+        bool | None,
+        Field(
+            description="""Indicates that the deployment is paused.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    revision_history_limit: int | None = Field(
-        default=None,
-        serialization_alias="revisionHistoryLimit",
-        validation_alias=AliasChoices("revision_history_limit", "revisionHistoryLimit"),
-        exclude_if=_exclude_if,
-    )
+    progress_deadline_seconds: Annotated[
+        int | None,
+        Field(
+            alias="progressDeadlineSeconds",
+            description="""The maximum time in seconds for a deployment to make progress before it is considered to be failed. The deployment controller will continue to process failed deployments and a condition with a ProgressDeadlineExceeded reason will be surfaced in the deployment status. Note that progress will not be estimated during the time a deployment is paused. Defaults to 600s.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    replicas: Annotated[
+        int | None,
+        Field(
+            description="""Number of desired pods. This is a pointer to distinguish between explicit zero and not specified. Defaults to 1.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    revision_history_limit: Annotated[
+        int | None,
+        Field(
+            alias="revisionHistoryLimit",
+            description="""The number of old ReplicaSets to retain to allow rollback. This is a pointer to distinguish between explicit zero and not specified. Defaults to 10.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     selector: Annotated[
-        V1LabelSelector, BeforeValidator(_default_if_none(V1LabelSelector))
-    ] = Field(default_factory=lambda: V1LabelSelector(), exclude_if=_exclude_if)
+        V1LabelSelector,
+        Field(
+            description="""Label selector for pods. Existing ReplicaSets whose pods are selected by this will be the ones affected by this deployment. It must match the pod template's labels."""
+        ),
+    ]
 
     strategy: Annotated[
-        V1DeploymentStrategy, BeforeValidator(_default_if_none(V1DeploymentStrategy))
-    ] = Field(default_factory=lambda: V1DeploymentStrategy(), exclude_if=_exclude_if)
+        V1DeploymentStrategy,
+        Field(
+            description="""The deployment strategy to use to replace existing pods with new ones.""",
+            exclude_if=lambda v: v == V1DeploymentStrategy(),
+        ),
+        BeforeValidator(_default_if_none(V1DeploymentStrategy)),
+    ] = V1DeploymentStrategy()
 
     template: Annotated[
-        V1PodTemplateSpec, BeforeValidator(_default_if_none(V1PodTemplateSpec))
-    ] = Field(default_factory=lambda: V1PodTemplateSpec(), exclude_if=_exclude_if)
+        V1PodTemplateSpec,
+        Field(
+            description="""Template describes the pods that will be created. The only allowed template.spec.restartPolicy value is "Always"."""
+        ),
+    ]

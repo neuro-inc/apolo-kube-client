@@ -1,41 +1,72 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1ContainerStateTerminated",)
 
 
 class V1ContainerStateTerminated(BaseModel):
-    container_id: str | None = Field(
-        default=None,
-        serialization_alias="containerID",
-        validation_alias=AliasChoices("container_id", "containerID"),
-        exclude_if=_exclude_if,
-    )
+    """ContainerStateTerminated is a terminated state of a container."""
 
-    exit_code: int | None = Field(
-        default=None,
-        serialization_alias="exitCode",
-        validation_alias=AliasChoices("exit_code", "exitCode"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    finished_at: datetime | None = Field(
-        default=None,
-        serialization_alias="finishedAt",
-        validation_alias=AliasChoices("finished_at", "finishedAt"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerStateTerminated"
 
-    message: str | None = Field(default=None, exclude_if=_exclude_if)
+    container_id: Annotated[
+        str | None,
+        Field(
+            alias="containerID",
+            description="""Container's ID in the format '<type>://<container_id>'""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    reason: str | None = Field(default=None, exclude_if=_exclude_if)
+    exit_code: Annotated[
+        int,
+        Field(
+            alias="exitCode",
+            description="""Exit status from the last termination of the container""",
+        ),
+    ]
 
-    signal: int | None = Field(default=None, exclude_if=_exclude_if)
+    finished_at: Annotated[
+        datetime | None,
+        Field(
+            alias="finishedAt",
+            description="""Time at which the container last terminated""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    started_at: datetime | None = Field(
-        default=None,
-        serialization_alias="startedAt",
-        validation_alias=AliasChoices("started_at", "startedAt"),
-        exclude_if=_exclude_if,
-    )
+    message: Annotated[
+        str | None,
+        Field(
+            description="""Message regarding the last termination of the container""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    reason: Annotated[
+        str | None,
+        Field(
+            description="""(brief) reason from the last termination of the container""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    signal: Annotated[
+        int | None,
+        Field(
+            description="""Signal from the last termination of the container""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    started_at: Annotated[
+        datetime | None,
+        Field(
+            alias="startedAt",
+            description="""Time at which previous execution of the container started""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

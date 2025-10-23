@@ -1,42 +1,87 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_condition import V1Condition
 from .v1beta1_network_device_data import V1beta1NetworkDeviceData
 from apolo_kube_client._typedefs import JsonType
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1beta1AllocatedDeviceStatus",)
 
 
 class V1beta1AllocatedDeviceStatus(BaseModel):
+    """AllocatedDeviceStatus contains the status of an allocated device, if the driver chooses to report it. This may include driver-specific information.
+
+    The combination of Driver, Pool, Device, and ShareID must match the corresponding key in Status.Allocation.Devices."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.resource.v1beta1.AllocatedDeviceStatus"
+    )
+
     conditions: Annotated[
-        list[V1Condition], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1Condition],
+        Field(
+            description="""Conditions contains the latest observation of the device's state. If the device has been configured according to the class and claim config references, the `Ready` condition should be True.
 
-    data: JsonType = Field(default={}, exclude_if=_exclude_if)
+Must not contain more than 8 entries.""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    device: str | None = Field(default=None, exclude_if=_exclude_if)
+    data: Annotated[
+        JsonType,
+        Field(
+            description="""Data contains arbitrary driver-specific data.
 
-    driver: str | None = Field(default=None, exclude_if=_exclude_if)
+The length of the raw data must be smaller or equal to 10 Ki.""",
+            exclude_if=lambda v: v == {},
+        ),
+    ] = {}
+
+    device: Annotated[
+        str,
+        Field(
+            description="""Device references one device instance via its name in the driver's resource pool. It must be a DNS label."""
+        ),
+    ]
+
+    driver: Annotated[
+        str,
+        Field(
+            description="""Driver specifies the name of the DRA driver whose kubelet plugin should be invoked to process the allocation once the claim is needed on a node.
+
+Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver."""
+        ),
+    ]
 
     network_data: Annotated[
         V1beta1NetworkDeviceData,
+        Field(
+            alias="networkData",
+            description="""NetworkData contains network-related information specific to the device.""",
+            exclude_if=lambda v: v == V1beta1NetworkDeviceData(),
+        ),
         BeforeValidator(_default_if_none(V1beta1NetworkDeviceData)),
-    ] = Field(
-        default_factory=lambda: V1beta1NetworkDeviceData(),
-        serialization_alias="networkData",
-        validation_alias=AliasChoices("network_data", "networkData"),
-        exclude_if=_exclude_if,
-    )
+    ] = V1beta1NetworkDeviceData()
 
-    pool: str | None = Field(default=None, exclude_if=_exclude_if)
+    pool: Annotated[
+        str,
+        Field(
+            description="""This name together with the driver name and the device name field identify which device was allocated (`<driver name>/<pool name>/<device name>`).
 
-    share_id: str | None = Field(
-        default=None,
-        serialization_alias="shareID",
-        validation_alias=AliasChoices("share_id", "shareID"),
-        exclude_if=_exclude_if,
-    )
+Must not be longer than 253 characters and may contain one or more DNS sub-domains separated by slashes."""
+        ),
+    ]
+
+    share_id: Annotated[
+        str | None,
+        Field(
+            alias="shareID",
+            description="""ShareID uniquely identifies an individual allocation share of the device.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

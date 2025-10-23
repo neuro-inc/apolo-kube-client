@@ -1,25 +1,33 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_condition import V1Condition
 from .v1_load_balancer_status import V1LoadBalancerStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1ServiceStatus",)
 
 
 class V1ServiceStatus(BaseModel):
+    """ServiceStatus represents the current status of a service."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ServiceStatus"
+
     conditions: Annotated[
-        list[V1Condition], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1Condition],
+        Field(description="""Current service state""", exclude_if=lambda v: v == []),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
     load_balancer: Annotated[
-        V1LoadBalancerStatus, BeforeValidator(_default_if_none(V1LoadBalancerStatus))
-    ] = Field(
-        default_factory=lambda: V1LoadBalancerStatus(),
-        serialization_alias="loadBalancer",
-        validation_alias=AliasChoices("load_balancer", "loadBalancer"),
-        exclude_if=_exclude_if,
-    )
+        V1LoadBalancerStatus,
+        Field(
+            alias="loadBalancer",
+            description="""LoadBalancer contains the current status of the load-balancer, if one is present.""",
+            exclude_if=lambda v: v == V1LoadBalancerStatus(),
+        ),
+        BeforeValidator(_default_if_none(V1LoadBalancerStatus)),
+    ] = V1LoadBalancerStatus()

@@ -1,27 +1,36 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1VolumeAttachmentSource",)
 
 
 class V1VolumeAttachmentSource(BaseModel):
-    inline_volume_spec: Annotated[
-        V1PersistentVolumeSpec,
-        BeforeValidator(_default_if_none(V1PersistentVolumeSpec)),
-    ] = Field(
-        default_factory=lambda: V1PersistentVolumeSpec(),
-        serialization_alias="inlineVolumeSpec",
-        validation_alias=AliasChoices("inline_volume_spec", "inlineVolumeSpec"),
-        exclude_if=_exclude_if,
+    """VolumeAttachmentSource represents a volume that should be attached. Right now only PersistentVolumes can be attached via external attacher, in the future we may allow also inline volumes in pods. Exactly one member can be set."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.storage.v1.VolumeAttachmentSource"
     )
 
-    persistent_volume_name: str | None = Field(
-        default=None,
-        serialization_alias="persistentVolumeName",
-        validation_alias=AliasChoices("persistent_volume_name", "persistentVolumeName"),
-        exclude_if=_exclude_if,
-    )
+    inline_volume_spec: Annotated[
+        V1PersistentVolumeSpec,
+        Field(
+            alias="inlineVolumeSpec",
+            description="""inlineVolumeSpec contains all the information necessary to attach a persistent volume defined by a pod's inline VolumeSource. This field is populated only for the CSIMigration feature. It contains translated fields from a pod's inline VolumeSource to a PersistentVolumeSpec. This field is beta-level and is only honored by servers that enabled the CSIMigration feature.""",
+            exclude_if=lambda v: v == V1PersistentVolumeSpec(),
+        ),
+        BeforeValidator(_default_if_none(V1PersistentVolumeSpec)),
+    ] = V1PersistentVolumeSpec()
+
+    persistent_volume_name: Annotated[
+        str | None,
+        Field(
+            alias="persistentVolumeName",
+            description="""persistentVolumeName represents the name of the persistent volume to attach.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

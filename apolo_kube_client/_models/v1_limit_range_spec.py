@@ -1,14 +1,20 @@
-from pydantic import BaseModel, Field
-from .utils import _collection_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_limit_range_item import V1LimitRangeItem
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1LimitRangeSpec",)
 
 
 class V1LimitRangeSpec(BaseModel):
+    """LimitRangeSpec defines a min/max usage limit for resources that match on kind."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LimitRangeSpec"
+
     limits: Annotated[
-        list[V1LimitRangeItem], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1LimitRangeItem],
+        Field(
+            description="""Limits is the list of LimitRangeItem objects that are enforced."""
+        ),
+    ]

@@ -1,16 +1,26 @@
-from pydantic import BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v2_metric_value_status import V2MetricValueStatus
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V2ResourceMetricStatus",)
 
 
 class V2ResourceMetricStatus(BaseModel):
-    current: Annotated[
-        V2MetricValueStatus, BeforeValidator(_default_if_none(V2MetricValueStatus))
-    ] = Field(default_factory=lambda: V2MetricValueStatus(), exclude_if=_exclude_if)
+    """ResourceMetricStatus indicates the current value of a resource metric known to Kubernetes, as specified in requests and limits, describing each pod in the current scale target (e.g. CPU or memory).  Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the "pods" source."""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.autoscaling.v2.ResourceMetricStatus"
+    )
+
+    current: Annotated[
+        V2MetricValueStatus,
+        Field(
+            description="""current contains the current value for the given metric"""
+        ),
+    ]
+
+    name: Annotated[
+        str, Field(description="""name is the name of the resource in question.""")
+    ]

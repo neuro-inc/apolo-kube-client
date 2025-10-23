@@ -1,10 +1,29 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1EventSource",)
 
 
 class V1EventSource(BaseModel):
-    component: str | None = Field(default=None, exclude_if=_exclude_if)
+    """EventSource contains information for an event."""
 
-    host: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EventSource"
+
+    component: Annotated[
+        str | None,
+        Field(
+            description="""Component from which the event is generated.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    host: Annotated[
+        str | None,
+        Field(
+            description="""Node name on which the event is generated.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

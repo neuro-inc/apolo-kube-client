@@ -1,81 +1,96 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_node_swap_status import V1NodeSwapStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1NodeSystemInfo",)
 
 
 class V1NodeSystemInfo(BaseModel):
-    architecture: str | None = Field(default=None, exclude_if=_exclude_if)
+    """NodeSystemInfo is a set of ids/uuids to uniquely identify the node."""
 
-    boot_id: str | None = Field(
-        default=None,
-        serialization_alias="bootID",
-        validation_alias=AliasChoices("boot_id", "bootID"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    container_runtime_version: str | None = Field(
-        default=None,
-        serialization_alias="containerRuntimeVersion",
-        validation_alias=AliasChoices(
-            "container_runtime_version", "containerRuntimeVersion"
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSystemInfo"
+
+    architecture: Annotated[
+        str, Field(description="""The Architecture reported by the node""")
+    ]
+
+    boot_id: Annotated[
+        str, Field(alias="bootID", description="""Boot ID reported by the node.""")
+    ]
+
+    container_runtime_version: Annotated[
+        str,
+        Field(
+            alias="containerRuntimeVersion",
+            description="""ContainerRuntime Version reported by the node through runtime remote API (e.g. containerd://1.4.2).""",
         ),
-        exclude_if=_exclude_if,
-    )
+    ]
 
-    kernel_version: str | None = Field(
-        default=None,
-        serialization_alias="kernelVersion",
-        validation_alias=AliasChoices("kernel_version", "kernelVersion"),
-        exclude_if=_exclude_if,
-    )
+    kernel_version: Annotated[
+        str,
+        Field(
+            alias="kernelVersion",
+            description="""Kernel Version reported by the node from 'uname -r' (e.g. 3.16.0-0.bpo.4-amd64).""",
+        ),
+    ]
 
-    kube_proxy_version: str | None = Field(
-        default=None,
-        serialization_alias="kubeProxyVersion",
-        validation_alias=AliasChoices("kube_proxy_version", "kubeProxyVersion"),
-        exclude_if=_exclude_if,
-    )
+    kube_proxy_version: Annotated[
+        str,
+        Field(
+            alias="kubeProxyVersion",
+            description="""Deprecated: KubeProxy Version reported by the node.""",
+        ),
+    ]
 
-    kubelet_version: str | None = Field(
-        default=None,
-        serialization_alias="kubeletVersion",
-        validation_alias=AliasChoices("kubelet_version", "kubeletVersion"),
-        exclude_if=_exclude_if,
-    )
+    kubelet_version: Annotated[
+        str,
+        Field(
+            alias="kubeletVersion",
+            description="""Kubelet Version reported by the node.""",
+        ),
+    ]
 
-    machine_id: str | None = Field(
-        default=None,
-        serialization_alias="machineID",
-        validation_alias=AliasChoices("machine_id", "machineID"),
-        exclude_if=_exclude_if,
-    )
+    machine_id: Annotated[
+        str,
+        Field(
+            alias="machineID",
+            description="""MachineID reported by the node. For unique machine identification in the cluster this field is preferred. Learn more from man(5) machine-id: http://man7.org/linux/man-pages/man5/machine-id.5.html""",
+        ),
+    ]
 
-    operating_system: str | None = Field(
-        default=None,
-        serialization_alias="operatingSystem",
-        validation_alias=AliasChoices("operating_system", "operatingSystem"),
-        exclude_if=_exclude_if,
-    )
+    operating_system: Annotated[
+        str,
+        Field(
+            alias="operatingSystem",
+            description="""The Operating System reported by the node""",
+        ),
+    ]
 
-    os_image: str | None = Field(
-        default=None,
-        serialization_alias="osImage",
-        validation_alias=AliasChoices("os_image", "osImage"),
-        exclude_if=_exclude_if,
-    )
+    os_image: Annotated[
+        str,
+        Field(
+            alias="osImage",
+            description="""OS Image reported by the node from /etc/os-release (e.g. Debian GNU/Linux 7 (wheezy)).""",
+        ),
+    ]
 
     swap: Annotated[
-        V1NodeSwapStatus, BeforeValidator(_default_if_none(V1NodeSwapStatus))
-    ] = Field(default_factory=lambda: V1NodeSwapStatus(), exclude_if=_exclude_if)
+        V1NodeSwapStatus,
+        Field(
+            description="""Swap Info reported by the node.""",
+            exclude_if=lambda v: v == V1NodeSwapStatus(),
+        ),
+        BeforeValidator(_default_if_none(V1NodeSwapStatus)),
+    ] = V1NodeSwapStatus()
 
-    system_uuid: str | None = Field(
-        default=None,
-        serialization_alias="systemUUID",
-        validation_alias=AliasChoices("system_uuid", "systemUUID"),
-        exclude_if=_exclude_if,
-    )
+    system_uuid: Annotated[
+        str,
+        Field(
+            alias="systemUUID",
+            description="""SystemUUID reported by the node. For unique machine identification MachineID is preferred. This field is specific to Red Hat hosts https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid""",
+        ),
+    ]

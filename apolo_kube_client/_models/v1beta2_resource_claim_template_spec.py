@@ -1,23 +1,35 @@
-from pydantic import Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1beta2_resource_claim_spec import V1beta2ResourceClaimSpec
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1beta2ResourceClaimTemplateSpec",)
 
 
 class V1beta2ResourceClaimTemplateSpec(ResourceModel):
+    """ResourceClaimTemplateSpec contains the metadata and fields for a ResourceClaim."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.resource.v1beta2.ResourceClaimTemplateSpec"
+    )
+
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""ObjectMeta may contain labels and annotations that will be copied into the ResourceClaim when creating it. No other fields are allowed and will be rejected during validation.""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
     spec: Annotated[
         V1beta2ResourceClaimSpec,
-        BeforeValidator(_default_if_none(V1beta2ResourceClaimSpec)),
-    ] = Field(
-        default_factory=lambda: V1beta2ResourceClaimSpec(), exclude_if=_exclude_if
-    )
+        Field(
+            description="""Spec for the ResourceClaim. The entire content is copied unchanged into the ResourceClaim that gets created from this template. The same fields as in a ResourceClaim are also valid here."""
+        ),
+    ]

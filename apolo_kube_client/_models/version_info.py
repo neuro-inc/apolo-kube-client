@@ -1,81 +1,71 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("VersionInfo",)
 
 
 class VersionInfo(BaseModel):
-    build_date: str | None = Field(
-        default=None,
-        serialization_alias="buildDate",
-        validation_alias=AliasChoices("build_date", "buildDate"),
-        exclude_if=_exclude_if,
-    )
+    """Info contains versioning information. how we'll want to distribute that information."""
 
-    compiler: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    emulation_major: str | None = Field(
-        default=None,
-        serialization_alias="emulationMajor",
-        validation_alias=AliasChoices("emulation_major", "emulationMajor"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.apimachinery.pkg.version.Info"
 
-    emulation_minor: str | None = Field(
-        default=None,
-        serialization_alias="emulationMinor",
-        validation_alias=AliasChoices("emulation_minor", "emulationMinor"),
-        exclude_if=_exclude_if,
-    )
+    build_date: Annotated[str, Field(alias="buildDate")]
 
-    git_commit: str | None = Field(
-        default=None,
-        serialization_alias="gitCommit",
-        validation_alias=AliasChoices("git_commit", "gitCommit"),
-        exclude_if=_exclude_if,
-    )
+    compiler: Annotated[str, Field()]
 
-    git_tree_state: str | None = Field(
-        default=None,
-        serialization_alias="gitTreeState",
-        validation_alias=AliasChoices("git_tree_state", "gitTreeState"),
-        exclude_if=_exclude_if,
-    )
-
-    git_version: str | None = Field(
-        default=None,
-        serialization_alias="gitVersion",
-        validation_alias=AliasChoices("git_version", "gitVersion"),
-        exclude_if=_exclude_if,
-    )
-
-    go_version: str | None = Field(
-        default=None,
-        serialization_alias="goVersion",
-        validation_alias=AliasChoices("go_version", "goVersion"),
-        exclude_if=_exclude_if,
-    )
-
-    major: str | None = Field(default=None, exclude_if=_exclude_if)
-
-    min_compatibility_major: str | None = Field(
-        default=None,
-        serialization_alias="minCompatibilityMajor",
-        validation_alias=AliasChoices(
-            "min_compatibility_major", "minCompatibilityMajor"
+    emulation_major: Annotated[
+        str | None,
+        Field(
+            alias="emulationMajor",
+            description="""EmulationMajor is the major version of the emulation version""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
-    min_compatibility_minor: str | None = Field(
-        default=None,
-        serialization_alias="minCompatibilityMinor",
-        validation_alias=AliasChoices(
-            "min_compatibility_minor", "minCompatibilityMinor"
+    emulation_minor: Annotated[
+        str | None,
+        Field(
+            alias="emulationMinor",
+            description="""EmulationMinor is the minor version of the emulation version""",
+            exclude_if=lambda v: v is None,
         ),
-        exclude_if=_exclude_if,
-    )
+    ] = None
 
-    minor: str | None = Field(default=None, exclude_if=_exclude_if)
+    git_commit: Annotated[str, Field(alias="gitCommit")]
 
-    platform: str | None = Field(default=None, exclude_if=_exclude_if)
+    git_tree_state: Annotated[str, Field(alias="gitTreeState")]
+
+    git_version: Annotated[str, Field(alias="gitVersion")]
+
+    go_version: Annotated[str, Field(alias="goVersion")]
+
+    major: Annotated[
+        str, Field(description="""Major is the major version of the binary version""")
+    ]
+
+    min_compatibility_major: Annotated[
+        str | None,
+        Field(
+            alias="minCompatibilityMajor",
+            description="""MinCompatibilityMajor is the major version of the minimum compatibility version""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    min_compatibility_minor: Annotated[
+        str | None,
+        Field(
+            alias="minCompatibilityMinor",
+            description="""MinCompatibilityMinor is the minor version of the minimum compatibility version""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    minor: Annotated[
+        str, Field(description="""Minor is the minor version of the binary version""")
+    ]
+
+    platform: Annotated[str, Field()]

@@ -1,46 +1,83 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _collection_if_none
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_secret_reference import V1SecretReference
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1RBDPersistentVolumeSource",)
 
 
 class V1RBDPersistentVolumeSource(BaseModel):
-    fs_type: str | None = Field(
-        default=None,
-        serialization_alias="fsType",
-        validation_alias=AliasChoices("fs_type", "fsType"),
-        exclude_if=_exclude_if,
+    """Represents a Rados Block Device mount that lasts the lifetime of a pod. RBD volumes support ownership management and SELinux relabeling."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.RBDPersistentVolumeSource"
     )
 
-    image: str | None = Field(default=None, exclude_if=_exclude_if)
+    fs_type: Annotated[
+        str | None,
+        Field(
+            alias="fsType",
+            description="""fsType is the filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    keyring: str | None = Field(default=None, exclude_if=_exclude_if)
+    image: Annotated[
+        str,
+        Field(
+            description="""image is the rados image name. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it"""
+        ),
+    ]
 
-    monitors: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
-    )
+    keyring: Annotated[
+        str | None,
+        Field(
+            description="""keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    pool: str | None = Field(default=None, exclude_if=_exclude_if)
+    monitors: Annotated[
+        list[str],
+        Field(
+            description="""monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it"""
+        ),
+    ]
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    pool: Annotated[
+        str | None,
+        Field(
+            description="""pool is the rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     secret_ref: Annotated[
-        V1SecretReference, BeforeValidator(_default_if_none(V1SecretReference))
-    ] = Field(
-        default_factory=lambda: V1SecretReference(),
-        serialization_alias="secretRef",
-        validation_alias=AliasChoices("secret_ref", "secretRef"),
-        exclude_if=_exclude_if,
-    )
+        V1SecretReference,
+        Field(
+            alias="secretRef",
+            description="""secretRef is name of the authentication secret for RBDUser. If provided overrides keyring. Default is nil. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
+            exclude_if=lambda v: v == V1SecretReference(),
+        ),
+        BeforeValidator(_default_if_none(V1SecretReference)),
+    ] = V1SecretReference()
 
-    user: str | None = Field(default=None, exclude_if=_exclude_if)
+    user: Annotated[
+        str | None,
+        Field(
+            description="""user is the rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

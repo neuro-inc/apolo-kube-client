@@ -1,17 +1,36 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1GlusterfsVolumeSource",)
 
 
 class V1GlusterfsVolumeSource(BaseModel):
-    endpoints: str | None = Field(default=None, exclude_if=_exclude_if)
+    """Represents a Glusterfs mount that lasts the lifetime of a pod. Glusterfs volumes do not support ownership management or SELinux relabeling."""
 
-    path: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.GlusterfsVolumeSource"
+
+    endpoints: Annotated[
+        str,
+        Field(
+            description="""endpoints is the endpoint name that details Glusterfs topology."""
+        ),
+    ]
+
+    path: Annotated[
+        str,
+        Field(
+            description="""path is the Glusterfs volume path. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod"""
+        ),
+    ]
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""readOnly here will force the Glusterfs volume to be mounted with read-only permissions. Defaults to false. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

@@ -1,14 +1,40 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1ParentReference",)
 
 
 class V1ParentReference(BaseModel):
-    group: str | None = Field(default=None, exclude_if=_exclude_if)
+    """ParentReference describes a reference to a parent object."""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    namespace: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.ParentReference"
 
-    resource: str | None = Field(default=None, exclude_if=_exclude_if)
+    group: Annotated[
+        str | None,
+        Field(
+            description="""Group is the group of the object being referenced.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    name: Annotated[
+        str, Field(description="""Name is the name of the object being referenced.""")
+    ]
+
+    namespace: Annotated[
+        str | None,
+        Field(
+            description="""Namespace is the namespace of the object being referenced.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    resource: Annotated[
+        str,
+        Field(
+            description="""Resource is the resource of the object being referenced."""
+        ),
+    ]

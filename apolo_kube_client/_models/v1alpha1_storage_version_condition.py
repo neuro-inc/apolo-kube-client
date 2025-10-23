@@ -1,29 +1,51 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1alpha1StorageVersionCondition",)
 
 
 class V1alpha1StorageVersionCondition(BaseModel):
-    last_transition_time: datetime | None = Field(
-        default=None,
-        serialization_alias="lastTransitionTime",
-        validation_alias=AliasChoices("last_transition_time", "lastTransitionTime"),
-        exclude_if=_exclude_if,
+    """Describes the state of the storageVersion at a certain point."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.apiserverinternal.v1alpha1.StorageVersionCondition"
     )
 
-    message: str | None = Field(default=None, exclude_if=_exclude_if)
+    last_transition_time: Annotated[
+        datetime | None,
+        Field(
+            alias="lastTransitionTime",
+            description="""Last time the condition transitioned from one status to another.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    observed_generation: int | None = Field(
-        default=None,
-        serialization_alias="observedGeneration",
-        validation_alias=AliasChoices("observed_generation", "observedGeneration"),
-        exclude_if=_exclude_if,
-    )
+    message: Annotated[
+        str,
+        Field(
+            description="""A human readable message indicating details about the transition."""
+        ),
+    ]
 
-    reason: str | None = Field(default=None, exclude_if=_exclude_if)
+    observed_generation: Annotated[
+        int | None,
+        Field(
+            alias="observedGeneration",
+            description="""If set, this represents the .metadata.generation that the condition was set based upon.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    status: str | None = Field(default=None, exclude_if=_exclude_if)
+    reason: Annotated[
+        str, Field(description="""The reason for the condition's last transition.""")
+    ]
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    status: Annotated[
+        str,
+        Field(description="""Status of the condition, one of True, False, Unknown."""),
+    ]
+
+    type: Annotated[str, Field(description="""Type of the condition.""")]

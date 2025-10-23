@@ -1,20 +1,44 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 __all__ = ("V1alpha3DeviceTaint",)
 
 
 class V1alpha3DeviceTaint(BaseModel):
-    effect: str | None = Field(default=None, exclude_if=_exclude_if)
+    """The device this taint is attached to has the "effect" on any claim which does not tolerate the taint and, through the claim, to pods using the claim."""
 
-    key: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    time_added: datetime | None = Field(
-        default=None,
-        serialization_alias="timeAdded",
-        validation_alias=AliasChoices("time_added", "timeAdded"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1alpha3.DeviceTaint"
 
-    value: str | None = Field(default=None, exclude_if=_exclude_if)
+    effect: Annotated[
+        str,
+        Field(
+            description="""The effect of the taint on claims that do not tolerate the taint and through such claims on the pods using them. Valid effects are NoSchedule and NoExecute. PreferNoSchedule as used for nodes is not valid here."""
+        ),
+    ]
+
+    key: Annotated[
+        str,
+        Field(
+            description="""The taint key to be applied to a device. Must be a label name."""
+        ),
+    ]
+
+    time_added: Annotated[
+        datetime | None,
+        Field(
+            alias="timeAdded",
+            description="""TimeAdded represents the time at which the taint was added. Added automatically during create or update if not set.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    value: Annotated[
+        str | None,
+        Field(
+            description="""The taint value corresponding to the taint key. Must be a label value.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

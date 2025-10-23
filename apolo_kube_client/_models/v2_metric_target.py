@@ -1,24 +1,46 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V2MetricTarget",)
 
 
 class V2MetricTarget(BaseModel):
-    average_utilization: int | None = Field(
-        default=None,
-        serialization_alias="averageUtilization",
-        validation_alias=AliasChoices("average_utilization", "averageUtilization"),
-        exclude_if=_exclude_if,
-    )
+    """MetricTarget defines the target value, average value, or average utilization of a specific metric"""
 
-    average_value: str | None = Field(
-        default=None,
-        serialization_alias="averageValue",
-        validation_alias=AliasChoices("average_value", "averageValue"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    type: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricTarget"
 
-    value: str | None = Field(default=None, exclude_if=_exclude_if)
+    average_utilization: Annotated[
+        int | None,
+        Field(
+            alias="averageUtilization",
+            description="""averageUtilization is the target value of the average of the resource metric across all relevant pods, represented as a percentage of the requested value of the resource for the pods. Currently only valid for Resource metric source type""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    average_value: Annotated[
+        str | None,
+        Field(
+            alias="averageValue",
+            description="""averageValue is the target value of the average of the metric across all relevant pods (as a quantity)""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    type: Annotated[
+        str,
+        Field(
+            description="""type represents whether the metric type is Utilization, Value, or AverageValue"""
+        ),
+    ]
+
+    value: Annotated[
+        str | None,
+        Field(
+            description="""value is the target value of the metric (as a quantity).""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

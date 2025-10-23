@@ -1,34 +1,67 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_node_spec import V1NodeSpec
 from .v1_node_status import V1NodeStatus
 from .v1_object_meta import V1ObjectMeta
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1Node",)
 
 
 class V1Node(ResourceModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """Node is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd)."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Node"
+
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="", kind="Node", version="v1"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
-    spec: Annotated[V1NodeSpec, BeforeValidator(_default_if_none(V1NodeSpec))] = Field(
-        default_factory=lambda: V1NodeSpec(), exclude_if=_exclude_if
-    )
+    spec: Annotated[
+        V1NodeSpec,
+        Field(
+            description="""Spec defines the behavior of a node. https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
+            exclude_if=lambda v: v == V1NodeSpec(),
+        ),
+        BeforeValidator(_default_if_none(V1NodeSpec)),
+    ] = V1NodeSpec()
 
-    status: Annotated[V1NodeStatus, BeforeValidator(_default_if_none(V1NodeStatus))] = (
-        Field(default_factory=lambda: V1NodeStatus(), exclude_if=_exclude_if)
-    )
+    status: Annotated[
+        V1NodeStatus,
+        Field(
+            description="""Most recently observed status of the node. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
+            exclude_if=lambda v: v == V1NodeStatus(),
+        ),
+        BeforeValidator(_default_if_none(V1NodeStatus)),
+    ] = V1NodeStatus()

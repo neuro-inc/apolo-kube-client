@@ -1,15 +1,26 @@
-from pydantic import BaseModel, Field
-from .utils import _collection_if_none
-from .utils import _exclude_if
-from pydantic import BeforeValidator
-from typing import Annotated
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1TopologySelectorLabelRequirement",)
 
 
 class V1TopologySelectorLabelRequirement(BaseModel):
-    key: str | None = Field(default=None, exclude_if=_exclude_if)
+    """A topology selector requirement is a selector that matches given label. This is an alpha feature and may change in the future."""
 
-    values: Annotated[list[str], BeforeValidator(_collection_if_none("[]"))] = Field(
-        default=[], exclude_if=_exclude_if
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.TopologySelectorLabelRequirement"
     )
+
+    key: Annotated[
+        str, Field(description="""The label key that the selector applies to.""")
+    ]
+
+    values: Annotated[
+        list[str],
+        Field(
+            description="""An array of string values. One value must match the label to be selected. Each entry in Values is ORed."""
+        ),
+    ]

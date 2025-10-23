@@ -1,14 +1,26 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1beta2_device_claim import V1beta2DeviceClaim
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1beta2ResourceClaimSpec",)
 
 
 class V1beta2ResourceClaimSpec(BaseModel):
+    """ResourceClaimSpec defines what is being requested in a ResourceClaim and how to configure it."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.resource.v1beta2.ResourceClaimSpec"
+    )
+
     devices: Annotated[
-        V1beta2DeviceClaim, BeforeValidator(_default_if_none(V1beta2DeviceClaim))
-    ] = Field(default_factory=lambda: V1beta2DeviceClaim(), exclude_if=_exclude_if)
+        V1beta2DeviceClaim,
+        Field(
+            description="""Devices defines how to request devices.""",
+            exclude_if=lambda v: v == V1beta2DeviceClaim(),
+        ),
+        BeforeValidator(_default_if_none(V1beta2DeviceClaim)),
+    ] = V1beta2DeviceClaim()

@@ -1,67 +1,128 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_job_condition import V1JobCondition
 from .v1_uncounted_terminated_pods import V1UncountedTerminatedPods
 from datetime import datetime
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1JobStatus",)
 
 
 class V1JobStatus(BaseModel):
-    active: int | None = Field(default=None, exclude_if=_exclude_if)
+    """JobStatus represents the current state of a Job."""
 
-    completed_indexes: str | None = Field(
-        default=None,
-        serialization_alias="completedIndexes",
-        validation_alias=AliasChoices("completed_indexes", "completedIndexes"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    completion_time: datetime | None = Field(
-        default=None,
-        serialization_alias="completionTime",
-        validation_alias=AliasChoices("completion_time", "completionTime"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobStatus"
+
+    active: Annotated[
+        int | None,
+        Field(
+            description="""The number of pending and running pods which are not terminating (without a deletionTimestamp). The value is zero for finished jobs.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    completed_indexes: Annotated[
+        str | None,
+        Field(
+            alias="completedIndexes",
+            description="""completedIndexes holds the completed indexes when .spec.completionMode = "Indexed" in a text format. The indexes are represented as decimal integers separated by commas. The numbers are listed in increasing order. Three or more consecutive numbers are compressed and represented by the first and last element of the series, separated by a hyphen. For example, if the completed indexes are 1, 3, 4, 5 and 7, they are represented as "1,3-5,7".""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    completion_time: Annotated[
+        datetime | None,
+        Field(
+            alias="completionTime",
+            description="""Represents time when the job was completed. It is not guaranteed to be set in happens-before order across separate operations. It is represented in RFC3339 form and is in UTC. The completion time is set when the job finishes successfully, and only then. The value cannot be updated or removed. The value indicates the same or later point in time as the startTime field.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     conditions: Annotated[
-        list[V1JobCondition], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(default=[], exclude_if=_exclude_if)
+        list[V1JobCondition],
+        Field(
+            description="""The latest available observations of an object's current state. When a Job fails, one of the conditions will have type "Failed" and status true. When a Job is suspended, one of the conditions will have type "Suspended" and status true; when the Job is resumed, the status of this condition will become false. When a Job is completed, one of the conditions will have type "Complete" and status true.
 
-    failed: int | None = Field(default=None, exclude_if=_exclude_if)
+A job is considered finished when it is in a terminal condition, either "Complete" or "Failed". A Job cannot have both the "Complete" and "Failed" conditions. Additionally, it cannot be in the "Complete" and "FailureTarget" conditions. The "Complete", "Failed" and "FailureTarget" conditions cannot be disabled.
 
-    failed_indexes: str | None = Field(
-        default=None,
-        serialization_alias="failedIndexes",
-        validation_alias=AliasChoices("failed_indexes", "failedIndexes"),
-        exclude_if=_exclude_if,
-    )
+More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/""",
+            exclude_if=lambda v: v == [],
+        ),
+        BeforeValidator(_collection_if_none("[]")),
+    ] = []
 
-    ready: int | None = Field(default=None, exclude_if=_exclude_if)
+    failed: Annotated[
+        int | None,
+        Field(
+            description="""The number of pods which reached phase Failed. The value increases monotonically.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    start_time: datetime | None = Field(
-        default=None,
-        serialization_alias="startTime",
-        validation_alias=AliasChoices("start_time", "startTime"),
-        exclude_if=_exclude_if,
-    )
+    failed_indexes: Annotated[
+        str | None,
+        Field(
+            alias="failedIndexes",
+            description="""FailedIndexes holds the failed indexes when spec.backoffLimitPerIndex is set. The indexes are represented in the text format analogous as for the `completedIndexes` field, ie. they are kept as decimal integers separated by commas. The numbers are listed in increasing order. Three or more consecutive numbers are compressed and represented by the first and last element of the series, separated by a hyphen. For example, if the failed indexes are 1, 3, 4, 5 and 7, they are represented as "1,3-5,7". The set of failed indexes cannot overlap with the set of completed indexes.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    succeeded: int | None = Field(default=None, exclude_if=_exclude_if)
+    ready: Annotated[
+        int | None,
+        Field(
+            description="""The number of active pods which have a Ready condition and are not terminating (without a deletionTimestamp).""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
-    terminating: int | None = Field(default=None, exclude_if=_exclude_if)
+    start_time: Annotated[
+        datetime | None,
+        Field(
+            alias="startTime",
+            description="""Represents time when the job controller started processing a job. When a Job is created in the suspended state, this field is not set until the first time it is resumed. This field is reset every time a Job is resumed from suspension. It is represented in RFC3339 form and is in UTC.
+
+Once set, the field can only be removed when the job is suspended. The field cannot be modified while the job is unsuspended or finished.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    succeeded: Annotated[
+        int | None,
+        Field(
+            description="""The number of pods which reached phase Succeeded. The value increases monotonically for a given spec. However, it may decrease in reaction to scale down of elastic indexed jobs.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    terminating: Annotated[
+        int | None,
+        Field(
+            description="""The number of pods which are terminating (in phase Pending or Running and have a deletionTimestamp).
+
+This field is beta-level. The job controller populates the field when the feature gate JobPodReplacementPolicy is enabled (enabled by default).""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     uncounted_terminated_pods: Annotated[
         V1UncountedTerminatedPods,
-        BeforeValidator(_default_if_none(V1UncountedTerminatedPods)),
-    ] = Field(
-        default_factory=lambda: V1UncountedTerminatedPods(),
-        serialization_alias="uncountedTerminatedPods",
-        validation_alias=AliasChoices(
-            "uncounted_terminated_pods", "uncountedTerminatedPods"
+        Field(
+            alias="uncountedTerminatedPods",
+            description="""uncountedTerminatedPods holds the UIDs of Pods that have terminated but the job controller hasn't yet accounted for in the status counters.
+
+The job controller creates pods with a finalizer. When a pod terminates (succeeded or failed), the controller does three steps to account for it in the job status:
+
+1. Add the pod UID to the arrays in this field. 2. Remove the pod finalizer. 3. Remove the pod UID from the arrays while increasing the corresponding
+    counter.
+
+Old jobs might not be tracked using this field, in which case the field remains null. The structure is empty for finished jobs.""",
+            exclude_if=lambda v: v == V1UncountedTerminatedPods(),
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(V1UncountedTerminatedPods)),
+    ] = V1UncountedTerminatedPods()

@@ -1,26 +1,33 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1VolumeAttachmentSpec",)
 
 
 class V1VolumeAttachmentSpec(BaseModel):
-    attacher: str | None = Field(default=None, exclude_if=_exclude_if)
+    """VolumeAttachmentSpec is the specification of a VolumeAttachment request."""
 
-    node_name: str | None = Field(
-        default=None,
-        serialization_alias="nodeName",
-        validation_alias=AliasChoices("node_name", "nodeName"),
-        exclude_if=_exclude_if,
-    )
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.VolumeAttachmentSpec"
+
+    attacher: Annotated[
+        str,
+        Field(
+            description="""attacher indicates the name of the volume driver that MUST handle this request. This is the name returned by GetPluginName()."""
+        ),
+    ]
+
+    node_name: Annotated[
+        str,
+        Field(
+            alias="nodeName",
+            description="""nodeName represents the node that the volume should be attached to.""",
+        ),
+    ]
 
     source: Annotated[
         V1VolumeAttachmentSource,
-        BeforeValidator(_default_if_none(V1VolumeAttachmentSource)),
-    ] = Field(
-        default_factory=lambda: V1VolumeAttachmentSource(), exclude_if=_exclude_if
-    )
+        Field(description="""source represents the volume that should be attached."""),
+    ]

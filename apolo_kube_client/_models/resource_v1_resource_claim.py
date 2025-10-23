@@ -1,34 +1,67 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_resource_claim_spec import V1ResourceClaimSpec
 from .v1_resource_claim_status import V1ResourceClaimStatus
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("ResourceV1ResourceClaim",)
 
 
 class ResourceV1ResourceClaim(ResourceModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """ResourceClaim describes a request for access to resources in the cluster, for use by workloads. For example, if a workload needs an accelerator device with specific properties, this is how that request is expressed. The status stanza tracks whether this claim has been satisfied and what specific resources have been allocated.
+
+    This is an alpha type and requires enabling the DynamicResourceAllocation feature gate."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceClaim"
+
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="resource.k8s.io", kind="ResourceClaim", version="v1"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""Standard object metadata""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
     spec: Annotated[
-        V1ResourceClaimSpec, BeforeValidator(_default_if_none(V1ResourceClaimSpec))
-    ] = Field(default_factory=lambda: V1ResourceClaimSpec(), exclude_if=_exclude_if)
+        V1ResourceClaimSpec,
+        Field(
+            description="""Spec describes what is being requested and how to configure it. The spec is immutable."""
+        ),
+    ]
 
     status: Annotated[
-        V1ResourceClaimStatus, BeforeValidator(_default_if_none(V1ResourceClaimStatus))
-    ] = Field(default_factory=lambda: V1ResourceClaimStatus(), exclude_if=_exclude_if)
+        V1ResourceClaimStatus,
+        Field(
+            description="""Status describes whether the claim is ready to use and what has been allocated.""",
+            exclude_if=lambda v: v == V1ResourceClaimStatus(),
+        ),
+        BeforeValidator(_default_if_none(V1ResourceClaimStatus)),
+    ] = V1ResourceClaimStatus()

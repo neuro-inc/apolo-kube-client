@@ -1,44 +1,57 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_exec_action import V1ExecAction
 from .v1_http_get_action import V1HTTPGetAction
 from .v1_sleep_action import V1SleepAction
 from .v1_tcp_socket_action import V1TCPSocketAction
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1LifecycleHandler",)
 
 
 class V1LifecycleHandler(BaseModel):
-    exec_: Annotated[V1ExecAction, BeforeValidator(_default_if_none(V1ExecAction))] = (
+    """LifecycleHandler defines a specific action that should be taken in a lifecycle hook. One and only one of the fields, except TCPSocket must be specified."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LifecycleHandler"
+
+    exec_: Annotated[
+        V1ExecAction,
         Field(
-            default_factory=lambda: V1ExecAction(),
-            serialization_alias="exec",
-            validation_alias=AliasChoices("exec_", "exec"),
-            exclude_if=_exclude_if,
-        )
-    )
+            alias="exec",
+            description="""Exec specifies a command to execute in the container.""",
+            exclude_if=lambda v: v == V1ExecAction(),
+        ),
+        BeforeValidator(_default_if_none(V1ExecAction)),
+    ] = V1ExecAction()
 
     http_get: Annotated[
-        V1HTTPGetAction, BeforeValidator(_default_if_none(V1HTTPGetAction))
-    ] = Field(
-        default_factory=lambda: V1HTTPGetAction(),
-        serialization_alias="httpGet",
-        validation_alias=AliasChoices("http_get", "httpGet"),
-        exclude_if=_exclude_if,
-    )
+        V1HTTPGetAction | None,
+        Field(
+            alias="httpGet",
+            description="""HTTPGet specifies an HTTP GET request to perform.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1HTTPGetAction)),
+    ] = None
 
     sleep: Annotated[
-        V1SleepAction, BeforeValidator(_default_if_none(V1SleepAction))
-    ] = Field(default_factory=lambda: V1SleepAction(), exclude_if=_exclude_if)
+        V1SleepAction | None,
+        Field(
+            description="""Sleep represents a duration that the container should sleep.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1SleepAction)),
+    ] = None
 
     tcp_socket: Annotated[
-        V1TCPSocketAction, BeforeValidator(_default_if_none(V1TCPSocketAction))
-    ] = Field(
-        default_factory=lambda: V1TCPSocketAction(),
-        serialization_alias="tcpSocket",
-        validation_alias=AliasChoices("tcp_socket", "tcpSocket"),
-        exclude_if=_exclude_if,
-    )
+        V1TCPSocketAction | None,
+        Field(
+            alias="tcpSocket",
+            description="""Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for backward compatibility. There is no validation of this field and lifecycle hooks will fail at runtime when it is specified.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1TCPSocketAction)),
+    ] = None

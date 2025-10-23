@@ -1,29 +1,46 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1VolumeMountStatus",)
 
 
 class V1VolumeMountStatus(BaseModel):
-    mount_path: str | None = Field(
-        default=None,
-        serialization_alias="mountPath",
-        validation_alias=AliasChoices("mount_path", "mountPath"),
-        exclude_if=_exclude_if,
-    )
+    """VolumeMountStatus shows status of volume mounts."""
 
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
-    read_only: bool | None = Field(
-        default=None,
-        serialization_alias="readOnly",
-        validation_alias=AliasChoices("read_only", "readOnly"),
-        exclude_if=_exclude_if,
-    )
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeMountStatus"
 
-    recursive_read_only: str | None = Field(
-        default=None,
-        serialization_alias="recursiveReadOnly",
-        validation_alias=AliasChoices("recursive_read_only", "recursiveReadOnly"),
-        exclude_if=_exclude_if,
-    )
+    mount_path: Annotated[
+        str,
+        Field(
+            alias="mountPath",
+            description="""MountPath corresponds to the original VolumeMount.""",
+        ),
+    ]
+
+    name: Annotated[
+        str,
+        Field(
+            description="""Name corresponds to the name of the original VolumeMount."""
+        ),
+    ]
+
+    read_only: Annotated[
+        bool | None,
+        Field(
+            alias="readOnly",
+            description="""ReadOnly corresponds to the original VolumeMount.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    recursive_read_only: Annotated[
+        str | None,
+        Field(
+            alias="recursiveReadOnly",
+            description="""RecursiveReadOnly must be set to Disabled, Enabled, or unspecified (for non-readonly mounts). An IfPossible value in the original VolumeMount must be translated to Disabled or Enabled, depending on the mount result.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

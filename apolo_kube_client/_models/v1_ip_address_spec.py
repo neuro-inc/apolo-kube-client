@@ -1,19 +1,21 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _default_if_none
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_parent_reference import V1ParentReference
-from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1IPAddressSpec",)
 
 
 class V1IPAddressSpec(BaseModel):
+    """IPAddressSpec describe the attributes in an IP Address."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IPAddressSpec"
+
     parent_ref: Annotated[
-        V1ParentReference, BeforeValidator(_default_if_none(V1ParentReference))
-    ] = Field(
-        default_factory=lambda: V1ParentReference(),
-        serialization_alias="parentRef",
-        validation_alias=AliasChoices("parent_ref", "parentRef"),
-        exclude_if=_exclude_if,
-    )
+        V1ParentReference,
+        Field(
+            alias="parentRef",
+            description="""ParentRef references the resource that an IPAddress is attached to. An IPAddress must reference a parent object.""",
+        ),
+    ]

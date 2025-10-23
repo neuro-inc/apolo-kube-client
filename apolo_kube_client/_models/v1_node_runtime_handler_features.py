@@ -1,22 +1,33 @@
-from pydantic import AliasChoices, BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1NodeRuntimeHandlerFeatures",)
 
 
 class V1NodeRuntimeHandlerFeatures(BaseModel):
-    recursive_read_only_mounts: bool | None = Field(
-        default=None,
-        serialization_alias="recursiveReadOnlyMounts",
-        validation_alias=AliasChoices(
-            "recursive_read_only_mounts", "recursiveReadOnlyMounts"
-        ),
-        exclude_if=_exclude_if,
+    """NodeRuntimeHandlerFeatures is a set of features implemented by the runtime handler."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.core.v1.NodeRuntimeHandlerFeatures"
     )
 
-    user_namespaces: bool | None = Field(
-        default=None,
-        serialization_alias="userNamespaces",
-        validation_alias=AliasChoices("user_namespaces", "userNamespaces"),
-        exclude_if=_exclude_if,
-    )
+    recursive_read_only_mounts: Annotated[
+        bool | None,
+        Field(
+            alias="recursiveReadOnlyMounts",
+            description="""RecursiveReadOnlyMounts is set to true if the runtime handler supports RecursiveReadOnlyMounts.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    user_namespaces: Annotated[
+        bool | None,
+        Field(
+            alias="userNamespaces",
+            description="""UserNamespaces is set to true if the runtime handler supports UserNamespaces, including for volumes.""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None

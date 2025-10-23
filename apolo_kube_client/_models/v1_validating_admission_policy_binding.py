@@ -1,35 +1,67 @@
-from pydantic import AliasChoices, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import ConfigDict, Field
 from .base import ResourceModel
+from .utils import KubeMeta
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_object_meta import V1ObjectMeta
 from .v1_validating_admission_policy_binding_spec import (
     V1ValidatingAdmissionPolicyBindingSpec,
 )
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1ValidatingAdmissionPolicyBinding",)
 
 
 class V1ValidatingAdmissionPolicyBinding(ResourceModel):
-    api_version: str | None = Field(
-        default=None,
-        serialization_alias="apiVersion",
-        validation_alias=AliasChoices("api_version", "apiVersion"),
-        exclude_if=_exclude_if,
+    """ValidatingAdmissionPolicyBinding binds the ValidatingAdmissionPolicy with paramerized resources. ValidatingAdmissionPolicyBinding and parameter CRDs together define how cluster administrators configure policies for clusters.
+
+    For a given admission request, each binding will cause its policy to be evaluated N times, where N is 1 for policies/bindings that don't use params, otherwise N is the number of parameters selected by the binding.
+
+    The CEL expressions of a policy must have a computed CEL cost below the maximum CEL budget. Each evaluation of the policy is given an independent CEL cost budget. Adding/removing policies, bindings, or params can not affect whether a given (policy, binding, param) combination is within its own CEL budget."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBinding"
     )
 
-    kind: str | None = Field(default=None, exclude_if=_exclude_if)
+    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = KubeMeta(
+        group="admissionregistration.k8s.io",
+        kind="ValidatingAdmissionPolicyBinding",
+        version="v1",
+    )
+
+    api_version: Annotated[
+        str | None,
+        Field(
+            alias="apiVersion",
+            description="""APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
+
+    kind: Annotated[
+        str | None,
+        Field(
+            description="""Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
+            exclude_if=lambda v: v is None,
+        ),
+    ] = None
 
     metadata: Annotated[
-        V1ObjectMeta, BeforeValidator(_default_if_none(V1ObjectMeta))
-    ] = Field(default_factory=lambda: V1ObjectMeta(), exclude_if=_exclude_if)
+        V1ObjectMeta,
+        Field(
+            description="""Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata.""",
+            exclude_if=lambda v: v == V1ObjectMeta(),
+        ),
+        BeforeValidator(_default_if_none(V1ObjectMeta)),
+    ] = V1ObjectMeta()
 
     spec: Annotated[
         V1ValidatingAdmissionPolicyBindingSpec,
+        Field(
+            description="""Specification of the desired behavior of the ValidatingAdmissionPolicyBinding.""",
+            exclude_if=lambda v: v == V1ValidatingAdmissionPolicyBindingSpec(),
+        ),
         BeforeValidator(_default_if_none(V1ValidatingAdmissionPolicyBindingSpec)),
-    ] = Field(
-        default_factory=lambda: V1ValidatingAdmissionPolicyBindingSpec(),
-        exclude_if=_exclude_if,
-    )
+    ] = V1ValidatingAdmissionPolicyBindingSpec()

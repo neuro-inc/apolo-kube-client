@@ -1,21 +1,35 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .utils import _default_if_none
-from .utils import _exclude_if
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
 from apolo_kube_client._typedefs import JsonType
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1CustomResourceSubresources",)
 
 
 class V1CustomResourceSubresources(BaseModel):
-    scale: Annotated[
-        V1CustomResourceSubresourceScale,
-        BeforeValidator(_default_if_none(V1CustomResourceSubresourceScale)),
-    ] = Field(
-        default_factory=lambda: V1CustomResourceSubresourceScale(),
-        exclude_if=_exclude_if,
+    """CustomResourceSubresources defines the status and scale subresources for CustomResources."""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceSubresources"
     )
 
-    status: JsonType = Field(default={}, exclude_if=_exclude_if)
+    scale: Annotated[
+        V1CustomResourceSubresourceScale | None,
+        Field(
+            description="""scale indicates the custom resource should serve a `/scale` subresource that returns an `autoscaling/v1` Scale object.""",
+            exclude_if=lambda v: v is None,
+        ),
+        BeforeValidator(_default_if_none(V1CustomResourceSubresourceScale)),
+    ] = None
+
+    status: Annotated[
+        JsonType,
+        Field(
+            description="""status indicates the custom resource should serve a `/status` subresource. When enabled: 1. requests to the custom resource primary endpoint ignore changes to the `status` stanza of the object. 2. requests to the custom resource `/status` subresource ignore changes to anything other than the `status` stanza of the object.""",
+            exclude_if=lambda v: v == {},
+        ),
+    ] = {}

@@ -1,32 +1,35 @@
-from pydantic import AliasChoices, BaseModel, Field
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
 from .apiextensions_v1_webhook_client_config import ApiextensionsV1WebhookClientConfig
-from .utils import _collection_if_none
 from .utils import _default_if_none
-from .utils import _exclude_if
 from pydantic import BeforeValidator
-from typing import Annotated
 
 __all__ = ("V1WebhookConversion",)
 
 
 class V1WebhookConversion(BaseModel):
-    client_config: Annotated[
-        ApiextensionsV1WebhookClientConfig,
-        BeforeValidator(_default_if_none(ApiextensionsV1WebhookClientConfig)),
-    ] = Field(
-        default_factory=lambda: ApiextensionsV1WebhookClientConfig(),
-        serialization_alias="clientConfig",
-        validation_alias=AliasChoices("client_config", "clientConfig"),
-        exclude_if=_exclude_if,
+    """WebhookConversion describes how to call a conversion webhook"""
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = (
+        "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.WebhookConversion"
     )
 
-    conversion_review_versions: Annotated[
-        list[str], BeforeValidator(_collection_if_none("[]"))
-    ] = Field(
-        default=[],
-        serialization_alias="conversionReviewVersions",
-        validation_alias=AliasChoices(
-            "conversion_review_versions", "conversionReviewVersions"
+    client_config: Annotated[
+        ApiextensionsV1WebhookClientConfig,
+        Field(
+            alias="clientConfig",
+            description="""clientConfig is the instructions for how to call the webhook if strategy is `Webhook`.""",
+            exclude_if=lambda v: v == ApiextensionsV1WebhookClientConfig(),
         ),
-        exclude_if=_exclude_if,
-    )
+        BeforeValidator(_default_if_none(ApiextensionsV1WebhookClientConfig)),
+    ] = ApiextensionsV1WebhookClientConfig()
+
+    conversion_review_versions: Annotated[
+        list[str],
+        Field(
+            alias="conversionReviewVersions",
+            description="""conversionReviewVersions is an ordered list of preferred `ConversionReview` versions the Webhook expects. The API server will use the first version in the list which it supports. If none of the versions specified in this list are supported by API server, conversion will fail for the custom resource. If a persisted Webhook configuration specifies allowed versions and does not include any versions known to the API Server, calls to the webhook will fail.""",
+        ),
+    ]

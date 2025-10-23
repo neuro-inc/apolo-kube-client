@@ -1,10 +1,22 @@
-from pydantic import BaseModel, Field
-from .utils import _exclude_if
+from typing import Annotated, ClassVar, Final
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1HTTPHeader",)
 
 
 class V1HTTPHeader(BaseModel):
-    name: str | None = Field(default=None, exclude_if=_exclude_if)
+    """HTTPHeader describes a custom header to be used in HTTP probes"""
 
-    value: str | None = Field(default=None, exclude_if=_exclude_if)
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
+
+    kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HTTPHeader"
+
+    name: Annotated[
+        str,
+        Field(
+            description="""The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header."""
+        ),
+    ]
+
+    value: Annotated[str, Field(description="""The header field value""")]
