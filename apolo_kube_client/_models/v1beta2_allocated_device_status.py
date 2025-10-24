@@ -16,7 +16,10 @@ class V1beta2AllocatedDeviceStatus(BaseModel):
     The combination of Driver, Pool, Device, and ShareID must match the corresponding key in Status.Allocation.Devices."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

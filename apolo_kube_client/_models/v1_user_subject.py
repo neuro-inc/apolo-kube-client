@@ -9,7 +9,10 @@ class V1UserSubject(BaseModel):
     """UserSubject holds detailed information for user-kind subject."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.flowcontrol.v1.UserSubject"

@@ -11,7 +11,10 @@ class V2HorizontalPodAutoscalerBehavior(BaseModel):
     """HorizontalPodAutoscalerBehavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively)."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

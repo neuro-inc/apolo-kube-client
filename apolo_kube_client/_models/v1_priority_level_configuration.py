@@ -15,7 +15,10 @@ class V1PriorityLevelConfiguration(ResourceModel):
     """PriorityLevelConfiguration represents the configuration of a priority level."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

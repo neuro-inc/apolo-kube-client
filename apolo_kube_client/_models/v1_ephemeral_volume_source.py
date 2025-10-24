@@ -11,7 +11,10 @@ class V1EphemeralVolumeSource(BaseModel):
     """Represents an ephemeral volume that is handled by a normal storage driver."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EphemeralVolumeSource"

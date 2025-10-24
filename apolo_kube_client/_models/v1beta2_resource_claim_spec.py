@@ -11,7 +11,10 @@ class V1beta2ResourceClaimSpec(BaseModel):
     """ResourceClaimSpec defines what is being requested in a ResourceClaim and how to configure it."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

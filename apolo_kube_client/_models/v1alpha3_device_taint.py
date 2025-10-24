@@ -9,7 +9,10 @@ class V1alpha3DeviceTaint(BaseModel):
     """The device this taint is attached to has the "effect" on any claim which does not tolerate the taint and, through the claim, to pods using the claim."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1alpha3.DeviceTaint"

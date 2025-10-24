@@ -9,7 +9,10 @@ class V1beta1OpaqueDeviceConfiguration(BaseModel):
     """OpaqueDeviceConfiguration contains configuration parameters for a driver in a format defined by the driver vendor."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

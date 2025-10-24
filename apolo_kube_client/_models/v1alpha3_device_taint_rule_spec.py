@@ -12,7 +12,10 @@ class V1alpha3DeviceTaintRuleSpec(BaseModel):
     """DeviceTaintRuleSpec specifies the selector and one taint."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -9,7 +9,10 @@ class V1SuccessPolicy(BaseModel):
     """SuccessPolicy describes when a Job can be declared as succeeded based on the success of some indexes."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.SuccessPolicy"

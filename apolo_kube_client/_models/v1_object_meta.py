@@ -13,7 +13,10 @@ class V1ObjectMeta(BaseModel):
     """ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

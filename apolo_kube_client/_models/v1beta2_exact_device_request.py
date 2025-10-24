@@ -14,7 +14,10 @@ class V1beta2ExactDeviceRequest(BaseModel):
     """ExactDeviceRequest is a request for one or more identical devices."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

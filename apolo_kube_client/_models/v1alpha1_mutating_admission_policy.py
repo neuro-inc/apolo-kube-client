@@ -14,7 +14,10 @@ class V1alpha1MutatingAdmissionPolicy(ResourceModel):
     """MutatingAdmissionPolicy describes the definition of an admission mutation policy that mutates the object coming into admission chain."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

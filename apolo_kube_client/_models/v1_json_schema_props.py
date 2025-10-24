@@ -14,7 +14,10 @@ class V1JSONSchemaProps(BaseModel):
     """JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/)."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

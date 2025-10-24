@@ -14,7 +14,10 @@ class V1alpha1PodCertificateRequestList(ListModel):
     """PodCertificateRequestList is a collection of PodCertificateRequest objects"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

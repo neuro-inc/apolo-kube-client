@@ -9,7 +9,10 @@ class V2MetricValueStatus(BaseModel):
     """MetricValueStatus holds the current value for a metric"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricValueStatus"

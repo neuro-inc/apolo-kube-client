@@ -14,7 +14,10 @@ class V1NetworkPolicy(ResourceModel):
     """NetworkPolicy describes what network traffic is allowed for a set of Pods"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicy"

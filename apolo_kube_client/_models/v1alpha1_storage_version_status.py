@@ -12,7 +12,10 @@ class V1alpha1StorageVersionStatus(BaseModel):
     """API server instances report the versions they can decode and the version they encode objects to when persisting objects in the backend."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

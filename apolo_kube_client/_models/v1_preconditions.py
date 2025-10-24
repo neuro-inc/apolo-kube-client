@@ -9,7 +9,10 @@ class V1Preconditions(BaseModel):
     """Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

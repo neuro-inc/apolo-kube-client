@@ -9,7 +9,10 @@ class V1SecretReference(BaseModel):
     """SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SecretReference"

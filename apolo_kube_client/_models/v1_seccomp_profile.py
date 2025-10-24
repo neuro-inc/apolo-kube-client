@@ -9,7 +9,10 @@ class V1SeccompProfile(BaseModel):
     """SeccompProfile defines a pod/container's seccomp profile settings. Only one profile source may be set."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SeccompProfile"

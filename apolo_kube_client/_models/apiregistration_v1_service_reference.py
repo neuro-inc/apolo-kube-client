@@ -9,7 +9,10 @@ class ApiregistrationV1ServiceReference(BaseModel):
     """ServiceReference holds a reference to Service.legacy.k8s.io"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

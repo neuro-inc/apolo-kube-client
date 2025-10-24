@@ -11,7 +11,10 @@ class V1DownwardAPIProjection(BaseModel):
     """Represents downward API info for projecting into a projected volume. Note that this is identical to a downwardAPI volume source without the default mode."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.DownwardAPIProjection"

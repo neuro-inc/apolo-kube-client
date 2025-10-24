@@ -11,7 +11,10 @@ class V1SelfSubjectReviewStatus(BaseModel):
     """SelfSubjectReviewStatus is filled by the kube-apiserver and sent back to a user."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

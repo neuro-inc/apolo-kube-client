@@ -9,7 +9,10 @@ class V1FlowSchemaCondition(BaseModel):
     """FlowSchemaCondition describes conditions for a FlowSchema."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -9,7 +9,10 @@ class V1ServerAddressByClientCIDR(BaseModel):
     """ServerAddressByClientCIDR helps the client to determine the server address that they should use, depending on the clientCIDR that they match."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

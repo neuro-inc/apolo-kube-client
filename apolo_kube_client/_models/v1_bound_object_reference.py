@@ -9,7 +9,10 @@ class V1BoundObjectReference(BaseModel):
     """BoundObjectReference is a reference to an object that a token is bound to."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

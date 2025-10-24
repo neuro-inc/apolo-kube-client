@@ -9,7 +9,10 @@ class V1DeploymentCondition(BaseModel):
     """DeploymentCondition describes the state of a deployment at a certain point."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentCondition"

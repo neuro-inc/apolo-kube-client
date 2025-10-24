@@ -13,7 +13,10 @@ class V1CustomResourceDefinitionSpec(BaseModel):
     """CustomResourceDefinitionSpec describes how a user wants their resource to appear"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (
