@@ -117,20 +117,22 @@ class NamespacedResourceProxy[
 
 class NestedResourceProxy[
     ModelT: ResourceModel,
-    ListModelT: ListModel,
-    DeleteModelT: ListModel | ResourceModel,
     OriginT,
-](
-    BaseProxy[OriginT],
-):
-    async def get(self, name: str) -> ModelT:
-        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
-        return await origin.get(name=name)
+]:
+    def __init__(
+        self,
+        origin: OriginT,
+        namespace: str,
+        resource_id: str | None = None,
+    ):
+        self._origin = origin
+        self._namespace = namespace  # 'default' for vcluster projects
+        self._resource_id = resource_id
 
-    async def get_list(self) -> ListModelT:
-        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
-        return await origin.get_list()
+    async def get(self) -> ModelT:
+        origin = cast(NestedResource[ModelT], self._origin)
+        return await origin.get(self._namespace)
 
     async def update(self, model: ModelT) -> ModelT:
-        origin = cast(NestedResource[ModelT, ListModelT, DeleteModelT], self._origin)
-        return await origin.update(model)
+        origin = cast(NestedResource[ModelT], self._origin)
+        return await origin.update(model, self._namespace)

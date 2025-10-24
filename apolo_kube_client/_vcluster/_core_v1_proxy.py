@@ -1,9 +1,16 @@
+import datetime
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
+from aiohttp import StreamReader
 from .._core_v1 import (
     CoreV1Api,
     Endpoint,
     Event,
     PersistentVolumeClaim,
     Pod,
+    PodLog,
+    PodStatus,
     Secret,
     Service,
 )
@@ -25,20 +32,61 @@ from .._models import (
     V1Status,
 )
 
-from .._core_v1 import (
-    PodStatus,
-)
 from ._resource_proxy import NestedResourceProxy
 
 
-class PodStatusProxy(NestedResourceProxy[V1Pod, V1PodList, V1Pod, PodStatus]):
+class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
     pass
+
+
+class PodLogProxy(NestedResourceProxy[V1Pod, PodLog]):
+    async def read(
+        self,
+        *,
+        container: str | None = None,
+        follow: bool | None = None,
+        previous: bool | None = None,
+        timestamps: bool | None = None,
+        since: datetime.datetime | None = None,
+    ) -> str:
+        return await self._origin.read(
+            container=container,
+            follow=follow,
+            previous=previous,
+            timestamps=timestamps,
+            since=since,
+            namespace=self._namespace,
+        )
+
+    @asynccontextmanager
+    async def stream(
+        self,
+        *,
+        container: str | None = None,
+        follow: bool | None = None,
+        previous: bool | None = None,
+        timestamps: bool | None = None,
+        since: datetime.datetime | None = None,
+    ) -> AsyncIterator[StreamReader]:
+        async with self._origin.stream(
+            container=container,
+            follow=follow,
+            previous=previous,
+            timestamps=timestamps,
+            since=since,
+            namespace=self._namespace,
+        ) as stream:
+            yield stream
 
 
 class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
     @attr(PodStatusProxy)
     def status(self) -> PodStatus:
         return self._origin.status
+
+    @attr(PodLogProxy)
+    def log(self) -> PodLog:
+        return self._origin.log
 
 
 class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secret]):
