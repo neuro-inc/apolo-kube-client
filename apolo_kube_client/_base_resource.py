@@ -445,23 +445,34 @@ class NestedResource[
             raise ValueError("Nested resource requires parent resource_id")
         self._parent_resource_id: str = rid
 
-    def _build_url(self) -> URL:
+    def _build_url(self, namespace: str | None = None) -> URL:
         assert self.query_path, "query_path must be set"
         parent = self._parent
         if isinstance(parent, NamespacedResource):
-            base = parent._build_url(self._parent_resource_id, parent._get_ns())
+            base = parent._build_url(
+                self._parent_resource_id, parent._get_ns(namespace)
+            )
         else:
             base = parent._build_url(self._parent_resource_id)
         return base / self.query_path
 
-    async def get(self) -> ModelT:
-        async with self._core.request(method="GET", url=self._build_url()) as resp:
+    async def get(
+        self,
+        namespace: str | None = None,
+    ) -> ModelT:
+        async with self._core.request(
+            method="GET", url=self._build_url(namespace)
+        ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
 
-    async def update(self, model: ModelT) -> ModelT:
+    async def update(
+        self,
+        model: ModelT,
+        namespace: str | None = None,
+    ) -> ModelT:
         async with self._core.request(
             method="PUT",
-            url=self._build_url(),
+            url=self._build_url(namespace),
             json=self._core.serialize(model),
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)

@@ -23,6 +23,14 @@ async def _wait_pod_succeeded(kube_client: KubeClient, name: str) -> V1Pod:
             return pod
 
 
+async def _wait_pod_running_or_succeeded(kube_client: KubeClient, name: str) -> V1Pod:
+    while True:
+        await asyncio.sleep(0.5)
+        pod = await kube_client.core_v1.pod.get(name=name)
+        if pod.status.phase in {"Running", "Succeeded"}:
+            return pod
+
+
 class TestPodLog:
     async def test_read(self, kube_client: KubeClient) -> None:
         pod_name = uuid4().hex
@@ -161,5 +169,165 @@ class TestPodLog:
         # Non-existent container name -> expect 400
         with pytest.raises(ResourceBadRequest):
             await kube_client.core_v1.pod[pod_name].log.read(container="nope")
+
+        await kube_client.core_v1.pod.delete(name=pod_name)
+
+    async def test_stream_read(self, kube_client: KubeClient) -> None:
+        pod_name = uuid4().hex
+
+        pod = V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=V1ObjectMeta(name=pod_name),
+            spec=V1PodSpec(
+                containers=[V1Container(name="hello-world", image="hello-world")],
+                restart_policy="Never",
+            ),
+        )
+
+        await kube_client.core_v1.pod.create(pod)
+        await _wait_pod_succeeded(kube_client, pod_name)
+
+        async with kube_client.core_v1.pod[pod_name].log.stream() as reader:
+            data = await reader.read()
+        logs = data.decode("utf-8")
+        assert "Hello from Docker!" in logs
+        await kube_client.core_v1.pod.delete(name=pod_name)
+
+    async def test_stream_follow(self, kube_client: KubeClient) -> None:
+        pod_name = uuid4().hex
+        # Use busybox to emit multiple lines over time
+        pod = V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=V1ObjectMeta(name=pod_name),
+            spec=V1PodSpec(
+                containers=[
+                    V1Container(
+                        name="line-writer",
+                        image="busybox:1.36",
+                        image_pull_policy="IfNotPresent",
+                        command=[
+                            "/bin/sh",
+                            "-c",
+                            # shell prints 5 lines, one per second
+                            "i=1; while [ $i -le 5 ]; do echo line-$i; i=$((i+1)); sleep 1; done",
+                        ],
+                    )
+                ],
+                restart_policy="Never",
+            ),
+        )
+
+        await kube_client.core_v1.pod.create(pod)
+        await _wait_pod_running_or_succeeded(kube_client, pod_name)
+
+        lines: list[str] = []
+        async with kube_client.core_v1.pod[pod_name].log.stream(follow=True) as reader:
+            # Read until we receive the expected last line
+            # or the stream ends.
+            while True:
+                chunk = await asyncio.wait_for(reader.readline(), timeout=30)
+                if not chunk:
+                    break
+                text = chunk.decode("utf-8").strip()
+                if not text:
+                    continue
+                lines.append(text)
+                if text.endswith("line-5"):
+                    break
+
+        # Ensure we received the progressive lines
+        assert any(ln.endswith("line-1") for ln in lines)
+        assert any(ln.endswith("line-5") for ln in lines)
+        await kube_client.core_v1.pod.delete(name=pod_name)
+
+    async def test_stream_timestamps(self, kube_client: KubeClient) -> None:
+        pod_name = uuid4().hex
+        pod = V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=V1ObjectMeta(name=pod_name),
+            spec=V1PodSpec(
+                containers=[V1Container(name="hello-world", image="hello-world")],
+                restart_policy="Never",
+            ),
+        )
+        await kube_client.core_v1.pod.create(pod)
+        await _wait_pod_succeeded(kube_client, pod_name)
+
+        async with kube_client.core_v1.pod[pod_name].log.stream(
+            timestamps=True
+        ) as reader:
+            logs = (await reader.read()).decode("utf-8")
+
+        # Expect ISO8601 prefix on each non-empty line
+        lines = [ln for ln in logs.splitlines() if ln.strip()]
+        assert lines, "expected at least one log line"
+        ts_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:")
+        assert all(ts_pattern.match(ln) for ln in lines)
+        await kube_client.core_v1.pod.delete(name=pod_name)
+
+    async def test_stream_multi_container_requires_container(
+        self, kube_client: KubeClient
+    ) -> None:
+        pod_name = uuid4().hex
+        pod = V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=V1ObjectMeta(name=pod_name),
+            spec=V1PodSpec(
+                containers=[
+                    V1Container(name="c1", image="hello-world"),
+                    V1Container(name="c2", image="hello-world"),
+                ],
+                restart_policy="Never",
+            ),
+        )
+        await kube_client.core_v1.pod.create(pod)
+        await _wait_pod_succeeded(kube_client, pod_name)
+
+        # Without container name, API should return 400
+        with pytest.raises(ResourceBadRequest):
+            async with kube_client.core_v1.pod[pod_name].log.stream():
+                pass
+
+        async with kube_client.core_v1.pod[pod_name].log.stream(
+            container="c1"
+        ) as reader:
+            logs_c1 = (await reader.read()).decode("utf-8")
+        async with kube_client.core_v1.pod[pod_name].log.stream(
+            container="c2"
+        ) as reader:
+            logs_c2 = (await reader.read()).decode("utf-8")
+        assert "Hello from Docker!" in logs_c1
+        assert "Hello from Docker!" in logs_c2
+        await kube_client.core_v1.pod.delete(name=pod_name)
+
+    async def test_stream_previous_and_bad_container_errors(
+        self, kube_client: KubeClient
+    ) -> None:
+        pod_name = uuid4().hex
+        pod = V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=V1ObjectMeta(name=pod_name),
+            spec=V1PodSpec(
+                containers=[V1Container(name="hello-world", image="hello-world")],
+                restart_policy="Never",
+            ),
+        )
+        await kube_client.core_v1.pod.create(pod)
+        await _wait_pod_succeeded(kube_client, pod_name)
+
+        # No previous container exists -> expect 400
+        with pytest.raises(ResourceBadRequest):
+            async with kube_client.core_v1.pod[pod_name].log.stream(previous=True):
+                pass
+
+        # Non-existent container name -> expect 400
+        with pytest.raises(ResourceBadRequest):
+            async with kube_client.core_v1.pod[pod_name].log.stream(container="nope"):
+                pass
 
         await kube_client.core_v1.pod.delete(name=pod_name)

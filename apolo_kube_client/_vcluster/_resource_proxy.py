@@ -131,8 +131,8 @@ class NestedResourceProxy[
 
     async def get(self) -> ModelT:
         origin = cast(NestedResource[ModelT], self._origin)
-        return await origin.get()
+        return await origin.get(self._namespace)
 
     async def update(self, model: ModelT) -> ModelT:
         origin = cast(NestedResource[ModelT], self._origin)
-        return await origin.update(model)
+        return await origin.update(model, self._namespace)
