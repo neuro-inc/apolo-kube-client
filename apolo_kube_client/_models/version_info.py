@@ -9,7 +9,10 @@ class VersionInfo(BaseModel):
     """Info contains versioning information. how we'll want to distribute that information."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.apimachinery.pkg.version.Info"

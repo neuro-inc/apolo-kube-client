@@ -9,7 +9,10 @@ class V1ExternalDocumentation(BaseModel):
     """ExternalDocumentation allows referencing an external resource for extended documentation."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

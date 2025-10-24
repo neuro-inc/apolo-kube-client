@@ -10,7 +10,10 @@ class V1ScopedResourceSelectorRequirement(BaseModel):
     """A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator that relates the scope name and values."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

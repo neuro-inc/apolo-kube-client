@@ -9,7 +9,10 @@ class V1AppArmorProfile(BaseModel):
     """AppArmorProfile defines a pod or container's AppArmor settings."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.AppArmorProfile"

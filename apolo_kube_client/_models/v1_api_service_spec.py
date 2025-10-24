@@ -11,7 +11,10 @@ class V1APIServiceSpec(BaseModel):
     """APIServiceSpec contains information for locating and communicating with a server. Only https is supported, though you are able to disable certificate verification."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

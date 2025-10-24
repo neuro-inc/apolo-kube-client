@@ -9,7 +9,10 @@ class V1RollingUpdateDaemonSet(BaseModel):
     """Spec to control the desired behavior of daemon set rolling update."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.RollingUpdateDaemonSet"

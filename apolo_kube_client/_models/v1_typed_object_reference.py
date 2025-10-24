@@ -9,7 +9,10 @@ class V1TypedObjectReference(BaseModel):
     """TypedObjectReference contains enough information to let you locate the typed referenced object"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.TypedObjectReference"

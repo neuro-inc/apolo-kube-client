@@ -15,7 +15,10 @@ class V1SubjectAccessReview(ResourceModel):
     """SubjectAccessReview checks whether or not a user or group can perform an action."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

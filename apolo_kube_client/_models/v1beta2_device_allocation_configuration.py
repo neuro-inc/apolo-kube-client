@@ -12,7 +12,10 @@ class V1beta2DeviceAllocationConfiguration(BaseModel):
     """DeviceAllocationConfiguration gets embedded in an AllocationResult."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

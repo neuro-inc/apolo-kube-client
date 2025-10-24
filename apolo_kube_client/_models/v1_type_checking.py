@@ -11,7 +11,10 @@ class V1TypeChecking(BaseModel):
     """TypeChecking contains results of type checking the expressions in the ValidatingAdmissionPolicy"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -9,7 +9,10 @@ class V1SelectableField(BaseModel):
     """SelectableField specifies the JSON path of a field that may be used with field selectors."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

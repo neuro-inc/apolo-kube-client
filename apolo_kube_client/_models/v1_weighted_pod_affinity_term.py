@@ -9,7 +9,10 @@ class V1WeightedPodAffinityTerm(BaseModel):
     """The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.WeightedPodAffinityTerm"

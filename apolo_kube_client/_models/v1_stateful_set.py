@@ -19,7 +19,10 @@ class V1StatefulSet(ResourceModel):
     The StatefulSet guarantees that a given network identity will always map to the same storage identity."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSet"

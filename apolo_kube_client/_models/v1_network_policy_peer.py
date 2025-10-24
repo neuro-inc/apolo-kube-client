@@ -12,7 +12,10 @@ class V1NetworkPolicyPeer(BaseModel):
     """NetworkPolicyPeer describes a peer to allow traffic to/from. Only certain combinations of fields are allowed"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicyPeer"

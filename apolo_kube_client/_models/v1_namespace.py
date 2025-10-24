@@ -15,7 +15,10 @@ class V1Namespace(ResourceModel):
     """Namespace provides a scope for Names. Use of multiple namespaces is optional."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Namespace"

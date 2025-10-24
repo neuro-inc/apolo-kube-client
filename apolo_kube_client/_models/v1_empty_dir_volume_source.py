@@ -9,7 +9,10 @@ class V1EmptyDirVolumeSource(BaseModel):
     """Represents an empty directory for a pod. Empty directory volumes support ownership management and SELinux relabeling."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EmptyDirVolumeSource"

@@ -9,7 +9,10 @@ class V1AzureFilePersistentVolumeSource(BaseModel):
     """AzureFile represents an Azure File Service mount on the host and bind mount to the pod."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

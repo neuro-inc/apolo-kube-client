@@ -9,7 +9,10 @@ class V1TypedLocalObjectReference(BaseModel):
     """TypedLocalObjectReference contains enough information to let you locate the typed referenced object inside the same namespace."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

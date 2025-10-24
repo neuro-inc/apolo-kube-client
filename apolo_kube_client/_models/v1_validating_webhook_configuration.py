@@ -15,7 +15,10 @@ class V1ValidatingWebhookConfiguration(ResourceModel):
     """ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -10,7 +10,10 @@ class V1HostAlias(BaseModel):
     """HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the pod's hosts file."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HostAlias"

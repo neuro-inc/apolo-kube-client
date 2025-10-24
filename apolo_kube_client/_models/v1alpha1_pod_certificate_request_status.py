@@ -12,7 +12,10 @@ class V1alpha1PodCertificateRequestStatus(BaseModel):
     """PodCertificateRequestStatus describes the status of the request, and holds the certificate data if the request is issued."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

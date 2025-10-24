@@ -9,7 +9,10 @@ class V1GroupVersionForDiscovery(BaseModel):
     """GroupVersion contains the "group/version" and "version" string of a version. It is made a struct to keep extensibility."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

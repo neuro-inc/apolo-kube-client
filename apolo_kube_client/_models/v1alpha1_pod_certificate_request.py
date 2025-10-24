@@ -17,7 +17,10 @@ class V1alpha1PodCertificateRequest(ResourceModel):
     Kubelets use this API to implement podCertificate projected volumes"""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

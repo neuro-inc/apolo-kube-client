@@ -9,7 +9,10 @@ class V1alpha1JSONPatch(BaseModel):
     """JSONPatch defines a JSON Patch."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

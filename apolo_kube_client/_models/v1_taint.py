@@ -9,7 +9,10 @@ class V1Taint(BaseModel):
     """The node this Taint is attached to has the "effect" on any pod that does not tolerate the Taint."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Taint"

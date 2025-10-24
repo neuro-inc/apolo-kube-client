@@ -9,7 +9,10 @@ class V1IngressClassParametersReference(BaseModel):
     """IngressClassParametersReference identifies an API object. This can be used to specify a cluster or namespace-scoped resource."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = (

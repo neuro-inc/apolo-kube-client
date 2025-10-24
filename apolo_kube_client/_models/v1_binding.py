@@ -14,7 +14,10 @@ class V1Binding(ResourceModel):
     """Binding ties one object to another; for example, a pod is bound to a node by a scheduler."""
 
     model_config = ConfigDict(
-        extra="forbid", validate_by_alias=True, validate_by_name=True
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
     )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Binding"
