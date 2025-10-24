@@ -4,12 +4,7 @@ import re
 from uuid import uuid4
 
 import pytest
-from kubernetes.client import (
-    V1Container,
-    V1ObjectMeta,
-    V1Pod,
-    V1PodSpec,
-)
+from apolo_kube_client import V1Container, V1ObjectMeta, V1Pod, V1PodSpec
 
 from apolo_kube_client import KubeClient
 from apolo_kube_client._errors import ResourceBadRequest

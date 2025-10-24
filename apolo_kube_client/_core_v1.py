@@ -52,7 +52,7 @@ class PodStatus(NestedResource[V1Pod]):
     query_path = "status"
 
 
-class PodLog(NestedResource[str]):
+class PodLog(NestedResource[V1Pod]):
     query_path = "log"
 
     async def read(

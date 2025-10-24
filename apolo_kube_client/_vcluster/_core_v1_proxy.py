@@ -39,7 +39,7 @@ class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
     pass
 
 
-class PodLogProxy(NestedResourceProxy[str, PodLog]):
+class PodLogProxy(NestedResourceProxy[V1Pod, PodLog]):
     async def read(
         self,
         *,

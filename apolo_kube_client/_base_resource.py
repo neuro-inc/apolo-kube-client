@@ -425,7 +425,7 @@ class NamespacedResource[
 
 
 class NestedResource[
-    ModelT: ResourceModel | str | None,
+    ModelT: ResourceModel,
 ](ModelClassMixin[ModelT, None, None]):
     is_nested_resource = True  # marker
     query_path: ClassVar[str]

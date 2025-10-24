@@ -116,7 +116,7 @@ class NamespacedResourceProxy[
 
 
 class NestedResourceProxy[
-    ModelT: ResourceModel | str | None,
+    ModelT: ResourceModel,
     OriginT,
 ]:
     def __init__(
