@@ -59,6 +59,7 @@ class KubeClientSelector:
     DEFAULT_VCLUSTER_CACHE_SIZE: int = 32
     DEFAULT_REAL_CLUSTER_CACHE_SIZE: int = 1024
 
+    _VCLUSTER_NAME = "vcluster"
     _VCLUSTER_SECRET_PREFIX = "vc"
 
     def __init__(
@@ -169,6 +170,7 @@ class KubeClientSelector:
 
         entry: VclusterEntry | None = None
         client: KubeClient
+        is_vcluster = False
 
         async with self._locks[cache_key]:
             cached = self._vcluster_cache.get(cache_key)
@@ -178,12 +180,13 @@ class KubeClientSelector:
                 entry = cached
                 client = cached.client
                 namespace = "default"
+                is_vcluster = True
             elif self._is_host_client(cache_key):
                 logger.info(f"{self}: host client cache hit: return host client")
                 client = self._host_client
             else:
                 # Try to fetch secret
-                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}-{namespace}"
+                secret_name = f"{self._VCLUSTER_SECRET_PREFIX}-{self._VCLUSTER_NAME}"
                 secret = await self._fetch_vcluster_secret(
                     secret_name=secret_name,
                     namespace=namespace,
@@ -197,6 +200,7 @@ class KubeClientSelector:
                     entry = VclusterEntry(client=client, leases=1)
                     await self._vcluster_cache.set(cache_key, entry)
                     namespace = "default"
+                    is_vcluster = True
                 else:
                     logger.info(f"{self}: secret not found: return shared host client")
                     self._host_cache[cache_key] = True
@@ -205,7 +209,7 @@ class KubeClientSelector:
                     await create_namespace(client, org_name, project_name)
 
         try:
-            yield KubeClientProxy(client, namespace)
+            yield KubeClientProxy(client, namespace, is_vcluster=is_vcluster)
         finally:
             await self._release_vcluster_lease(cache_key, entry)
 

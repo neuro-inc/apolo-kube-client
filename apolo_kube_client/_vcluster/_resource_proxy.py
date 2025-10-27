@@ -13,8 +13,11 @@ class BaseProxy[OriginT]:
         self,
         origin: OriginT,
         namespace: str,
+        *,
+        is_vcluster: bool,
         resource_id: str | None = None,
     ):
+        self.is_vcluster = is_vcluster
         self._origin = origin
         self._namespace = namespace  # 'default' for vcluster projects
         self._resource_id = resource_id
@@ -24,7 +27,12 @@ class BaseProxy[OriginT]:
             raise ValueError(f"kube client was already bound to {self._resource_id}")
         # create a new origin and bound it to a specific resource ID
         bound_origin = self._origin[resource_id]  # type: ignore[index]
-        return self.__class__(bound_origin, self._namespace, resource_id)
+        return self.__class__(
+            bound_origin,
+            self._namespace,
+            is_vcluster=self.is_vcluster,
+            resource_id=resource_id,
+        )
 
 
 class NamespacedResourceProxy[
