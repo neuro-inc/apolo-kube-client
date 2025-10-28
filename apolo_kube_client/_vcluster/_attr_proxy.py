@@ -32,7 +32,7 @@ class _AttrProxy[SelfT, AttrT, OriginT]:
             origin = self.func(inst)
             assert isinstance(inst, BaseProxy)
             namespace = inst._namespace
-            ret = self.cls(origin, namespace)  # type: ignore[call-arg]
+            ret = self.cls(origin, namespace, is_vcluster=inst.is_vcluster)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
         else:

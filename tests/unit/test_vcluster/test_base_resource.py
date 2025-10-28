@@ -9,7 +9,7 @@ async def test_virtual_proxy() -> None:
     orig_batch = Mock(spec=BatchV1Api)
     job = V1Job()
     orig_batch.job.get = AsyncMock(return_value=job)
-    batch = BatchV1ApiProxy(orig_batch, "ns")
+    batch = BatchV1ApiProxy(orig_batch, "ns", is_vcluster=False)
 
     ret = await batch.job.get("name")
     assert ret is job
