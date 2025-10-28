@@ -1,7 +1,12 @@
+import datetime
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from ._attr import _Attr
 from ._base_resource import Base, ClusterScopedResource, NamespacedResource
 from ._typedefs import JsonType
 from ._utils import base64_encode, escape_json_pointer
+from aiohttp import StreamReader
 from ._models import (
     CoreV1Event,
     CoreV1EventList,
@@ -43,14 +48,75 @@ class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
         )
 
 
-# list operations are not really supported for pod statuses
-class PodStatus(NestedResource[V1Pod, V1PodList, V1Pod]):
+class PodStatus(NestedResource[V1Pod]):
     query_path = "status"
+
+
+class PodLog(NestedResource[V1Pod]):
+    query_path = "log"
+
+    async def read(
+        self,
+        *,
+        container: str | None = None,
+        follow: bool | None = None,
+        previous: bool | None = None,
+        timestamps: bool | None = None,
+        since: datetime.datetime | None = None,
+        namespace: str | None = None,
+    ) -> str:
+        params: dict[str, str | bool] = {}
+        if container is not None:
+            params["container"] = container
+        if follow is not None:
+            params["follow"] = str(follow).lower()
+        if previous is not None:
+            params["previous"] = str(previous).lower()
+        if timestamps is not None:
+            params["timestamps"] = str(timestamps).lower()
+        if since is not None:
+            params["sinceTime"] = since.isoformat().replace("+00:00", "Z")
+        async with self._core.request(
+            method="GET",
+            url=self._build_url(namespace),
+            params=params,
+        ) as resp:
+            return (await resp.read()).decode("utf-8")
+
+    @asynccontextmanager
+    async def stream(
+        self,
+        *,
+        container: str | None = None,
+        follow: bool | None = None,
+        previous: bool | None = None,
+        timestamps: bool | None = None,
+        since: datetime.datetime | None = None,
+        namespace: str | None = None,
+    ) -> AsyncIterator[StreamReader]:
+        params: dict[str, str | bool] = {}
+        if container is not None:
+            params["container"] = container
+        if follow is not None:
+            params["follow"] = str(follow).lower()
+        if previous is not None:
+            params["previous"] = str(previous).lower()
+        if timestamps is not None:
+            params["timestamps"] = str(timestamps).lower()
+        if since is not None:
+            params["sinceTime"] = since.isoformat().replace("+00:00", "Z")
+        async with self._core.request(
+            method="GET",
+            url=self._build_url(namespace),
+            params=params,
+        ) as resp:
+            yield resp.content
 
 
 class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "pods"
     status = _Attr(PodStatus)
+    log = _Attr(PodLog)
 
 
 class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
