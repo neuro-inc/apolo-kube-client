@@ -27,7 +27,7 @@ class V1IngressSpec(BaseModel):
         Field(
             alias="defaultBackend",
             description="""defaultBackend is the backend that should handle requests that don't match any rule. If Rules are not specified, DefaultBackend must be specified. If DefaultBackend is not set, the handling of requests that do not match any of the rules will be up to the Ingress controller.""",
-            exclude_if=lambda v: v == V1IngressBackend(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1IngressBackend)),
     ] = V1IngressBackend()

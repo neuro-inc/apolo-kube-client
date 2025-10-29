@@ -48,7 +48,7 @@ class V1EndpointAddress(BaseModel):
         Field(
             alias="targetRef",
             description="""Reference to object providing the endpoint.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()

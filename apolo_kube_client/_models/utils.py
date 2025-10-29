@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import Any, Callable
-from pydantic import BaseModel
 
 
 @dataclass(frozen=True)
@@ -28,17 +27,3 @@ def _collection_if_none(type_: str) -> Callable[[Any], Any]:
             return arg
 
     return validator
-
-
-def _exclude_if(v: Any) -> bool:
-    if v is None:
-        return True
-    if isinstance(v, BaseModel):
-        type_ = type(v)
-        required = any(f.is_required() for f in type_.model_fields.values())
-        if required:
-            return False
-        return v.model_dump() == type_().model_dump()
-    if isinstance(v, (list, dict)):
-        return not v
-    return False

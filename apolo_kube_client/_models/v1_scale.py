@@ -48,7 +48,7 @@ class V1Scale(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1Scale(ResourceModel):
         V1ScaleSpec,
         Field(
             description="""spec defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.""",
-            exclude_if=lambda v: v == V1ScaleSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ScaleSpec)),
     ] = V1ScaleSpec()

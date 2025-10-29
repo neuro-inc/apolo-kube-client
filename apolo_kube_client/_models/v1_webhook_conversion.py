@@ -26,7 +26,7 @@ class V1WebhookConversion(BaseModel):
         Field(
             alias="clientConfig",
             description="""clientConfig is the instructions for how to call the webhook if strategy is `Webhook`.""",
-            exclude_if=lambda v: v == ApiextensionsV1WebhookClientConfig(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(ApiextensionsV1WebhookClientConfig)),
     ] = ApiextensionsV1WebhookClientConfig()

@@ -94,7 +94,7 @@ class V1ISCSIPersistentVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef is the CHAP Secret for iSCSI target and initiator authentication""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()

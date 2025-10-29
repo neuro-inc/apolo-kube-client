@@ -42,7 +42,7 @@ class V1CinderVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef is optional: points to a secret object containing parameters used to connect to OpenStack.""",
-            exclude_if=lambda v: v == V1LocalObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
     ] = V1LocalObjectReference()

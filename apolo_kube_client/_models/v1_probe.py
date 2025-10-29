@@ -27,7 +27,7 @@ class V1Probe(BaseModel):
         Field(
             alias="exec",
             description="""Exec specifies a command to execute in the container.""",
-            exclude_if=lambda v: v == V1ExecAction(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ExecAction)),
     ] = V1ExecAction()

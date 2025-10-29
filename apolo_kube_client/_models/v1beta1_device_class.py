@@ -49,7 +49,7 @@ class V1beta1DeviceClass(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()

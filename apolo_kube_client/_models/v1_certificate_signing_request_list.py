@@ -54,6 +54,6 @@ class V1CertificateSigningRequestList(ListModel):
 
     metadata: Annotated[
         V1ListMeta,
-        Field(exclude_if=lambda v: v == V1ListMeta()),
+        Field(exclude_if=lambda v: not v.__pydantic_fields_set__),
         BeforeValidator(_default_if_none(V1ListMeta)),
     ] = V1ListMeta()

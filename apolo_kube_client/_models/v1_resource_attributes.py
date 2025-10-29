@@ -27,7 +27,7 @@ class V1ResourceAttributes(BaseModel):
         Field(
             alias="fieldSelector",
             description="""fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.""",
-            exclude_if=lambda v: v == V1FieldSelectorAttributes(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1FieldSelectorAttributes)),
     ] = V1FieldSelectorAttributes()
@@ -45,7 +45,7 @@ class V1ResourceAttributes(BaseModel):
         Field(
             alias="labelSelector",
             description="""labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.""",
-            exclude_if=lambda v: v == V1LabelSelectorAttributes(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelectorAttributes)),
     ] = V1LabelSelectorAttributes()

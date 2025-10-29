@@ -23,7 +23,7 @@ class V1LimitResponse(BaseModel):
         V1QueuingConfiguration,
         Field(
             description="""`queuing` holds the configuration parameters for queuing. This field may be non-empty only if `type` is `"Queue"`.""",
-            exclude_if=lambda v: v == V1QueuingConfiguration(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1QueuingConfiguration)),
     ] = V1QueuingConfiguration()

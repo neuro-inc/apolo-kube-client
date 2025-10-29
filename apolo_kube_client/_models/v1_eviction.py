@@ -40,7 +40,7 @@ class V1Eviction(ResourceModel):
         Field(
             alias="deleteOptions",
             description="""DeleteOptions may be provided""",
-            exclude_if=lambda v: v == V1DeleteOptions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1DeleteOptions)),
     ] = V1DeleteOptions()
@@ -57,7 +57,7 @@ class V1Eviction(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""ObjectMeta describes the pod that is being evicted.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()

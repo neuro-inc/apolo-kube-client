@@ -48,7 +48,7 @@ class V1PersistentVolume(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1PersistentVolume(ResourceModel):
         V1PersistentVolumeSpec,
         Field(
             description="""spec defines a specification of a persistent volume owned by the cluster. Provisioned by an administrator. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes""",
-            exclude_if=lambda v: v == V1PersistentVolumeSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PersistentVolumeSpec)),
     ] = V1PersistentVolumeSpec()
@@ -66,7 +66,7 @@ class V1PersistentVolume(ResourceModel):
         V1PersistentVolumeStatus,
         Field(
             description="""status represents the current information/status for the persistent volume. Populated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes""",
-            exclude_if=lambda v: v == V1PersistentVolumeStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PersistentVolumeStatus)),
     ] = V1PersistentVolumeStatus()

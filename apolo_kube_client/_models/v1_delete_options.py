@@ -184,7 +184,7 @@ class V1DeleteOptions(BaseModel):
         V1Preconditions,
         Field(
             description="""Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.""",
-            exclude_if=lambda v: v == V1Preconditions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Preconditions)),
     ] = V1Preconditions()

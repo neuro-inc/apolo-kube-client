@@ -52,7 +52,7 @@ class V1ReplicationControllerSpec(BaseModel):
         V1PodTemplateSpec,
         Field(
             description="""Template is the object that describes the pod that will be created if insufficient replicas are detected. This takes precedence over a TemplateRef. The only allowed template.spec.restartPolicy value is "Always". More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template""",
-            exclude_if=lambda v: v == V1PodTemplateSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodTemplateSpec)),
     ] = V1PodTemplateSpec()

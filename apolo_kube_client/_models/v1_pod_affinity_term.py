@@ -25,7 +25,7 @@ class V1PodAffinityTerm(BaseModel):
         Field(
             alias="labelSelector",
             description="""A label query over a set of resources, in this case pods. If it's null, this PodAffinityTerm matches with no Pods.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()
@@ -55,7 +55,7 @@ class V1PodAffinityTerm(BaseModel):
         Field(
             alias="namespaceSelector",
             description="""A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

@@ -46,7 +46,7 @@ class V1SecurityContext(BaseModel):
         V1Capabilities,
         Field(
             description="""The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.""",
-            exclude_if=lambda v: v == V1Capabilities(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Capabilities)),
     ] = V1Capabilities()
@@ -109,7 +109,7 @@ class V1SecurityContext(BaseModel):
         Field(
             alias="seLinuxOptions",
             description="""The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.""",
-            exclude_if=lambda v: v == V1SELinuxOptions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SELinuxOptions)),
     ] = V1SELinuxOptions()
@@ -129,7 +129,7 @@ class V1SecurityContext(BaseModel):
         Field(
             alias="windowsOptions",
             description="""The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.""",
-            exclude_if=lambda v: v == V1WindowsSecurityContextOptions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1WindowsSecurityContextOptions)),
     ] = V1WindowsSecurityContextOptions()

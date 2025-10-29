@@ -25,7 +25,7 @@ class V1beta2ResourceClaimSpec(BaseModel):
         V1beta2DeviceClaim,
         Field(
             description="""Devices defines how to request devices.""",
-            exclude_if=lambda v: v == V1beta2DeviceClaim(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta2DeviceClaim)),
     ] = V1beta2DeviceClaim()

@@ -47,7 +47,7 @@ class V1PodSpec(BaseModel):
         V1Affinity,
         Field(
             description="""If specified, the pod's scheduling constraints""",
-            exclude_if=lambda v: v == V1Affinity(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Affinity)),
     ] = V1Affinity()
@@ -73,7 +73,7 @@ class V1PodSpec(BaseModel):
         Field(
             alias="dnsConfig",
             description="""Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.""",
-            exclude_if=lambda v: v == V1PodDNSConfig(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodDNSConfig)),
     ] = V1PodDNSConfig()
@@ -290,7 +290,7 @@ This field is immutable.""",
 This field enables fine-grained control over resource allocation for the entire pod, allowing resource sharing among containers in a pod.
 
 This is an alpha field and requires enabling the PodLevelResources feature gate.""",
-            exclude_if=lambda v: v == V1ResourceRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ResourceRequirements)),
     ] = V1ResourceRequirements()
@@ -339,7 +339,7 @@ SchedulingGates can only be set at pod creation time, and be removed only afterw
         Field(
             alias="securityContext",
             description="""SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.""",
-            exclude_if=lambda v: v == V1PodSecurityContext(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodSecurityContext)),
     ] = V1PodSecurityContext()

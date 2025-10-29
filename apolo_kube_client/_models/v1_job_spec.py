@@ -137,7 +137,7 @@ When using podFailurePolicy, Failed is the the only allowed value. TerminatingOr
         V1LabelSelector,
         Field(
             description="""A label query over pods that should match the pod count. Normally, the system sets this field for you. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

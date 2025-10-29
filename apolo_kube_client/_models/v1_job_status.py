@@ -127,7 +127,7 @@ The job controller creates pods with a finalizer. When a pod terminates (succeed
     counter.
 
 Old jobs might not be tracked using this field, in which case the field remains null. The structure is empty for finished jobs.""",
-            exclude_if=lambda v: v == V1UncountedTerminatedPods(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1UncountedTerminatedPods)),
     ] = V1UncountedTerminatedPods()

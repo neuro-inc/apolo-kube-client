@@ -80,7 +80,7 @@ This is defined since CSI spec 1.4.0 as the largest size that may be used in a C
 Objects are namespaced.
 
 More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -90,7 +90,7 @@ More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-
         Field(
             alias="nodeTopology",
             description="""nodeTopology defines which nodes have access to the storage for which capacity was reported. If not set, the storage is not accessible from any node in the cluster. If empty, the storage is accessible from all nodes. This field is immutable.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

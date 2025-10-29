@@ -64,7 +64,7 @@ Allowed values are `Allow` or `Deny` Default to `Deny`""",
 If multiple params are found, they are all evaluated with the policy expressions and the results are ANDed together.
 
 One of `name` or `selector` must be set, but `name` and `selector` are mutually exclusive properties. If one is set, the other must be unset.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

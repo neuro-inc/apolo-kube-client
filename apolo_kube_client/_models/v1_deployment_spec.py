@@ -75,7 +75,7 @@ class V1DeploymentSpec(BaseModel):
         V1DeploymentStrategy,
         Field(
             description="""The deployment strategy to use to replace existing pods with new ones.""",
-            exclude_if=lambda v: v == V1DeploymentStrategy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1DeploymentStrategy)),
     ] = V1DeploymentStrategy()

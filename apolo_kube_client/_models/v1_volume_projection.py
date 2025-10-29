@@ -45,7 +45,7 @@ Kubelet performs aggressive normalization of the PEM contents written into the p
         Field(
             alias="configMap",
             description="""configMap information about the configMap data to project""",
-            exclude_if=lambda v: v == V1ConfigMapProjection(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ConfigMapProjection)),
     ] = V1ConfigMapProjection()
@@ -55,7 +55,7 @@ Kubelet performs aggressive normalization of the PEM contents written into the p
         Field(
             alias="downwardAPI",
             description="""downwardAPI information about the downwardAPI data to project""",
-            exclude_if=lambda v: v == V1DownwardAPIProjection(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1DownwardAPIProjection)),
     ] = V1DownwardAPIProjection()
@@ -86,7 +86,7 @@ The named signer controls chooses the format of the certificate it issues; consu
         V1SecretProjection,
         Field(
             description="""secret information about the secret data to project""",
-            exclude_if=lambda v: v == V1SecretProjection(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretProjection)),
     ] = V1SecretProjection()

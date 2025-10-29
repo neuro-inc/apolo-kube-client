@@ -68,7 +68,7 @@ Must be a DNS subdomain and should end with a DNS domain owned by the vendor of 
         Field(
             alias="networkData",
             description="""NetworkData contains network-related information specific to the device.""",
-            exclude_if=lambda v: v == V1beta2NetworkDeviceData(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta2NetworkDeviceData)),
     ] = V1beta2NetworkDeviceData()

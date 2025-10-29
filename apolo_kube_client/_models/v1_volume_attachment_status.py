@@ -27,7 +27,7 @@ class V1VolumeAttachmentStatus(BaseModel):
         Field(
             alias="attachError",
             description="""attachError represents the last error encountered during attach operation, if any. This field must only be set by the entity completing the attach operation, i.e. the external-attacher.""",
-            exclude_if=lambda v: v == V1VolumeError(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1VolumeError)),
     ] = V1VolumeError()
@@ -54,7 +54,7 @@ class V1VolumeAttachmentStatus(BaseModel):
         Field(
             alias="detachError",
             description="""detachError represents the last error encountered during detach operation, if any. This field must only be set by the entity completing the detach operation, i.e. the external-attacher.""",
-            exclude_if=lambda v: v == V1VolumeError(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1VolumeError)),
     ] = V1VolumeError()

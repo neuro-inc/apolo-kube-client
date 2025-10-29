@@ -48,7 +48,7 @@ class V1Node(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1Node(ResourceModel):
         V1NodeSpec,
         Field(
             description="""Spec defines the behavior of a node. https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1NodeSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeSpec)),
     ] = V1NodeSpec()
@@ -66,7 +66,7 @@ class V1Node(ResourceModel):
         V1NodeStatus,
         Field(
             description="""Most recently observed status of the node. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1NodeStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeStatus)),
     ] = V1NodeStatus()

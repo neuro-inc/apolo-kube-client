@@ -24,7 +24,7 @@ class V1SessionAffinityConfig(BaseModel):
         Field(
             alias="clientIP",
             description="""clientIP contains the configurations of Client IP based session affinity.""",
-            exclude_if=lambda v: v == V1ClientIPConfig(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ClientIPConfig)),
     ] = V1ClientIPConfig()

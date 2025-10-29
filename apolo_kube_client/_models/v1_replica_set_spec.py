@@ -48,7 +48,7 @@ class V1ReplicaSetSpec(BaseModel):
         V1PodTemplateSpec,
         Field(
             description="""Template is the object that describes the pod that will be created if insufficient replicas are detected. More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#pod-template""",
-            exclude_if=lambda v: v == V1PodTemplateSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodTemplateSpec)),
     ] = V1PodTemplateSpec()

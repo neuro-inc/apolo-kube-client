@@ -46,7 +46,7 @@ class V1ValidatingAdmissionPolicyStatus(BaseModel):
         Field(
             alias="typeChecking",
             description="""The results of type checking for each expression. Presence of this field indicates the completion of the type checking.""",
-            exclude_if=lambda v: v == V1TypeChecking(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1TypeChecking)),
     ] = V1TypeChecking()

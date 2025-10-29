@@ -27,7 +27,7 @@ class V1alpha3DeviceTaintRuleSpec(BaseModel):
         Field(
             alias="deviceSelector",
             description="""DeviceSelector defines which device(s) the taint is applied to. All selector criteria must be satified for a device to match. The empty selector matches all devices. Without a selector, no devices are matches.""",
-            exclude_if=lambda v: v == V1alpha3DeviceTaintSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1alpha3DeviceTaintSelector)),
     ] = V1alpha3DeviceTaintSelector()

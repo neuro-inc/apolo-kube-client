@@ -27,7 +27,7 @@ class V1beta1Mutation(BaseModel):
         Field(
             alias="applyConfiguration",
             description="""applyConfiguration defines the desired configuration values of an object. The configuration is applied to the admission object using [structured merge diff](https://github.com/kubernetes-sigs/structured-merge-diff). A CEL expression is used to create apply configuration.""",
-            exclude_if=lambda v: v == V1beta1ApplyConfiguration(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta1ApplyConfiguration)),
     ] = V1beta1ApplyConfiguration()
@@ -37,7 +37,7 @@ class V1beta1Mutation(BaseModel):
         Field(
             alias="jsonPatch",
             description="""jsonPatch defines a [JSON patch](https://jsonpatch.com/) operation to perform a mutation to the object. A CEL expression is used to create the JSON patch.""",
-            exclude_if=lambda v: v == V1beta1JSONPatch(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta1JSONPatch)),
     ] = V1beta1JSONPatch()

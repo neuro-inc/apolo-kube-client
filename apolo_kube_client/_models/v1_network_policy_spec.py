@@ -45,7 +45,7 @@ class V1NetworkPolicySpec(BaseModel):
         Field(
             alias="podSelector",
             description="""podSelector selects the pods to which this NetworkPolicy object applies. The array of rules is applied to any pods selected by this field. An empty selector matches all pods in the policy's namespace. Multiple network policies can select the same set of pods. In this case, the ingress rules for each are combined additively. This field is optional. If it is not specified, it defaults to an empty selector.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

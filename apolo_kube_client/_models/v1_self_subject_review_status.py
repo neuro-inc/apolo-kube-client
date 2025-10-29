@@ -26,7 +26,7 @@ class V1SelfSubjectReviewStatus(BaseModel):
         Field(
             alias="userInfo",
             description="""User attributes of the user making this request.""",
-            exclude_if=lambda v: v == V1UserInfo(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1UserInfo)),
     ] = V1UserInfo()

@@ -53,7 +53,7 @@ More modes may get added in the future. Clients must refuse to handle requests w
 If this field is unset and the device supports multiple allocations, the default value will be applied to each capacity according to requestPolicy. For the capacity that has no requestPolicy, default is the full capacity value.
 
 Applies to each device allocation. If Count > 1, the request fails if there aren't enough devices that meet the requirements. If AllocationMode is set to All, the request fails if there are devices that otherwise match the request, and have this capacity, with a value >= the requested amount, but which cannot be allocated to this request.""",
-            exclude_if=lambda v: v == V1CapacityRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1CapacityRequirements)),
     ] = V1CapacityRequirements()

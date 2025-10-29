@@ -44,7 +44,7 @@ class V1StorageOSPersistentVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef specifies the secret to use for obtaining the StorageOS API credentials.  If not specified, default values will be attempted.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()

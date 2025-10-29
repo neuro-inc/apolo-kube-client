@@ -48,7 +48,7 @@ class V1ReplicationController(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""If the Labels of a ReplicationController are empty, they are defaulted to be the same as the Pod(s) that the replication controller manages. Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1ReplicationController(ResourceModel):
         V1ReplicationControllerSpec,
         Field(
             description="""Spec defines the specification of the desired behavior of the replication controller. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1ReplicationControllerSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ReplicationControllerSpec)),
     ] = V1ReplicationControllerSpec()

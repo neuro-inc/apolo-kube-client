@@ -24,7 +24,7 @@ class V1DeploymentStrategy(BaseModel):
         Field(
             alias="rollingUpdate",
             description="""Rolling update config params. Present only if DeploymentStrategyType = RollingUpdate.""",
-            exclude_if=lambda v: v == V1RollingUpdateDeployment(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1RollingUpdateDeployment)),
     ] = V1RollingUpdateDeployment()

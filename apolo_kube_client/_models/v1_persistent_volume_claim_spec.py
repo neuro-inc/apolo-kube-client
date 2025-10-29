@@ -66,7 +66,7 @@ class V1PersistentVolumeClaimSpec(BaseModel):
         V1VolumeResourceRequirements,
         Field(
             description="""resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources""",
-            exclude_if=lambda v: v == V1VolumeResourceRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1VolumeResourceRequirements)),
     ] = V1VolumeResourceRequirements()
@@ -75,7 +75,7 @@ class V1PersistentVolumeClaimSpec(BaseModel):
         V1LabelSelector,
         Field(
             description="""selector is a label query over volumes to consider for binding.""",
-            exclude_if=lambda v: v == V1LabelSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LabelSelector)),
     ] = V1LabelSelector()

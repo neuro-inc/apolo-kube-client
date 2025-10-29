@@ -88,7 +88,7 @@ class V1Container(BaseModel):
         V1Lifecycle,
         Field(
             description="""Actions that the management system should take in response to container lifecycle events. Cannot be updated.""",
-            exclude_if=lambda v: v == V1Lifecycle(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Lifecycle)),
     ] = V1Lifecycle()
@@ -98,7 +98,7 @@ class V1Container(BaseModel):
         Field(
             alias="livenessProbe",
             description="""Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()
@@ -124,7 +124,7 @@ class V1Container(BaseModel):
         Field(
             alias="readinessProbe",
             description="""Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()
@@ -143,7 +143,7 @@ class V1Container(BaseModel):
         V1ResourceRequirements,
         Field(
             description="""Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/""",
-            exclude_if=lambda v: v == V1ResourceRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ResourceRequirements)),
     ] = V1ResourceRequirements()
@@ -172,7 +172,7 @@ class V1Container(BaseModel):
         Field(
             alias="securityContext",
             description="""SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/""",
-            exclude_if=lambda v: v == V1SecurityContext(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecurityContext)),
     ] = V1SecurityContext()
@@ -182,7 +182,7 @@ class V1Container(BaseModel):
         Field(
             alias="startupProbe",
             description="""StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()

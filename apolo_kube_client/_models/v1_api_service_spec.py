@@ -59,7 +59,7 @@ class V1APIServiceSpec(BaseModel):
         ApiregistrationV1ServiceReference,
         Field(
             description="""Service is a reference to the service for this API server.  It must communicate on port 443. If the Service is nil, that means the handling for the API groupversion is handled locally on this server. The call will simply delegate to the normal handler chain to be fulfilled.""",
-            exclude_if=lambda v: v == ApiregistrationV1ServiceReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(ApiregistrationV1ServiceReference)),
     ] = ApiregistrationV1ServiceReference()

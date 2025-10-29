@@ -26,7 +26,7 @@ class V1CustomResourceValidation(BaseModel):
         Field(
             alias="openAPIV3Schema",
             description="""openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.""",
-            exclude_if=lambda v: v == V1JSONSchemaProps(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1JSONSchemaProps)),
     ] = V1JSONSchemaProps()

@@ -54,7 +54,7 @@ class V1CertificateSigningRequest(ResourceModel):
 
     metadata: Annotated[
         V1ObjectMeta,
-        Field(exclude_if=lambda v: v == V1ObjectMeta()),
+        Field(exclude_if=lambda v: not v.__pydantic_fields_set__),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
 
@@ -69,7 +69,7 @@ class V1CertificateSigningRequest(ResourceModel):
         V1CertificateSigningRequestStatus,
         Field(
             description="""status contains information about whether the request is approved or denied, and the certificate issued by the signer, or the failure condition indicating signer failure.""",
-            exclude_if=lambda v: v == V1CertificateSigningRequestStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1CertificateSigningRequestStatus)),
     ] = V1CertificateSigningRequestStatus()

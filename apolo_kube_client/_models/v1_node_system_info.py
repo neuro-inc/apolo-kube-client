@@ -87,7 +87,7 @@ class V1NodeSystemInfo(BaseModel):
         V1NodeSwapStatus,
         Field(
             description="""Swap Info reported by the node.""",
-            exclude_if=lambda v: v == V1NodeSwapStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeSwapStatus)),
     ] = V1NodeSwapStatus()

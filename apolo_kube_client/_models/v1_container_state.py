@@ -25,7 +25,7 @@ class V1ContainerState(BaseModel):
         V1ContainerStateRunning,
         Field(
             description="""Details about a running container""",
-            exclude_if=lambda v: v == V1ContainerStateRunning(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ContainerStateRunning)),
     ] = V1ContainerStateRunning()
@@ -43,7 +43,7 @@ class V1ContainerState(BaseModel):
         V1ContainerStateWaiting,
         Field(
             description="""Details about a waiting container""",
-            exclude_if=lambda v: v == V1ContainerStateWaiting(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ContainerStateWaiting)),
     ] = V1ContainerStateWaiting()

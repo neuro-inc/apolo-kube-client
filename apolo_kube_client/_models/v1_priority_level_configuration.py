@@ -52,7 +52,7 @@ class V1PriorityLevelConfiguration(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""`metadata` is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -70,7 +70,7 @@ class V1PriorityLevelConfiguration(ResourceModel):
         V1PriorityLevelConfigurationStatus,
         Field(
             description="""`status` is the current status of a "request-priority". More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1PriorityLevelConfigurationStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PriorityLevelConfigurationStatus)),
     ] = V1PriorityLevelConfigurationStatus()

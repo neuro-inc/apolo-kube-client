@@ -47,7 +47,7 @@ class V1IngressClass(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -56,7 +56,7 @@ class V1IngressClass(ResourceModel):
         V1IngressClassSpec,
         Field(
             description="""spec is the desired state of the IngressClass. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1IngressClassSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1IngressClassSpec)),
     ] = V1IngressClassSpec()

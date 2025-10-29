@@ -48,7 +48,7 @@ class V1Pod(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -66,7 +66,7 @@ class V1Pod(ResourceModel):
         V1PodStatus,
         Field(
             description="""Most recently observed status of the pod. This data may not be up to date. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
-            exclude_if=lambda v: v == V1PodStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodStatus)),
     ] = V1PodStatus()

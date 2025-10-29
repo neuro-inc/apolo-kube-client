@@ -39,7 +39,7 @@ class V1EnvVar(BaseModel):
         Field(
             alias="valueFrom",
             description="""Source for the environment variable's value. Cannot be used if value is not empty.""",
-            exclude_if=lambda v: v == V1EnvVarSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EnvVarSource)),
     ] = V1EnvVarSource()

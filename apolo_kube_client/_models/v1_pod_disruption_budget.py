@@ -48,7 +48,7 @@ class V1PodDisruptionBudget(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1PodDisruptionBudget(ResourceModel):
         V1PodDisruptionBudgetSpec,
         Field(
             description="""Specification of the desired behavior of the PodDisruptionBudget.""",
-            exclude_if=lambda v: v == V1PodDisruptionBudgetSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodDisruptionBudgetSpec)),
     ] = V1PodDisruptionBudgetSpec()

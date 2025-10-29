@@ -54,7 +54,7 @@ class V1CustomResourceDefinitionList(ListModel):
         V1ListMeta,
         Field(
             description="""Standard object's metadata More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ListMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ListMeta)),
     ] = V1ListMeta()

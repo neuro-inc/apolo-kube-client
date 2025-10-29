@@ -51,7 +51,7 @@ class V1alpha1MutatingAdmissionPolicy(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -60,7 +60,7 @@ class V1alpha1MutatingAdmissionPolicy(ResourceModel):
         V1alpha1MutatingAdmissionPolicySpec,
         Field(
             description="""Specification of the desired behavior of the MutatingAdmissionPolicy.""",
-            exclude_if=lambda v: v == V1alpha1MutatingAdmissionPolicySpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1alpha1MutatingAdmissionPolicySpec)),
     ] = V1alpha1MutatingAdmissionPolicySpec()

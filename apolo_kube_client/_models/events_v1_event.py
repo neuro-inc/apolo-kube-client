@@ -78,7 +78,7 @@ class EventsV1Event(ResourceModel):
         Field(
             alias="deprecatedSource",
             description="""deprecatedSource is the deprecated field assuring backward compatibility with core.v1 Event type.""",
-            exclude_if=lambda v: v == V1EventSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EventSource)),
     ] = V1EventSource()
@@ -103,7 +103,7 @@ class EventsV1Event(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -128,7 +128,7 @@ class EventsV1Event(ResourceModel):
         V1ObjectReference,
         Field(
             description="""regarding contains the object this Event is about. In most cases it's an Object reporting controller implements, e.g. ReplicaSetController implements ReplicaSets and this event is emitted because it acts on some changes in a ReplicaSet object.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()
@@ -137,7 +137,7 @@ class EventsV1Event(ResourceModel):
         V1ObjectReference,
         Field(
             description="""related is the optional secondary object for more complex actions. E.g. when regarding object triggers a creation or deletion of related object.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()

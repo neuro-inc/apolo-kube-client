@@ -92,9 +92,7 @@ class V1JSONSchemaProps(BaseModel):
 
     external_docs: Annotated[
         V1ExternalDocumentation,
-        Field(
-            alias="externalDocs", exclude_if=lambda v: v == V1ExternalDocumentation()
-        ),
+        Field(alias="externalDocs", exclude_if=lambda v: not v.__pydantic_fields_set__),
         BeforeValidator(_default_if_none(V1ExternalDocumentation)),
     ] = V1ExternalDocumentation()
 
