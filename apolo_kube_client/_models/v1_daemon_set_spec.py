@@ -58,7 +58,7 @@ class V1DaemonSetSpec(BaseModel):
         Field(
             alias="updateStrategy",
             description="""An update strategy to replace existing DaemonSet pods with new pods.""",
-            exclude_if=lambda v: v == V1DaemonSetUpdateStrategy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1DaemonSetUpdateStrategy)),
     ] = V1DaemonSetUpdateStrategy()

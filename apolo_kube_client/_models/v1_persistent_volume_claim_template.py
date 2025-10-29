@@ -27,7 +27,7 @@ class V1PersistentVolumeClaimTemplate(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""May contain labels and annotations that will be copied into the PVC when creating it. No other fields are allowed and will be rejected during validation.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()

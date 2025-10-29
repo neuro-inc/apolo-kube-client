@@ -68,7 +68,7 @@ class V1NodeStatus(BaseModel):
         V1NodeConfigStatus,
         Field(
             description="""Status of the config assigned to the node via the dynamic Kubelet config feature.""",
-            exclude_if=lambda v: v == V1NodeConfigStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeConfigStatus)),
     ] = V1NodeConfigStatus()
@@ -78,7 +78,7 @@ class V1NodeStatus(BaseModel):
         Field(
             alias="daemonEndpoints",
             description="""Endpoints of daemons running on the Node.""",
-            exclude_if=lambda v: v == V1NodeDaemonEndpoints(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeDaemonEndpoints)),
     ] = V1NodeDaemonEndpoints()
@@ -87,7 +87,7 @@ class V1NodeStatus(BaseModel):
         V1NodeFeatures,
         Field(
             description="""Features describes the set of features implemented by the CRI implementation.""",
-            exclude_if=lambda v: v == V1NodeFeatures(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeFeatures)),
     ] = V1NodeFeatures()

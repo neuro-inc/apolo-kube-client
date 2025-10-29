@@ -47,7 +47,7 @@ class V1Status(ListModel):
         V1StatusDetails,
         Field(
             description="""Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type.""",
-            exclude_if=lambda v: v == V1StatusDetails(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1StatusDetails)),
     ] = V1StatusDetails()
@@ -72,7 +72,7 @@ class V1Status(ListModel):
         V1ListMeta,
         Field(
             description="""Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
-            exclude_if=lambda v: v == V1ListMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ListMeta)),
     ] = V1ListMeta()

@@ -26,7 +26,7 @@ class V1VolumeAttachmentSource(BaseModel):
         Field(
             alias="inlineVolumeSpec",
             description="""inlineVolumeSpec contains all the information necessary to attach a persistent volume defined by a pod's inline VolumeSource. This field is populated only for the CSIMigration feature. It contains translated fields from a pod's inline VolumeSource to a PersistentVolumeSpec. This field is beta-level and is only honored by servers that enabled the CSIMigration feature.""",
-            exclude_if=lambda v: v == V1PersistentVolumeSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PersistentVolumeSpec)),
     ] = V1PersistentVolumeSpec()

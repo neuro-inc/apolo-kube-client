@@ -90,7 +90,7 @@ class V1EphemeralContainer(BaseModel):
         V1Lifecycle,
         Field(
             description="""Lifecycle is not allowed for ephemeral containers.""",
-            exclude_if=lambda v: v == V1Lifecycle(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Lifecycle)),
     ] = V1Lifecycle()
@@ -100,7 +100,7 @@ class V1EphemeralContainer(BaseModel):
         Field(
             alias="livenessProbe",
             description="""Probes are not allowed for ephemeral containers.""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()
@@ -126,7 +126,7 @@ class V1EphemeralContainer(BaseModel):
         Field(
             alias="readinessProbe",
             description="""Probes are not allowed for ephemeral containers.""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()
@@ -145,7 +145,7 @@ class V1EphemeralContainer(BaseModel):
         V1ResourceRequirements,
         Field(
             description="""Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources already allocated to the pod.""",
-            exclude_if=lambda v: v == V1ResourceRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ResourceRequirements)),
     ] = V1ResourceRequirements()
@@ -174,7 +174,7 @@ class V1EphemeralContainer(BaseModel):
         Field(
             alias="securityContext",
             description="""Optional: SecurityContext defines the security options the ephemeral container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext.""",
-            exclude_if=lambda v: v == V1SecurityContext(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecurityContext)),
     ] = V1SecurityContext()
@@ -184,7 +184,7 @@ class V1EphemeralContainer(BaseModel):
         Field(
             alias="startupProbe",
             description="""Probes are not allowed for ephemeral containers.""",
-            exclude_if=lambda v: v == V1Probe(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Probe)),
     ] = V1Probe()

@@ -58,7 +58,7 @@ class V1alpha1MutatingAdmissionPolicyBindingList(ListModel):
         V1ListMeta,
         Field(
             description="""Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds""",
-            exclude_if=lambda v: v == V1ListMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ListMeta)),
     ] = V1ListMeta()

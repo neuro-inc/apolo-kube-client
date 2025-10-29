@@ -32,7 +32,7 @@ class V1IngressServiceBackend(BaseModel):
         V1ServiceBackendPort,
         Field(
             description="""port of the referenced service. A port name or port number is required for a IngressServiceBackend.""",
-            exclude_if=lambda v: v == V1ServiceBackendPort(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ServiceBackendPort)),
     ] = V1ServiceBackendPort()

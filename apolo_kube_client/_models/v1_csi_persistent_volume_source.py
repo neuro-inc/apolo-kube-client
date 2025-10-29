@@ -27,7 +27,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         Field(
             alias="controllerExpandSecretRef",
             description="""controllerExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerExpandVolume call. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()
@@ -37,7 +37,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         Field(
             alias="controllerPublishSecretRef",
             description="""controllerPublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerPublishVolume and ControllerUnpublishVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()
@@ -63,7 +63,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         Field(
             alias="nodeExpandSecretRef",
             description="""nodeExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodeExpandVolume call. This field is optional, may be omitted if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()
@@ -73,7 +73,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         Field(
             alias="nodePublishSecretRef",
             description="""nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()
@@ -83,7 +83,7 @@ class V1CSIPersistentVolumeSource(BaseModel):
         Field(
             alias="nodeStageSecretRef",
             description="""nodeStageSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodeStageVolume and NodeStageVolume and NodeUnstageVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()

@@ -32,7 +32,7 @@ class V1ServiceStatus(BaseModel):
         Field(
             alias="loadBalancer",
             description="""LoadBalancer contains the current status of the load-balancer, if one is present.""",
-            exclude_if=lambda v: v == V1LoadBalancerStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LoadBalancerStatus)),
     ] = V1LoadBalancerStatus()

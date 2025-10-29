@@ -33,7 +33,7 @@ class V1Endpoint(BaseModel):
         V1EndpointConditions,
         Field(
             description="""conditions contains information about the current status of the endpoint.""",
-            exclude_if=lambda v: v == V1EndpointConditions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EndpointConditions)),
     ] = V1EndpointConditions()
@@ -52,7 +52,7 @@ class V1Endpoint(BaseModel):
         V1EndpointHints,
         Field(
             description="""hints contains information associated with how an endpoint should be consumed.""",
-            exclude_if=lambda v: v == V1EndpointHints(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EndpointHints)),
     ] = V1EndpointHints()
@@ -79,7 +79,7 @@ class V1Endpoint(BaseModel):
         Field(
             alias="targetRef",
             description="""targetRef is a reference to a Kubernetes object that represents this endpoint.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()

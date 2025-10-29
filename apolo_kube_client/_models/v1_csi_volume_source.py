@@ -41,7 +41,7 @@ class V1CSIVolumeSource(BaseModel):
         Field(
             alias="nodePublishSecretRef",
             description="""nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and  may be empty if no secret is required. If the secret object contains more than one secret, all secret references are passed.""",
-            exclude_if=lambda v: v == V1LocalObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
     ] = V1LocalObjectReference()

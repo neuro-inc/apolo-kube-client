@@ -107,7 +107,7 @@ All Pods that use the same volume should use the same seLinuxChangePolicy, other
         Field(
             alias="seLinuxOptions",
             description="""The SELinux context to be applied to all containers. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.""",
-            exclude_if=lambda v: v == V1SELinuxOptions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SELinuxOptions)),
     ] = V1SELinuxOptions()
@@ -155,7 +155,7 @@ All Pods that use the same volume should use the same seLinuxChangePolicy, other
         Field(
             alias="windowsOptions",
             description="""The Windows specific settings applied to all containers. If unspecified, the options within a container's SecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.""",
-            exclude_if=lambda v: v == V1WindowsSecurityContextOptions(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1WindowsSecurityContextOptions)),
     ] = V1WindowsSecurityContextOptions()

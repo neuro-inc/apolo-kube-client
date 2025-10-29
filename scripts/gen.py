@@ -45,7 +45,6 @@ class ListModel(BaseModel):
 UTILS_MOD = """\
 from dataclasses import dataclass
 from typing import Any, Callable
-from pydantic import BaseModel
 
 
 @dataclass(frozen=True)
@@ -73,20 +72,6 @@ def _collection_if_none(type_: str) -> Callable[[Any], Any]:
             return arg
 
     return validator
-
-
-def _exclude_if(v: Any) -> bool:
-    if v is None:
-        return True
-    if isinstance(v, BaseModel):
-        type_ = type(v)
-        required = any(f.is_required() for f in type_.model_fields.values())
-        if required:
-            return False
-        return v.model_dump() == type_().model_dump()
-    if isinstance(v, (list, dict)):
-        return not v
-    return False
 """
 
 
@@ -257,13 +242,13 @@ def generate(
     cls: type,
     swagger: Any,
     target_dir: Path,
-    visited: dict[str, bool],
+    has_required_fields: dict[str, bool],
     init_lines: list[str],
     all_names: list[str],
 ) -> None:
     _, _, modname = cls.__module__.rpartition(".")
     name = cls.__name__
-    if name in visited:
+    if name in has_required_fields:
         return
     print(f"Generate {name}")
     imports: set[str] = set()
@@ -324,24 +309,21 @@ def generate(
         if is_required:
             res = replace(res, default=None)
         else:
-            # field_args["exclude_if"] = "_exclude_if"
-            # imports.add("from .utils import _exclude_if")
-
             if res.is_model:
                 imports.add("from pydantic import BeforeValidator")
                 imports.add("from .utils import _default_if_none")
                 annotations.append(f"BeforeValidator(_default_if_none({res.type_}))")
                 if not res.self_ref:
-                    if res.type_ not in visited:
+                    if res.type_ not in has_required_fields:
                         generate(
                             getattr(models, res.type_),
                             swagger,
                             target_dir,
-                            visited,
+                            has_required_fields,
                             init_lines,
                             all_names,
                         )
-                    if visited[res.type_]:
+                    if has_required_fields[res.type_]:
                         res = replace(
                             res,
                             default="None",
@@ -360,11 +342,13 @@ def generate(
                         default="None",
                         type_=res.type_ + " | None",
                     )
-            field_args["exclude_if"] = (
-                f"lambda v: v=={res.default}"
-                if res.default != "None"
-                else "lambda v: v is None"
-            )
+
+            if res.default == "None":
+                field_args["exclude_if"] = "lambda v: v is None"
+            elif res.is_model:
+                field_args["exclude_if"] = "lambda v: not v.__pydantic_fields_set__"
+            else:
+                field_args["exclude_if"] = f"lambda v: v=={res.default}"
 
         field_str = ", ".join(f"{k}={v}" for k, v in field_args.items())
         annotations.insert(0, f"Field({field_str})")
@@ -391,7 +375,7 @@ def generate(
     (target_dir / modname).with_suffix(".py").write_text(mod)
     init_lines.append(f"from .{modname} import {name}")
     all_names.append(name)
-    visited[name] = has_required
+    has_required_fields[name] = has_required
 
 
 class Transformer(libcst.CSTTransformer):
@@ -451,11 +435,13 @@ def main() -> None:
     all_names: list[str] = []
     with (here.parent / "swagger.json").open() as swagger_file:
         swagger = json.load(swagger_file)
-    visited: dict[str, bool] = {}
+    has_required_fields: dict[str, bool] = {}
     for name in dir(models):
         obj = getattr(models, name)
         if isinstance(obj, type):
-            generate(obj, swagger, target_dir, visited, init_lines, all_names)
+            generate(
+                obj, swagger, target_dir, has_required_fields, init_lines, all_names
+            )
 
     (target_dir / "base.py").write_text(BASE_MOD)
     (target_dir / "utils.py").write_text(UTILS_MOD)

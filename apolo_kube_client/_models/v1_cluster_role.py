@@ -33,7 +33,7 @@ class V1ClusterRole(ResourceModel):
         Field(
             alias="aggregationRule",
             description="""AggregationRule is an optional field that describes how to build the Rules for this ClusterRole. If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be stomped by the controller.""",
-            exclude_if=lambda v: v == V1AggregationRule(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1AggregationRule)),
     ] = V1AggregationRule()
@@ -59,7 +59,7 @@ class V1ClusterRole(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()

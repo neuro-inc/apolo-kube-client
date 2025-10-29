@@ -26,7 +26,7 @@ class V1NodeSpec(BaseModel):
         Field(
             alias="configSource",
             description="""Deprecated: Previously used to specify the source of the node's configuration for the DynamicKubeletConfig feature. This feature is removed.""",
-            exclude_if=lambda v: v == V1NodeConfigSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeConfigSource)),
     ] = V1NodeConfigSource()

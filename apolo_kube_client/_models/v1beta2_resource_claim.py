@@ -50,7 +50,7 @@ class V1beta2ResourceClaim(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -66,7 +66,7 @@ class V1beta2ResourceClaim(ResourceModel):
         V1beta2ResourceClaimStatus,
         Field(
             description="""Status describes whether the claim is ready to use and what has been allocated.""",
-            exclude_if=lambda v: v == V1beta2ResourceClaimStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta2ResourceClaimStatus)),
     ] = V1beta2ResourceClaimStatus()

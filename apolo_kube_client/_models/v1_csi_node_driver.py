@@ -24,7 +24,7 @@ class V1CSINodeDriver(BaseModel):
         V1VolumeNodeResources,
         Field(
             description="""allocatable represents the volume resources of a node that are available for scheduling. This field is beta.""",
-            exclude_if=lambda v: v == V1VolumeNodeResources(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1VolumeNodeResources)),
     ] = V1VolumeNodeResources()

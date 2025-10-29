@@ -28,7 +28,7 @@ class V2HorizontalPodAutoscalerSpec(BaseModel):
         V2HorizontalPodAutoscalerBehavior,
         Field(
             description="""behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used.""",
-            exclude_if=lambda v: v == V2HorizontalPodAutoscalerBehavior(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerBehavior)),
     ] = V2HorizontalPodAutoscalerBehavior()

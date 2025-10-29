@@ -26,7 +26,7 @@ class V1StatefulSetUpdateStrategy(BaseModel):
         Field(
             alias="rollingUpdate",
             description="""RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.""",
-            exclude_if=lambda v: v == V1RollingUpdateStatefulSetStrategy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1RollingUpdateStatefulSetStrategy)),
     ] = V1RollingUpdateStatefulSetStrategy()

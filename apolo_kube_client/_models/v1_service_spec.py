@@ -187,7 +187,7 @@ This field may hold a maximum of two entries (dual-stack families, in either ord
         Field(
             alias="sessionAffinityConfig",
             description="""sessionAffinityConfig contains the configurations of session affinity.""",
-            exclude_if=lambda v: v == V1SessionAffinityConfig(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SessionAffinityConfig)),
     ] = V1SessionAffinityConfig()

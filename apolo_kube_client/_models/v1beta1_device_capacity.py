@@ -28,7 +28,7 @@ class V1beta1DeviceCapacity(BaseModel):
 The Device must have allowMultipleAllocations set to true in order to set a requestPolicy.
 
 If unset, capacity requests are unconstrained: requests can consume any amount of capacity, as long as the total consumed across all allocations does not exceed the device's defined capacity. If request is also unset, default is the full capacity value.""",
-            exclude_if=lambda v: v == V1beta1CapacityRequestPolicy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta1CapacityRequestPolicy)),
     ] = V1beta1CapacityRequestPolicy()

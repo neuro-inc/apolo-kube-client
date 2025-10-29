@@ -23,7 +23,7 @@ class V1beta1Device(BaseModel):
         V1beta1BasicDevice,
         Field(
             description="""Basic defines one device instance.""",
-            exclude_if=lambda v: v == V1beta1BasicDevice(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta1BasicDevice)),
     ] = V1beta1BasicDevice()

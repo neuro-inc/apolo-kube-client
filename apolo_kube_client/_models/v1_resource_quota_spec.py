@@ -34,7 +34,7 @@ class V1ResourceQuotaSpec(BaseModel):
         Field(
             alias="scopeSelector",
             description="""scopeSelector is also a collection of filters like scopes that must match each object tracked by a quota but expressed using ScopeSelectorOperator in combination with possible values. For a resource to match, both scopes AND scopeSelector (if specified in spec), must be matched.""",
-            exclude_if=lambda v: v == V1ScopeSelector(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ScopeSelector)),
     ] = V1ScopeSelector()

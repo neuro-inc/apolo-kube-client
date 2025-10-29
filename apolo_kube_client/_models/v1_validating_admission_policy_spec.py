@@ -78,7 +78,7 @@ The exact matching logic is (in order):
         Field(
             alias="matchConstraints",
             description="""MatchConstraints specifies what resources this policy is designed to validate. The AdmissionPolicy cares about a request if it matches _all_ Constraints. However, in order to prevent clusters from being put into an unstable state that cannot be recovered from via the API ValidatingAdmissionPolicy cannot match ValidatingAdmissionPolicy and ValidatingAdmissionPolicyBinding. Required.""",
-            exclude_if=lambda v: v == V1MatchResources(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1MatchResources)),
     ] = V1MatchResources()
@@ -88,7 +88,7 @@ The exact matching logic is (in order):
         Field(
             alias="paramKind",
             description="""ParamKind specifies the kind of resources used to parameterize this policy. If absent, there are no parameters for this policy and the param CEL variable will not be provided to validation expressions. If ParamKind refers to a non-existent kind, this policy definition is mis-configured and the FailurePolicy is applied. If paramKind is specified but paramRef is unset in ValidatingAdmissionPolicyBinding, the params variable will be null.""",
-            exclude_if=lambda v: v == V1ParamKind(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ParamKind)),
     ] = V1ParamKind()

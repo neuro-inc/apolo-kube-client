@@ -61,7 +61,7 @@ class V1FlexPersistentVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef is Optional: SecretRef is reference to the secret object containing sensitive information to pass to the plugin scripts. This may be empty if no secret object is specified. If the secret object contains more than one secret, all secrets are passed to the plugin scripts.""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()

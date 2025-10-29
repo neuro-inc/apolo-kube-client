@@ -26,7 +26,7 @@ class V2HorizontalPodAutoscalerBehavior(BaseModel):
         Field(
             alias="scaleDown",
             description="""scaleDown is scaling policy for scaling Down. If not set, the default value is to allow to scale down to minReplicas pods, with a 300 second stabilization window (i.e., the highest recommendation for the last 300sec is used).""",
-            exclude_if=lambda v: v == V2HPAScalingRules(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V2HPAScalingRules)),
     ] = V2HPAScalingRules()
@@ -39,7 +39,7 @@ class V2HorizontalPodAutoscalerBehavior(BaseModel):
   * increase no more than 4 pods per 60 seconds
   * double the number of pods per 60 seconds
 No stabilization is used.""",
-            exclude_if=lambda v: v == V2HPAScalingRules(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V2HPAScalingRules)),
     ] = V2HPAScalingRules()

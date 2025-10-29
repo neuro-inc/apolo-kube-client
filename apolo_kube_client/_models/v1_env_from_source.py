@@ -25,7 +25,7 @@ class V1EnvFromSource(BaseModel):
         Field(
             alias="configMapRef",
             description="""The ConfigMap to select from""",
-            exclude_if=lambda v: v == V1ConfigMapEnvSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ConfigMapEnvSource)),
     ] = V1ConfigMapEnvSource()
@@ -43,7 +43,7 @@ class V1EnvFromSource(BaseModel):
         Field(
             alias="secretRef",
             description="""The Secret to select from""",
-            exclude_if=lambda v: v == V1SecretEnvSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretEnvSource)),
     ] = V1SecretEnvSource()

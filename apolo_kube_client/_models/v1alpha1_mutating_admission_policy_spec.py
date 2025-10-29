@@ -65,7 +65,7 @@ The exact matching logic is (in order):
         Field(
             alias="matchConstraints",
             description="""matchConstraints specifies what resources this policy is designed to validate. The MutatingAdmissionPolicy cares about a request if it matches _all_ Constraints. However, in order to prevent clusters from being put into an unstable state that cannot be recovered from via the API MutatingAdmissionPolicy cannot match MutatingAdmissionPolicy and MutatingAdmissionPolicyBinding. The CREATE, UPDATE and CONNECT operations are allowed.  The DELETE operation may not be matched. '*' matches CREATE, UPDATE and CONNECT. Required.""",
-            exclude_if=lambda v: v == V1alpha1MatchResources(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1alpha1MatchResources)),
     ] = V1alpha1MatchResources()
@@ -84,7 +84,7 @@ The exact matching logic is (in order):
         Field(
             alias="paramKind",
             description="""paramKind specifies the kind of resources used to parameterize this policy. If absent, there are no parameters for this policy and the param CEL variable will not be provided to validation expressions. If paramKind refers to a non-existent kind, this policy definition is mis-configured and the FailurePolicy is applied. If paramKind is specified but paramRef is unset in MutatingAdmissionPolicyBinding, the params variable will be null.""",
-            exclude_if=lambda v: v == V1alpha1ParamKind(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1alpha1ParamKind)),
     ] = V1alpha1ParamKind()

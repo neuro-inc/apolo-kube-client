@@ -57,7 +57,7 @@ class V1ValidatingAdmissionPolicyBinding(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object metadata; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -66,7 +66,7 @@ class V1ValidatingAdmissionPolicyBinding(ResourceModel):
         V1ValidatingAdmissionPolicyBindingSpec,
         Field(
             description="""Specification of the desired behavior of the ValidatingAdmissionPolicyBinding.""",
-            exclude_if=lambda v: v == V1ValidatingAdmissionPolicyBindingSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ValidatingAdmissionPolicyBindingSpec)),
     ] = V1ValidatingAdmissionPolicyBindingSpec()

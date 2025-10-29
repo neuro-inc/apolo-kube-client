@@ -33,7 +33,7 @@ class V1TokenRequestSpec(BaseModel):
         Field(
             alias="boundObjectRef",
             description="""BoundObjectRef is a reference to an object that the token will be bound to. The token will only be valid for as long as the bound object exists. NOTE: The API server's TokenReview endpoint will validate the BoundObjectRef, but other audiences may not. Keep ExpirationSeconds small if you want prompt revocation.""",
-            exclude_if=lambda v: v == V1BoundObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1BoundObjectReference)),
     ] = V1BoundObjectReference()

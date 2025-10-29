@@ -23,7 +23,7 @@ class V1NodeRuntimeHandler(BaseModel):
         V1NodeRuntimeHandlerFeatures,
         Field(
             description="""Supported features.""",
-            exclude_if=lambda v: v == V1NodeRuntimeHandlerFeatures(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeRuntimeHandlerFeatures)),
     ] = V1NodeRuntimeHandlerFeatures()

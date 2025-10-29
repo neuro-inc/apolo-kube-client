@@ -47,7 +47,7 @@ class V1CSINode(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. metadata.name must be the Kubernetes node name.""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()

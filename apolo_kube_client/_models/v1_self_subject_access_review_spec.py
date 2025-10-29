@@ -27,7 +27,7 @@ class V1SelfSubjectAccessReviewSpec(BaseModel):
         Field(
             alias="nonResourceAttributes",
             description="""NonResourceAttributes describes information for a non-resource access request""",
-            exclude_if=lambda v: v == V1NonResourceAttributes(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NonResourceAttributes)),
     ] = V1NonResourceAttributes()
@@ -37,7 +37,7 @@ class V1SelfSubjectAccessReviewSpec(BaseModel):
         Field(
             alias="resourceAttributes",
             description="""ResourceAuthorizationAttributes describes information for a resource access request""",
-            exclude_if=lambda v: v == V1ResourceAttributes(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ResourceAttributes)),
     ] = V1ResourceAttributes()

@@ -103,7 +103,7 @@ class V1Volume(BaseModel):
         Field(
             alias="configMap",
             description="""configMap represents a configMap that should populate this volume""",
-            exclude_if=lambda v: v == V1ConfigMapVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ConfigMapVolumeSource)),
     ] = V1ConfigMapVolumeSource()
@@ -122,7 +122,7 @@ class V1Volume(BaseModel):
         Field(
             alias="downwardAPI",
             description="""downwardAPI represents downward API about the pod that should populate this volume""",
-            exclude_if=lambda v: v == V1DownwardAPIVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1DownwardAPIVolumeSource)),
     ] = V1DownwardAPIVolumeSource()
@@ -132,7 +132,7 @@ class V1Volume(BaseModel):
         Field(
             alias="emptyDir",
             description="""emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir""",
-            exclude_if=lambda v: v == V1EmptyDirVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EmptyDirVolumeSource)),
     ] = V1EmptyDirVolumeSource()
@@ -154,7 +154,7 @@ Use PersistentVolumeClaim or one of the vendor-specific APIs for volumes that pe
 Use CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.
 
 A pod can use both types of ephemeral volumes and persistent volumes at the same time.""",
-            exclude_if=lambda v: v == V1EphemeralVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EphemeralVolumeSource)),
     ] = V1EphemeralVolumeSource()
@@ -163,7 +163,7 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
         V1FCVolumeSource,
         Field(
             description="""fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.""",
-            exclude_if=lambda v: v == V1FCVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1FCVolumeSource)),
     ] = V1FCVolumeSource()
@@ -182,7 +182,7 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
         V1FlockerVolumeSource,
         Field(
             description="""flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.""",
-            exclude_if=lambda v: v == V1FlockerVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1FlockerVolumeSource)),
     ] = V1FlockerVolumeSource()
@@ -234,7 +234,7 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
 - Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.
 
 The volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33. The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.""",
-            exclude_if=lambda v: v == V1ImageVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ImageVolumeSource)),
     ] = V1ImageVolumeSource()
@@ -298,7 +298,7 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
         V1ProjectedVolumeSource,
         Field(
             description="""projected items for all in one resources secrets, configmaps, and downward API""",
-            exclude_if=lambda v: v == V1ProjectedVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ProjectedVolumeSource)),
     ] = V1ProjectedVolumeSource()
@@ -335,7 +335,7 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
         V1SecretVolumeSource,
         Field(
             description="""secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret""",
-            exclude_if=lambda v: v == V1SecretVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretVolumeSource)),
     ] = V1SecretVolumeSource()
@@ -344,7 +344,7 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
         V1StorageOSVolumeSource,
         Field(
             description="""storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.""",
-            exclude_if=lambda v: v == V1StorageOSVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1StorageOSVolumeSource)),
     ] = V1StorageOSVolumeSource()

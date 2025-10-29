@@ -24,7 +24,7 @@ class V1DaemonSetUpdateStrategy(BaseModel):
         Field(
             alias="rollingUpdate",
             description="""Rolling update config params. Present only if type = "RollingUpdate".""",
-            exclude_if=lambda v: v == V1RollingUpdateDaemonSet(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1RollingUpdateDaemonSet)),
     ] = V1RollingUpdateDaemonSet()

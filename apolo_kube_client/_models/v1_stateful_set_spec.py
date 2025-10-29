@@ -40,7 +40,7 @@ class V1StatefulSetSpec(BaseModel):
         V1StatefulSetOrdinals,
         Field(
             description="""ordinals controls the numbering of replica indices in a StatefulSet. The default ordinals behavior assigns a "0" index to the first replica and increments the index by one for each additional replica requested.""",
-            exclude_if=lambda v: v == V1StatefulSetOrdinals(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1StatefulSetOrdinals)),
     ] = V1StatefulSetOrdinals()
@@ -50,8 +50,7 @@ class V1StatefulSetSpec(BaseModel):
         Field(
             alias="persistentVolumeClaimRetentionPolicy",
             description="""persistentVolumeClaimRetentionPolicy describes the lifecycle of persistent volume claims created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and retained until manually deleted. This policy allows the lifecycle to be altered, for example by deleting persistent volume claims when their stateful set is deleted, or when their pod is scaled down.""",
-            exclude_if=lambda v: v
-            == V1StatefulSetPersistentVolumeClaimRetentionPolicy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(
             _default_if_none(V1StatefulSetPersistentVolumeClaimRetentionPolicy)
@@ -112,7 +111,7 @@ class V1StatefulSetSpec(BaseModel):
         Field(
             alias="updateStrategy",
             description="""updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.""",
-            exclude_if=lambda v: v == V1StatefulSetUpdateStrategy(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1StatefulSetUpdateStrategy)),
     ] = V1StatefulSetUpdateStrategy()

@@ -59,7 +59,7 @@ class V1CephFSPersistentVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef is Optional: SecretRef is reference to the authentication secret for User, default is empty. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it""",
-            exclude_if=lambda v: v == V1SecretReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1SecretReference)),
     ] = V1SecretReference()

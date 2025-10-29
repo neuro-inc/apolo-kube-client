@@ -115,7 +115,7 @@ class V1PersistentVolumeSpec(BaseModel):
         Field(
             alias="claimRef",
             description="""claimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim. Expected to be non-nil when bound. claim.VolumeName is the authoritative bind between PV and PVC. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()
@@ -133,7 +133,7 @@ class V1PersistentVolumeSpec(BaseModel):
         V1FCVolumeSource,
         Field(
             description="""fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.""",
-            exclude_if=lambda v: v == V1FCVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1FCVolumeSource)),
     ] = V1FCVolumeSource()
@@ -152,7 +152,7 @@ class V1PersistentVolumeSpec(BaseModel):
         V1FlockerVolumeSource,
         Field(
             description="""flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.""",
-            exclude_if=lambda v: v == V1FlockerVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1FlockerVolumeSource)),
     ] = V1FlockerVolumeSource()
@@ -228,7 +228,7 @@ class V1PersistentVolumeSpec(BaseModel):
         Field(
             alias="nodeAffinity",
             description="""nodeAffinity defines constraints that limit what nodes this volume can be accessed from. This field influences the scheduling of pods that use this volume.""",
-            exclude_if=lambda v: v == V1VolumeNodeAffinity(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1VolumeNodeAffinity)),
     ] = V1VolumeNodeAffinity()
@@ -303,7 +303,7 @@ class V1PersistentVolumeSpec(BaseModel):
         V1StorageOSPersistentVolumeSource,
         Field(
             description="""storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported. More info: https://examples.k8s.io/volumes/storageos/README.md""",
-            exclude_if=lambda v: v == V1StorageOSPersistentVolumeSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1StorageOSPersistentVolumeSource)),
     ] = V1StorageOSPersistentVolumeSource()

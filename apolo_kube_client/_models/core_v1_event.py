@@ -124,7 +124,7 @@ class CoreV1Event(ResourceModel):
         V1ObjectReference,
         Field(
             description="""Optional secondary object for more complex actions.""",
-            exclude_if=lambda v: v == V1ObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectReference)),
     ] = V1ObjectReference()
@@ -151,7 +151,7 @@ class CoreV1Event(ResourceModel):
         CoreV1EventSeries,
         Field(
             description="""Data about the Event series this event represents or nil if it's a singleton Event.""",
-            exclude_if=lambda v: v == CoreV1EventSeries(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(CoreV1EventSeries)),
     ] = CoreV1EventSeries()
@@ -160,7 +160,7 @@ class CoreV1Event(ResourceModel):
         V1EventSource,
         Field(
             description="""The component reporting this event. Should be a short machine understandable string.""",
-            exclude_if=lambda v: v == V1EventSource(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1EventSource)),
     ] = V1EventSource()

@@ -51,7 +51,7 @@ class V1TokenReviewStatus(BaseModel):
         V1UserInfo,
         Field(
             description="""User is the UserInfo associated with the provided token.""",
-            exclude_if=lambda v: v == V1UserInfo(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1UserInfo)),
     ] = V1UserInfo()

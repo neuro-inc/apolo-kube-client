@@ -48,7 +48,7 @@ class V1PersistentVolumeClaim(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -57,7 +57,7 @@ class V1PersistentVolumeClaim(ResourceModel):
         V1PersistentVolumeClaimSpec,
         Field(
             description="""spec defines the desired characteristics of a volume requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims""",
-            exclude_if=lambda v: v == V1PersistentVolumeClaimSpec(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PersistentVolumeClaimSpec)),
     ] = V1PersistentVolumeClaimSpec()
@@ -66,7 +66,7 @@ class V1PersistentVolumeClaim(ResourceModel):
         V1PersistentVolumeClaimStatus,
         Field(
             description="""status represents the current information/status of a persistent volume claim. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims""",
-            exclude_if=lambda v: v == V1PersistentVolumeClaimStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PersistentVolumeClaimStatus)),
     ] = V1PersistentVolumeClaimStatus()

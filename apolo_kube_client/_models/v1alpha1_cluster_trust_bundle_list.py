@@ -54,7 +54,7 @@ class V1alpha1ClusterTrustBundleList(ListModel):
         V1ListMeta,
         Field(
             description="""metadata contains the list metadata.""",
-            exclude_if=lambda v: v == V1ListMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ListMeta)),
     ] = V1ListMeta()

@@ -50,7 +50,7 @@ class V1APIService(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -68,7 +68,7 @@ class V1APIService(ResourceModel):
         V1APIServiceStatus,
         Field(
             description="""Status contains derived information about an API server""",
-            exclude_if=lambda v: v == V1APIServiceStatus(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1APIServiceStatus)),
     ] = V1APIServiceStatus()

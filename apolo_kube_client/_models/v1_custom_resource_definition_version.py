@@ -64,7 +64,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         Field(
             alias="schema",
             description="""schema describes the schema used for validation, pruning, and defaulting of this version of the custom resource.""",
-            exclude_if=lambda v: v == V1CustomResourceValidation(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1CustomResourceValidation)),
     ] = V1CustomResourceValidation()
@@ -97,7 +97,7 @@ class V1CustomResourceDefinitionVersion(BaseModel):
         V1CustomResourceSubresources,
         Field(
             description="""subresources specify what subresources this version of the defined custom resource have.""",
-            exclude_if=lambda v: v == V1CustomResourceSubresources(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1CustomResourceSubresources)),
     ] = V1CustomResourceSubresources()

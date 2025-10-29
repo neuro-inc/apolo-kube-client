@@ -26,7 +26,7 @@ class V1Affinity(BaseModel):
         Field(
             alias="nodeAffinity",
             description="""Describes node affinity scheduling rules for the pod.""",
-            exclude_if=lambda v: v == V1NodeAffinity(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1NodeAffinity)),
     ] = V1NodeAffinity()
@@ -36,7 +36,7 @@ class V1Affinity(BaseModel):
         Field(
             alias="podAffinity",
             description="""Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).""",
-            exclude_if=lambda v: v == V1PodAffinity(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodAffinity)),
     ] = V1PodAffinity()
@@ -46,7 +46,7 @@ class V1Affinity(BaseModel):
         Field(
             alias="podAntiAffinity",
             description="""Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).""",
-            exclude_if=lambda v: v == V1PodAntiAffinity(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1PodAntiAffinity)),
     ] = V1PodAntiAffinity()

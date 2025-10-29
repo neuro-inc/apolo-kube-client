@@ -26,7 +26,7 @@ class V1PriorityLevelConfigurationSpec(BaseModel):
         V1ExemptPriorityLevelConfiguration,
         Field(
             description="""`exempt` specifies how requests are handled for an exempt priority level. This field MUST be empty if `type` is `"Limited"`. This field MAY be non-empty if `type` is `"Exempt"`. If empty and `type` is `"Exempt"` then the default values for `ExemptPriorityLevelConfiguration` apply.""",
-            exclude_if=lambda v: v == V1ExemptPriorityLevelConfiguration(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ExemptPriorityLevelConfiguration)),
     ] = V1ExemptPriorityLevelConfiguration()
@@ -35,7 +35,7 @@ class V1PriorityLevelConfigurationSpec(BaseModel):
         V1LimitedPriorityLevelConfiguration,
         Field(
             description="""`limited` specifies how requests are handled for a Limited priority level. This field must be non-empty if and only if `type` is `"Limited"`.""",
-            exclude_if=lambda v: v == V1LimitedPriorityLevelConfiguration(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LimitedPriorityLevelConfiguration)),
     ] = V1LimitedPriorityLevelConfiguration()

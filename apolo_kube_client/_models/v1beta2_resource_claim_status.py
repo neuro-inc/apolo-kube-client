@@ -30,7 +30,7 @@ class V1beta2ResourceClaimStatus(BaseModel):
         V1beta2AllocationResult,
         Field(
             description="""Allocation is set once the claim has been allocated successfully.""",
-            exclude_if=lambda v: v == V1beta2AllocationResult(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta2AllocationResult)),
     ] = V1beta2AllocationResult()

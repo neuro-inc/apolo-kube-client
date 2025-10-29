@@ -55,7 +55,7 @@ class V1RuntimeClass(ResourceModel):
         V1ObjectMeta,
         Field(
             description="""More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata""",
-            exclude_if=lambda v: v == V1ObjectMeta(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ObjectMeta)),
     ] = V1ObjectMeta()
@@ -65,7 +65,7 @@ class V1RuntimeClass(ResourceModel):
         Field(
             description="""overhead represents the resource overhead associated with running a pod for a given RuntimeClass. For more details, see
  https://kubernetes.io/docs/concepts/scheduling-eviction/pod-overhead/""",
-            exclude_if=lambda v: v == V1Overhead(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Overhead)),
     ] = V1Overhead()
@@ -74,7 +74,7 @@ class V1RuntimeClass(ResourceModel):
         V1Scheduling,
         Field(
             description="""scheduling holds the scheduling constraints to ensure that pods running with this RuntimeClass are scheduled to nodes that support it. If scheduling is nil, this RuntimeClass is assumed to be supported by all nodes.""",
-            exclude_if=lambda v: v == V1Scheduling(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1Scheduling)),
     ] = V1Scheduling()

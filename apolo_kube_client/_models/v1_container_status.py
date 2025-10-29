@@ -73,7 +73,7 @@ class V1ContainerStatus(BaseModel):
         Field(
             alias="lastState",
             description="""LastTerminationState holds the last termination state of the container to help debug container crashes and restarts. This field is not populated if the container is still running and RestartCount is 0.""",
-            exclude_if=lambda v: v == V1ContainerState(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ContainerState)),
     ] = V1ContainerState()
@@ -98,7 +98,7 @@ The value is typically used to determine whether a container is ready to accept 
         V1ResourceRequirements,
         Field(
             description="""Resources represents the compute resource requests and limits that have been successfully enacted on the running container after it has been started or has been successfully resized.""",
-            exclude_if=lambda v: v == V1ResourceRequirements(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ResourceRequirements)),
     ] = V1ResourceRequirements()
@@ -123,7 +123,7 @@ The value is typically used to determine whether a container is ready to accept 
         V1ContainerState,
         Field(
             description="""State holds details about the container's current condition.""",
-            exclude_if=lambda v: v == V1ContainerState(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ContainerState)),
     ] = V1ContainerState()
@@ -141,7 +141,7 @@ The value is typically used to determine whether a container is ready to accept 
         V1ContainerUser,
         Field(
             description="""User represents user identity information initially attached to the first process of the container""",
-            exclude_if=lambda v: v == V1ContainerUser(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1ContainerUser)),
     ] = V1ContainerUser()

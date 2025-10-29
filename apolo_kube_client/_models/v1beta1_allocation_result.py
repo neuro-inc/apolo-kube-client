@@ -38,7 +38,7 @@ This is an alpha field and requires enabling the DRADeviceBindingConditions and 
         V1beta1DeviceAllocationResult,
         Field(
             description="""Devices is the result of allocating devices.""",
-            exclude_if=lambda v: v == V1beta1DeviceAllocationResult(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1beta1DeviceAllocationResult)),
     ] = V1beta1DeviceAllocationResult()

@@ -72,7 +72,7 @@ class V1RBDVolumeSource(BaseModel):
         Field(
             alias="secretRef",
             description="""secretRef is name of the authentication secret for RBDUser. If provided overrides keyring. Default is nil. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it""",
-            exclude_if=lambda v: v == V1LocalObjectReference(),
+            exclude_if=lambda v: not v.__pydantic_fields_set__,
         ),
         BeforeValidator(_default_if_none(V1LocalObjectReference)),
     ] = V1LocalObjectReference()
