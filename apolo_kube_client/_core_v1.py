@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 
 from ._attr import _Attr
 from ._base_resource import Base, ClusterScopedResource, NamespacedResource
-from ._typedefs import JsonType
 from ._utils import base64_encode, escape_json_pointer
 from aiohttp import StreamReader
 from ._models import (
@@ -33,19 +32,66 @@ from collections.abc import Collection
 from ._base_resource import (
     NestedResource,
 )
+from typing import Annotated
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
     query_path = "namespaces"
 
 
+class StatsBaseModel(BaseModel):
+    model_config = ConfigDict(
+        extra="allow",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
+    )
+
+
+class StatsSwap(StatsBaseModel):
+    swap_available_bytes: Annotated[int, Field(alias="swapAvailableBytes")] = -1
+    swap_usage_bytes: Annotated[int, Field(alias="swapUsageBytes")] = -1
+    time: datetime.datetime
+
+
+class StatsPodRef(StatsBaseModel):
+    name: str
+    namespace: str
+
+
+class StatsVolumePVC(StatsBaseModel):
+    name: str
+
+
+class StatsVolume(StatsBaseModel):
+    pvc_ref: Annotated[StatsVolumePVC | None, Field(alias="pvcRef")] = None
+    used_bytes: Annotated[int, Field(alias="usedBytes")]
+
+
+class StatsPod(StatsBaseModel):
+    pod_ref: Annotated[StatsPodRef, Field(alias="podRef")]
+    swap: StatsSwap
+    volume: list[StatsVolume] = []
+
+
+class StatsNode(StatsBaseModel):
+    swap: StatsSwap
+
+
+class StatsSummary(StatsBaseModel):
+    node: StatsNode
+    pods: list[StatsPod] = []
+
+
 class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
     query_path = "nodes"
 
-    async def get_stats_summary(self, name: str) -> JsonType:
-        return await self._core.get(
+    async def get_stats_summary(self, name: str) -> StatsSummary:
+        dct = await self._core.get(
             url=self._build_url(name) / "proxy" / "stats" / "summary",
         )
+        return StatsSummary.validate(dct)
 
 
 class PodStatus(NestedResource[V1Pod]):
