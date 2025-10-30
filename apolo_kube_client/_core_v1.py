@@ -133,7 +133,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
     ) -> V1Secret:
         secret = await self.get(name=name, namespace=self._get_ns(namespace))
         patch_json_list: list[dict[str, str | Collection[str]]] = []
-        if secret.data is None:
+        if "data" not in secret.__pydantic_fields_set__:
             patch_json_list.append({"op": "add", "path": "/data", "value": {}})
         patch_json_list.append(
             {
