@@ -1,3 +1,4 @@
+import asyncio
 from uuid import uuid4
 
 from apolo_kube_client import (
@@ -32,7 +33,14 @@ class TestPodStatus:
         await kube_client.core_v1.pod[pod_name].status.update(pod)
 
         # re-fetch
-        pod = await kube_client.core_v1.pod.get(name=pod_name)
-        assert pod.status.reason == "Custom"
+        for attempt in range(100):
+            pod = await kube_client.core_v1.pod.get(name=pod_name)
+            if pod.status.reason is None:
+                await asyncio.sleep(0.01)
+                continue
+            assert pod.status.reason == "Custom"
+            break
+        else:
+            raise AssertionError("Waiting for status update has failed")
 
         await kube_client.core_v1.pod.delete(name=pod_name)
