@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_config_map_node_config_source import V1ConfigMapNodeConfigSource
-from pydantic import BeforeValidator
 
 __all__ = ("V1NodeConfigSource",)
 
@@ -26,5 +24,4 @@ class V1NodeConfigSource(BaseModel):
             description="""ConfigMap is a reference to a Node's ConfigMap""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ConfigMapNodeConfigSource)),
     ] = None

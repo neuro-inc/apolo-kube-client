@@ -36,7 +36,6 @@ class V1ContainerState(BaseModel):
             description="""Details about a terminated container""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ContainerStateTerminated)),
     ] = None
 
     waiting: Annotated[

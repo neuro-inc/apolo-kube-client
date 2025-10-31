@@ -68,5 +68,4 @@ class V1PodDisruptionBudget(ResourceModel):
             description="""Most recently observed status of the PodDisruptionBudget.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PodDisruptionBudgetStatus)),
     ] = None

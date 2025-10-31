@@ -1,10 +1,8 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_group_subject import V1GroupSubject
 from .v1_service_account_subject import V1ServiceAccountSubject
 from .v1_user_subject import V1UserSubject
-from pydantic import BeforeValidator
 
 __all__ = ("FlowcontrolV1Subject",)
 
@@ -27,7 +25,6 @@ class FlowcontrolV1Subject(BaseModel):
             description="""`group` matches based on user group name.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GroupSubject)),
     ] = None
 
     kind: Annotated[
@@ -44,7 +41,6 @@ class FlowcontrolV1Subject(BaseModel):
             description="""`serviceAccount` matches ServiceAccounts.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ServiceAccountSubject)),
     ] = None
 
     user: Annotated[
@@ -53,5 +49,4 @@ class FlowcontrolV1Subject(BaseModel):
             description="""`user` matches based on username.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1UserSubject)),
     ] = None

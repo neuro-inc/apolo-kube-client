@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
 from pydantic import BeforeValidator
@@ -38,5 +37,4 @@ class V1NodeAffinity(BaseModel):
             description="""If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NodeSelector)),
     ] = None

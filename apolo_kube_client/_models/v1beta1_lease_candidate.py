@@ -60,5 +60,4 @@ class V1beta1LeaseCandidate(ResourceModel):
             description="""spec contains the specification of the Lease. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1beta1LeaseCandidateSpec)),
     ] = None

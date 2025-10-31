@@ -1,12 +1,10 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v2_container_resource_metric_source import V2ContainerResourceMetricSource
 from .v2_external_metric_source import V2ExternalMetricSource
 from .v2_object_metric_source import V2ObjectMetricSource
 from .v2_pods_metric_source import V2PodsMetricSource
 from .v2_resource_metric_source import V2ResourceMetricSource
-from pydantic import BeforeValidator
 
 __all__ = ("V2MetricSpec",)
 
@@ -30,7 +28,6 @@ class V2MetricSpec(BaseModel):
             description="""containerResource refers to a resource metric (such as those specified in requests and limits) known to Kubernetes describing a single container in each pod of the current scale target (e.g. CPU or memory). Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the "pods" source.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2ContainerResourceMetricSource)),
     ] = None
 
     external: Annotated[
@@ -39,7 +36,6 @@ class V2MetricSpec(BaseModel):
             description="""external refers to a global metric that is not associated with any Kubernetes object. It allows autoscaling based on information coming from components running outside of cluster (for example length of queue in cloud messaging service, or QPS from loadbalancer running outside of cluster).""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2ExternalMetricSource)),
     ] = None
 
     object: Annotated[
@@ -48,7 +44,6 @@ class V2MetricSpec(BaseModel):
             description="""object refers to a metric describing a single kubernetes object (for example, hits-per-second on an Ingress object).""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2ObjectMetricSource)),
     ] = None
 
     pods: Annotated[
@@ -57,7 +52,6 @@ class V2MetricSpec(BaseModel):
             description="""pods refers to a metric describing each pod in the current scale target (for example, transactions-processed-per-second).  The values will be averaged together before being compared to the target value.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2PodsMetricSource)),
     ] = None
 
     resource: Annotated[
@@ -66,7 +60,6 @@ class V2MetricSpec(BaseModel):
             description="""resource refers to a resource metric (such as those specified in requests and limits) known to Kubernetes describing each pod in the current scale target (e.g. CPU or memory). Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the "pods" source.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2ResourceMetricSource)),
     ] = None
 
     type: Annotated[

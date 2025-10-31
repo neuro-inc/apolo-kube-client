@@ -42,7 +42,6 @@ class V1PersistentVolumeClaimSpec(BaseModel):
             description="""dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1TypedLocalObjectReference)),
     ] = None
 
     data_source_ref: Annotated[
@@ -59,7 +58,6 @@ class V1PersistentVolumeClaimSpec(BaseModel):
 (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1TypedObjectReference)),
     ] = None
 
     resources: Annotated[

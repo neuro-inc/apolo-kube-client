@@ -1,10 +1,8 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
-from pydantic import BeforeValidator
 
 __all__ = ("V1CustomResourceDefinitionSpec",)
 
@@ -29,7 +27,6 @@ class V1CustomResourceDefinitionSpec(BaseModel):
             description="""conversion defines conversion settings for the CRD.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CustomResourceConversion)),
     ] = None
 
     group: Annotated[

@@ -57,7 +57,6 @@ class V1Volume(BaseModel):
             description="""awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AWSElasticBlockStoreVolumeSource)),
     ] = None
 
     azure_disk: Annotated[
@@ -67,7 +66,6 @@ class V1Volume(BaseModel):
             description="""azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AzureDiskVolumeSource)),
     ] = None
 
     azure_file: Annotated[
@@ -77,7 +75,6 @@ class V1Volume(BaseModel):
             description="""azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AzureFileVolumeSource)),
     ] = None
 
     cephfs: Annotated[
@@ -86,7 +83,6 @@ class V1Volume(BaseModel):
             description="""cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CephFSVolumeSource)),
     ] = None
 
     cinder: Annotated[
@@ -95,7 +91,6 @@ class V1Volume(BaseModel):
             description="""cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CinderVolumeSource)),
     ] = None
 
     config_map: Annotated[
@@ -114,7 +109,6 @@ class V1Volume(BaseModel):
             description="""csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CSIVolumeSource)),
     ] = None
 
     downward_api: Annotated[
@@ -175,7 +169,6 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
             description="""flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1FlexVolumeSource)),
     ] = None
 
     flocker: Annotated[
@@ -194,7 +187,6 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
             description="""gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GCEPersistentDiskVolumeSource)),
     ] = None
 
     git_repo: Annotated[
@@ -204,7 +196,6 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
             description="""gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GitRepoVolumeSource)),
     ] = None
 
     glusterfs: Annotated[
@@ -213,7 +204,6 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
             description="""glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GlusterfsVolumeSource)),
     ] = None
 
     host_path: Annotated[
@@ -223,7 +213,6 @@ A pod can use both types of ephemeral volumes and persistent volumes at the same
             description="""hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1HostPathVolumeSource)),
     ] = None
 
     image: Annotated[
@@ -245,7 +234,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes/#iscsi""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ISCSIVolumeSource)),
     ] = None
 
     name: Annotated[
@@ -261,7 +249,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NFSVolumeSource)),
     ] = None
 
     persistent_volume_claim: Annotated[
@@ -271,7 +258,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PersistentVolumeClaimVolumeSource)),
     ] = None
 
     photon_persistent_disk: Annotated[
@@ -281,7 +267,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PhotonPersistentDiskVolumeSource)),
     ] = None
 
     portworx_volume: Annotated[
@@ -291,7 +276,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PortworxVolumeSource)),
     ] = None
 
     projected: Annotated[
@@ -309,7 +293,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1QuobyteVolumeSource)),
     ] = None
 
     rbd: Annotated[
@@ -318,7 +301,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1RBDVolumeSource)),
     ] = None
 
     scale_io: Annotated[
@@ -328,7 +310,6 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ScaleIOVolumeSource)),
     ] = None
 
     secret: Annotated[
@@ -356,5 +337,4 @@ The volume gets re-resolved if the pod gets deleted and recreated, which means t
             description="""vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1VsphereVirtualDiskVolumeSource)),
     ] = None

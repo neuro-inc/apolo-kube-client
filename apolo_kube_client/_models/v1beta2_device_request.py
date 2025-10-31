@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1beta2_device_sub_request import V1beta2DeviceSubRequest
 from .v1beta2_exact_device_request import V1beta2ExactDeviceRequest
 from pydantic import BeforeValidator
@@ -29,7 +28,6 @@ class V1beta2DeviceRequest(BaseModel):
 One of Exactly or FirstAvailable must be set.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1beta2ExactDeviceRequest)),
     ] = None
 
     first_available: Annotated[

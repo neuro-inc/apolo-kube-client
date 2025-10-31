@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
 from .v1_pod_condition import V1PodCondition
@@ -62,7 +61,6 @@ class V1PodStatus(BaseModel):
             description="""Status of extended resource claim backed by DRA.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PodExtendedResourceClaimStatus)),
     ] = None
 
     host_ip: Annotated[

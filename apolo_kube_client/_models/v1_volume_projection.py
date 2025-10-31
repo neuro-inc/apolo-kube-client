@@ -37,7 +37,6 @@ ClusterTrustBundle objects can either be selected by name, or by the combination
 Kubelet performs aggressive normalization of the PEM contents written into the pod filesystem.  Esoteric PEM features such as inter-block comments and block headers are stripped.  Certificates are deduplicated. The ordering of certificates within the file is arbitrary, and Kubelet may change the order over time.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ClusterTrustBundleProjection)),
     ] = None
 
     config_map: Annotated[
@@ -79,7 +78,6 @@ Prefer using the credential bundle format, since your application code can read 
 The named signer controls chooses the format of the certificate it issues; consult the signer implementation's documentation to learn how to use the certificates it issues.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PodCertificateProjection)),
     ] = None
 
     secret: Annotated[
@@ -98,5 +96,4 @@ The named signer controls chooses the format of the certificate it issues; consu
             description="""serviceAccountToken is information about the serviceAccountToken data to project""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ServiceAccountTokenProjection)),
     ] = None

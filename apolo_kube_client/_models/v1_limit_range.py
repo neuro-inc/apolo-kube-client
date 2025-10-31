@@ -58,5 +58,4 @@ class V1LimitRange(ResourceModel):
             description="""Spec defines the limits enforced. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1LimitRangeSpec)),
     ] = None

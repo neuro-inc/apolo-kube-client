@@ -27,7 +27,6 @@ class V1NetworkPolicyPeer(BaseModel):
             description="""ipBlock defines policy on a particular IPBlock. If this field is set then neither of the other fields can be.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1IPBlock)),
     ] = None
 
     namespace_selector: Annotated[

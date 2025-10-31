@@ -1,9 +1,7 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
 from apolo_kube_client._typedefs import JsonType
-from pydantic import BeforeValidator
 
 __all__ = ("V1CustomResourceSubresources",)
 
@@ -28,7 +26,6 @@ class V1CustomResourceSubresources(BaseModel):
             description="""scale indicates the custom resource should serve a `/scale` subresource that returns an `autoscaling/v1` Scale object.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CustomResourceSubresourceScale)),
     ] = None
 
     status: Annotated[

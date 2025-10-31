@@ -47,7 +47,6 @@ class V1Probe(BaseModel):
             description="""GRPC specifies a GRPC HealthCheckRequest.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GRPCAction)),
     ] = None
 
     http_get: Annotated[
@@ -57,7 +56,6 @@ class V1Probe(BaseModel):
             description="""HTTPGet specifies an HTTP GET request to perform.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1HTTPGetAction)),
     ] = None
 
     initial_delay_seconds: Annotated[
@@ -94,7 +92,6 @@ class V1Probe(BaseModel):
             description="""TCPSocket specifies a connection to a TCP port.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1TCPSocketAction)),
     ] = None
 
     termination_grace_period_seconds: Annotated[

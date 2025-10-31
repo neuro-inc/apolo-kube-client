@@ -66,5 +66,4 @@ class AuthenticationV1TokenRequest(ResourceModel):
             description="""Status is filled in by the server and indicates whether the token can be authenticated.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1TokenRequestStatus)),
     ] = None
