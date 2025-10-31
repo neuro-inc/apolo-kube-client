@@ -65,7 +65,6 @@ class V1alpha1StorageVersionMigration(ResourceModel):
             description="""Specification of the migration.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1alpha1StorageVersionMigrationSpec)),
     ] = None
 
     status: Annotated[

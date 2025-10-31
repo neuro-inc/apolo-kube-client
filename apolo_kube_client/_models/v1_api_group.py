@@ -2,7 +2,6 @@ from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import KubeMeta
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 from pydantic import BeforeValidator
@@ -54,7 +53,6 @@ class V1APIGroup(BaseModel):
             description="""preferredVersion is the version preferred by the API server, which probably is the storage version.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GroupVersionForDiscovery)),
     ] = None
 
     server_address_by_client_cid_rs: Annotated[

@@ -59,7 +59,6 @@ class V1Deployment(ResourceModel):
             description="""Specification of the desired behavior of the Deployment.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1DeploymentSpec)),
     ] = None
 
     status: Annotated[

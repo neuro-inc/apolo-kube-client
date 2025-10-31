@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_webhook_conversion import V1WebhookConversion
-from pydantic import BeforeValidator
 
 __all__ = ("V1CustomResourceConversion",)
 
@@ -35,5 +33,4 @@ class V1CustomResourceConversion(BaseModel):
             description="""webhook describes how to call the conversion webhook. Required when `strategy` is set to `"Webhook"`.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1WebhookConversion)),
     ] = None

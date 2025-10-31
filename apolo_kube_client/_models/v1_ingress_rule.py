@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_http_ingress_rule_value import V1HTTPIngressRuleValue
-from pydantic import BeforeValidator
 
 __all__ = ("V1IngressRule",)
 
@@ -35,7 +33,5 @@ host can be "precise" which is a domain name without the terminating dot of a ne
     ] = None
 
     http: Annotated[
-        V1HTTPIngressRuleValue | None,
-        Field(exclude_if=lambda v: v is None),
-        BeforeValidator(_default_if_none(V1HTTPIngressRuleValue)),
+        V1HTTPIngressRuleValue | None, Field(exclude_if=lambda v: v is None)
     ] = None

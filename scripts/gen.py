@@ -310,9 +310,6 @@ def generate(
             res = replace(res, default=None)
         else:
             if res.is_model:
-                imports.add("from pydantic import BeforeValidator")
-                imports.add("from .utils import _default_if_none")
-                annotations.append(f"BeforeValidator(_default_if_none({res.type_}))")
                 if not res.self_ref:
                     if res.type_ not in has_required_fields:
                         generate(
@@ -328,6 +325,12 @@ def generate(
                             res,
                             default="None",
                             type_=res.type_ + " | None",
+                        )
+                    if res.default != "None":
+                        imports.add("from pydantic import BeforeValidator")
+                        imports.add("from .utils import _default_if_none")
+                        annotations.append(
+                            f"BeforeValidator(_default_if_none({res.type_}))"
                         )
             elif res.is_collection:
                 imports.add("from pydantic import BeforeValidator")

@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_flow_distinguisher_method import V1FlowDistinguisherMethod
 from .v1_policy_rules_with_subjects import V1PolicyRulesWithSubjects
 from .v1_priority_level_configuration_reference import (
@@ -31,7 +30,6 @@ class V1FlowSchemaSpec(BaseModel):
             description="""`distinguisherMethod` defines how to compute the flow distinguisher for requests that match this schema. `nil` specifies that the distinguisher is disabled and thus will always be the empty string.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1FlowDistinguisherMethod)),
     ] = None
 
     matching_precedence: Annotated[

@@ -39,7 +39,6 @@ class V1LifecycleHandler(BaseModel):
             description="""HTTPGet specifies an HTTP GET request to perform.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1HTTPGetAction)),
     ] = None
 
     sleep: Annotated[
@@ -48,7 +47,6 @@ class V1LifecycleHandler(BaseModel):
             description="""Sleep represents a duration that the container should sleep.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1SleepAction)),
     ] = None
 
     tcp_socket: Annotated[
@@ -58,5 +56,4 @@ class V1LifecycleHandler(BaseModel):
             description="""Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for backward compatibility. There is no validation of this field and lifecycle hooks will fail at runtime when it is specified.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1TCPSocketAction)),
     ] = None

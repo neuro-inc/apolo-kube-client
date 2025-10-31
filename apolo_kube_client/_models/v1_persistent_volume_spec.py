@@ -60,7 +60,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AWSElasticBlockStoreVolumeSource)),
     ] = None
 
     azure_disk: Annotated[
@@ -70,7 +69,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AzureDiskVolumeSource)),
     ] = None
 
     azure_file: Annotated[
@@ -80,7 +78,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AzureFilePersistentVolumeSource)),
     ] = None
 
     capacity: Annotated[
@@ -98,7 +95,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CephFSPersistentVolumeSource)),
     ] = None
 
     cinder: Annotated[
@@ -107,7 +103,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CinderPersistentVolumeSource)),
     ] = None
 
     claim_ref: Annotated[
@@ -126,7 +121,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""csi represents storage that is handled by an external CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CSIPersistentVolumeSource)),
     ] = None
 
     fc: Annotated[
@@ -145,7 +139,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1FlexPersistentVolumeSource)),
     ] = None
 
     flocker: Annotated[
@@ -164,7 +157,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GCEPersistentDiskVolumeSource)),
     ] = None
 
     glusterfs: Annotated[
@@ -173,7 +165,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""glusterfs represents a Glusterfs volume that is attached to a host and exposed to the pod. Provisioned by an admin. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1GlusterfsPersistentVolumeSource)),
     ] = None
 
     host_path: Annotated[
@@ -183,7 +174,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""hostPath represents a directory on the host. Provisioned by a developer or tester. This is useful for single-node development and testing only! On-host storage is not supported in any way and WILL NOT WORK in a multi-node cluster. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1HostPathVolumeSource)),
     ] = None
 
     iscsi: Annotated[
@@ -192,7 +182,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ISCSIPersistentVolumeSource)),
     ] = None
 
     local: Annotated[
@@ -201,7 +190,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""local represents directly-attached storage with node affinity""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1LocalVolumeSource)),
     ] = None
 
     mount_options: Annotated[
@@ -220,7 +208,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""nfs represents an NFS mount on the host. Provisioned by an admin. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NFSVolumeSource)),
     ] = None
 
     node_affinity: Annotated[
@@ -249,7 +236,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PhotonPersistentDiskVolumeSource)),
     ] = None
 
     portworx_volume: Annotated[
@@ -259,7 +245,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PortworxVolumeSource)),
     ] = None
 
     quobyte: Annotated[
@@ -268,7 +253,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1QuobyteVolumeSource)),
     ] = None
 
     rbd: Annotated[
@@ -277,7 +261,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1RBDPersistentVolumeSource)),
     ] = None
 
     scale_io: Annotated[
@@ -287,7 +270,6 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ScaleIOPersistentVolumeSource)),
     ] = None
 
     storage_class_name: Annotated[
@@ -333,5 +315,4 @@ class V1PersistentVolumeSpec(BaseModel):
             description="""vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1VsphereVirtualDiskVolumeSource)),
     ] = None

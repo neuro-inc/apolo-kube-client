@@ -31,7 +31,6 @@ class V1PodSecurityContext(BaseModel):
             description="""appArmorProfile is the AppArmor options to use by the containers in this pod. Note that this field cannot be set when spec.os.name is windows.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1AppArmorProfile)),
     ] = None
 
     fs_group: Annotated[
@@ -119,7 +118,6 @@ All Pods that use the same volume should use the same seLinuxChangePolicy, other
             description="""The seccomp options to use by the containers in this pod. Note that this field cannot be set when spec.os.name is windows.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1SeccompProfile)),
     ] = None
 
     supplemental_groups: Annotated[

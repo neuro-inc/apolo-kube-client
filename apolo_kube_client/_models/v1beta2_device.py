@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_attribute import V1beta2DeviceAttribute
 from .v1beta2_device_capacity import V1beta2DeviceCapacity
@@ -154,7 +153,6 @@ Must use exactly one term.
 Must only be set if Spec.PerDeviceNodeSelection is set to true. At most one of NodeName, NodeSelector and AllNodes can be set.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NodeSelector)),
     ] = None
 
     taints: Annotated[

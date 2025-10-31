@@ -50,5 +50,4 @@ This is an alpha field and requires enabling the DRADeviceBindingConditions and 
             description="""NodeSelector defines where the allocated resources are available. If unset, they are available everywhere.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NodeSelector)),
     ] = None

@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
 from pydantic import BeforeValidator
@@ -126,7 +125,6 @@ This is an alpha field and requires enabling RecoverVolumeExpansionFailure featu
             description="""ModifyVolumeStatus represents the status object of ControllerModifyVolume operation. When this is unset, there is no ModifyVolume operation being attempted.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ModifyVolumeStatus)),
     ] = None
 
     phase: Annotated[

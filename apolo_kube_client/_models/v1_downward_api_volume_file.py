@@ -1,9 +1,7 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_object_field_selector import V1ObjectFieldSelector
 from .v1_resource_field_selector import V1ResourceFieldSelector
-from pydantic import BeforeValidator
 
 __all__ = ("V1DownwardAPIVolumeFile",)
 
@@ -27,7 +25,6 @@ class V1DownwardAPIVolumeFile(BaseModel):
             description="""Required: Selects a field of the pod: only annotations, labels, name, namespace and uid are supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ObjectFieldSelector)),
     ] = None
 
     mode: Annotated[
@@ -52,5 +49,4 @@ class V1DownwardAPIVolumeFile(BaseModel):
             description="""Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ResourceFieldSelector)),
     ] = None

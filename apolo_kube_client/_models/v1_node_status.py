@@ -108,7 +108,6 @@ class V1NodeStatus(BaseModel):
             description="""Set of ids/uuids to uniquely identify the node. More info: https://kubernetes.io/docs/reference/node/node-status/#info""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NodeSystemInfo)),
     ] = None
 
     phase: Annotated[

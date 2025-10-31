@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1beta2_capacity_request_policy_range import V1beta2CapacityRequestPolicyRange
 from pydantic import BeforeValidator
 
@@ -45,7 +44,6 @@ If the requested amount does not fall within the defined range, the request viol
 If the request doesn't contain this capacity entry, Default value is used.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1beta2CapacityRequestPolicyRange)),
     ] = None
 
     valid_values: Annotated[

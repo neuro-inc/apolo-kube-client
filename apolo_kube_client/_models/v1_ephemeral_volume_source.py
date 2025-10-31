@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
-from pydantic import BeforeValidator
 
 __all__ = ("V1EphemeralVolumeSource",)
 
@@ -32,5 +30,4 @@ This field is read-only and no changes will be made by Kubernetes to the PVC aft
 Required, must not be nil.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PersistentVolumeClaimTemplate)),
     ] = None

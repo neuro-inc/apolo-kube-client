@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_ingress_class_parameters_reference import V1IngressClassParametersReference
-from pydantic import BeforeValidator
 
 __all__ = ("V1IngressClassSpec",)
 
@@ -33,5 +31,4 @@ class V1IngressClassSpec(BaseModel):
             description="""parameters is a link to a custom resource containing additional configuration for the controller. This is optional if the controller does not require extra parameters.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1IngressClassParametersReference)),
     ] = None

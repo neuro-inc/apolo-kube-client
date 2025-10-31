@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_opaque_device_configuration import V1OpaqueDeviceConfiguration
-from pydantic import BeforeValidator
 
 __all__ = ("V1DeviceClassConfiguration",)
 
@@ -27,5 +25,4 @@ class V1DeviceClassConfiguration(BaseModel):
             description="""Opaque provides driver-specific configuration parameters.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1OpaqueDeviceConfiguration)),
     ] = None

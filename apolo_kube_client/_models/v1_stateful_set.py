@@ -63,7 +63,6 @@ class V1StatefulSet(ResourceModel):
             description="""Spec defines the desired identities of pods in this set.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1StatefulSetSpec)),
     ] = None
 
     status: Annotated[
@@ -72,5 +71,4 @@ class V1StatefulSet(ResourceModel):
             description="""Status is the current status of Pods in this StatefulSet. This data may be out of date by some window of time.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1StatefulSetStatus)),
     ] = None

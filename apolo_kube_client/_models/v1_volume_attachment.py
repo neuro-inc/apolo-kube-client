@@ -68,5 +68,4 @@ class V1VolumeAttachment(ResourceModel):
             description="""status represents status of the VolumeAttachment request. Populated by the entity completing the attach or detach operation, i.e. the external-attacher.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1VolumeAttachmentStatus)),
     ] = None

@@ -68,5 +68,4 @@ class V1SelfSubjectRulesReview(ResourceModel):
             description="""Status is filled in by the server and indicates the set of actions a user can perform.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1SubjectRulesReviewStatus)),
     ] = None

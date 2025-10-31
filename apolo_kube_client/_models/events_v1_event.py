@@ -166,7 +166,6 @@ class EventsV1Event(ResourceModel):
             description="""series is data about the Event series this event represents or nil if it's a singleton Event.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(EventsV1EventSeries)),
     ] = None
 
     type: Annotated[

@@ -68,5 +68,4 @@ class V1SubjectAccessReview(ResourceModel):
             description="""Status is filled in by the server and indicates whether the request is allowed or not""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1SubjectAccessReviewStatus)),
     ] = None

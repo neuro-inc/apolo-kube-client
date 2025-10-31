@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .apiextensions_v1_service_reference import ApiextensionsV1ServiceReference
-from .utils import _default_if_none
-from pydantic import BeforeValidator
 
 __all__ = ("ApiextensionsV1WebhookClientConfig",)
 
@@ -38,7 +36,6 @@ class ApiextensionsV1WebhookClientConfig(BaseModel):
 If the webhook is running within the cluster, then you should use `service`.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(ApiextensionsV1ServiceReference)),
     ] = None
 
     url: Annotated[

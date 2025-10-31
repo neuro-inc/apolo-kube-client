@@ -116,7 +116,6 @@ This field is beta-level. The job controller accepts setting the field when the 
             description="""Specifies the policy of handling failed pods. In particular, it allows to specify the set of actions and conditions which need to be satisfied to take the associated action. If empty, the default behaviour applies - the counter of failed pods, represented by the jobs's .status.failed field, is incremented and it is checked against the backoffLimit. This field cannot be used in combination with restartPolicy=OnFailure.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PodFailurePolicy)),
     ] = None
 
     pod_replacement_policy: Annotated[
@@ -149,7 +148,6 @@ When using podFailurePolicy, Failed is the the only allowed value. TerminatingOr
             description="""successPolicy specifies the policy when the Job can be declared as succeeded. If empty, the default behavior applies - the Job is declared as succeeded only when the number of succeeded pods equals to the completions. When the field is specified, it must be immutable and works only for the Indexed Jobs. Once the Job meets the SuccessPolicy, the lingering pods are terminated.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1SuccessPolicy)),
     ] = None
 
     suspend: Annotated[

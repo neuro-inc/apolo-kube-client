@@ -61,7 +61,6 @@ class V1APIService(ResourceModel):
             description="""Spec contains information for locating and communicating with a server""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1APIServiceSpec)),
     ] = None
 
     status: Annotated[

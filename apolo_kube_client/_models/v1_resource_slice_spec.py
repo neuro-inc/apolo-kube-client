@@ -1,7 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 from .utils import _collection_if_none
-from .utils import _default_if_none
 from .v1_counter_set import V1CounterSet
 from .v1_device import V1Device
 from .v1_node_selector import V1NodeSelector
@@ -78,7 +77,6 @@ Must use exactly one term.
 Exactly one of NodeName, NodeSelector, AllNodes, and PerDeviceNodeSelection must be set.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1NodeSelector)),
     ] = None
 
     per_device_node_selection: Annotated[

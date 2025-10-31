@@ -63,7 +63,6 @@ class V1PriorityLevelConfiguration(ResourceModel):
             description="""`spec` is the specification of the desired behavior of a "request-priority". More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1PriorityLevelConfigurationSpec)),
     ] = None
 
     status: Annotated[

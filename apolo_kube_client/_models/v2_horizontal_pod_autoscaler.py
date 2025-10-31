@@ -61,7 +61,6 @@ class V2HorizontalPodAutoscaler(ResourceModel):
             description="""spec is the specification for the behaviour of the autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerSpec)),
     ] = None
 
     status: Annotated[
@@ -70,5 +69,4 @@ class V2HorizontalPodAutoscaler(ResourceModel):
             description="""status is the current information about the autoscaler.""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V2HorizontalPodAutoscalerStatus)),
     ] = None

@@ -59,7 +59,6 @@ class V1CronJob(ResourceModel):
             description="""Specification of the desired behavior of a cron job, including the schedule. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1CronJobSpec)),
     ] = None
 
     status: Annotated[

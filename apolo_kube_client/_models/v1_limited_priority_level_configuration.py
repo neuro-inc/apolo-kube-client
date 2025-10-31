@@ -1,8 +1,6 @@
 from typing import Annotated, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import _default_if_none
 from .v1_limit_response import V1LimitResponse
-from pydantic import BeforeValidator
 
 __all__ = ("V1LimitedPriorityLevelConfiguration",)
 
@@ -54,7 +52,6 @@ LendableCL(i) = round( NominalCL(i) * lendablePercent(i)/100.0 )""",
             description="""`limitResponse` indicates what to do with requests that can not be executed right now""",
             exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1LimitResponse)),
     ] = None
 
     nominal_concurrency_shares: Annotated[

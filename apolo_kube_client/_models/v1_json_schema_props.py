@@ -143,9 +143,7 @@ class V1JSONSchemaProps(BaseModel):
     ] = None
 
     not_: Annotated[
-        "V1JSONSchemaProps | None",
-        Field(alias="not", exclude_if=lambda v: v is None),
-        BeforeValidator(_default_if_none("V1JSONSchemaProps | None")),
+        "V1JSONSchemaProps | None", Field(alias="not", exclude_if=lambda v: v is None)
     ] = None
 
     nullable: Annotated[bool | None, Field(exclude_if=lambda v: v is None)] = None
