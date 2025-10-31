@@ -175,14 +175,22 @@ class KubeClientSelector:
         async with self._locks[cache_key]:
             cached = self._vcluster_cache.get(cache_key)
             if cached is not None:
-                logger.info(f"{self}: vcluster cache hit: lease and return")
+                logger.info(
+                    f"{self}: vcluster cache hit: lease and return. "
+                    f"namespace={namespace}; "
+                    f"org_name={org_name}; project_name={project_name}"
+                )
                 cached.leases += 1
                 entry = cached
                 client = cached.client
                 namespace = "default"
                 is_vcluster = True
             elif self._is_host_client(cache_key):
-                logger.info(f"{self}: host client cache hit: return host client")
+                logger.info(
+                    f"{self}: host client cache hit: return host client. "
+                    f"namespace={namespace}; "
+                    f"org_name={org_name}; project_name={project_name}"
+                )
                 client = self._host_client
             else:
                 # Try to fetch secret
@@ -194,7 +202,9 @@ class KubeClientSelector:
                 if secret:
                     logger.info(
                         f"{self}: secret found: "
-                        f"build vcluster client, cache, lease, return"
+                        f"build vcluster client, cache, lease, return."
+                        f"secret_name={secret_name}; namespace={namespace}; "
+                        f"org_name={org_name}; project_name={project_name}"
                     )
                     client = await self._vcluster_client_factory.from_secret(secret)
                     entry = VclusterEntry(client=client, leases=1)
@@ -202,7 +212,11 @@ class KubeClientSelector:
                     namespace = "default"
                     is_vcluster = True
                 else:
-                    logger.info(f"{self}: secret not found: return shared host client")
+                    logger.info(
+                        f"{self}: secret not found: return shared host client"
+                        f"secret_name={secret_name}; namespace={namespace}; "
+                        f"org_name={org_name}; project_name={project_name}"
+                    )
                     self._host_cache[cache_key] = True
                     client = self._host_client
                     # ensure namespace is in place
