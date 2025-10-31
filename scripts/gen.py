@@ -255,6 +255,9 @@ def generate(
     body: list[str] = []
     ref, definition = find_def(swagger, name)
 
+    default_kind: str | None = None
+    default_api_version: str | None = None
+
     if "x-kubernetes-group-version-kind" in definition:
         meta: list[str] = []
         for group_version_kind in sorted(
@@ -269,6 +272,15 @@ def generate(
             f"    kubernetes_meta: ClassVar[Final[tuple[KubeMeta, ...]]] = ({meta_str})\n"
         )
         imports.add("from .utils import KubeMeta")
+
+        if len(meta) == 1:
+            default_kind = group_version_kind["kind"]
+            if group_version_kind["group"]:
+                default_api_version = (
+                    group_version_kind["group"] + "/" + group_version_kind["version"]
+                )
+            else:
+                default_api_version = group_version_kind["version"]
 
     required: set[str] = set(definition.get("required", []))
 
@@ -352,6 +364,14 @@ def generate(
                 field_args["exclude_if"] = "lambda v: not v.__pydantic_fields_set__"
             else:
                 field_args["exclude_if"] = f"lambda v: v=={res.default}"
+        if real_attr == "kind":
+            if default_kind:
+                field_args.pop("exclude_if", None)
+                res = replace(res, type_="str", default=f'"{default_kind}"')
+        elif real_attr == "api_version":
+            if default_api_version:
+                field_args.pop("exclude_if", None)
+                res = replace(res, type_="str", default=f'"{default_api_version}"')
 
         field_str = ", ".join(f"{k}={v}" for k, v in field_args.items())
         annotations.insert(0, f"Field({field_str})")
