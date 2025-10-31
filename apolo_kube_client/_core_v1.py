@@ -71,12 +71,12 @@ class StatsVolume(StatsBaseModel):
 
 class StatsPod(StatsBaseModel):
     pod_ref: Annotated[StatsPodRef, Field(alias="podRef")]
-    swap: StatsSwap
+    swap: StatsSwap | None = None
     volume: list[StatsVolume] = []
 
 
 class StatsNode(StatsBaseModel):
-    swap: StatsSwap
+    swap: StatsSwap | None = None
 
 
 class StatsSummary(StatsBaseModel):
