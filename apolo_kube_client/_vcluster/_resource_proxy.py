@@ -110,6 +110,12 @@ class NamespacedResourceProxy[
         )
         return await origin.create_or_update(model=model, namespace=self._namespace)
 
+    async def update(self, model: ModelT) -> ModelT:
+        origin = cast(
+            NamespacedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.update(model=model, namespace=self._namespace)
+
     async def patch_json(
         self,
         name: str,
