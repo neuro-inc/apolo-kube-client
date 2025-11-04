@@ -146,6 +146,7 @@ class KubeClientSelector:
         *,
         org_name: str,
         project_name: str,
+        ensure_namespace: bool = True,
     ) -> AsyncIterator[KubeClientProxy]:
         """
         Client acquisition entry-point.
@@ -219,8 +220,8 @@ class KubeClientSelector:
                     )
                     self._host_cache[cache_key] = True
                     client = self._host_client
-                    # ensure namespace is in place
-                    await create_namespace(client, org_name, project_name)
+                    if ensure_namespace:
+                        await create_namespace(client, org_name, project_name)
 
         try:
             yield KubeClientProxy(client, namespace, is_vcluster=is_vcluster)
