@@ -10,30 +10,12 @@ from typing import Self
 import aiohttp
 from aiohttp import ClientSession
 from yarl import URL, Query
-
 from ._errors import (
-    KubeClientException,
-    KubeClientUnauthorized,
-    ResourceBadRequest,
-    ResourceExists,
-    ResourceGone,
-    ResourceInvalid,
-    ResourceNotFound,
+    _raise_for_text,
 )
 from ._typedefs import JsonType
 
 logger = logging.getLogger(__name__)
-
-
-ERROR_CODES_MAPPING: dict[int, type[Exception]] = {
-    400: ResourceBadRequest,
-    401: KubeClientUnauthorized,
-    403: KubeClientException,
-    404: ResourceNotFound,
-    409: ResourceExists,
-    410: ResourceGone,
-    422: ResourceInvalid,
-}
 
 
 class KubeTransport:
@@ -87,8 +69,7 @@ class KubeTransport:
     async def _raise_for_status(response: aiohttp.ClientResponse) -> None:
         if response.status >= 400:
             payload = await response.text()
-            exc_cls = ERROR_CODES_MAPPING.get(response.status, KubeClientException)
-            raise exc_cls(payload)
+            _raise_for_text(response.status, payload)
 
     @asynccontextmanager
     async def request(

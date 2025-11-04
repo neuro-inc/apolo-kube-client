@@ -1,18 +1,14 @@
 import json
 import logging
-from collections.abc import AsyncGenerator, Callable, Mapping
+from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, aclosing
 from dataclasses import dataclass
 from json import JSONDecodeError
-from typing import TYPE_CHECKING, Any, Literal, NoReturn, Protocol
+from typing import TYPE_CHECKING, Literal, NoReturn, Protocol
 
 import aiohttp
 
-from ._errors import (
-    KubeClientException,
-    ResourceGone,
-)
-from ._transport import ERROR_CODES_MAPPING
+from ._errors import ResourceGone, _raise_for_text, _raise_for_obj
 from ._typedefs import JsonType
 
 if TYPE_CHECKING:
@@ -92,7 +88,7 @@ class Watch[ModelT: ResourceModel]:
 
                 match event["type"]:
                     case "ERROR":
-                        self._raise_for_error_event(event["object"])
+                        _raise_for_obj(event["object"])
                     case "BOOKMARK":
                         yield BookmarkEvent(
                             resource_version=event["object"]["metadata"][
@@ -113,9 +109,4 @@ class Watch[ModelT: ResourceModel]:
         if response.ok:
             return None
         payload = await response.text()
-        exc_cls = ERROR_CODES_MAPPING.get(response.status, KubeClientException)
-        raise exc_cls(payload)
-
-    def _raise_for_error_event(self, payload: Mapping[str, Any]) -> NoReturn:
-        exc_cls = ERROR_CODES_MAPPING.get(payload["code"], KubeClientException)
-        raise exc_cls(payload)
+        _raise_for_text(response.status, payload)
