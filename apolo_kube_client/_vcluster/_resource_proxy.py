@@ -137,8 +137,11 @@ class NestedResourceProxy[
         self,
         origin: OriginT,
         namespace: str,
+        *,
+        is_vcluster: bool,
         resource_id: str | None = None,
     ):
+        self.is_vcluster = is_vcluster
         self._origin = origin
         self._namespace = namespace  # 'default' for vcluster projects
         self._resource_id = resource_id
