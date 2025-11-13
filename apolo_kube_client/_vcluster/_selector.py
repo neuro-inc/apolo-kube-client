@@ -140,6 +140,10 @@ class KubeClientSelector:
         """Return a kube client instance connected to the host kubernetes"""
         return self._host_client
 
+    @property
+    def transport(self) -> KubeTransport:
+        return self._transport
+
     @asynccontextmanager
     async def get_client(
         self,

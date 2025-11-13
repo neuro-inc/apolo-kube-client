@@ -1,10 +1,10 @@
 from typing import Protocol, Self, overload
 
-from ._core import _KubeCore
+from ._core import KubeCore
 
 
 class _HasCore(Protocol):
-    _core: _KubeCore
+    _core: KubeCore
 
 
 class _Attr[T]:

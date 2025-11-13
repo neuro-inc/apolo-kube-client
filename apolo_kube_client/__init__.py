@@ -1,5 +1,6 @@
 from ._client import KubeClient
 from ._config import KubeClientAuthType, KubeConfig
+from ._core import KubeCore
 from ._crd_models import (
     V1DiskNamingCRD,
     V1DiskNamingCRDList,
@@ -773,6 +774,7 @@ __all__ = [
     "KubeClientSelector",
     "KubeClientUnauthorized",
     "KubeConfig",
+    "KubeCore",
     "KubeTransport",
     "ListModel",
     "RbacV1Subject",

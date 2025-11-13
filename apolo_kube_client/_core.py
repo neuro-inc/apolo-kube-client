@@ -20,7 +20,7 @@ from ._typedefs import JsonType
 logger = logging.getLogger(__name__)
 
 
-class _KubeCore:
+class KubeCore:
     """
     A kubernetes core API client wrapper.
     Contains generic logic for interacting with the concrete kube cluster,
