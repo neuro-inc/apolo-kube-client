@@ -7,7 +7,7 @@ from yarl import URL
 
 from apolo_kube_client import KubeClient, KubeClientAuthType, KubeConfig
 from apolo_kube_client._batch_v1 import BatchV1Api, Job
-from apolo_kube_client._core import _KubeCore
+from apolo_kube_client._core import KubeCore
 from apolo_kube_client._core_v1 import CoreV1Api, Event, Namespace
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
 
@@ -51,7 +51,7 @@ async def kube_client(kube_config_cert_auth: KubeConfig) -> AsyncIterator[KubeCl
 
 async def test_create_kube_client(kube_client: KubeClient) -> None:
     assert isinstance(kube_client, KubeClient)
-    assert isinstance(kube_client._core, _KubeCore)
+    assert isinstance(kube_client._core, KubeCore)
     assert kube_client._core.base_url == URL("https://k8s-test.com")
     assert kube_client._core._auth_type == KubeClientAuthType.CERTIFICATE
     assert kube_client._core.namespace == "default"
@@ -71,7 +71,7 @@ async def test_create_kube_client_token_auth(
 ) -> None:
     async with KubeClient(config=kube_config_token_auth) as kube_client:
         assert isinstance(kube_client, KubeClient)
-        assert isinstance(kube_client._core, _KubeCore)
+        assert isinstance(kube_client._core, KubeCore)
         assert kube_client._core.base_url == URL("https://k8s-test.com")
         assert kube_client._core._auth_type == KubeClientAuthType.TOKEN
         assert kube_client._core._token == "token"

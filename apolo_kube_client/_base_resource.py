@@ -7,7 +7,7 @@ from typing import Self
 import aiohttp
 from yarl import URL
 
-from ._core import _KubeCore
+from ._core import KubeCore
 from ._errors import ResourceNotFound
 from ._typedefs import JsonType
 from ._watch import Watch
@@ -15,7 +15,7 @@ from ._models import ResourceModel, ListModel
 
 
 class Base:
-    def __init__(self, core: _KubeCore) -> None:
+    def __init__(self, core: KubeCore) -> None:
         self._core = core
 
 
@@ -63,14 +63,14 @@ class BaseResource[
 
     def __init__(
         self,
-        core: _KubeCore,
+        core: KubeCore,
         group_api_query_path: str,
         resource_id: str | None = None,
     ):
         if not self.query_path:
             raise ValueError("resource api query_path must be set")
 
-        self._core: _KubeCore = core
+        self._core: KubeCore = core
         self._group_api_query_path: str = group_api_query_path
         self._resource_id = resource_id
 

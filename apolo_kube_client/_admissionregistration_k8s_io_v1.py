@@ -1,6 +1,6 @@
 from ._attr import _Attr
 from ._base_resource import ClusterScopedResource
-from ._core import _KubeCore
+from ._core import KubeCore
 from ._models import (
     V1MutatingWebhookConfiguration,
     V1MutatingWebhookConfigurationList,
@@ -29,5 +29,5 @@ class AdmissionRegistrationK8SioV1Api:
         MutatingWebhookConfiguration, group_api_query_path
     )
 
-    def __init__(self, core: _KubeCore) -> None:
+    def __init__(self, core: KubeCore) -> None:
         self._core = core

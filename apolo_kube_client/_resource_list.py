@@ -1,4 +1,4 @@
-from ._core import _KubeCore
+from ._core import KubeCore
 from ._models import V1APIResource, V1APIResourceList
 
 
@@ -7,7 +7,7 @@ class ResourceListApi:
     Resource List API wrapper for Kubernetes.
     """
 
-    def __init__(self, core: _KubeCore) -> None:
+    def __init__(self, core: KubeCore) -> None:
         self._core = core
 
     async def get_list(self, resource_list_path: str) -> V1APIResourceList:

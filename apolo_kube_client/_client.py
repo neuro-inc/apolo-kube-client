@@ -8,7 +8,7 @@ from ._apps_v1 import AppsV1Api
 from ._attr import _Attr
 from ._batch_v1 import BatchV1Api
 from ._config import KubeConfig
-from ._core import _KubeCore
+from ._core import KubeCore
 from ._core_v1 import CoreV1Api
 from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
@@ -47,7 +47,7 @@ class KubeClient:
                 read_timeout_s=config.client_read_timeout_s,
             )
         self._transport = transport
-        self._core = _KubeCore(config, transport=transport)
+        self._core = KubeCore(config, transport=transport)
 
     async def __aenter__(self) -> Self:
         if self._owns_transport:
@@ -73,3 +73,7 @@ class KubeClient:
         Returns the current namespace of the Kubernetes client.
         """
         return self._core.resolve_namespace()
+
+    @property
+    def core(self) -> KubeCore:
+        return self._core
