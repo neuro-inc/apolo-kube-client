@@ -34,6 +34,7 @@ from ._base_resource import (
 )
 from typing import Annotated
 from pydantic import BaseModel, Field, ConfigDict
+from ._apolo_waiters import ApoloPodWaiter
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
@@ -163,6 +164,7 @@ class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     query_path = "pods"
     status = _Attr(PodStatus)
     log = _Attr(PodLog)
+    apolo_waiter = _Attr(ApoloPodWaiter)
 
 
 class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):

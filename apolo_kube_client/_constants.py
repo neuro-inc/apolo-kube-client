@@ -1,0 +1,2 @@
+DEFAULT_TIMEOUT = 10.0 * 60  # 10 minutes
+DEFAULT_WAIT_INTERVAL = 1.0  # 1 second
