@@ -33,6 +33,7 @@ from .._models import (
 )
 
 from ._resource_proxy import NestedResourceProxy
+from .._apolo_waiters import ApoloPodWaiter
 
 
 class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
@@ -79,6 +80,76 @@ class PodLogProxy(NestedResourceProxy[V1Pod, PodLog]):
             yield stream
 
 
+class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
+    async def wait_running(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+    ) -> V1Pod:
+        return await self._origin.wait_running(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+        )
+
+    async def wait_finished(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+    ) -> V1Pod:
+        return await self._origin.wait_finished(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+        )
+
+    async def wait_deleted(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+    ) -> None:
+        return await self._origin.wait_deleted(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+        )
+
+    async def wait_terminated(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+        allow_pod_not_exists: bool = False,
+    ) -> V1Pod | None:
+        return await self._origin.wait_terminated(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+            allow_pod_not_exists=allow_pod_not_exists,
+        )
+
+    async def wait_not_waiting(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+    ) -> V1Pod:
+        return await self._origin.wait_not_waiting(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+        )
+
+    async def wait_scheduled(
+        self,
+        *,
+        timeout_s: float = 10.0 * 60,
+        interval_s: float = 1.0,
+    ) -> V1Pod:
+        return await self._origin.wait_scheduled(
+            timeout_s=timeout_s,
+            interval_s=interval_s,
+        )
+
+
 class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
     @attr(PodStatusProxy)
     def status(self) -> PodStatus:
@@ -87,6 +158,10 @@ class PodProxy(NamespacedResourceProxy[V1Pod, V1PodList, V1Pod, Pod]):
     @attr(PodLogProxy)
     def log(self) -> PodLog:
         return self._origin.log
+
+    @attr(ApoloPodWaiterProxy)
+    def apolo_waiter(self) -> ApoloPodWaiter:
+        return self._origin.apolo_waiter
 
 
 class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secret]):
