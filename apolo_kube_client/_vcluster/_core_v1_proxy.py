@@ -3,6 +3,12 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from aiohttp import StreamReader
+
+from ._attr_proxy import attr
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy
+from ._resource_proxy import NestedResourceProxy
+from .._apolo_waiters import ApoloPodWaiter
+from .._constants import DEFAULT_TIMEOUT, DEFAULT_WAIT_INTERVAL
 from .._core_v1 import (
     CoreV1Api,
     Endpoint,
@@ -14,8 +20,6 @@ from .._core_v1 import (
     Secret,
     Service,
 )
-from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 from .._models import (
     CoreV1Event,
     CoreV1EventList,
@@ -31,9 +35,6 @@ from .._models import (
     V1ServiceList,
     V1Status,
 )
-
-from ._resource_proxy import NestedResourceProxy
-from .._apolo_waiters import ApoloPodWaiter
 
 
 class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
@@ -84,8 +85,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_running(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         return await self._origin.wait_running(
             timeout_s=timeout_s,
@@ -95,8 +96,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_finished(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         return await self._origin.wait_finished(
             timeout_s=timeout_s,
@@ -106,8 +107,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_deleted(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> None:
         return await self._origin.wait_deleted(
             timeout_s=timeout_s,
@@ -117,8 +118,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_terminated(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
         allow_pod_not_exists: bool = False,
     ) -> V1Pod | None:
         return await self._origin.wait_terminated(
@@ -130,8 +131,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_not_waiting(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         return await self._origin.wait_not_waiting(
             timeout_s=timeout_s,
@@ -141,8 +142,8 @@ class ApoloPodWaiterProxy(NestedResourceProxy[V1Pod, ApoloPodWaiter]):
     async def wait_scheduled(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         return await self._origin.wait_scheduled(
             timeout_s=timeout_s,

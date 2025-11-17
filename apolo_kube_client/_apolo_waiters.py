@@ -3,6 +3,7 @@ from enum import StrEnum
 from typing import Awaitable, Callable
 
 from ._base_resource import NestedResource
+from ._constants import DEFAULT_TIMEOUT, DEFAULT_WAIT_INTERVAL
 from ._errors import KubeClientException, ResourceGone, ResourceNotFound
 from ._models import V1Pod
 
@@ -26,8 +27,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_running(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         async def _is_running(pod: V1Pod) -> bool:
             return (pod.status.phase or "") == _PodStatus.RUNNING
@@ -41,8 +42,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_finished(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         async def _is_finished(pod: V1Pod) -> bool:
             return (pod.status.phase or "") in {_PodStatus.SUCCEEDED, _PodStatus.FAILED}
@@ -56,8 +57,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_deleted(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> None:
         async def _on_result(_: V1Pod) -> bool:
             return False
@@ -77,8 +78,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_terminated(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
         allow_pod_not_exists: bool = False,
     ) -> V1Pod | None:
         async def _any_terminated(pod: V1Pod) -> bool:
@@ -109,8 +110,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_not_waiting(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         async def _all_not_waiting(pod: V1Pod) -> bool:
             for s in pod.status.container_statuses:
@@ -130,8 +131,8 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     async def wait_scheduled(
         self,
         *,
-        timeout_s: float = 10.0 * 60,
-        interval_s: float = 1.0,
+        timeout_s: float = DEFAULT_TIMEOUT,
+        interval_s: float = DEFAULT_WAIT_INTERVAL,
     ) -> V1Pod:
         async def _is_scheduled(pod: V1Pod) -> bool:
             for cond in pod.status.conditions:
