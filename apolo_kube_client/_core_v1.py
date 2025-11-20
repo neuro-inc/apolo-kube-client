@@ -9,6 +9,8 @@ from aiohttp import StreamReader
 from ._models import (
     CoreV1Event,
     CoreV1EventList,
+    V1ConfigMap,
+    V1ConfigMapList,
     V1Endpoints,
     V1EndpointsList,
     V1Namespace,
@@ -206,6 +208,46 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         )
 
 
+class ConfigMap(
+    NamespacedResource[V1ConfigMap, V1ConfigMapList, V1Status],
+):
+    query_path = "configmaps"
+
+    async def add_key(
+        self,
+        name: str,
+        key: str,
+        value: str,
+        *,
+        namespace: str,
+    ) -> V1ConfigMap:
+        config_map = await self.get(name=name, namespace=self._get_ns(namespace))
+        patch_json_list: list[dict[str, str | Collection[str]]] = []
+        if "data" not in config_map.__pydantic_fields_set__:
+            patch_json_list.append({"op": "add", "path": "/data", "value": {}})
+        patch_json_list.append(
+            {
+                "op": "add",
+                "path": f"/data/{escape_json_pointer(key)}",
+                "value": value,
+            }
+        )
+        return await self.patch_json(
+            name=name,
+            patch_json_list=patch_json_list,
+            namespace=self._get_ns(namespace),
+        )
+
+    async def delete_key(self, name: str, key: str, *, namespace: str) -> V1ConfigMap:
+        return await self.patch_json(
+            name=name,
+            patch_json_list=[
+                {"op": "remove", "path": f"/data/{escape_json_pointer(key)}"}
+            ],
+            namespace=self._get_ns(namespace),
+        )
+
+
 class PersistentVolume(
     ClusterScopedResource[
         V1PersistentVolume, V1PersistentVolumeList, V1PersistentVolume
@@ -247,6 +289,7 @@ class CoreV1Api(Base):
     # namespaced resources
     pod = _Attr(Pod, group_api_query_path)
     secret = _Attr(Secret, group_api_query_path)
+    config_map = _Attr(ConfigMap, group_api_query_path)
     persistent_volume_claim = _Attr(PersistentVolumeClaim, group_api_query_path)
     service = _Attr(Service, group_api_query_path)
     endpoint = _Attr(Endpoint, group_api_query_path)

@@ -12,8 +12,6 @@ from apolo_kube_client import (
 class TestJob:
     async def test_crud(self, kube_client: KubeClient) -> None:
         job = V1Job(
-            api_version="batch/v1",
-            kind="Job",
             metadata=V1ObjectMeta(name="test-hello-world-job"),
             spec=V1JobSpec(
                 template=V1PodTemplateSpec(

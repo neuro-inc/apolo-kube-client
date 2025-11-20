@@ -10,8 +10,6 @@ from apolo_kube_client import (
 class TestPersistentVolumeClaim:
     async def test_crud(self, kube_client: KubeClient) -> None:
         pvc = V1PersistentVolumeClaim(
-            api_version="v1",
-            kind="PersistentVolumeClaim",
             metadata=V1ObjectMeta(name="pvc-test", namespace="default"),
             spec=V1PersistentVolumeClaimSpec(
                 access_modes=["ReadWriteOnce"],

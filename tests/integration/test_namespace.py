@@ -16,8 +16,6 @@ def namespace_model_factory() -> Callable[[str, dict[str, str] | None], V1Namesp
     ) -> V1Namespace:
         labels = labels or {}
         return V1Namespace(
-            api_version="v1",
-            kind="Namespace",
             metadata=V1ObjectMeta(name=name, labels=labels),
         )
 

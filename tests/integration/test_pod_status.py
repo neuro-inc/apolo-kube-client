@@ -17,8 +17,6 @@ class TestPodStatus:
         pod_name = uuid4().hex
 
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],

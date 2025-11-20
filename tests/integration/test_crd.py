@@ -19,8 +19,6 @@ from apolo_kube_client import (
 @pytest.fixture
 def crd() -> V1CustomResourceDefinition:
     return V1CustomResourceDefinition(
-        api_version="apiextensions.k8s.io/v1",
-        kind="CustomResourceDefinition",
         metadata=V1ObjectMeta(name="disknamings.neuromation.io"),
         spec=V1CustomResourceDefinitionSpec(
             group="neuromation.io",

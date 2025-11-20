@@ -11,6 +11,7 @@ from .._apolo_waiters import ApoloPodWaiter
 from .._constants import DEFAULT_TIMEOUT, DEFAULT_WAIT_INTERVAL
 from .._core_v1 import (
     CoreV1Api,
+    ConfigMap,
     Endpoint,
     Event,
     PersistentVolumeClaim,
@@ -23,6 +24,8 @@ from .._core_v1 import (
 from .._models import (
     CoreV1Event,
     CoreV1EventList,
+    V1ConfigMap,
+    V1ConfigMapList,
     V1Endpoints,
     V1EndpointsList,
     V1PersistentVolumeClaim,
@@ -186,6 +189,30 @@ class SecretProxy(NamespacedResourceProxy[V1Secret, V1SecretList, V1Status, Secr
         )
 
 
+class ConfigMapProxy(
+    NamespacedResourceProxy[V1ConfigMap, V1ConfigMapList, V1Status, ConfigMap]
+):
+    async def add_key(
+        self,
+        name: str,
+        key: str,
+        value: str,
+    ) -> V1ConfigMap:
+        return await self._origin.add_key(
+            name=name,
+            key=key,
+            value=value,
+            namespace=self._namespace,
+        )
+
+    async def delete_key(self, name: str, key: str) -> V1ConfigMap:
+        return await self._origin.delete_key(
+            name=name,
+            key=key,
+            namespace=self._namespace,
+        )
+
+
 class PersistentVolumeClaimProxy(
     NamespacedResourceProxy[
         V1PersistentVolumeClaim,
@@ -244,6 +271,10 @@ class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     @attr(SecretProxy)
     def secret(self) -> Secret:
         return self._origin.secret
+
+    @attr(ConfigMapProxy)
+    def config_map(self) -> ConfigMap:
+        return self._origin.config_map
 
     @attr(PersistentVolumeClaimProxy)
     def persistent_volume_claim(self) -> PersistentVolumeClaim:

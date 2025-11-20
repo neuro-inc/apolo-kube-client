@@ -13,8 +13,6 @@ from apolo_kube_client import (
 class TestStatefulSet:
     async def test_crud(self, kube_client: KubeClient) -> None:
         statefulset = V1StatefulSet(
-            api_version="apps/v1",
-            kind="StatefulSet",
             metadata=V1ObjectMeta(
                 name="hello-world-statefulset", labels={"app": "hello-world"}
             ),

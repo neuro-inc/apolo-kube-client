@@ -16,8 +16,6 @@ def secret_model_factory() -> Callable[[str, dict[str, str] | None], V1Secret]:
     def _create_secret_model(name: str, data: dict[str, str] | None = None) -> V1Secret:
         data = data or {}
         return V1Secret(
-            api_version="v1",
-            kind="Secret",
             metadata=V1ObjectMeta(name=name, namespace="default"),
             data={key: base64_encode(value) for key, value in data.items()},
             type="Opaque",

@@ -18,8 +18,6 @@ class TestEvent:
 
         # create a pod
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name="test-pod"),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
