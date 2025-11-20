@@ -10,8 +10,6 @@ from apolo_kube_client import (
 class TestPod:
     async def test_crud(self, kube_client: KubeClient) -> None:
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(
                 name="test-hello-world-pod", labels={"app": "hello-world"}
             ),

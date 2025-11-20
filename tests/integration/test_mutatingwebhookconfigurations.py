@@ -29,8 +29,6 @@ class TestMutatingWebhookConfigurations:
             ca_bundle=base64_encode(ca_cert),
         )
         mvc = V1MutatingWebhookConfiguration(
-            api_version="admissionregistration.k8s.io/v1",
-            kind="MutatingWebhookConfiguration",
             metadata=V1ObjectMeta(name="test-mvc"),
             webhooks=[
                 V1MutatingWebhook(

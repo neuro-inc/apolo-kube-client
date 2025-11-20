@@ -24,8 +24,6 @@ from apolo_kube_client import (
 @pytest.fixture
 async def install_disk_naming_crd(kube_client: KubeClient) -> AsyncGenerator[None]:
     dn_crd = V1CustomResourceDefinition(
-        api_version="apiextensions.k8s.io/v1",
-        kind="CustomResourceDefinition",
         metadata=V1ObjectMeta(name="disknamings.neuromation.io"),
         spec=V1CustomResourceDefinitionSpec(
             group="neuromation.io",

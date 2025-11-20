@@ -5,8 +5,6 @@ from apolo_kube_client import V1ObjectMeta, V1StorageClass
 class TestStorageClass:
     async def test_crud(self, kube_client: KubeClient) -> None:
         storage_class = V1StorageClass(
-            api_version="storage.k8s.io/v1",
-            kind="StorageClass",
             metadata=V1ObjectMeta(name="test-storage-class"),
             provisioner="kubernetes.io/no-provisioner",
             reclaim_policy="Delete",

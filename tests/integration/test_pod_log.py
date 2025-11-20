@@ -31,8 +31,6 @@ class TestPodLog:
         pod_name = uuid4().hex
 
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -50,8 +48,6 @@ class TestPodLog:
     async def test_read_follow(self, kube_client: KubeClient) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -68,8 +64,6 @@ class TestPodLog:
     async def test_read_timestamps(self, kube_client: KubeClient) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -90,8 +84,6 @@ class TestPodLog:
     async def test_read_since_time(self, kube_client: KubeClient) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -117,8 +109,6 @@ class TestPodLog:
     ) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[
@@ -146,8 +136,6 @@ class TestPodLog:
     ) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -171,8 +159,6 @@ class TestPodLog:
         pod_name = uuid4().hex
 
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -193,8 +179,6 @@ class TestPodLog:
         pod_name = uuid4().hex
         # Use busybox to emit multiple lines over time
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[
@@ -240,8 +224,6 @@ class TestPodLog:
     async def test_stream_timestamps(self, kube_client: KubeClient) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],
@@ -268,8 +250,6 @@ class TestPodLog:
     ) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[
@@ -304,8 +284,6 @@ class TestPodLog:
     ) -> None:
         pod_name = uuid4().hex
         pod = V1Pod(
-            api_version="v1",
-            kind="Pod",
             metadata=V1ObjectMeta(name=pod_name),
             spec=V1PodSpec(
                 containers=[V1Container(name="hello-world", image="hello-world")],

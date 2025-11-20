@@ -13,8 +13,6 @@ from apolo_kube_client import (
 class TestNetworkPolicy:
     async def test_crud(self, kube_client: KubeClient) -> None:
         np = V1NetworkPolicy(
-            api_version="networking.k8s.io/v1",
-            kind="NetworkPolicy",
             metadata=V1ObjectMeta(name="allow-all-ingress"),
             spec=V1NetworkPolicySpec(
                 pod_selector=V1LabelSelector(match_labels={}),
