@@ -34,9 +34,8 @@ function k8s::start {
 
     # ----- Start Minikube -------------------------------------------------------
     echo "• Starting Minikube (driver=docker) …"
-    sudo -E minikube start \
-        --driver=docker \
-        --cni=calico \
+    minikube start \
+	--profile=minikube \
         --wait=all \
         --wait-timeout=5m
 
