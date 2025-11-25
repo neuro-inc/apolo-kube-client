@@ -46,6 +46,10 @@ class Watch[ModelT: ResourceModel]:
         self._get_response = get_response
         self._deserialize = deserialize
 
+    @property
+    def resource_version(self) -> str | None:
+        return self._resource_version
+
     async def stream(self) -> AsyncGenerator[WatchEvent[ModelT]]:
         # Initially True to avoid sending two requests at the start
         # if resource_version has already expired.
