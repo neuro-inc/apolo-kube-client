@@ -5,7 +5,7 @@ set -o verbose
 # https://github.com/kubernetes/minikube#linux-continuous-integration-without-vm-support
 
 function k8s::install_minikube {
-    local minikube_version="v1.25.2"
+    local minikube_version="v1.37.0"
     sudo apt-get update
     sudo apt-get install -y conntrack
     curl -Lo minikube https://storage.googleapis.com/minikube/releases/${minikube_version}/minikube-linux-amd64
@@ -32,30 +32,10 @@ function k8s::start {
     export MINIKUBE_HOME="$HOME"
     export CHANGE_MINIKUBE_NONE_USER=true     # allow non-root kubectl usage
 
-    # ----- Kernel prerequisites for the none driver ----------------------------
-    echo "• Enabling br_netfilter and required sysctl flags …"
-    sudo modprobe br_netfilter
-    sudo sysctl -w \
-        net.bridge.bridge-nf-call-iptables=1 \
-        net.bridge.bridge-nf-call-ip6tables=1 \
-        net.ipv4.ip_forward=1
-
-    # ----- Disable swap (kubeadm requirement) -----------------------------------
-    echo "• Disabling swap …"
-    sudo swapoff -a
-
-    # ----- Optional utilities required by kubeadm pre-flight --------------------
-    if ! command -v socat >/dev/null 2>&1; then
-        echo "• Installing socat (kubeadm pre-flight dependency) …"
-        sudo apt-get update -qq
-        sudo apt-get install -y -qq socat
-    fi
-
     # ----- Start Minikube -------------------------------------------------------
-    echo "• Starting Minikube (driver=none) …"
-    sudo -E minikube start \
-        --driver=none \
-        --cni=calico \
+    echo "• Starting Minikube (driver=docker) …"
+    minikube start \
+	--profile=minikube \
         --wait=all \
         --wait-timeout=5m
 
