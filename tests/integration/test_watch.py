@@ -30,6 +30,7 @@ class TestWatch:
                     node_event.type == "MODIFIED"
                     and node_event.object.metadata.labels["test"] == "test"
                 ):
+                    await asyncio.sleep(0.01)
                     break
 
         task = asyncio.create_task(_watch())
@@ -124,6 +125,7 @@ class TestWatch:
                     node_event.type == "MODIFIED"
                     and node_event.object.metadata.labels["test"] == "test"
                 ):
+                    await asyncio.sleep(0.01)
                     break
 
         task = asyncio.create_task(_watch())
