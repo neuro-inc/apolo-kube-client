@@ -120,13 +120,17 @@ class TestWatch:
             watch = kube_client.core_v1.node.watch(allow_watch_bookmarks=True)
             started_event.set()
 
+            i = 0
+
             async for node_event in watch.stream():
                 if (
                     node_event.type == "MODIFIED"
-                    and node_event.object.metadata.labels["test"] == "test"
+                    and "test" in node_event.object.metadata.labels
                 ):
-                    await asyncio.sleep(0.01)
-                    break
+                    i += 1
+                    if i == 10:
+                        await asyncio.sleep(0.01)
+                        break
 
         task = asyncio.create_task(_watch())
 
@@ -134,10 +138,13 @@ class TestWatch:
         assert watch is not None
         assert watch.resource_version is None
 
-        await kube_client.core_v1.node.patch_json(
-            node.metadata.name,
-            [{"op": "add", "path": "/metadata/labels/test", "value": "test"}],
-        )
+        for i in range(10):
+            # run multiple times, not all kube versions send BOOKMARK
+            # immediatelly after MODIFIED
+            await kube_client.core_v1.node.patch_json(
+                node.metadata.name,
+                [{"op": "add", "path": "/metadata/labels/test", "value": f"test{i}"}],
+            )
 
         async with asyncio.timeout(5):
             await task
