@@ -94,7 +94,7 @@ class Node(ClusterScopedResource[V1Node, V1NodeList, V1Status]):
         dct = await self._core.get(
             url=self._build_url(name) / "proxy" / "stats" / "summary",
         )
-        return StatsSummary.validate(dct)
+        return StatsSummary.model_validate(dct)
 
 
 class PodStatus(NestedResource[V1Pod]):
