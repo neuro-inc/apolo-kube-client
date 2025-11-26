@@ -1,7 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
-from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
+
 from apolo_kube_client._typedefs import JsonType
+
+from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
+
 
 __all__ = ("V1CustomResourceSubresources",)
 

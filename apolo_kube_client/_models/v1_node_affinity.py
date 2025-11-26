@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1NodeAffinity",)
 

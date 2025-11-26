@@ -1,7 +1,10 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_ingress_service_backend import V1IngressServiceBackend
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference
+
 
 __all__ = ("V1IngressBackend",)
 

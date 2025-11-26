@@ -1,7 +1,10 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .utils import KubeMeta
 from .v1_api_group import V1APIGroup
+
 
 __all__ = ("V1APIGroupList",)
 

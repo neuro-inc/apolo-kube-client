@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1beta2_counter import V1beta2Counter
+
 
 __all__ = ("V1beta2DeviceCounterConsumption",)
 

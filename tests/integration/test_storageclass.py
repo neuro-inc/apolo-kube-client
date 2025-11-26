@@ -1,5 +1,4 @@
-from apolo_kube_client import KubeClient
-from apolo_kube_client import V1ObjectMeta, V1StorageClass
+from apolo_kube_client import KubeClient, V1ObjectMeta, V1StorageClass
 
 
 class TestStorageClass:

@@ -1,9 +1,8 @@
-from collections.abc import Collection
+from collections.abc import Sequence
 from typing import Self, cast
 
-from .._base_resource import NamespacedResource
-from .._models import ResourceModel, ListModel
-from .._base_resource import NestedResource
+from .._base_resource import NamespacedResource, NestedResource, PatchOps
+from .._models import ListModel, ResourceModel
 from .._typedefs import JsonType
 from .._watch import Watch
 
@@ -24,7 +23,8 @@ class BaseProxy[OriginT]:
 
     def __getitem__(self, resource_id: str) -> Self:
         if self._resource_id is not None:
-            raise ValueError(f"kube client was already bound to {self._resource_id}")
+            msg = f"kube client was already bound to {self._resource_id}"
+            raise ValueError(msg)
         # create a new origin and bound it to a specific resource ID
         bound_origin = self._origin[resource_id]  # type: ignore[index]
         return self.__class__(
@@ -117,9 +117,7 @@ class NamespacedResourceProxy[
         return await origin.update(model=model, namespace=self._namespace)
 
     async def patch_json(
-        self,
-        name: str,
-        patch_json_list: list[dict[str, str | Collection[str]]],
+        self, name: str, patch_json_list: Sequence[PatchOps]
     ) -> ModelT:
         origin = cast(
             NamespacedResource[ModelT, ListModelT, DeleteModelT], self._origin

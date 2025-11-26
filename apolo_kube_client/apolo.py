@@ -19,6 +19,7 @@ from ._models import (
     V1ObjectMeta,
 )
 
+
 KUBE_NAME_LENGTH_MAX = 63
 DASH = "-"
 KUBE_NAMESPACE_SEP = DASH * 2

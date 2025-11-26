@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_ingress_class_parameters_reference import V1IngressClassParametersReference
+
 
 __all__ = ("V1IngressClassSpec",)
 

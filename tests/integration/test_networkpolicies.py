@@ -1,5 +1,5 @@
-from apolo_kube_client import KubeClient
 from apolo_kube_client import (
+    KubeClient,
     V1LabelSelector,
     V1NetworkPolicy,
     V1NetworkPolicyEgressRule,

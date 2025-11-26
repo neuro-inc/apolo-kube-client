@@ -1,11 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_counter_set import V1CounterSet
 from .v1_device import V1Device
 from .v1_node_selector import V1NodeSelector
 from .v1_resource_pool import V1ResourcePool
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1ResourceSliceSpec",)
 

@@ -3,6 +3,7 @@ from typing import Any, Self, overload
 
 from ._resource_proxy import BaseProxy
 
+
 type FuncT[SelfT, OriginT] = Callable[[SelfT], OriginT]
 
 
@@ -35,8 +36,7 @@ class _AttrProxy[SelfT, AttrT, OriginT]:
             ret = self.cls(origin, namespace, is_vcluster=inst.is_vcluster)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
-        else:
-            return self
+        return self
 
 
 type InnerT[SelfT, AttrT, OriginT] = Callable[

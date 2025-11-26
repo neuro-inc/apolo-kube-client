@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_success_policy_rule import V1SuccessPolicyRule
+
 
 __all__ = ("V1SuccessPolicy",)
 

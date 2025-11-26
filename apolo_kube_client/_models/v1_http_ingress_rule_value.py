@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_http_ingress_path import V1HTTPIngressPath
+
 
 __all__ = ("V1HTTPIngressRuleValue",)
 

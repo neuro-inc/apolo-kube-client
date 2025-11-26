@@ -1,10 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_priority_level_configuration_condition import (
     V1PriorityLevelConfigurationCondition,
 )
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PriorityLevelConfigurationStatus",)
 

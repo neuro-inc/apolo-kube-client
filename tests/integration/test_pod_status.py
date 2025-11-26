@@ -2,14 +2,13 @@ import asyncio
 from uuid import uuid4
 
 from apolo_kube_client import (
+    KubeClient,
     V1Container,
     V1ObjectMeta,
     V1Pod,
     V1PodSpec,
     V1PodStatus,
 )
-
-from apolo_kube_client import KubeClient
 
 
 class TestPodStatus:
@@ -31,7 +30,7 @@ class TestPodStatus:
         await kube_client.core_v1.pod[pod_name].status.update(pod)
 
         # re-fetch
-        for attempt in range(100):
+        for _attempt in range(100):
             pod = await kube_client.core_v1.pod.get(name=pod_name)
             if pod.status.reason is None:
                 await asyncio.sleep(0.01)

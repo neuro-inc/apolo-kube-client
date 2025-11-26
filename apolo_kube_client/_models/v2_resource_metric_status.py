@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v2_metric_value_status import V2MetricValueStatus
+
 
 __all__ = ("V2ResourceMetricStatus",)
 

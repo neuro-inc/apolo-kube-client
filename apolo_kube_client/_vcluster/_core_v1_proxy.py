@@ -4,14 +4,11 @@ from contextlib import asynccontextmanager
 
 from aiohttp import StreamReader
 
-from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy
-from ._resource_proxy import NestedResourceProxy
 from .._apolo_waiters import ApoloPodWaiter
 from .._constants import DEFAULT_TIMEOUT, DEFAULT_WAIT_INTERVAL
 from .._core_v1 import (
-    CoreV1Api,
     ConfigMap,
+    CoreV1Api,
     Endpoint,
     Event,
     PersistentVolumeClaim,
@@ -38,6 +35,8 @@ from .._models import (
     V1ServiceList,
     V1Status,
 )
+from ._attr_proxy import attr
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy, NestedResourceProxy
 
 
 class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):

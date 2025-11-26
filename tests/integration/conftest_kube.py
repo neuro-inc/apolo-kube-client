@@ -9,6 +9,7 @@ import pytest
 from apolo_kube_client import KubeClient, KubeClientAuthType, KubeConfig
 from apolo_kube_client._typedefs import NestedStrKeyDict
 
+
 # TODO: add analogue kubectl wait for the resource to be ready
 
 KubeClusterPayload = TypedDict(

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_container_port import V1ContainerPort
 from .v1_container_resize_policy import V1ContainerResizePolicy
 from .v1_container_restart_rule import V1ContainerRestartRule
@@ -13,7 +14,7 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_security_context import V1SecurityContext
 from .v1_volume_device import V1VolumeDevice
 from .v1_volume_mount import V1VolumeMount
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1Container",)
 

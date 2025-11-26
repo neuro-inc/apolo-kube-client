@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from apolo_kube_client._typedefs import JsonType
+
 
 __all__ = ("V1ServicePort",)
 

@@ -1,11 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from apolo_kube_client._typedefs import JsonType
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
-from apolo_kube_client._typedefs import JsonType
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1JSONSchemaProps",)
 

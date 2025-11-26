@@ -1,5 +1,7 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_pod_failure_policy_on_exit_codes_requirement import (
     V1PodFailurePolicyOnExitCodesRequirement,
@@ -7,7 +9,7 @@ from .v1_pod_failure_policy_on_exit_codes_requirement import (
 from .v1_pod_failure_policy_on_pod_conditions_pattern import (
     V1PodFailurePolicyOnPodConditionsPattern,
 )
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PodFailurePolicyRule",)
 

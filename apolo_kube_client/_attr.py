@@ -34,5 +34,4 @@ class _Attr[T]:
                 ret = self.cls(inst._core, *self._args)  # type: ignore[call-arg]
             setattr(inst, name, ret)
             return ret
-        else:
-            return self
+        return self

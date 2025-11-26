@@ -1,4 +1,5 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -28,30 +29,30 @@ expression must return an array of JSONPatch values.
 
 For example, this CEL expression returns a JSON patch to conditionally modify a value:
 
-	  [
-	    JSONPatch{op: "test", path: "/spec/example", value: "Red"},
-	    JSONPatch{op: "replace", path: "/spec/example", value: "Green"}
-	  ]
+          [
+            JSONPatch{op: "test", path: "/spec/example", value: "Red"},
+            JSONPatch{op: "replace", path: "/spec/example", value: "Green"}
+          ]
 
 To define an object for the patch value, use Object types. For example:
 
-	  [
-	    JSONPatch{
-	      op: "add",
-	      path: "/spec/selector",
-	      value: Object.spec.selector{matchLabels: {"environment": "test"}}
-	    }
-	  ]
+          [
+            JSONPatch{
+              op: "add",
+              path: "/spec/selector",
+              value: Object.spec.selector{matchLabels: {"environment": "test"}}
+            }
+          ]
 
 To use strings containing '/' and '~' as JSONPatch path keys, use "jsonpatch.escapeKey". For example:
 
-	  [
-	    JSONPatch{
-	      op: "add",
-	      path: "/metadata/labels/" + jsonpatch.escapeKey("example.com/environment"),
-	      value: "test"
-	    },
-	  ]
+          [
+            JSONPatch{
+              op: "add",
+              path: "/metadata/labels/" + jsonpatch.escapeKey("example.com/environment"),
+              value: "test"
+            },
+          ]
 
 CEL expressions have access to the types needed to create JSON patches and objects:
 

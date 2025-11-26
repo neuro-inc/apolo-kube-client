@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_container_extended_resource_request import V1ContainerExtendedResourceRequest
+
 
 __all__ = ("V1PodExtendedResourceClaimStatus",)
 

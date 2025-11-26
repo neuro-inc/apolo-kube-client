@@ -1,6 +1,6 @@
 import asyncio
 
-from apolo_kube_client import KubeClient, V1Node, Watch
+from apolo_kube_client import KubeClient, PatchAdd, PatchRemove, V1Node, Watch
 
 
 class TestWatch:
@@ -12,7 +12,7 @@ class TestWatch:
         try:
             await kube_client.core_v1.node.patch_json(
                 node.metadata.name,
-                [{"op": "remove", "path": "/metadata/labels/test"}],
+                [PatchRemove(path="/metadata/labels/test")],
             )
         except Exception:
             pass
@@ -38,7 +38,7 @@ class TestWatch:
 
         await kube_client.core_v1.node.patch_json(
             node.metadata.name,
-            [{"op": "add", "path": "/metadata/labels/test", "value": "test"}],
+            [PatchAdd(path="/metadata/labels/test", value="test")],
         )
 
         async with asyncio.timeout(5):
@@ -55,7 +55,7 @@ class TestWatch:
         try:
             await kube_client.core_v1.node.patch_json(
                 node.metadata.name,
-                [{"op": "remove", "path": "/metadata/labels/test"}],
+                [PatchRemove(path="/metadata/labels/test")],
             )
         except Exception:
             pass
@@ -91,7 +91,7 @@ class TestWatch:
         for i in range(max_events):
             await kube_client.core_v1.node.patch_json(
                 node.metadata.name,
-                [{"op": "add", "path": "/metadata/labels/test", "value": f"test-{i}"}],
+                [PatchAdd(path="/metadata/labels/test", value=f"test-{i}")],
             )
             await modified_event.wait()
             modified_event.clear()

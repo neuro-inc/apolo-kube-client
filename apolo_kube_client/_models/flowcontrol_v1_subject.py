@@ -1,8 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_group_subject import V1GroupSubject
 from .v1_service_account_subject import V1ServiceAccountSubject
 from .v1_user_subject import V1UserSubject
+
 
 __all__ = ("FlowcontrolV1Subject",)
 

@@ -4,9 +4,8 @@ import re
 from uuid import uuid4
 
 import pytest
-from apolo_kube_client import V1Container, V1ObjectMeta, V1Pod, V1PodSpec
 
-from apolo_kube_client import KubeClient
+from apolo_kube_client import KubeClient, V1Container, V1ObjectMeta, V1Pod, V1PodSpec
 from apolo_kube_client._errors import ResourceBadRequest
 
 
@@ -93,7 +92,7 @@ class TestPodLog:
         await kube_client.core_v1.pod.create(pod)
         await _wait_pod_succeeded(kube_client, pod_name)
 
-        now_utc = dt.datetime.now(dt.timezone.utc)
+        now_utc = dt.datetime.now(dt.UTC)
         future = now_utc + dt.timedelta(minutes=10)
         past = now_utc - dt.timedelta(days=1)
 

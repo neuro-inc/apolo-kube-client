@@ -1,8 +1,10 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_topology_selector_label_requirement import V1TopologySelectorLabelRequirement
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1TopologySelectorTerm",)
 

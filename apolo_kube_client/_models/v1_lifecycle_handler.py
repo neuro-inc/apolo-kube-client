@@ -1,11 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_exec_action import V1ExecAction
 from .v1_http_get_action import V1HTTPGetAction
 from .v1_sleep_action import V1SleepAction
 from .v1_tcp_socket_action import V1TCPSocketAction
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1LifecycleHandler",)
 

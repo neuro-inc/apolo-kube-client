@@ -1,8 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
+
 
 __all__ = ("V1CustomResourceDefinitionSpec",)
 

@@ -1,6 +1,6 @@
 import asyncio
+from collections.abc import Awaitable, Callable
 from enum import StrEnum
-from typing import Awaitable, Callable
 
 from ._base_resource import NestedResource
 from ._constants import DEFAULT_TIMEOUT, DEFAULT_WAIT_INTERVAL
@@ -73,7 +73,7 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
             timeout_s=timeout_s,
             interval_s=interval_s,
         )
-        return None
+        return
 
     async def wait_terminated(
         self,

@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_daemon_endpoint import V1DaemonEndpoint
+
 
 __all__ = ("V1NodeDaemonEndpoints",)
 

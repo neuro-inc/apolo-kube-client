@@ -1,8 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .admissionregistration_v1_service_reference import (
     AdmissionregistrationV1ServiceReference,
 )
+
 
 __all__ = ("AdmissionregistrationV1WebhookClientConfig",)
 

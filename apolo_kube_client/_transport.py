@@ -10,10 +10,12 @@ from typing import Self
 import aiohttp
 from aiohttp import ClientSession
 from yarl import URL, Query
+
 from ._errors import (
     _raise_for_text,
 )
 from ._typedefs import JsonType
+
 
 logger = logging.getLogger(__name__)
 

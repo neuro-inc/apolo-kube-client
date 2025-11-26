@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_flow_distinguisher_method import V1FlowDistinguisherMethod
 from .v1_policy_rules_with_subjects import V1PolicyRulesWithSubjects
 from .v1_priority_level_configuration_reference import (
     V1PriorityLevelConfigurationReference,
 )
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1FlowSchemaSpec",)
 
