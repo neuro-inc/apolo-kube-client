@@ -1,11 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_network_policy_egress_rule import V1NetworkPolicyEgressRule
 from .v1_network_policy_ingress_rule import V1NetworkPolicyIngressRule
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1NetworkPolicySpec",)
 

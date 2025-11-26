@@ -1,11 +1,22 @@
 import datetime
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Annotated
 
-from ._attr import _Attr
-from ._base_resource import Base, ClusterScopedResource, NamespacedResource
-from ._utils import base64_encode, escape_json_pointer
 from aiohttp import StreamReader
+from pydantic import BaseModel, ConfigDict, Field
+
+from ._apolo_waiters import ApoloPodWaiter
+from ._attr import _Attr
+from ._base_resource import (
+    Base,
+    ClusterScopedResource,
+    NamespacedResource,
+    NestedResource,
+    PatchAdd,
+    PatchOps,
+    PatchRemove,
+)
 from ._models import (
     CoreV1Event,
     CoreV1EventList,
@@ -29,14 +40,7 @@ from ._models import (
     V1ServiceList,
     V1Status,
 )
-from collections.abc import Collection
-
-from ._base_resource import (
-    NestedResource,
-)
-from typing import Annotated
-from pydantic import BaseModel, Field, ConfigDict
-from ._apolo_waiters import ApoloPodWaiter
+from ._utils import base64_encode, escape_json_pointer
 
 
 class Namespace(ClusterScopedResource[V1Namespace, V1NamespaceList, V1Namespace]):
@@ -182,15 +186,14 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
         encode: bool = True,
     ) -> V1Secret:
         secret = await self.get(name=name, namespace=self._get_ns(namespace))
-        patch_json_list: list[dict[str, str | Collection[str]]] = []
+        patch_json_list: list[PatchOps] = []
         if "data" not in secret.__pydantic_fields_set__:
-            patch_json_list.append({"op": "add", "path": "/data", "value": {}})
+            patch_json_list.append(PatchAdd(path="/data", value={}))
         patch_json_list.append(
-            {
-                "op": "add",
-                "path": f"/data/{escape_json_pointer(key)}",
-                "value": base64_encode(value) if encode else value,
-            }
+            PatchAdd(
+                path=f"/data/{escape_json_pointer(key)}",
+                value=base64_encode(value) if encode else value,
+            )
         )
         return await self.patch_json(
             name=name,
@@ -201,9 +204,7 @@ class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
     async def delete_key(self, name: str, key: str, *, namespace: str) -> V1Secret:
         return await self.patch_json(
             name=name,
-            patch_json_list=[
-                {"op": "remove", "path": f"/data/{escape_json_pointer(key)}"}
-            ],
+            patch_json_list=[PatchRemove(path=f"/data/{escape_json_pointer(key)}")],
             namespace=self._get_ns(namespace),
         )
 
@@ -222,15 +223,14 @@ class ConfigMap(
         namespace: str,
     ) -> V1ConfigMap:
         config_map = await self.get(name=name, namespace=self._get_ns(namespace))
-        patch_json_list: list[dict[str, str | Collection[str]]] = []
+        patch_json_list: list[PatchOps] = []
         if "data" not in config_map.__pydantic_fields_set__:
-            patch_json_list.append({"op": "add", "path": "/data", "value": {}})
+            patch_json_list.append(PatchAdd(path="/data", value={}))
         patch_json_list.append(
-            {
-                "op": "add",
-                "path": f"/data/{escape_json_pointer(key)}",
-                "value": value,
-            }
+            PatchAdd(
+                path=f"/data/{escape_json_pointer(key)}",
+                value=value,
+            )
         )
         return await self.patch_json(
             name=name,
@@ -241,9 +241,7 @@ class ConfigMap(
     async def delete_key(self, name: str, key: str, *, namespace: str) -> V1ConfigMap:
         return await self.patch_json(
             name=name,
-            patch_json_list=[
-                {"op": "remove", "path": f"/data/{escape_json_pointer(key)}"}
-            ],
+            patch_json_list=[PatchRemove(path=f"/data/{escape_json_pointer(key)}")],
             namespace=self._get_ns(namespace),
         )
 

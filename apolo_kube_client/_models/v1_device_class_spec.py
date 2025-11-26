@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_device_class_configuration import V1DeviceClassConfiguration
 from .v1_device_selector import V1DeviceSelector
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1DeviceClassSpec",)
 

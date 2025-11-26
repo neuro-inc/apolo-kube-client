@@ -1,9 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from apolo_kube_client._typedefs import JsonType
+
 from .utils import _collection_if_none
 from .v1_http_header import V1HTTPHeader
-from apolo_kube_client._typedefs import JsonType
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1HTTPGetAction",)
 

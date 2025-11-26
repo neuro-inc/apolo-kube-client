@@ -48,15 +48,28 @@ types-cachetools = "^6.2.0.20250827"
 kubernetes = "^34.1.0"
 libcst = "^1.8.5"
 
-[tool.black]
-exclude = '''
-/(
-      \.git
-    | venv
-    | __pycache__
-    | \.tox
-)/
-'''
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "C90", "UP", "B", "ASYNC", "N", "A", "C4", "EM", "FA", "ICN",
+    "G", "PIE", "T20", "PYI", "PT", "RET", "PTH", "T10"
+]
+ignore = [
+  "A003",  # Class attribute "..." is shadowing a Python builtin
+  "N818",
+  "C901",  # ... is too complex
+  "E501",  # Line too long
+  "EM101",  # Exception must not use a string literal, assign to variable first
+  "PT012",  # `pytest.raises()` block should contain a single simple statement
+  "N802",  # Function name XXX should be lowercase
+  "N815",  # Variable `apiVersion` in class scope should not be mixedCase
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+lines-after-imports = 2
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -67,6 +80,8 @@ addopts = """
     --cov-branch
     --cov-report term-missing:skip-covered
 """
+filterwarnings = ["error"]
+
 
 [tool.mypy]
 strict = true

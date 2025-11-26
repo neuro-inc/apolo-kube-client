@@ -1,4 +1,5 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -34,8 +35,8 @@ class V1Validation(BaseModel):
 The `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the object. No other metadata properties are accessible.
 
 Only property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible. Accessible property names are escaped according to the following rules when accessed in the expression: - '__' escapes to '__underscores__' - '.' escapes to '__dot__' - '-' escapes to '__dash__' - '/' escapes to '__slash__' - Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:
-	  "true", "false", "null", "in", "as", "break", "const", "continue", "else", "for", "function", "if",
-	  "import", "let", "loop", "package", "namespace", "return".
+          "true", "false", "null", "in", "as", "break", "const", "continue", "else", "for", "function", "if",
+          "import", "let", "loop", "package", "namespace", "return".
 Examples:
   - Expression accessing a property named "namespace": {"Expression": "object.__namespace__ > 0"}
   - Expression accessing a property named "x-prop": {"Expression": "object.x__dash__prop > 0"}

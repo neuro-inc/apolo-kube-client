@@ -3,10 +3,9 @@ from uuid import uuid4
 
 import pytest
 
-from apolo_kube_client import KubeClient
+from apolo_kube_client import KubeClient, PatchAdd, V1Namespace, V1ObjectMeta
 from apolo_kube_client._errors import ResourceExists, ResourceNotFound
 from apolo_kube_client._utils import escape_json_pointer
-from apolo_kube_client import V1Namespace, V1ObjectMeta
 
 
 @pytest.fixture
@@ -124,11 +123,10 @@ class TestNamespace:
         self, kube_client: KubeClient, namespace: V1Namespace
     ) -> None:
         patch_json_list = [
-            {
-                "op": "add",
-                "path": f"/metadata/labels/{escape_json_pointer('platform.apolo.us/app')}",
-                "value": "my-app",
-            }
+            PatchAdd(
+                path=f"/metadata/labels/{escape_json_pointer('platform.apolo.us/app')}",
+                value="my-app",
+            )
         ]
         assert namespace.metadata.name is not None
         namespace = await kube_client.core_v1.namespace.patch_json(
@@ -142,6 +140,6 @@ class TestNamespace:
         with pytest.raises(ResourceNotFound):
             await kube_client.core_v1.namespace.get(name="non-existing-namespace")
 
+        namespace = V1Namespace(metadata=V1ObjectMeta(name=namespace.metadata.name))
         with pytest.raises(ResourceExists):
-            namespace = V1Namespace(metadata=V1ObjectMeta(name=namespace.metadata.name))
             await kube_client.core_v1.namespace.create(model=namespace)

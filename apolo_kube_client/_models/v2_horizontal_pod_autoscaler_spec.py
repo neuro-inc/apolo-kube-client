@@ -1,11 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_horizontal_pod_autoscaler_behavior import V2HorizontalPodAutoscalerBehavior
 from .v2_metric_spec import V2MetricSpec
-from pydantic import BeforeValidator
+
 
 __all__ = ("V2HorizontalPodAutoscalerSpec",)
 

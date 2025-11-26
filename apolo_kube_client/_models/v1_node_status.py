@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_attached_volume import V1AttachedVolume
 from .v1_container_image import V1ContainerImage
 from .v1_node_address import V1NodeAddress
@@ -11,7 +12,7 @@ from .v1_node_daemon_endpoints import V1NodeDaemonEndpoints
 from .v1_node_features import V1NodeFeatures
 from .v1_node_runtime_handler import V1NodeRuntimeHandler
 from .v1_node_system_info import V1NodeSystemInfo
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1NodeStatus",)
 

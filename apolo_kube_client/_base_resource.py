@@ -1,17 +1,65 @@
 import functools
-from collections.abc import AsyncIterator, Collection
+from collections.abc import AsyncIterator, Sequence
 from contextlib import asynccontextmanager
-from typing import ClassVar, cast, get_args
-from typing import Self
+from typing import Annotated, ClassVar, Literal, Self, cast, get_args
 
 import aiohttp
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 from yarl import URL
 
 from ._core import KubeCore
 from ._errors import ResourceNotFound
+from ._models import ListModel, ResourceModel
 from ._typedefs import JsonType
 from ._watch import Watch
-from ._models import ResourceModel, ListModel
+
+
+class PatchOp(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
+    )
+
+
+class PatchAdd(PatchOp):
+    op: Literal["add"] = "add"
+    path: str
+    value: JsonType
+
+
+class PatchRemove(PatchOp):
+    op: Literal["remove"] = "remove"
+    path: str
+
+
+class PatchReplace(PatchOp):
+    op: Literal["replace"] = "replace"
+    path: str
+    value: JsonType
+
+
+class PatchMove(PatchOp):
+    op: Literal["move"] = "move"
+    from_: Annotated[str, Field(alias="from")]
+    path: str
+
+
+class PatchCopy(PatchOp):
+    op: Literal["copy"] = "copy"
+    from_: Annotated[str, Field(alias="from")]
+    path: str
+
+
+class PatchTest(PatchOp):
+    op: Literal["test"] = "test"
+    path: str
+    value: JsonType
+
+
+PatchOps = PatchAdd | PatchRemove | PatchReplace | PatchMove | PatchCopy | PatchTest
+PatchOpModel = RootModel[Annotated[PatchOps, Field(discriminator="op")]]
 
 
 class Base:
@@ -82,7 +130,8 @@ class BaseResource[
         >>> kube_client.core_v1.pod["pod-name"]
         """
         if self._resource_id is not None:
-            raise ValueError(f"kube client was already bound to {self._resource_id}")
+            msg = f"kube client was already bound to {self._resource_id}"
+            raise ValueError(msg)
         return self.__class__(self._core, self._group_api_query_path, resource_id)
 
     async def get(self, name: str) -> ModelT:
@@ -226,17 +275,23 @@ class ClusterScopedResource[
             return True, await self.create(model)
 
     async def patch_json(
-        self, name: str, patch_json_list: list[dict[str, str]]
+        self, name: str, patch_json_list: Sequence[PatchOps]
     ) -> ModelT:
         """
         Patch a resource with a JSON patch.
         RFC 6902 defines the JSON Patch format.
         """
+        js = []
+        for item in patch_json_list:
+            if isinstance(item, dict):
+                js.append(item)
+            else:
+                js.append(item.model_dump(mode="json"))
         async with self._core.request(
             method="PATCH",
             headers={"Content-Type": "application/json-patch+json"},
             url=self._build_url(name),
-            json=cast(JsonType, patch_json_list),
+            json=cast(JsonType, js),
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
 
@@ -408,18 +463,24 @@ class NamespacedResource[
     async def patch_json(
         self,
         name: str,
-        patch_json_list: list[dict[str, str | Collection[str]]],
+        patch_json_list: Sequence[PatchOps],
         namespace: str | None = None,
     ) -> ModelT:
         """
         Patch a resource with a JSON patch.
         RFC 6902 defines the JSON Patch format.
         """
+        js = []
+        for item in patch_json_list:
+            if isinstance(item, dict):
+                js.append(item)
+            else:
+                js.append(item.model_dump(mode="json"))
         async with self._core.request(
             method="PATCH",
             headers={"Content-Type": "application/json-patch+json"},
             url=self._build_url(name, self._get_ns(namespace)),
-            json=cast(JsonType, patch_json_list),
+            json=cast(JsonType, js),
         ) as resp:
             return await self._core.deserialize_response(resp, self._model_class)
 

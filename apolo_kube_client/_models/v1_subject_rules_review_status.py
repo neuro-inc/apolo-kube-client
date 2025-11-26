@@ -1,7 +1,10 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_non_resource_rule import V1NonResourceRule
 from .v1_resource_rule import V1ResourceRule
+
 
 __all__ = ("V1SubjectRulesReviewStatus",)
 

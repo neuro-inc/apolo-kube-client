@@ -1,6 +1,8 @@
-from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
+from typing import Annotated, ClassVar, Final
+
+from pydantic import BaseModel, ConfigDict, Field
+
 
 __all__ = ("V1Condition",)
 

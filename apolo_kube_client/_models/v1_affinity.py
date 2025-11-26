@@ -1,10 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_node_affinity import V1NodeAffinity
 from .v1_pod_affinity import V1PodAffinity
 from .v1_pod_anti_affinity import V1PodAntiAffinity
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1Affinity",)
 

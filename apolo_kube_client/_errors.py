@@ -1,7 +1,9 @@
-from ._typedefs import JsonType
-from ._models.v1_status import V1Status
-from pydantic import ValidationError
 from typing import NoReturn
+
+from pydantic import ValidationError
+
+from ._models.v1_status import V1Status
+from ._typedefs import JsonType
 
 
 class KubeClientException(Exception):

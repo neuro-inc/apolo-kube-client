@@ -1,8 +1,10 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_ingress_load_balancer_status import V1IngressLoadBalancerStatus
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1IngressStatus",)
 

@@ -1,11 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_failure_policy import V1PodFailurePolicy
 from .v1_pod_template_spec import V1PodTemplateSpec
 from .v1_success_policy import V1SuccessPolicy
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1JobSpec",)
 

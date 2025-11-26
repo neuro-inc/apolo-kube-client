@@ -1,10 +1,12 @@
+from datetime import datetime
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_managed_fields_entry import V1ManagedFieldsEntry
 from .v1_owner_reference import V1OwnerReference
-from datetime import datetime
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1ObjectMeta",)
 

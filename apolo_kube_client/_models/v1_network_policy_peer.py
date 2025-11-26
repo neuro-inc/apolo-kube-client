@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_ip_block import V1IPBlock
 from .v1_label_selector import V1LabelSelector
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1NetworkPolicyPeer",)
 

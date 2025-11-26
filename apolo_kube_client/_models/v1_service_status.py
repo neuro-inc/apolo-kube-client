@@ -1,10 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_condition import V1Condition
 from .v1_load_balancer_status import V1LoadBalancerStatus
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1ServiceStatus",)
 

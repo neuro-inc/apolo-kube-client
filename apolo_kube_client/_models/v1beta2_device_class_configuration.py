@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1beta2_opaque_device_configuration import V1beta2OpaqueDeviceConfiguration
+
 
 __all__ = ("V1beta2DeviceClassConfiguration",)
 

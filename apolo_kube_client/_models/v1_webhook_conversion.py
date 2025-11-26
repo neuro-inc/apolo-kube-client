@@ -1,8 +1,10 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .apiextensions_v1_webhook_client_config import ApiextensionsV1WebhookClientConfig
 from .utils import _default_if_none
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1WebhookConversion",)
 

@@ -1,6 +1,5 @@
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 from yarl import URL

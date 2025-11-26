@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_persistent_volume_claim import V1PersistentVolumeClaim
 from .v1_pod_template_spec import V1PodTemplateSpec
@@ -10,7 +11,7 @@ from .v1_stateful_set_persistent_volume_claim_retention_policy import (
     V1StatefulSetPersistentVolumeClaimRetentionPolicy,
 )
 from .v1_stateful_set_update_strategy import V1StatefulSetUpdateStrategy
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1StatefulSetSpec",)
 

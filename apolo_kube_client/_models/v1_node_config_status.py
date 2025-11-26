@@ -1,8 +1,10 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1_node_config_source import V1NodeConfigSource
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1NodeConfigStatus",)
 

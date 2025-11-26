@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PersistentVolumeClaimStatus",)
 
@@ -37,26 +39,26 @@ class V1PersistentVolumeClaimStatus(BaseModel):
         Field(
             alias="allocatedResourceStatuses",
             description="""allocatedResourceStatuses stores status of resource being resized for the given PVC. Key names follow standard Kubernetes label syntax. Valid values are either:
-	* Un-prefixed keys:
-		- storage - the capacity of the volume.
-	* Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
+        * Un-prefixed keys:
+                - storage - the capacity of the volume.
+        * Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
 Apart from above values - keys that are unprefixed or have kubernetes.io prefix are considered reserved and hence may not be used.
 
 ClaimResourceStatus can be in any of following states:
-	- ControllerResizeInProgress:
-		State set when resize controller starts resizing the volume in control-plane.
-	- ControllerResizeFailed:
-		State set when resize has failed in resize controller with a terminal error.
-	- NodeResizePending:
-		State set when resize controller has finished resizing the volume but further resizing of
-		volume is needed on the node.
-	- NodeResizeInProgress:
-		State set when kubelet starts resizing the volume.
-	- NodeResizeFailed:
-		State set when resizing has failed in kubelet with a terminal error. Transient errors don't set
-		NodeResizeFailed.
+        - ControllerResizeInProgress:
+                State set when resize controller starts resizing the volume in control-plane.
+        - ControllerResizeFailed:
+                State set when resize has failed in resize controller with a terminal error.
+        - NodeResizePending:
+                State set when resize controller has finished resizing the volume but further resizing of
+                volume is needed on the node.
+        - NodeResizeInProgress:
+                State set when kubelet starts resizing the volume.
+        - NodeResizeFailed:
+                State set when resizing has failed in kubelet with a terminal error. Transient errors don't set
+                NodeResizeFailed.
 For example: if expanding a PVC for more capacity - this field can be one of the following states:
-	- pvc.status.allocatedResourceStatus['storage'] = "ControllerResizeInProgress"
+        - pvc.status.allocatedResourceStatus['storage'] = "ControllerResizeInProgress"
      - pvc.status.allocatedResourceStatus['storage'] = "ControllerResizeFailed"
      - pvc.status.allocatedResourceStatus['storage'] = "NodeResizePending"
      - pvc.status.allocatedResourceStatus['storage'] = "NodeResizeInProgress"
@@ -76,9 +78,9 @@ This is an alpha field and requires enabling RecoverVolumeExpansionFailure featu
         Field(
             alias="allocatedResources",
             description="""allocatedResources tracks the resources allocated to a PVC including its capacity. Key names follow standard Kubernetes label syntax. Valid values are either:
-	* Un-prefixed keys:
-		- storage - the capacity of the volume.
-	* Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
+        * Un-prefixed keys:
+                - storage - the capacity of the volume.
+        * Custom resources must use implementation-defined prefixed names such as "example.com/my-custom-resource"
 Apart from above values - keys that are unprefixed or have kubernetes.io prefix are considered reserved and hence may not be used.
 
 Capacity reported here may be larger than the actual capacity when a volume expansion operation is requested. For storage quota, the larger value from allocatedResources and PVC.spec.resources is used. If allocatedResources is not set, PVC.spec.resources alone is used for quota calculation. If a volume expansion capacity request is lowered, allocatedResources is only lowered if there are no expansion operations in progress and if the actual volume capacity is equal or lower than the requested capacity.

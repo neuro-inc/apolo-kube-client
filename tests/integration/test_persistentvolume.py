@@ -1,9 +1,9 @@
-from apolo_kube_client import KubeClient
 from apolo_kube_client import (
+    KubeClient,
+    V1HostPathVolumeSource,
     V1ObjectMeta,
     V1PersistentVolume,
     V1PersistentVolumeSpec,
-    V1HostPathVolumeSource,
 )
 
 

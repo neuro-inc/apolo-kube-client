@@ -1,10 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .flowcontrol_v1_subject import FlowcontrolV1Subject
 from .utils import _collection_if_none
 from .v1_non_resource_policy_rule import V1NonResourcePolicyRule
 from .v1_resource_policy_rule import V1ResourcePolicyRule
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PolicyRulesWithSubjects",)
 

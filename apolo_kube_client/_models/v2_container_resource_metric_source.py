@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v2_metric_target import V2MetricTarget
+
 
 __all__ = ("V2ContainerResourceMetricSource",)
 

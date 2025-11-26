@@ -24,6 +24,7 @@ from apolo_kube_client.apolo import create_namespace, generate_namespace_name
 
 from .._models import V1Secret
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -102,7 +103,7 @@ class KubeClientSelector:
         self._closing = False
 
     async def __aenter__(self) -> Self:
-        logger.info(f"{self}: initializing...")
+        logger.info("%r: initializing...", self)
         await self._transport.__aenter__()
         await self._host_client.__aenter__()
         return self
@@ -116,23 +117,23 @@ class KubeClientSelector:
         await self.aclose()
 
     async def aclose(self) -> None:
-        logger.info(f"{self}: closing...")
+        logger.info("%r: closing...", self)
         if self._closing:
             return
         self._closing = True
 
-        logger.info(f"{self}: evicting all vcluster cached entries")
+        logger.info("%r: evicting all vcluster cached entries", self)
         await self._vcluster_cache.close()
 
-        logger.info(f"{self}: closing zombies")
+        logger.info("%r: closing zombies", self)
         for key, entry in list(self._vcluster_zombies.items()):
             await self._vcluster_client_factory.close(client=entry.client)
             self._vcluster_zombies.pop(key, None)
 
         # Close the shared default client, and a common transport
-        logger.info(f"{self}: closing default client")
+        logger.info("%r: closing default client", self)
         await self._host_client.__aexit__(None, None, None)
-        logger.info(f"{self}: closing transport")
+        logger.info("%r: closing transport", self)
         await self._transport.__aexit__(None, None, None)
 
     @property
@@ -181,9 +182,13 @@ class KubeClientSelector:
             cached = self._vcluster_cache.get(cache_key)
             if cached is not None:
                 logger.info(
-                    f"{self}: vcluster cache hit: lease and return. "
-                    f"namespace={namespace}; "
-                    f"org_name={org_name}; project_name={project_name}"
+                    "%r: vcluster cache hit: lease and return. "
+                    "namespace=%s; "
+                    "org_name=%s; project_name=%s",
+                    self,
+                    namespace,
+                    org_name,
+                    project_name,
                 )
                 cached.leases += 1
                 entry = cached
@@ -192,9 +197,13 @@ class KubeClientSelector:
                 is_vcluster = True
             elif self._is_host_client(cache_key):
                 logger.info(
-                    f"{self}: host client cache hit: return host client. "
-                    f"namespace={namespace}; "
-                    f"org_name={org_name}; project_name={project_name}"
+                    "%r: host client cache hit: return host client. "
+                    "namespace=%s; "
+                    "org_name=%s; project_name=%s",
+                    self,
+                    namespace,
+                    org_name,
+                    project_name,
                 )
                 client = self._host_client
             else:
@@ -206,10 +215,15 @@ class KubeClientSelector:
                 )
                 if secret:
                     logger.info(
-                        f"{self}: secret found: "
-                        f"build vcluster client, cache, lease, return."
-                        f"secret_name={secret_name}; namespace={namespace}; "
-                        f"org_name={org_name}; project_name={project_name}"
+                        "%r: secret found: "
+                        "build vcluster client, cache, lease, return."
+                        "secret_name=%s; namespace=%s; "
+                        "org_name=%s; project_name=%s",
+                        self,
+                        secret_name,
+                        namespace,
+                        org_name,
+                        project_name,
                     )
                     client = await self._vcluster_client_factory.from_secret(secret)
                     entry = VclusterEntry(client=client, leases=1)
@@ -218,9 +232,14 @@ class KubeClientSelector:
                     is_vcluster = True
                 else:
                     logger.info(
-                        f"{self}: secret not found: return shared host client"
-                        f"secret_name={secret_name}; namespace={namespace}; "
-                        f"org_name={org_name}; project_name={project_name}"
+                        "%r: secret not found: return shared host client"
+                        "secret_name=%s; namespace=%s; "
+                        "org_name=%s; project_name=%s",
+                        self,
+                        secret_name,
+                        namespace,
+                        org_name,
+                        project_name,
                     )
                     self._host_cache[cache_key] = True
                     client = self._host_client
@@ -236,7 +255,7 @@ class KubeClientSelector:
         self, key: str, entry: VclusterEntry | None
     ) -> None:
         if not entry:
-            return None
+            return
         entry.leases -= 1
         if entry.leases <= 0 and key in self._vcluster_zombies:
             self._vcluster_zombies.pop(key, None)

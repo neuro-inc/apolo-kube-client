@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_parent_reference import V1ParentReference
+
 
 __all__ = ("V1IPAddressSpec",)
 

@@ -1,4 +1,5 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -28,7 +29,7 @@ class V1ModifyVolumeStatus(BaseModel):
    InProgress indicates that the volume is being modified.
  - Infeasible
   Infeasible indicates that the request has been rejected as invalid by the CSI driver. To
-	  resolve the error, a valid VolumeAttributesClass needs to be specified.
+          resolve the error, a valid VolumeAttributesClass needs to be specified.
 Note: New statuses can be added in the future. Consumers should check for unknown statuses and fail appropriately."""
         ),
     ]
