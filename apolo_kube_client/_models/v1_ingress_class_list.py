@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_ingress_class import V1IngressClass
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1IngressClassList",)
 
 
-class V1IngressClassList(ListModel):
+class V1IngressClassList(CollectionModel[V1IngressClass]):
     """IngressClassList is a collection of IngressClasses."""
 
     model_config = ConfigDict(

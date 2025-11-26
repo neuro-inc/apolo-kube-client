@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_api_service import V1APIService
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1APIServiceList",)
 
 
-class V1APIServiceList(ListModel):
+class V1APIServiceList(CollectionModel[V1APIService]):
     """APIServiceList is a list of APIService objects."""
 
     model_config = ConfigDict(

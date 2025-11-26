@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_daemon_set import V1DaemonSet
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1DaemonSetList",)
 
 
-class V1DaemonSetList(ListModel):
+class V1DaemonSetList(CollectionModel[V1DaemonSet]):
     """DaemonSetList is a collection of daemon sets."""
 
     model_config = ConfigDict(

@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1beta1_service_cidr import V1beta1ServiceCIDR
@@ -11,7 +11,7 @@ from .v1beta1_service_cidr import V1beta1ServiceCIDR
 __all__ = ("V1beta1ServiceCIDRList",)
 
 
-class V1beta1ServiceCIDRList(ListModel):
+class V1beta1ServiceCIDRList(CollectionModel[V1beta1ServiceCIDR]):
     """ServiceCIDRList contains a list of ServiceCIDR objects."""
 
     model_config = ConfigDict(

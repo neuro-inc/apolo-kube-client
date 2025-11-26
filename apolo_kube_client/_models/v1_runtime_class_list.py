@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_runtime_class import V1RuntimeClass
@@ -11,7 +11,7 @@ from .v1_runtime_class import V1RuntimeClass
 __all__ = ("V1RuntimeClassList",)
 
 
-class V1RuntimeClassList(ListModel):
+class V1RuntimeClassList(CollectionModel[V1RuntimeClass]):
     """RuntimeClassList is a list of RuntimeClass objects."""
 
     model_config = ConfigDict(

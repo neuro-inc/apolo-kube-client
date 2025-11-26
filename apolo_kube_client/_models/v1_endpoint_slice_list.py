@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_endpoint_slice import V1EndpointSlice
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1EndpointSliceList",)
 
 
-class V1EndpointSliceList(ListModel):
+class V1EndpointSliceList(CollectionModel[V1EndpointSlice]):
     """EndpointSliceList represents a list of endpoint slices"""
 
     model_config = ConfigDict(

@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_job import V1Job
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1JobList",)
 
 
-class V1JobList(ListModel):
+class V1JobList(CollectionModel[V1Job]):
     """JobList is a collection of jobs."""
 
     model_config = ConfigDict(

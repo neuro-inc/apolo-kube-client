@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1beta2_resource_claim_template import V1beta2ResourceClaimTemplate
@@ -11,7 +11,7 @@ from .v1beta2_resource_claim_template import V1beta2ResourceClaimTemplate
 __all__ = ("V1beta2ResourceClaimTemplateList",)
 
 
-class V1beta2ResourceClaimTemplateList(ListModel):
+class V1beta2ResourceClaimTemplateList(CollectionModel[V1beta2ResourceClaimTemplate]):
     """ResourceClaimTemplateList is a collection of claim templates."""
 
     model_config = ConfigDict(

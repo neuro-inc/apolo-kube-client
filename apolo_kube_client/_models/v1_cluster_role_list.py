@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_cluster_role import V1ClusterRole
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1ClusterRoleList",)
 
 
-class V1ClusterRoleList(ListModel):
+class V1ClusterRoleList(CollectionModel[V1ClusterRole]):
     """ClusterRoleList is a collection of ClusterRoles"""
 
     model_config = ConfigDict(

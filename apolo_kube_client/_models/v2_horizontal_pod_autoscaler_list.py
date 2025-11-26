@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v2_horizontal_pod_autoscaler import V2HorizontalPodAutoscaler
@@ -11,7 +11,7 @@ from .v2_horizontal_pod_autoscaler import V2HorizontalPodAutoscaler
 __all__ = ("V2HorizontalPodAutoscalerList",)
 
 
-class V2HorizontalPodAutoscalerList(ListModel):
+class V2HorizontalPodAutoscalerList(CollectionModel[V2HorizontalPodAutoscaler]):
     """HorizontalPodAutoscalerList is a list of horizontal pod autoscaler objects."""
 
     model_config = ConfigDict(

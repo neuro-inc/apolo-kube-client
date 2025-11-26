@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_network_policy import V1NetworkPolicy
@@ -11,7 +11,7 @@ from .v1_network_policy import V1NetworkPolicy
 __all__ = ("V1NetworkPolicyList",)
 
 
-class V1NetworkPolicyList(ListModel):
+class V1NetworkPolicyList(CollectionModel[V1NetworkPolicy]):
     """NetworkPolicyList is a list of NetworkPolicy objects."""
 
     model_config = ConfigDict(

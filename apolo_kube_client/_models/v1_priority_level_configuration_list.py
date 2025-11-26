@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_priority_level_configuration import V1PriorityLevelConfiguration
@@ -11,7 +11,7 @@ from .v1_priority_level_configuration import V1PriorityLevelConfiguration
 __all__ = ("V1PriorityLevelConfigurationList",)
 
 
-class V1PriorityLevelConfigurationList(ListModel):
+class V1PriorityLevelConfigurationList(CollectionModel[V1PriorityLevelConfiguration]):
     """PriorityLevelConfigurationList is a list of PriorityLevelConfiguration objects."""
 
     model_config = ConfigDict(

@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_config_map import V1ConfigMap
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1ConfigMapList",)
 
 
-class V1ConfigMapList(ListModel):
+class V1ConfigMapList(CollectionModel[V1ConfigMap]):
     """ConfigMapList is a resource containing a list of ConfigMap objects."""
 
     model_config = ConfigDict(

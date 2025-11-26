@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_volume_attachment import V1VolumeAttachment
@@ -11,7 +11,7 @@ from .v1_volume_attachment import V1VolumeAttachment
 __all__ = ("V1VolumeAttachmentList",)
 
 
-class V1VolumeAttachmentList(ListModel):
+class V1VolumeAttachmentList(CollectionModel[V1VolumeAttachment]):
     """VolumeAttachmentList is a collection of VolumeAttachment objects."""
 
     model_config = ConfigDict(

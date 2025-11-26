@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1beta1_cluster_trust_bundle import V1beta1ClusterTrustBundle
@@ -11,7 +11,7 @@ from .v1beta1_cluster_trust_bundle import V1beta1ClusterTrustBundle
 __all__ = ("V1beta1ClusterTrustBundleList",)
 
 
-class V1beta1ClusterTrustBundleList(ListModel):
+class V1beta1ClusterTrustBundleList(CollectionModel[V1beta1ClusterTrustBundle]):
     """ClusterTrustBundleList is a collection of ClusterTrustBundle objects"""
 
     model_config = ConfigDict(

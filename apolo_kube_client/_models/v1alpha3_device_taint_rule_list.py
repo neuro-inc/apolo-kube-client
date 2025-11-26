@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1alpha3_device_taint_rule import V1alpha3DeviceTaintRule
@@ -11,7 +11,7 @@ from .v1alpha3_device_taint_rule import V1alpha3DeviceTaintRule
 __all__ = ("V1alpha3DeviceTaintRuleList",)
 
 
-class V1alpha3DeviceTaintRuleList(ListModel):
+class V1alpha3DeviceTaintRuleList(CollectionModel[V1alpha3DeviceTaintRule]):
     """DeviceTaintRuleList is a collection of DeviceTaintRules."""
 
     model_config = ConfigDict(

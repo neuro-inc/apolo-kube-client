@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_limit_range import V1LimitRange
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1LimitRangeList",)
 
 
-class V1LimitRangeList(ListModel):
+class V1LimitRangeList(CollectionModel[V1LimitRange]):
     """LimitRangeList is a list of LimitRange items."""
 
     model_config = ConfigDict(

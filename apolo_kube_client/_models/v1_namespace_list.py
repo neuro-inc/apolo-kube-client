@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_namespace import V1Namespace
@@ -11,7 +11,7 @@ from .v1_namespace import V1Namespace
 __all__ = ("V1NamespaceList",)
 
 
-class V1NamespaceList(ListModel):
+class V1NamespaceList(CollectionModel[V1Namespace]):
     """NamespaceList is a list of Namespaces."""
 
     model_config = ConfigDict(

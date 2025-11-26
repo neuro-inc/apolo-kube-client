@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_storage_class import V1StorageClass
@@ -11,7 +11,7 @@ from .v1_storage_class import V1StorageClass
 __all__ = ("V1StorageClassList",)
 
 
-class V1StorageClassList(ListModel):
+class V1StorageClassList(CollectionModel[V1StorageClass]):
     """StorageClassList is a collection of storage classes."""
 
     model_config = ConfigDict(

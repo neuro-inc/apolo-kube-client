@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_endpoints import V1Endpoints
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1EndpointsList",)
 
 
-class V1EndpointsList(ListModel):
+class V1EndpointsList(CollectionModel[V1Endpoints]):
     """EndpointsList is a list of endpoints. Deprecated: This API is deprecated in v1.33+."""
 
     model_config = ConfigDict(

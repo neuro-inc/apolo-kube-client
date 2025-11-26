@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1beta1_device_class import V1beta1DeviceClass
@@ -11,7 +11,7 @@ from .v1beta1_device_class import V1beta1DeviceClass
 __all__ = ("V1beta1DeviceClassList",)
 
 
-class V1beta1DeviceClassList(ListModel):
+class V1beta1DeviceClassList(CollectionModel[V1beta1DeviceClass]):
     """DeviceClassList is a collection of classes."""
 
     model_config = ConfigDict(

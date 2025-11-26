@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_csi_driver import V1CSIDriver
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1CSIDriverList",)
 
 
-class V1CSIDriverList(ListModel):
+class V1CSIDriverList(CollectionModel[V1CSIDriver]):
     """CSIDriverList is a collection of CSIDriver objects."""
 
     model_config = ConfigDict(

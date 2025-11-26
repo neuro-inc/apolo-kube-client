@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_secret import V1Secret
@@ -11,7 +11,7 @@ from .v1_secret import V1Secret
 __all__ = ("V1SecretList",)
 
 
-class V1SecretList(ListModel):
+class V1SecretList(CollectionModel[V1Secret]):
     """SecretList is a list of Secret."""
 
     model_config = ConfigDict(
