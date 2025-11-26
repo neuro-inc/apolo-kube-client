@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_pod_affinity_term import V1PodAffinityTerm
 from .v1_weighted_pod_affinity_term import V1WeightedPodAffinityTerm
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PodAffinity",)
 

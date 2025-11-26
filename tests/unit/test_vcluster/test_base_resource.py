@@ -1,10 +1,10 @@
 from unittest.mock import AsyncMock, Mock
 
-from apolo_kube_client._batch_v1 import BatchV1Api
-from apolo_kube_client._vcluster._batch_v1_proxy import BatchV1ApiProxy
-from apolo_kube_client._core_v1 import CoreV1Api
-from apolo_kube_client._vcluster._core_v1_proxy import CoreV1ApiProxy
 from apolo_kube_client import V1ConfigMap, V1Job
+from apolo_kube_client._batch_v1 import BatchV1Api
+from apolo_kube_client._core_v1 import CoreV1Api
+from apolo_kube_client._vcluster._batch_v1_proxy import BatchV1ApiProxy
+from apolo_kube_client._vcluster._core_v1_proxy import CoreV1ApiProxy
 
 
 async def test_virtual_proxy() -> None:

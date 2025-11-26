@@ -1,11 +1,11 @@
 from .._apps_v1 import AppsV1Api, StatefulSet
-from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 from .._models import (
     V1StatefulSet,
     V1StatefulSetList,
     V1Status,
 )
+from ._attr_proxy import attr
+from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
 
 class StatefulSetProxy(

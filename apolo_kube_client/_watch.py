@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING, Literal, NoReturn, Protocol
 
 import aiohttp
 
-from ._errors import ResourceGone, _raise_for_text, _raise_for_obj
+from ._errors import ResourceGone, _raise_for_obj, _raise_for_text
 from ._typedefs import JsonType
+
 
 if TYPE_CHECKING:
     from ._models.base import ResourceModel

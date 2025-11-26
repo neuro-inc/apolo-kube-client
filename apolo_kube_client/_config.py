@@ -2,6 +2,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+
 NAMESPACE_DEFAULT = "default"
 
 

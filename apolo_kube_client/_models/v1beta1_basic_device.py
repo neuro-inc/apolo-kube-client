@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_device_attribute import V1beta1DeviceAttribute
 from .v1beta1_device_capacity import V1beta1DeviceCapacity
 from .v1beta1_device_counter_consumption import V1beta1DeviceCounterConsumption
 from .v1beta1_device_taint import V1beta1DeviceTaint
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1beta1BasicDevice",)
 

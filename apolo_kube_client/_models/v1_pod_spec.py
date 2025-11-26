@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_affinity import V1Affinity
 from .v1_container import V1Container
 from .v1_ephemeral_container import V1EphemeralContainer
@@ -17,7 +18,7 @@ from .v1_resource_requirements import V1ResourceRequirements
 from .v1_toleration import V1Toleration
 from .v1_topology_spread_constraint import V1TopologySpreadConstraint
 from .v1_volume import V1Volume
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PodSpec",)
 

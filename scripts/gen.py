@@ -1,14 +1,15 @@
 import json
 import keyword
 import re
+from copy import replace
 from dataclasses import dataclass
-from pathlib import Path
 from operator import itemgetter
+from pathlib import Path
+from typing import Any
+
 import libcst
 from kubernetes.client import models
 from pydantic import BaseModel
-from typing import Any
-from copy import replace
 
 
 MOD = """\
@@ -106,7 +107,7 @@ def parse_type(self_name: str, descr: str) -> ParseTypeRes:
             False,
             True,
         )
-    elif descr == "object":
+    if descr == "object":
         return ParseTypeRes(
             "JsonType",
             frozenset(["from apolo_kube_client._typedefs import JsonType"]),
@@ -114,7 +115,7 @@ def parse_type(self_name: str, descr: str) -> ParseTypeRes:
             False,
             False,
         )
-    elif match := DICT_RE.match(descr):
+    if match := DICT_RE.match(descr):
         key = parse_type(self_name, match.group("key"))
         val = parse_type(self_name, match.group("val"))
         return ParseTypeRes(
@@ -124,7 +125,7 @@ def parse_type(self_name: str, descr: str) -> ParseTypeRes:
             False,
             True,
         )
-    elif match := LIST_RE.match(descr):
+    if match := LIST_RE.match(descr):
         item = parse_type(self_name, match.group("item"))
         return ParseTypeRes(
             f"list[{item.type_}]",
@@ -133,64 +134,63 @@ def parse_type(self_name: str, descr: str) -> ParseTypeRes:
             False,
             True,
         )
-    else:
-        match descr:
-            case "int":
-                return ParseTypeRes(
-                    "int",
-                    frozenset(),
-                    "None",
-                    False,
-                    False,
-                )
-            case "bool":
-                return ParseTypeRes(
-                    "bool",
-                    frozenset(),
-                    "None",
-                    False,
-                    False,
-                )
-            case "int":
-                return ParseTypeRes(
-                    "int",
-                    frozenset(),
-                    "None",
-                    False,
-                    False,
-                )
-            case "float":
-                return ParseTypeRes(
-                    "float",
-                    frozenset(),
-                    "None",
-                    False,
-                    False,
-                )
-            case "str":
-                return ParseTypeRes(
-                    "str",
-                    frozenset(),
-                    "None",
-                    False,
-                    False,
-                )
-            case "datetime":
-                return ParseTypeRes(
-                    "datetime",
-                    frozenset(["from datetime import datetime"]),
-                    "None",
-                    False,
-                    False,
-                )
-            case _:
-                return ParseTypeRes(
-                    descr,
-                    frozenset([f"from .{mod_name(descr)} import {descr}"]),
-                    f"{descr}()",
-                    True,
-                    False,
-                )
+    match descr:
+        case "int":
+            return ParseTypeRes(
+                "int",
+                frozenset(),
+                "None",
+                False,
+                False,
+            )
+        case "bool":
+            return ParseTypeRes(
+                "bool",
+                frozenset(),
+                "None",
+                False,
+                False,
+            )
+        case "int":
+            return ParseTypeRes(
+                "int",
+                frozenset(),
+                "None",
+                False,
+                False,
+            )
+        case "float":
+            return ParseTypeRes(
+                "float",
+                frozenset(),
+                "None",
+                False,
+                False,
+            )
+        case "str":
+            return ParseTypeRes(
+                "str",
+                frozenset(),
+                "None",
+                False,
+                False,
+            )
+        case "datetime":
+            return ParseTypeRes(
+                "datetime",
+                frozenset(["from datetime import datetime"]),
+                "None",
+                False,
+                False,
+            )
+        case _:
+            return ParseTypeRes(
+                descr,
+                frozenset([f"from .{mod_name(descr)} import {descr}"]),
+                f"{descr}()",
+                True,
+                False,
+            )
 
 
 INVALID_NAMES = {"bool", "int", "float", "str"}
@@ -199,12 +199,11 @@ INVALID_NAMES = {"bool", "int", "float", "str"}
 def calc_attr_name(attr: str) -> str:
     if attr in dir(BaseModel) or keyword.iskeyword(attr):
         return attr + "_"
-    elif attr in INVALID_NAMES:
+    if attr in INVALID_NAMES:
         return attr + "_"
-    elif attr.startswith("_"):
+    if attr.startswith("_"):
         return attr[1:] + "_"
-    else:
-        return attr
+    return attr
 
 
 def find_def(swagger: Any, name: str) -> tuple[str, Any]:
@@ -231,9 +230,9 @@ def find_def(swagger: Any, name: str) -> tuple[str, Any]:
             found.append(ref)
 
     if not found:
-        raise Exception(f"Cannot find definition for {name}")
-    elif len(found) > 1:
-        raise Exception(f"Found multiple definitions for {name}: {found}")
+        raise Exception(f"Cannot find definition for {name}")  # noqa: EM102
+    if len(found) > 1:
+        raise Exception(f"Found multiple definitions for {name}: {found}")  # noqa: EM102
 
     return found[0], swagger["definitions"][found[0]]
 
@@ -250,7 +249,7 @@ def generate(
     name = cls.__name__
     if name in has_required_fields:
         return
-    print(f"Generate {name}")
+    print(f"Generate {name}")  # noqa: T201
     imports: set[str] = set()
     body: list[str] = []
     ref, definition = find_def(swagger, name)
@@ -309,6 +308,7 @@ def generate(
 
         attr_descr = attr_def.get("description")
         if attr_descr:
+            attr_descr = attr_descr.replace("\t", " " * 8)
             quota = (
                 '"""'
                 if not attr_descr.startswith('"') and not attr_descr.endswith('"')
@@ -384,7 +384,7 @@ def generate(
         body.append(f"    {field}\n")
 
     if "description" in definition:
-        doc = definition["description"]
+        doc = definition["description"].replace("\t", " " * 8)
     else:
         doc = ""
     mod = MOD.format(
@@ -471,7 +471,7 @@ def main() -> None:
     init_lines.append("from .base import ListModel, ResourceModel")
     all_names.extend(["ListModel", "ResourceModel"])
 
-    all = ", ".join(f'"{name}"' for name in sorted(all_names))
+    all = ", ".join(f'"{name}"' for name in sorted(all_names))  # noqa: A001
     init_lines.append(f"__all__ = ({all})")
     (target_dir / "__init__.py").write_text("\n".join(init_lines))
 

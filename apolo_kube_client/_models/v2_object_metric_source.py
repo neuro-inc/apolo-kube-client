@@ -1,8 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_metric_identifier import V2MetricIdentifier
 from .v2_metric_target import V2MetricTarget
+
 
 __all__ = ("V2ObjectMetricSource",)
 

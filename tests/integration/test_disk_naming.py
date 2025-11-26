@@ -3,13 +3,8 @@ from collections.abc import AsyncGenerator
 
 import pytest
 
-from apolo_kube_client import KubeClient
-from apolo_kube_client._crd_models import (
-    V1DiskNamingCRD,
-    V1DiskNamingCRDMetadata,
-    V1DiskNamingCRDSpec,
-)
 from apolo_kube_client import (
+    KubeClient,
     V1CustomResourceColumnDefinition,
     V1CustomResourceDefinition,
     V1CustomResourceDefinitionNames,
@@ -18,6 +13,11 @@ from apolo_kube_client import (
     V1CustomResourceValidation,
     V1JSONSchemaProps,
     V1ObjectMeta,
+)
+from apolo_kube_client._crd_models import (
+    V1DiskNamingCRD,
+    V1DiskNamingCRDMetadata,
+    V1DiskNamingCRDSpec,
 )
 
 

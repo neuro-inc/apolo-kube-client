@@ -1,11 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1beta2_capacity_requirements import V1beta2CapacityRequirements
 from .v1beta2_device_selector import V1beta2DeviceSelector
 from .v1beta2_device_toleration import V1beta2DeviceToleration
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1beta2ExactDeviceRequest",)
 

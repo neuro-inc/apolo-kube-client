@@ -1,5 +1,5 @@
-from apolo_kube_client import KubeClient
 from apolo_kube_client import (
+    KubeClient,
     V1Container,
     V1ObjectMeta,
     V1Pod,

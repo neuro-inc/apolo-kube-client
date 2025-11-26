@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_cel_device_selector import V1CELDeviceSelector
+
 
 __all__ = ("V1DeviceSelector",)
 

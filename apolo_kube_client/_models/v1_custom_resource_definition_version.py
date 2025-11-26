@@ -1,12 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
 from .v1_custom_resource_validation import V1CustomResourceValidation
 from .v1_selectable_field import V1SelectableField
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1CustomResourceDefinitionVersion",)
 

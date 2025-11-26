@@ -1,10 +1,9 @@
-from typing import Callable
+from collections.abc import Callable
 
-from apolo_kube_client import KubeClient
-from apolo_kube_client._utils import base64_encode
 from apolo_kube_client import (
     AdmissionregistrationV1ServiceReference,
     AdmissionregistrationV1WebhookClientConfig,
+    KubeClient,
     V1LabelSelector,
     V1LabelSelectorRequirement,
     V1MutatingWebhook,
@@ -12,6 +11,7 @@ from apolo_kube_client import (
     V1ObjectMeta,
     V1RuleWithOperations,
 )
+from apolo_kube_client._utils import base64_encode
 
 
 class TestMutatingWebhookConfigurations:

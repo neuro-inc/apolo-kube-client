@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_custom_resource_definition_condition import V1CustomResourceDefinitionCondition
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1CustomResourceDefinitionStatus",)
 

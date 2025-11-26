@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1beta1_apply_configuration import V1beta1ApplyConfiguration
 from .v1beta1_json_patch import V1beta1JSONPatch
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1beta1Mutation",)
 

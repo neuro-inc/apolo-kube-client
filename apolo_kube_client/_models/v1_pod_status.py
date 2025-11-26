@@ -1,5 +1,8 @@
+from datetime import datetime
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
@@ -7,8 +10,7 @@ from .v1_pod_condition import V1PodCondition
 from .v1_pod_extended_resource_claim_status import V1PodExtendedResourceClaimStatus
 from .v1_pod_ip import V1PodIP
 from .v1_pod_resource_claim_status import V1PodResourceClaimStatus
-from datetime import datetime
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PodStatus",)
 

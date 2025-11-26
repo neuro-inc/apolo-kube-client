@@ -1,12 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import ConfigDict, Field
+
+from pydantic import BeforeValidator, ConfigDict, Field
+
 from .base import ResourceModel
-from .utils import KubeMeta
-from .utils import _default_if_none
+from .utils import KubeMeta, _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1beta2_resource_claim_spec import V1beta2ResourceClaimSpec
 from .v1beta2_resource_claim_status import V1beta2ResourceClaimStatus
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1beta2ResourceClaim",)
 

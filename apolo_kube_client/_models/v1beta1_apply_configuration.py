@@ -1,4 +1,5 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -26,11 +27,11 @@ class V1beta1ApplyConfiguration(BaseModel):
 
 Apply configurations are declared in CEL using object initialization. For example, this CEL expression returns an apply configuration to set a single field:
 
-	Object{
-	  spec: Object.spec{
-	    serviceAccountName: "example"
-	  }
-	}
+        Object{
+          spec: Object.spec{
+            serviceAccountName: "example"
+          }
+        }
 
 Apply configurations may not modify atomic structs, maps or arrays due to the risk of accidental deletion of values not included in the apply configuration.
 

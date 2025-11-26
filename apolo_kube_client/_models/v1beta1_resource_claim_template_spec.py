@@ -1,10 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import ConfigDict, Field
+
+from pydantic import BeforeValidator, ConfigDict, Field
+
 from .base import ResourceModel
 from .utils import _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1beta1_resource_claim_spec import V1beta1ResourceClaimSpec
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1beta1ResourceClaimTemplateSpec",)
 

@@ -1,7 +1,11 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
-from .utils import KubeMeta
+
 from apolo_kube_client._typedefs import JsonType
+
+from .utils import KubeMeta
+
 
 __all__ = ("V1WatchEvent",)
 

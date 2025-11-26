@@ -3,12 +3,12 @@ from uuid import uuid4
 
 import pytest
 
-from apolo_kube_client import KubeClient
-from apolo_kube_client._utils import base64_encode
 from apolo_kube_client import (
+    KubeClient,
     V1ObjectMeta,
     V1Secret,
 )
+from apolo_kube_client._utils import base64_encode
 
 
 @pytest.fixture

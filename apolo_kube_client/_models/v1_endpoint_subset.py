@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .core_v1_endpoint_port import CoreV1EndpointPort
 from .utils import _collection_if_none
 from .v1_endpoint_address import V1EndpointAddress
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1EndpointSubset",)
 

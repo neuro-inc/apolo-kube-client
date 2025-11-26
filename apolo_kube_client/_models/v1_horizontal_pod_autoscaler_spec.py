@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .v1_cross_version_object_reference import V1CrossVersionObjectReference
+
 
 __all__ = ("V1HorizontalPodAutoscalerSpec",)
 

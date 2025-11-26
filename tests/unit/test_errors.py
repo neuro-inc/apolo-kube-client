@@ -1,11 +1,12 @@
-from apolo_kube_client._errors import _raise_for_obj, _raise_for_text
 import pytest
+
 from apolo_kube_client import (
-    ResourceNotFound,
-    V1Status,
     KubeClientException,
     ResourceGone,
+    ResourceNotFound,
+    V1Status,
 )
+from apolo_kube_client._errors import _raise_for_obj, _raise_for_text
 
 
 def test_raise_for_obj_status() -> None:

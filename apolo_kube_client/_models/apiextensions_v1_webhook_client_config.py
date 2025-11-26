@@ -1,6 +1,9 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .apiextensions_v1_service_reference import ApiextensionsV1ServiceReference
+
 
 __all__ = ("ApiextensionsV1WebhookClientConfig",)
 

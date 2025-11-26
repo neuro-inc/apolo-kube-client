@@ -1,9 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from apolo_kube_client._typedefs import JsonType
+
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
-from apolo_kube_client._typedefs import JsonType
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1PodDisruptionBudgetSpec",)
 

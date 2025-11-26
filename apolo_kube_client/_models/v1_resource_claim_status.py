@@ -1,11 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
-from .utils import _collection_if_none
-from .utils import _default_if_none
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
+from .utils import _collection_if_none, _default_if_none
 from .v1_allocated_device_status import V1AllocatedDeviceStatus
 from .v1_allocation_result import V1AllocationResult
 from .v1_resource_claim_consumer_reference import V1ResourceClaimConsumerReference
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1ResourceClaimStatus",)
 

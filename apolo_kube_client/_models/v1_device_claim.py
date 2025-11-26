@@ -1,10 +1,12 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v1_device_claim_configuration import V1DeviceClaimConfiguration
 from .v1_device_constraint import V1DeviceConstraint
 from .v1_device_request import V1DeviceRequest
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1DeviceClaim",)
 

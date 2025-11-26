@@ -1,13 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import ConfigDict, Field
+
+from pydantic import BeforeValidator, ConfigDict, Field
+
 from .base import ResourceModel
 from .rbac_v1_subject import RbacV1Subject
-from .utils import KubeMeta
-from .utils import _collection_if_none
-from .utils import _default_if_none
+from .utils import KubeMeta, _collection_if_none, _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v1_role_ref import V1RoleRef
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1RoleBinding",)
 

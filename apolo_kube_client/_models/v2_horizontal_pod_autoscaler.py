@@ -1,12 +1,13 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import ConfigDict, Field
+
+from pydantic import BeforeValidator, ConfigDict, Field
+
 from .base import ResourceModel
-from .utils import KubeMeta
-from .utils import _default_if_none
+from .utils import KubeMeta, _default_if_none
 from .v1_object_meta import V1ObjectMeta
 from .v2_horizontal_pod_autoscaler_spec import V2HorizontalPodAutoscalerSpec
 from .v2_horizontal_pod_autoscaler_status import V2HorizontalPodAutoscalerStatus
-from pydantic import BeforeValidator
+
 
 __all__ = ("V2HorizontalPodAutoscaler",)
 

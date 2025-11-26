@@ -1,9 +1,11 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _default_if_none
 from .v1alpha3_device_taint import V1alpha3DeviceTaint
 from .v1alpha3_device_taint_selector import V1alpha3DeviceTaintSelector
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1alpha3DeviceTaintRuleSpec",)
 

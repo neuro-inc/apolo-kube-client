@@ -1,7 +1,10 @@
 from typing import Annotated, ClassVar, Final
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from .utils import KubeMeta
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
+
 
 __all__ = ("V1APIVersions",)
 

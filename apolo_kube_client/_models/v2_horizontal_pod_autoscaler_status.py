@@ -1,10 +1,12 @@
+from datetime import datetime
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .utils import _collection_if_none
 from .v2_horizontal_pod_autoscaler_condition import V2HorizontalPodAutoscalerCondition
 from .v2_metric_status import V2MetricStatus
-from datetime import datetime
-from pydantic import BeforeValidator
+
 
 __all__ = ("V2HorizontalPodAutoscalerStatus",)
 

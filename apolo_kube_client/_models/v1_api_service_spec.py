@@ -1,8 +1,10 @@
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
 from .utils import _default_if_none
-from pydantic import BeforeValidator
+
 
 __all__ = ("V1APIServiceSpec",)
 
