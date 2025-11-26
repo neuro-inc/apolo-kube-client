@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_mutating_admission_policy_binding import (
@@ -13,7 +13,9 @@ from .v1alpha1_mutating_admission_policy_binding import (
 __all__ = ("V1alpha1MutatingAdmissionPolicyBindingList",)
 
 
-class V1alpha1MutatingAdmissionPolicyBindingList(ListModel):
+class V1alpha1MutatingAdmissionPolicyBindingList(
+    CollectionModel[V1alpha1MutatingAdmissionPolicyBinding]
+):
     """MutatingAdmissionPolicyBindingList is a list of MutatingAdmissionPolicyBinding."""
 
     model_config = ConfigDict(

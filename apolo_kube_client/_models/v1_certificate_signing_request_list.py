@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_certificate_signing_request import V1CertificateSigningRequest
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1CertificateSigningRequestList",)
 
 
-class V1CertificateSigningRequestList(ListModel):
+class V1CertificateSigningRequestList(CollectionModel[V1CertificateSigningRequest]):
     """CertificateSigningRequestList is a collection of CertificateSigningRequest objects"""
 
     model_config = ConfigDict(

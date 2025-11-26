@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_pod_disruption_budget import V1PodDisruptionBudget
@@ -11,7 +11,7 @@ from .v1_pod_disruption_budget import V1PodDisruptionBudget
 __all__ = ("V1PodDisruptionBudgetList",)
 
 
-class V1PodDisruptionBudgetList(ListModel):
+class V1PodDisruptionBudgetList(CollectionModel[V1PodDisruptionBudget]):
     """PodDisruptionBudgetList is a collection of PodDisruptionBudgets."""
 
     model_config = ConfigDict(

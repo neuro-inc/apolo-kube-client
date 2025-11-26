@@ -8,7 +8,7 @@ from .apiextensions_v1_service_reference import ApiextensionsV1ServiceReference
 from .apiextensions_v1_webhook_client_config import ApiextensionsV1WebhookClientConfig
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
 from .authentication_v1_token_request import AuthenticationV1TokenRequest
-from .base import ListModel, ResourceModel
+from .base import CollectionModel, ListModel, ResourceModel
 from .core_v1_endpoint_port import CoreV1EndpointPort
 from .core_v1_event import CoreV1Event
 from .core_v1_event_list import CoreV1EventList
@@ -775,6 +775,7 @@ __all__ = (
     "ApiextensionsV1WebhookClientConfig",
     "ApiregistrationV1ServiceReference",
     "AuthenticationV1TokenRequest",
+    "CollectionModel",
     "CoreV1EndpointPort",
     "CoreV1Event",
     "CoreV1EventList",

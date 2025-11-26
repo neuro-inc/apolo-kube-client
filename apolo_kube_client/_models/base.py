@@ -10,3 +10,7 @@ class ResourceModel(BaseModel):
 
 class ListModel(BaseModel):
     metadata: V1ListMeta = V1ListMeta()
+
+
+class CollectionModel[T](ListModel):
+    items: list[T]

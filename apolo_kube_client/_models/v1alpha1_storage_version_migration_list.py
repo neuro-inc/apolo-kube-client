@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_storage_version_migration import V1alpha1StorageVersionMigration
@@ -11,7 +11,9 @@ from .v1alpha1_storage_version_migration import V1alpha1StorageVersionMigration
 __all__ = ("V1alpha1StorageVersionMigrationList",)
 
 
-class V1alpha1StorageVersionMigrationList(ListModel):
+class V1alpha1StorageVersionMigrationList(
+    CollectionModel[V1alpha1StorageVersionMigration]
+):
     """StorageVersionMigrationList is a collection of storage version migrations."""
 
     model_config = ConfigDict(

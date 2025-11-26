@@ -41,6 +41,10 @@ class ResourceModel(BaseModel):
 
 class ListModel(BaseModel):
     metadata: V1ListMeta = V1ListMeta()
+
+
+class CollectionModel[T](ListModel):
+    items: list[T]
 """
 
 UTILS_MOD = """\
@@ -290,8 +294,17 @@ def generate(
             base = "ResourceModel"
             imports.add("from .base import ResourceModel")
         case "V1ListMeta":
-            base = "ListModel"
-            imports.add("from .base import ListModel")
+            if base_descr := cls.openapi_types.get("items"):
+                match = LIST_RE.match(base_descr)
+                res = parse_type(name, match.group("item"))
+                assert res.is_model
+                base = f"CollectionModel[{res.type_}]"
+                imports |= res.imports
+                imports.add("from .base import CollectionModel")
+            else:
+                base = "ListModel"
+                imports.add("from .base import ListModel")
+
     has_required = False
     for attr, typ in cls.openapi_types.items():
         alias = cls.attribute_map[attr]
@@ -468,8 +481,8 @@ def main() -> None:
 
     (target_dir / "base.py").write_text(BASE_MOD)
     (target_dir / "utils.py").write_text(UTILS_MOD)
-    init_lines.append("from .base import ListModel, ResourceModel")
-    all_names.extend(["ListModel", "ResourceModel"])
+    init_lines.append("from .base import CollectionModel, ListModel, ResourceModel")
+    all_names.extend(["CollectionModel", "ListModel", "ResourceModel"])
 
     all = ", ".join(f'"{name}"' for name in sorted(all_names))  # noqa: A001
     init_lines.append(f"__all__ = ({all})")

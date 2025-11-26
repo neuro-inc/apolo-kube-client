@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_service import V1Service
@@ -11,7 +11,7 @@ from .v1_service import V1Service
 __all__ = ("V1ServiceList",)
 
 
-class V1ServiceList(ListModel):
+class V1ServiceList(CollectionModel[V1Service]):
     """ServiceList holds a list of services."""
 
     model_config = ConfigDict(

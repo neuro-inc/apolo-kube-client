@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_component_status import V1ComponentStatus
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1ComponentStatusList",)
 
 
-class V1ComponentStatusList(ListModel):
+class V1ComponentStatusList(CollectionModel[V1ComponentStatus]):
     """Status of all the conditions for the component as a list of ComponentStatus objects. Deprecated: This API is deprecated in v1.19+"""
 
     model_config = ConfigDict(

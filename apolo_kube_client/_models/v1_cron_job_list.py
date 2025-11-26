@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_cron_job import V1CronJob
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1CronJobList",)
 
 
-class V1CronJobList(ListModel):
+class V1CronJobList(CollectionModel[V1CronJob]):
     """CronJobList is a collection of cron jobs."""
 
     model_config = ConfigDict(

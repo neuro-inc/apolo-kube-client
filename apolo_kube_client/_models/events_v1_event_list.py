@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .events_v1_event import EventsV1Event
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("EventsV1EventList",)
 
 
-class EventsV1EventList(ListModel):
+class EventsV1EventList(CollectionModel[EventsV1Event]):
     """EventList is a list of Event objects."""
 
     model_config = ConfigDict(

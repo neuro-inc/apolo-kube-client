@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_csi_storage_capacity import V1CSIStorageCapacity
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1CSIStorageCapacityList",)
 
 
-class V1CSIStorageCapacityList(ListModel):
+class V1CSIStorageCapacityList(CollectionModel[V1CSIStorageCapacity]):
     """CSIStorageCapacityList is a collection of CSIStorageCapacity objects."""
 
     model_config = ConfigDict(

@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_node import V1Node
@@ -11,7 +11,7 @@ from .v1_node import V1Node
 __all__ = ("V1NodeList",)
 
 
-class V1NodeList(ListModel):
+class V1NodeList(CollectionModel[V1Node]):
     """NodeList is the whole list of all Nodes which have been registered with master."""
 
     model_config = ConfigDict(

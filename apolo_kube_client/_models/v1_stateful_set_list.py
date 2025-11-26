@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_stateful_set import V1StatefulSet
@@ -11,7 +11,7 @@ from .v1_stateful_set import V1StatefulSet
 __all__ = ("V1StatefulSetList",)
 
 
-class V1StatefulSetList(ListModel):
+class V1StatefulSetList(CollectionModel[V1StatefulSet]):
     """StatefulSetList is a collection of StatefulSets."""
 
     model_config = ConfigDict(

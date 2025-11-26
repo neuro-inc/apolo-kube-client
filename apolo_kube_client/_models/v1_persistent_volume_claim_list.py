@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_persistent_volume_claim import V1PersistentVolumeClaim
@@ -11,7 +11,7 @@ from .v1_persistent_volume_claim import V1PersistentVolumeClaim
 __all__ = ("V1PersistentVolumeClaimList",)
 
 
-class V1PersistentVolumeClaimList(ListModel):
+class V1PersistentVolumeClaimList(CollectionModel[V1PersistentVolumeClaim]):
     """PersistentVolumeClaimList is a list of PersistentVolumeClaim items."""
 
     model_config = ConfigDict(

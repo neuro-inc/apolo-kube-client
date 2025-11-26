@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_validating_webhook_configuration import V1ValidatingWebhookConfiguration
@@ -11,7 +11,9 @@ from .v1_validating_webhook_configuration import V1ValidatingWebhookConfiguratio
 __all__ = ("V1ValidatingWebhookConfigurationList",)
 
 
-class V1ValidatingWebhookConfigurationList(ListModel):
+class V1ValidatingWebhookConfigurationList(
+    CollectionModel[V1ValidatingWebhookConfiguration]
+):
     """ValidatingWebhookConfigurationList is a list of ValidatingWebhookConfiguration."""
 
     model_config = ConfigDict(

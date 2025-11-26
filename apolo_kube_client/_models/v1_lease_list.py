@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_lease import V1Lease
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1LeaseList",)
 
 
-class V1LeaseList(ListModel):
+class V1LeaseList(CollectionModel[V1Lease]):
     """LeaseList is a list of Lease objects."""
 
     model_config = ConfigDict(

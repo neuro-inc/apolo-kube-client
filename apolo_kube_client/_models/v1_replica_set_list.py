@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1_replica_set import V1ReplicaSet
@@ -11,7 +11,7 @@ from .v1_replica_set import V1ReplicaSet
 __all__ = ("V1ReplicaSetList",)
 
 
-class V1ReplicaSetList(ListModel):
+class V1ReplicaSetList(CollectionModel[V1ReplicaSet]):
     """ReplicaSetList is a collection of ReplicaSets."""
 
     model_config = ConfigDict(

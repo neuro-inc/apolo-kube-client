@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_list_meta import V1ListMeta
 from .v1alpha1_volume_attributes_class import V1alpha1VolumeAttributesClass
@@ -11,7 +11,7 @@ from .v1alpha1_volume_attributes_class import V1alpha1VolumeAttributesClass
 __all__ = ("V1alpha1VolumeAttributesClassList",)
 
 
-class V1alpha1VolumeAttributesClassList(ListModel):
+class V1alpha1VolumeAttributesClassList(CollectionModel[V1alpha1VolumeAttributesClass]):
     """VolumeAttributesClassList is a collection of VolumeAttributesClass objects."""
 
     model_config = ConfigDict(

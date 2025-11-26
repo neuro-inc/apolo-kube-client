@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar, Final
 
 from pydantic import BeforeValidator, ConfigDict, Field
 
-from .base import ListModel
+from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
 from .v1_ip_address import V1IPAddress
 from .v1_list_meta import V1ListMeta
@@ -11,7 +11,7 @@ from .v1_list_meta import V1ListMeta
 __all__ = ("V1IPAddressList",)
 
 
-class V1IPAddressList(ListModel):
+class V1IPAddressList(CollectionModel[V1IPAddress]):
     """IPAddressList contains a list of IPAddress."""
 
     model_config = ConfigDict(
