@@ -11,20 +11,26 @@ from .._core_v1 import (
     CoreV1Api,
     Endpoint,
     Event,
+    Namespace,
     PersistentVolumeClaim,
     Pod,
     PodLog,
     PodStatus,
     Secret,
     Service,
+    ServiceAccount,
+    ServiceAccountToken,
 )
 from .._models import (
+    AuthenticationV1TokenRequest,
     CoreV1Event,
     CoreV1EventList,
     V1ConfigMap,
     V1ConfigMapList,
     V1Endpoints,
     V1EndpointsList,
+    V1Namespace,
+    V1NamespaceList,
     V1PersistentVolumeClaim,
     V1PersistentVolumeClaimList,
     V1Pod,
@@ -32,11 +38,18 @@ from .._models import (
     V1Secret,
     V1SecretList,
     V1Service,
+    V1ServiceAccount,
+    V1ServiceAccountList,
     V1ServiceList,
     V1Status,
 )
 from ._attr_proxy import attr
-from ._resource_proxy import BaseProxy, NamespacedResourceProxy, NestedResourceProxy
+from ._resource_proxy import (
+    BaseProxy,
+    ClusterScopedResourceProxy,
+    NamespacedResourceProxy,
+    NestedResourceProxy,
+)
 
 
 class PodStatusProxy(NestedResourceProxy[V1Pod, PodStatus]):
@@ -234,6 +247,29 @@ class ServiceProxy(
     pass
 
 
+class ServiceAccountTokenProxy(
+    NestedResourceProxy[AuthenticationV1TokenRequest, ServiceAccountToken]
+):
+    async def create(
+        self,
+        model: AuthenticationV1TokenRequest,
+    ) -> AuthenticationV1TokenRequest:
+        return await self._origin.create(model, namespace=self._namespace)
+
+
+class ServiceAccountProxy(
+    NamespacedResourceProxy[
+        V1ServiceAccount,
+        V1ServiceAccountList,
+        V1Status,
+        ServiceAccount,
+    ]
+):
+    @attr(ServiceAccountTokenProxy)
+    def token(self) -> ServiceAccountToken:
+        return self._origin.token
+
+
 class EventProxy(
     NamespacedResourceProxy[
         CoreV1Event,
@@ -256,12 +292,27 @@ class EndpointProxy(
     pass
 
 
+class NamespaceProxy(
+    ClusterScopedResourceProxy[
+        V1Namespace,
+        V1NamespaceList,
+        V1Namespace,
+        Namespace,
+    ]
+):
+    pass
+
+
 class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     """
     Core v1 API wrapper for Kubernetes.
     """
 
     # cluster scoped resources
+    @attr(NamespaceProxy)
+    def namespace(self) -> Namespace:
+        return self._origin.namespace
+
     # namespaced resources
     @attr(PodProxy)
     def pod(self) -> Pod:
@@ -290,6 +341,10 @@ class CoreV1ApiProxy(BaseProxy[CoreV1Api]):
     @attr(EventProxy)
     def event(self) -> Event:
         return self._origin.event
+
+    @attr(ServiceAccountProxy)
+    def serviceaccounts(self) -> ServiceAccount:
+        return self._origin.serviceaccounts
 
     # ASvetlov: CoreV1Api has cluster-scoped networking_k8s_io_v1 and discovery_k8s_io_v1
     # Not sure if we should expose these attrs in project-scoped client.
