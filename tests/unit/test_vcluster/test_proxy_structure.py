@@ -1,10 +1,15 @@
 from apolo_kube_client._attr import _Attr
-from apolo_kube_client._base_resource import Base, NamespacedResource
+from apolo_kube_client._base_resource import (
+    Base,
+    ClusterScopedResource,
+    NamespacedResource,
+)
 from apolo_kube_client._client import KubeClient
 from apolo_kube_client._vcluster._attr_proxy import _AttrProxy
 from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
 from apolo_kube_client._vcluster._resource_proxy import (
     BaseProxy,
+    ClusterScopedResourceProxy,
     NamespacedResourceProxy,
 )
 
@@ -26,6 +31,11 @@ def check_proxy(proxy: type, origin: type) -> None:
         if issubclass(proxy_attr.cls, NamespacedResourceProxy):
             assert issubclass(proxy_attr.cls, NamespacedResourceProxy)
             assert issubclass(orig_attr.cls, NamespacedResource)
+            func = proxy_attr.func
+            assert func.__annotations__["return"] is orig_attr.cls
+        elif issubclass(proxy_attr.cls, ClusterScopedResourceProxy):
+            assert issubclass(proxy_attr.cls, ClusterScopedResourceProxy)
+            assert issubclass(orig_attr.cls, ClusterScopedResource)
             func = proxy_attr.func
             assert func.__annotations__["return"] is orig_attr.cls
         else:

@@ -13,6 +13,7 @@ from ._core_v1 import CoreV1Api
 from ._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from ._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from ._neuromation_io_v1 import NeuromationioV1API
+from ._rbac_authorization_k8s_io_v1 import RbacAuthorizationK8sIoV1Api
 from ._resource_list import ResourceListApi
 from ._storage_k8s_io_v1 import StorageK8SioV1Api
 from ._transport import KubeTransport
@@ -32,6 +33,7 @@ class KubeClient:
     storage_k8s_io_v1 = _Attr(StorageK8SioV1Api)
     neuromation_io_v1 = _Attr(NeuromationioV1API)
     extensions_k8s_io_v1 = _Attr(ExtensionsK8sV1Api)
+    rbac_authorization_k8s_io_v1 = _Attr(RbacAuthorizationK8sIoV1Api)
 
     def __init__(
         self,
