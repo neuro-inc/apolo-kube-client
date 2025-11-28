@@ -24,13 +24,12 @@ class V1ContainerState(BaseModel):
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerState"
 
     running: Annotated[
-        V1ContainerStateRunning,
+        V1ContainerStateRunning | None,
         Field(
             description="""Details about a running container""",
-            exclude_if=lambda v: not v.__pydantic_fields_set__,
+            exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ContainerStateRunning)),
-    ] = V1ContainerStateRunning()
+    ] = None
 
     terminated: Annotated[
         V1ContainerStateTerminated | None,

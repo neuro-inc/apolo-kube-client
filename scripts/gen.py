@@ -245,13 +245,14 @@ def generate(
     cls: type,
     swagger: Any,
     target_dir: Path,
-    has_required_fields: dict[str, bool],
+    has_required_fields: dict[str, int],
     init_lines: list[str],
     all_names: list[str],
 ) -> None:
     _, _, modname = cls.__module__.rpartition(".")
     name = cls.__name__
-    if name in has_required_fields:
+    if has_required_fields.get(name, -1) > 0:
+        # already processed
         return
     print(f"Generate {name}")  # noqa: T201
     imports: set[str] = set()
@@ -411,7 +412,10 @@ def generate(
     (target_dir / modname).with_suffix(".py").write_text(mod)
     init_lines.append(f"from .{modname} import {name}")
     all_names.append(name)
-    has_required_fields[name] = has_required
+    if has_required_fields.get(name, 0) != -1:
+        has_required_fields[name] = int(has_required)
+    else:
+        has_required_fields[name] = 1
 
 
 class Transformer(libcst.CSTTransformer):
@@ -471,7 +475,7 @@ def main() -> None:
     all_names: list[str] = []
     with (here.parent / "swagger.json").open() as swagger_file:
         swagger = json.load(swagger_file)
-    has_required_fields: dict[str, bool] = {}
+    has_required_fields: dict[str, int] = {"V1ContainerStateRunning": -1}
     for name in dir(models):
         obj = getattr(models, name)
         if isinstance(obj, type):
