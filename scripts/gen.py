@@ -245,13 +245,14 @@ def generate(
     cls: type,
     swagger: Any,
     target_dir: Path,
-    has_required_fields: dict[str, bool],
+    has_required_fields: dict[str, int],
     init_lines: list[str],
-    all_names: list[str],
+    all_names: set[str],
 ) -> None:
     _, _, modname = cls.__module__.rpartition(".")
     name = cls.__name__
-    if name in has_required_fields:
+    if has_required_fields.get(name, -1) >= 0:
+        # already processed
         return
     print(f"Generate {name}")  # noqa: T201
     imports: set[str] = set()
@@ -410,8 +411,11 @@ def generate(
     )
     (target_dir / modname).with_suffix(".py").write_text(mod)
     init_lines.append(f"from .{modname} import {name}")
-    all_names.append(name)
-    has_required_fields[name] = has_required
+    all_names.add(name)
+    if has_required_fields.get(name, 0) != -1:
+        has_required_fields[name] = int(has_required)
+    else:
+        has_required_fields[name] = 1
 
 
 class Transformer(libcst.CSTTransformer):
@@ -455,10 +459,10 @@ class Transformer(libcst.CSTTransformer):
         return updated
 
 
-def fix_init(root_dir: Path, all_names: list[str]) -> None:
+def fix_init(root_dir: Path, all_names: set[str]) -> None:
     fname = root_dir / "__init__.py"
     mod = libcst.parse_module(fname.read_text())
-    updated_mod = mod.visit(Transformer(all_names))
+    updated_mod = mod.visit(Transformer(list(all_names)))
     fname.write_text(updated_mod.code)
 
 
@@ -468,10 +472,10 @@ def main() -> None:
     target_dir = root_dir / "_models"
     target_dir.mkdir(exist_ok=True)
     init_lines: list[str] = []
-    all_names: list[str] = []
+    all_names: set[str] = set()
     with (here.parent / "swagger.json").open() as swagger_file:
         swagger = json.load(swagger_file)
-    has_required_fields: dict[str, bool] = {}
+    has_required_fields: dict[str, int] = {"V1ContainerStateRunning": -1}
     for name in dir(models):
         obj = getattr(models, name)
         if isinstance(obj, type):
@@ -482,7 +486,7 @@ def main() -> None:
     (target_dir / "base.py").write_text(BASE_MOD)
     (target_dir / "utils.py").write_text(UTILS_MOD)
     init_lines.append("from .base import CollectionModel, ListModel, ResourceModel")
-    all_names.extend(["CollectionModel", "ListModel", "ResourceModel"])
+    all_names |= {"CollectionModel", "ListModel", "ResourceModel"}
 
     all = ", ".join(f'"{name}"' for name in sorted(all_names))  # noqa: A001
     init_lines.append(f"__all__ = ({all})")
