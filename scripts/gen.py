@@ -251,7 +251,7 @@ def generate(
 ) -> None:
     _, _, modname = cls.__module__.rpartition(".")
     name = cls.__name__
-    if has_required_fields.get(name, -1) > 0:
+    if has_required_fields.get(name, -1) >= 0:
         # already processed
         return
     print(f"Generate {name}")  # noqa: T201
