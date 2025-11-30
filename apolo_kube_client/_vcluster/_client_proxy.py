@@ -7,12 +7,14 @@ from .._core_v1 import CoreV1Api
 from .._discovery_k8s_io_v1 import DiscoveryK8sIoV1Api
 from .._networking_k8s_io_v1 import NetworkingK8SioV1Api
 from .._neuromation_io_v1 import NeuromationioV1API
+from .._rbac_authorization_k8s_io_v1 import RbacAuthorizationK8sIoV1Api
 from ._attr_proxy import attr
 from ._batch_v1_proxy import BatchV1ApiProxy
 from ._core_v1_proxy import CoreV1ApiProxy
 from ._discovery_k8s_io_v1_proxy import DiscoveryK8sIoV1ApiProxy
 from ._networking_k8s_io_v1_proxy import NetworkingK8SioV1ApiProxy
 from ._neuromation_io_v1_proxy import NeuromationioV1APIProxy
+from ._rbac_authorization_k8s_io_v1_proxy import RbacAuthorizationK8sIoV1ApiProxy
 from ._resource_proxy import BaseProxy
 
 
@@ -36,6 +38,10 @@ class KubeClientProxy(BaseProxy[KubeClient]):
     @attr(NeuromationioV1APIProxy)
     def neuromation_io_v1(self) -> NeuromationioV1API:
         return self._origin.neuromation_io_v1
+
+    @attr(RbacAuthorizationK8sIoV1ApiProxy)
+    def rbac_authorization_k8s_io_v1(self) -> RbacAuthorizationK8sIoV1Api:
+        return self._origin.rbac_authorization_k8s_io_v1
 
     async def __aenter__(self) -> Self:
         await self._origin.__aenter__()
