@@ -37,7 +37,6 @@ class KubeCore:
         transport: KubeTransport,
     ) -> None:
         self._base_url: URL = URL(config.endpoint_url)
-        self._namespace = config.namespace
 
         if config.auth_type == KubeClientAuthType.TOKEN:
             assert config.token or config.token_path
@@ -92,13 +91,6 @@ class KubeCore:
     @property
     def base_url(self) -> URL:
         return self._base_url
-
-    @property
-    def namespace(self) -> str:
-        return self._namespace
-
-    def resolve_namespace(self, namespace: str | None = None) -> str:
-        return namespace or self._namespace
 
     @property
     def _base_headers(self) -> dict[str, str]:

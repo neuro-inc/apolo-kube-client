@@ -82,7 +82,6 @@ async def kube_config(
         auth_cert_path=user["client-certificate"],
         auth_cert_key_path=user["client-key"],
         auth_type=KubeClientAuthType.CERTIFICATE,
-        namespace="default",
     )
 
 

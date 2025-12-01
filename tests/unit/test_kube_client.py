@@ -28,7 +28,6 @@ def kube_config_cert_auth(
         auth_cert_path=str(auth_cert_path),
         auth_cert_key_path=str(auth_cert_key_path),
         auth_type=KubeClientAuthType.CERTIFICATE,
-        namespace="default",
     )
 
 
@@ -38,7 +37,6 @@ def kube_config_token_auth() -> KubeConfig:
         endpoint_url="https://k8s-test.com",
         auth_type=KubeClientAuthType.TOKEN,
         token="token",
-        namespace="default",
     )
 
 
@@ -53,7 +51,6 @@ async def test_create_kube_client(kube_client: KubeClient) -> None:
     assert isinstance(kube_client._core, KubeCore)
     assert kube_client._core.base_url == URL("https://k8s-test.com")
     assert kube_client._core._auth_type == KubeClientAuthType.CERTIFICATE
-    assert kube_client._core.namespace == "default"
 
     assert isinstance(kube_client.core_v1, CoreV1Api)
     assert isinstance(kube_client.batch_v1, BatchV1Api)
@@ -75,4 +72,3 @@ async def test_create_kube_client_token_auth(
         assert kube_client._core.base_url == URL("https://k8s-test.com")
         assert kube_client._core._auth_type == KubeClientAuthType.TOKEN
         assert kube_client._core._token == "token"
-        assert kube_client._core.namespace == "default"

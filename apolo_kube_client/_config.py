@@ -1,18 +1,17 @@
-from enum import Enum
+from enum import StrEnum
 
-from pydantic import BaseModel, Field
-
-
-NAMESPACE_DEFAULT = "default"
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class KubeClientAuthType(str, Enum):
+class KubeClientAuthType(StrEnum):
     NONE = "none"
     TOKEN = "token"
     CERTIFICATE = "certificate"
 
 
 class KubeConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     endpoint_url: str
     cert_authority_data_pem: str | None = Field(repr=False, default=None)
     cert_authority_path: str | None = None
@@ -22,7 +21,6 @@ class KubeConfig(BaseModel):
     token: str | None = Field(repr=False, default=None)
     token_path: str | None = None
     token_update_interval_s: int = 300
-    namespace: str = NAMESPACE_DEFAULT
     client_conn_timeout_s: int = 300
     client_read_timeout_s: int = 300
     client_watch_timeout_s: int = 1800
