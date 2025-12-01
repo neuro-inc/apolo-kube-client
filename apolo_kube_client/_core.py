@@ -10,7 +10,6 @@ from typing import Self, cast
 
 import aiohttp
 from aiohttp.hdrs import METH_DELETE, METH_GET, METH_PATCH, METH_POST, METH_PUT
-from pydantic import BaseModel
 from yarl import URL, Query
 
 from ._config import KubeConfig
@@ -145,25 +144,6 @@ class KubeCore:
             return
         self._token = token
         logger.info("%s: kube token was refreshed", self)
-
-    def serialize[ModelT: BaseModel](self, obj: BaseModel) -> JsonType:
-        return cast(
-            JsonType,
-            obj.model_dump(mode="json"),
-        )
-
-    def deserialize[ModelT: BaseModel](
-        self, data: JsonType, klass: type[ModelT]
-    ) -> ModelT:
-        return klass.model_validate(data)
-
-    async def deserialize_response[ModelT: BaseModel](
-        self,
-        response: aiohttp.ClientResponse,
-        klass: type[ModelT],
-    ) -> ModelT:
-        data = await response.json()
-        return klass.model_validate(data)
 
     @asynccontextmanager
     async def request(
