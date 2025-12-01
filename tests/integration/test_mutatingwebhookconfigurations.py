@@ -22,7 +22,7 @@ class TestMutatingWebhookConfigurations:
         _, ca_cert = generate_certs("k8s-test-ca")
         client_config = AdmissionregistrationV1WebhookClientConfig(
             service=AdmissionregistrationV1ServiceReference(
-                namespace=kube_client.namespace,
+                namespace="default",
                 name=service_name,
                 path="/mutate",
             ),

@@ -316,7 +316,9 @@ class NamespacedResource[
         return self._build_url_list(namespace) / name
 
     def _get_ns(self, namespace: str | None = None) -> str:
-        return self._core.resolve_namespace(namespace)
+        if namespace is not None:
+            return namespace
+        return "default"
 
     async def get(self, name: str, namespace: str | None = None) -> ModelT:
         async with self._core.request(

@@ -71,12 +71,5 @@ class KubeClient:
             )
 
     @property
-    def namespace(self) -> str:
-        """
-        Returns the current namespace of the Kubernetes client.
-        """
-        return self._core.resolve_namespace()
-
-    @property
     def core(self) -> KubeCore:
         return self._core

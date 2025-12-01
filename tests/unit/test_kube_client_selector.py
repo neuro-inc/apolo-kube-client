@@ -6,7 +6,6 @@ import pytest
 import yaml
 
 from apolo_kube_client import KubeClientSelector, KubeConfig, V1ObjectMeta, V1Secret
-from apolo_kube_client._config import NAMESPACE_DEFAULT
 from apolo_kube_client._errors import ResourceNotFound
 
 
@@ -53,7 +52,7 @@ def build_vcluster_secret(server: str) -> V1Secret:
 
 @pytest.fixture
 def default_kube_config() -> KubeConfig:
-    return KubeConfig(endpoint_url="http://localhost", namespace=NAMESPACE_DEFAULT)
+    return KubeConfig(endpoint_url="http://localhost")
 
 
 @pytest.fixture
@@ -91,7 +90,7 @@ async def test_returns_vcluster_client_when_secret_present(
     async with selector:
         async with selector.get_client(org_name=org, project_name=project) as client:
             assert client._namespace == "default"
-            assert client.core_v1.secret._origin._get_ns(None) == NAMESPACE_DEFAULT
+            assert client.core_v1.secret._origin._get_ns(None) == "default"
             assert client.core_v1.secret._origin._get_ns("override") == "override"
     assert selector._host_client.core_v1.secret.get.await_count == 1
 
