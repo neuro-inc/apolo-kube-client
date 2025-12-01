@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 from .v1_custom_resource_definition_condition import V1CustomResourceDefinitionCondition
@@ -12,13 +12,6 @@ __all__ = ("V1CustomResourceDefinitionStatus",)
 
 class V1CustomResourceDefinitionStatus(BaseModel):
     """CustomResourceDefinitionStatus indicates the state of the CustomResourceDefinition"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionStatus"

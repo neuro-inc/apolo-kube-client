@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 
@@ -10,13 +10,6 @@ __all__ = ("V1UncountedTerminatedPods",)
 
 class V1UncountedTerminatedPods(BaseModel):
     """UncountedTerminatedPods holds UIDs of Pods that have terminated but haven't been accounted in Job status counters."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.UncountedTerminatedPods"
 

@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_device_claim import V1DeviceClaim
@@ -11,13 +11,6 @@ __all__ = ("V1ResourceClaimSpec",)
 
 class V1ResourceClaimSpec(BaseModel):
     """ResourceClaimSpec defines what is being requested in a ResourceClaim and how to configure it."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceClaimSpec"
 

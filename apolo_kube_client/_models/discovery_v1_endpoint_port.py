@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("DiscoveryV1EndpointPort",)
@@ -8,13 +8,6 @@ __all__ = ("DiscoveryV1EndpointPort",)
 
 class DiscoveryV1EndpointPort(BaseModel):
     """EndpointPort represents a Port used by an EndpointSlice"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.discovery.v1.EndpointPort"
 

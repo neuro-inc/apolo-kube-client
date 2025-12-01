@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1CustomResourceSubresourceScale",)
@@ -8,13 +8,6 @@ __all__ = ("V1CustomResourceSubresourceScale",)
 
 class V1CustomResourceSubresourceScale(BaseModel):
     """CustomResourceSubresourceScale defines how to serve the scale subresource for CustomResources."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceSubresourceScale"

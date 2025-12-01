@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _collection_if_none, _default_if_none
@@ -13,13 +13,6 @@ __all__ = ("V1MutatingWebhookConfiguration",)
 
 class V1MutatingWebhookConfiguration(ResourceModel):
     """MutatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and may change the object."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.MutatingWebhookConfiguration"

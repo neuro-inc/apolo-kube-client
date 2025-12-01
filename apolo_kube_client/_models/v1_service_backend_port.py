@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1ServiceBackendPort",)
@@ -8,13 +8,6 @@ __all__ = ("V1ServiceBackendPort",)
 
 class V1ServiceBackendPort(BaseModel):
     """ServiceBackendPort is the service port being referenced."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.ServiceBackendPort"
 

@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
@@ -13,13 +13,6 @@ __all__ = ("V1PodDisruptionBudgetSpec",)
 
 class V1PodDisruptionBudgetSpec(BaseModel):
     """PodDisruptionBudgetSpec is a description of a PodDisruptionBudget."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.policy.v1.PodDisruptionBudgetSpec"

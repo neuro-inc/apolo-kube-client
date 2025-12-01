@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_exec_action import V1ExecAction
@@ -14,13 +14,6 @@ __all__ = ("V1Probe",)
 
 class V1Probe(BaseModel):
     """Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Probe"
 

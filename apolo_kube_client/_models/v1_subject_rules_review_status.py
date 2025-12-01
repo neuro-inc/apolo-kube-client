@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .v1_non_resource_rule import V1NonResourceRule
 from .v1_resource_rule import V1ResourceRule
@@ -11,13 +11,6 @@ __all__ = ("V1SubjectRulesReviewStatus",)
 
 class V1SubjectRulesReviewStatus(BaseModel):
     """SubjectRulesReviewStatus contains the result of a rules check. This check can be incomplete depending on the set of authorizers the server is configured with and any errors experienced during evaluation. Because authorization rules are additive, if a rule appears in a list it's safe to assume the subject has that permission, even if that list is incomplete."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authorization.v1.SubjectRulesReviewStatus"

@@ -19,7 +19,7 @@ from ._resource_proxy import BaseProxy, NamespacedResourceProxy
 
 class DiskNamingCRDProxy(
     NamespacedResourceProxy[
-        V1DiskNamingCRD, V1DiskNamingCRDList, V1Status, DiskNamingCRD  # type: ignore
+        V1DiskNamingCRD, V1DiskNamingCRDList, V1Status, DiskNamingCRD
     ]
 ):
     pass
@@ -27,7 +27,7 @@ class DiskNamingCRDProxy(
 
 class UserBucketCRDProxy(
     NamespacedResourceProxy[
-        V1UserBucketCRD, V1UserBucketCRDList, V1Status, UserBucketCRD  # type: ignore
+        V1UserBucketCRD, V1UserBucketCRDList, V1Status, UserBucketCRD
     ]
 ):
     pass
@@ -35,8 +35,8 @@ class UserBucketCRDProxy(
 
 class PersistentBucketCredentialCRDProxy(
     NamespacedResourceProxy[
-        V1PersistentBucketCredentialCRD,  # type: ignore
-        V1PersistentBucketCredentialCRDList,  # type: ignore
+        V1PersistentBucketCredentialCRD,
+        V1PersistentBucketCredentialCRDList,
         V1Status,
         PersistentBucketCredentialCRD,
     ]

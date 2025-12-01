@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_exempt_priority_level_configuration import V1ExemptPriorityLevelConfiguration
@@ -12,13 +12,6 @@ __all__ = ("V1PriorityLevelConfigurationSpec",)
 
 class V1PriorityLevelConfigurationSpec(BaseModel):
     """PriorityLevelConfigurationSpec specifies the configuration of a priority level."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.flowcontrol.v1.PriorityLevelConfigurationSpec"

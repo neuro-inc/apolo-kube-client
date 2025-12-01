@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .storage_v1_token_request import StorageV1TokenRequest
 from .utils import _collection_if_none
@@ -11,13 +11,6 @@ __all__ = ("V1CSIDriverSpec",)
 
 class V1CSIDriverSpec(BaseModel):
     """CSIDriverSpec is the specification of a CSIDriver."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.CSIDriverSpec"
 

@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
@@ -18,13 +18,6 @@ __all__ = ("V1StatefulSetSpec",)
 
 class V1StatefulSetSpec(BaseModel):
     """A StatefulSetSpec is the specification of a StatefulSet."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSetSpec"
 

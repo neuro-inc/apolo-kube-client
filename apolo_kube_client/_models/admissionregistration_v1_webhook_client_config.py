@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .admissionregistration_v1_service_reference import (
     AdmissionregistrationV1ServiceReference,
@@ -12,13 +12,6 @@ __all__ = ("AdmissionregistrationV1WebhookClientConfig",)
 
 class AdmissionregistrationV1WebhookClientConfig(BaseModel):
     """WebhookClientConfig contains the information to make a TLS connection with the webhook"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.WebhookClientConfig"

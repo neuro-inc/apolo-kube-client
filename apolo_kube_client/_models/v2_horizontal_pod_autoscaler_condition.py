@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V2HorizontalPodAutoscalerCondition",)
@@ -9,13 +9,6 @@ __all__ = ("V2HorizontalPodAutoscalerCondition",)
 
 class V2HorizontalPodAutoscalerCondition(BaseModel):
     """HorizontalPodAutoscalerCondition describes the state of a HorizontalPodAutoscaler at a certain point."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerCondition"

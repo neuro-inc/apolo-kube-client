@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_daemon_set_update_strategy import V1DaemonSetUpdateStrategy
@@ -13,13 +13,6 @@ __all__ = ("V1DaemonSetSpec",)
 
 class V1DaemonSetSpec(BaseModel):
     """DaemonSetSpec is the specification of a daemon set."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DaemonSetSpec"
 

@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 
@@ -10,13 +10,6 @@ __all__ = ("V1beta2CapacityRequirements",)
 
 class V1beta2CapacityRequirements(BaseModel):
     """CapacityRequirements defines the capacity requirements for a specific device request."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.CapacityRequirements"

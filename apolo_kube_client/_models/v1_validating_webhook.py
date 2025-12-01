@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .admissionregistration_v1_webhook_client_config import (
     AdmissionregistrationV1WebhookClientConfig,
@@ -16,13 +16,6 @@ __all__ = ("V1ValidatingWebhook",)
 
 class V1ValidatingWebhook(BaseModel):
     """ValidatingWebhook describes an admission webhook and the resources and operations it applies to."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingWebhook"

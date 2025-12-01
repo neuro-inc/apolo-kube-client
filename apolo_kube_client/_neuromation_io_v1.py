@@ -11,17 +11,17 @@ from ._crd_models import (
 from ._models import V1Status
 
 
-class DiskNamingCRD(NamespacedResource[V1DiskNamingCRD, V1DiskNamingCRDList, V1Status]):  # type: ignore
+class DiskNamingCRD(NamespacedResource[V1DiskNamingCRD, V1DiskNamingCRDList, V1Status]):
     query_path = "disknamings"
 
 
-class UserBucketCRD(NamespacedResource[V1UserBucketCRD, V1UserBucketCRDList, V1Status]):  # type: ignore
+class UserBucketCRD(NamespacedResource[V1UserBucketCRD, V1UserBucketCRDList, V1Status]):
     query_path = "userbuckets"
 
 
 class PersistentBucketCredentialCRD(
     NamespacedResource[
-        V1PersistentBucketCredentialCRD, V1PersistentBucketCredentialCRDList, V1Status  # type: ignore
+        V1PersistentBucketCredentialCRD, V1PersistentBucketCredentialCRDList, V1Status
     ]
 ):
     query_path = "persistentbucketcredentials"

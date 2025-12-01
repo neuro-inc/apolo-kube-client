@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_rolling_update_deployment import V1RollingUpdateDeployment
@@ -11,13 +11,6 @@ __all__ = ("V1DeploymentStrategy",)
 
 class V1DeploymentStrategy(BaseModel):
     """DeploymentStrategy describes how to replace existing pods with new ones."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentStrategy"
 

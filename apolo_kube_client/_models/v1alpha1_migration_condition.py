@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1alpha1MigrationCondition",)
@@ -9,13 +9,6 @@ __all__ = ("V1alpha1MigrationCondition",)
 
 class V1alpha1MigrationCondition(BaseModel):
     """Describes the state of a migration at a certain point."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.storagemigration.v1alpha1.MigrationCondition"

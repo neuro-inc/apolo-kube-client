@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _collection_if_none, _default_if_none
@@ -15,13 +15,6 @@ class V1StorageClass(ResourceModel):
     """StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned.
 
     StorageClasses are non-namespaced; the name of the storage class according to etcd is in ObjectMeta.Name."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.StorageClass"
 

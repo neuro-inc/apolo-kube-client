@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .core_v1_endpoint_port import CoreV1EndpointPort
 from .utils import _collection_if_none
@@ -24,13 +24,6 @@ class V1EndpointSubset(BaseModel):
             b: [ 10.10.1.1:309, 10.10.2.2:309 ]
 
     Deprecated: This API is deprecated in v1.33+."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EndpointSubset"
 

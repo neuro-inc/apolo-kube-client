@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
@@ -17,13 +17,6 @@ class V1alpha1MutatingAdmissionPolicyBindingList(
     CollectionModel[V1alpha1MutatingAdmissionPolicyBinding]
 ):
     """MutatingAdmissionPolicyBindingList is a list of MutatingAdmissionPolicyBinding."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.MutatingAdmissionPolicyBindingList"

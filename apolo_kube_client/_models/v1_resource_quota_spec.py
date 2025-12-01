@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none, _default_if_none
 from .v1_scope_selector import V1ScopeSelector
@@ -11,13 +11,6 @@ __all__ = ("V1ResourceQuotaSpec",)
 
 class V1ResourceQuotaSpec(BaseModel):
     """ResourceQuotaSpec defines the desired hard limits to enforce for Quota."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ResourceQuotaSpec"
 

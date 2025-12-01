@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .v1_pod_failure_policy_rule import V1PodFailurePolicyRule
 
@@ -10,13 +10,6 @@ __all__ = ("V1PodFailurePolicy",)
 
 class V1PodFailurePolicy(BaseModel):
     """PodFailurePolicy describes how failed pods influence the backoffLimit."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.PodFailurePolicy"
 

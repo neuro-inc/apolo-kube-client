@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none, _default_if_none
 from .v1alpha1_match_condition import V1alpha1MatchCondition
@@ -15,13 +15,6 @@ __all__ = ("V1alpha1MutatingAdmissionPolicySpec",)
 
 class V1alpha1MutatingAdmissionPolicySpec(BaseModel):
     """MutatingAdmissionPolicySpec is the specification of the desired behavior of the admission policy."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.MutatingAdmissionPolicySpec"

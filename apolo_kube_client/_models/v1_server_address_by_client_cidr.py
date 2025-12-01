@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1ServerAddressByClientCIDR",)
@@ -8,13 +8,6 @@ __all__ = ("V1ServerAddressByClientCIDR",)
 
 class V1ServerAddressByClientCIDR(BaseModel):
     """ServerAddressByClientCIDR helps the client to determine the server address that they should use, depending on the clientCIDR that they match."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.ServerAddressByClientCIDR"

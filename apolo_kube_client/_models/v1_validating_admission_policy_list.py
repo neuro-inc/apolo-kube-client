@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
@@ -13,13 +13,6 @@ __all__ = ("V1ValidatingAdmissionPolicyList",)
 
 class V1ValidatingAdmissionPolicyList(CollectionModel[V1ValidatingAdmissionPolicy]):
     """ValidatingAdmissionPolicyList is a list of ValidatingAdmissionPolicy."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyList"

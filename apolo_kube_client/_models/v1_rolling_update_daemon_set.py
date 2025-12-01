@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from apolo_kube_client._typedefs import JsonType
 
@@ -10,13 +10,6 @@ __all__ = ("V1RollingUpdateDaemonSet",)
 
 class V1RollingUpdateDaemonSet(BaseModel):
     """Spec to control the desired behavior of daemon set rolling update."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.RollingUpdateDaemonSet"
 

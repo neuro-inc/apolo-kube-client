@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_queuing_configuration import V1QueuingConfiguration
@@ -11,13 +11,6 @@ __all__ = ("V1LimitResponse",)
 
 class V1LimitResponse(BaseModel):
     """LimitResponse defines how to handle requests that can not be executed right now."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.flowcontrol.v1.LimitResponse"
 

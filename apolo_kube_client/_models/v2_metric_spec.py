@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .v2_container_resource_metric_source import V2ContainerResourceMetricSource
 from .v2_external_metric_source import V2ExternalMetricSource
@@ -14,13 +14,6 @@ __all__ = ("V2MetricSpec",)
 
 class V2MetricSpec(BaseModel):
     """MetricSpec specifies how to scale based on a single metric (only `type` and one other matching field should be set at once)."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricSpec"
 

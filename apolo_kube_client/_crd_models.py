@@ -1,33 +1,26 @@
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel
+from pydantic import Field
+
+from ._models.base import BaseConfiguredModel, CollectionModel, ResourceModel
 
 
-class V1DiskNamingCRDSpec(BaseModel):
+class V1DiskNamingCRDSpec(BaseConfiguredModel):
     disk_id: str
 
 
-class V1DiskNamingCRDMetadata(BaseModel):
-    name: str
-    labels: dict[str, str] = {}
-    namespace: str | None = None
-    resourceVersion: str | None = None
-
-
-class V1DiskNamingCRD(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1DiskNamingCRD(ResourceModel):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "DiskNaming"
-    metadata: V1DiskNamingCRDMetadata
     spec: V1DiskNamingCRDSpec
 
 
-class V1DiskNamingCRDList(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1DiskNamingCRDList(CollectionModel[V1DiskNamingCRD]):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "DiskNamingsList"
-    items: list[V1DiskNamingCRD]
 
 
-class V1UserBucketCRDSpec(BaseModel):
+class V1UserBucketCRDSpec(BaseConfiguredModel):
     provider_type: str | None
     provider_name: str | None
     created_at: str | None
@@ -38,27 +31,18 @@ class V1UserBucketCRDSpec(BaseModel):
     credentials: dict[str, Any] | None = None
 
 
-class V1UserBucketCRDMetadata(BaseModel):
-    name: str
-    labels: dict[str, str] = {}
-    namespace: str | None = None
-    resourceVersion: str | None = None
-
-
-class V1UserBucketCRD(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1UserBucketCRD(ResourceModel):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "UserBucket"
-    metadata: V1UserBucketCRDMetadata
     spec: V1UserBucketCRDSpec
 
 
-class V1UserBucketCRDList(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1UserBucketCRDList(CollectionModel[V1UserBucketCRD]):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "UserBucketsList"
-    items: list[V1UserBucketCRD]
 
 
-class V1PersistentBucketCredentialCRDSpec(BaseModel):
+class V1PersistentBucketCredentialCRDSpec(BaseConfiguredModel):
     provider_name: str
     provider_type: str
     credentials: dict[str, Any]
@@ -67,21 +51,14 @@ class V1PersistentBucketCredentialCRDSpec(BaseModel):
     public: bool | None = None
 
 
-class V1PersistentBucketCredentialCRDMetadata(BaseModel):
-    name: str
-    labels: dict[str, str] = {}
-    namespace: str | None = None
-    resourceVersion: str | None = None
-
-
-class V1PersistentBucketCredentialCRD(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1PersistentBucketCredentialCRD(ResourceModel):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "PersistentBucketCredential"
-    metadata: V1PersistentBucketCredentialCRDMetadata
     spec: V1PersistentBucketCredentialCRDSpec
 
 
-class V1PersistentBucketCredentialCRDList(BaseModel):
-    apiVersion: str = "neuromation.io/v1"
+class V1PersistentBucketCredentialCRDList(
+    CollectionModel[V1PersistentBucketCredentialCRD]
+):
+    api_version: Annotated[str, Field(alias="apiVersion")] = "neuromation.io/v1"
     kind: str = "PersistentBucketCredentialsList"
-    items: list[V1PersistentBucketCredentialCRD]

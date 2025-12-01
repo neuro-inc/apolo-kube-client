@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 from .v1_condition import V1Condition
@@ -11,13 +11,6 @@ __all__ = ("V1ServiceCIDRStatus",)
 
 class V1ServiceCIDRStatus(BaseModel):
     """ServiceCIDRStatus describes the current state of the ServiceCIDR."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.ServiceCIDRStatus"
 

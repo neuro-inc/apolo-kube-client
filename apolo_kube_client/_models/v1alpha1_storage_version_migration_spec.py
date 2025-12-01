@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .v1alpha1_group_version_resource import V1alpha1GroupVersionResource
 
@@ -10,13 +10,6 @@ __all__ = ("V1alpha1StorageVersionMigrationSpec",)
 
 class V1alpha1StorageVersionMigrationSpec(BaseModel):
     """Spec of the storage version migration."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.storagemigration.v1alpha1.StorageVersionMigrationSpec"

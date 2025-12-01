@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("CoreV1EndpointPort",)
@@ -8,13 +8,6 @@ __all__ = ("CoreV1EndpointPort",)
 
 class CoreV1EndpointPort(BaseModel):
     """EndpointPort is a tuple that describes a single port. Deprecated: This API is deprecated in v1.33+."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EndpointPort"
 

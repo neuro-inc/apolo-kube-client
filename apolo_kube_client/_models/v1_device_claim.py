@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 from .v1_device_claim_configuration import V1DeviceClaimConfiguration
@@ -13,13 +13,6 @@ __all__ = ("V1DeviceClaim",)
 
 class V1DeviceClaim(BaseModel):
     """DeviceClaim defines how to request devices with a ResourceClaim."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.DeviceClaim"
 

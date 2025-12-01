@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none
 from .v1beta2_device_allocation_configuration import (
@@ -16,13 +16,6 @@ __all__ = ("V1beta2DeviceAllocationResult",)
 
 class V1beta2DeviceAllocationResult(BaseModel):
     """DeviceAllocationResult is the result of allocating devices."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.DeviceAllocationResult"

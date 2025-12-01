@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import KubeMeta, _collection_if_none
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
@@ -12,13 +12,6 @@ __all__ = ("V1APIGroup",)
 
 class V1APIGroup(BaseModel):
     """APIGroup contains the name, the supported versions, and the preferred version of a group."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.APIGroup"

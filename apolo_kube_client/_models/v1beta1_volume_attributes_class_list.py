@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
@@ -13,13 +13,6 @@ __all__ = ("V1beta1VolumeAttributesClassList",)
 
 class V1beta1VolumeAttributesClassList(CollectionModel[V1beta1VolumeAttributesClass]):
     """VolumeAttributesClassList is a collection of VolumeAttributesClass objects."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.storage.v1beta1.VolumeAttributesClassList"

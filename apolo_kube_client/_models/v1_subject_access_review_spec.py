@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none, _default_if_none
 from .v1_non_resource_attributes import V1NonResourceAttributes
@@ -12,13 +12,6 @@ __all__ = ("V1SubjectAccessReviewSpec",)
 
 class V1SubjectAccessReviewSpec(BaseModel):
     """SubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes and NonResourceAuthorizationAttributes must be set"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authorization.v1.SubjectAccessReviewSpec"

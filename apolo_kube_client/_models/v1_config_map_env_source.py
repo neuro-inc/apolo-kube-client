@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1ConfigMapEnvSource",)
@@ -10,13 +10,6 @@ class V1ConfigMapEnvSource(BaseModel):
     """ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.
 
     The contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ConfigMapEnvSource"
 

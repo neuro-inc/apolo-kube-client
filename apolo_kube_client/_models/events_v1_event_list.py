@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .events_v1_event import EventsV1Event
@@ -13,13 +13,6 @@ __all__ = ("EventsV1EventList",)
 
 class EventsV1EventList(CollectionModel[EventsV1Event]):
     """EventList is a list of Event objects."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.events.v1.EventList"
 

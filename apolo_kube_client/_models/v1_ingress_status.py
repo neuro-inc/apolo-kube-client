@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _default_if_none
 from .v1_ingress_load_balancer_status import V1IngressLoadBalancerStatus
@@ -11,13 +11,6 @@ __all__ = ("V1IngressStatus",)
 
 class V1IngressStatus(BaseModel):
     """IngressStatus describe the current state of the Ingress."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressStatus"
 

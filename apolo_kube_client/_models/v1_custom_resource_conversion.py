@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 from .v1_webhook_conversion import V1WebhookConversion
 
@@ -10,13 +10,6 @@ __all__ = ("V1CustomResourceConversion",)
 
 class V1CustomResourceConversion(BaseModel):
     """CustomResourceConversion describes how to convert different versions of a CR."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceConversion"

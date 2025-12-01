@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 __all__ = ("V1CrossVersionObjectReference",)
@@ -8,13 +8,6 @@ __all__ = ("V1CrossVersionObjectReference",)
 
 class V1CrossVersionObjectReference(BaseModel):
     """CrossVersionObjectReference contains enough information to let you identify the referred resource."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v1.CrossVersionObjectReference"

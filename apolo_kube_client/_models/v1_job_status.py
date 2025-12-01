@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, Field
 
 from .utils import _collection_if_none, _default_if_none
 from .v1_job_condition import V1JobCondition
@@ -13,13 +13,6 @@ __all__ = ("V1JobStatus",)
 
 class V1JobStatus(BaseModel):
     """JobStatus represents the current state of a Job."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobStatus"
 

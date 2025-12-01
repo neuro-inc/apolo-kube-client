@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _default_if_none
@@ -16,13 +16,6 @@ class V1VolumeAttachment(ResourceModel):
     """VolumeAttachment captures the intent to attach or detach the specified volume to/from the specified node.
 
     VolumeAttachment objects are non-namespaced."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.VolumeAttachment"
 
