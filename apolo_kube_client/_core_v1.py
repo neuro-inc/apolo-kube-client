@@ -188,9 +188,10 @@ class ServiceAccountToken(NestedResource[AuthenticationV1TokenRequest]):
         async with self._core.request(
             method="POST",
             url=self._build_url(namespace),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return AuthenticationV1TokenRequest.model_validate(js)
 
 
 class ServiceAccount(

@@ -1,7 +1,7 @@
 import functools
 from collections.abc import AsyncIterator, Sequence
 from contextlib import asynccontextmanager
-from typing import Annotated, ClassVar, Literal, Self, cast, get_args
+from typing import Annotated, Any, ClassVar, Literal, Protocol, Self, cast, get_args
 
 import aiohttp
 from pydantic import BaseModel, ConfigDict, Field, RootModel
@@ -9,7 +9,7 @@ from yarl import URL
 
 from ._core import KubeCore
 from ._errors import ResourceNotFound
-from ._models import ListModel, ResourceModel
+from ._models import ListModel, ResourceModel, V1ListMeta, V1ObjectMeta
 from ._typedefs import JsonType
 from ._watch import Watch
 
@@ -62,6 +62,14 @@ PatchOps = PatchAdd | PatchRemove | PatchReplace | PatchMove | PatchCopy | Patch
 PatchOpModel = RootModel[Annotated[PatchOps, Field(discriminator="op")]]
 
 
+class HasDeleteModel(Protocol):
+    @property
+    def metadata(self) -> V1ObjectMeta | V1ListMeta: ...
+
+    @classmethod
+    def model_validate(cls, obj: Any) -> Self: ...
+
+
 class Base:
     def __init__(self, core: KubeCore) -> None:
         self._core = core
@@ -70,37 +78,36 @@ class Base:
 class ModelClassMixin[
     ModelT: ResourceModel | str | None,
     ListModelT: ListModel | str | None,
-    DeleteModelT: ListModel | ResourceModel | str | None,
+    DeleteModelT: HasDeleteModel | str | None,
 ]:
+    # @functools.lru_cache
+    def _get_orig(self, kind: str) -> type:
+        ret = getattr(self, "__orig_class__", None)
+        if ret is not None:
+            return cast(type, ret)
+        ret = getattr(self, "__orig_bases__", None)
+        if ret is not None:
+            return cast(type, ret[0])
+        msg = f"{kind} class not found"
+        raise ValueError(msg)
+
     @property
     def _model_class(self) -> type[ModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[ModelT], get_args(self.__orig_class__)[0])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[ModelT], get_args(self.__orig_bases__[0])[0])
-        raise ValueError("Model class not found")
+        return cast(type[ModelT], get_args(self._get_orig("Model"))[0])
 
     @property
     def _list_model_class(self) -> type[ListModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[ListModelT], get_args(self.__orig_class__)[1])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[ListModelT], get_args(self.__orig_bases__[0])[1])
-        raise ValueError("ListModel class not found")
+        return cast(type[ListModelT], get_args(self._get_orig("ListModel"))[1])
 
     @property
     def _delete_model_class(self) -> type[DeleteModelT]:
-        if hasattr(self, "__orig_class__"):
-            return cast(type[DeleteModelT], get_args(self.__orig_class__)[2])
-        if hasattr(self, "__orig_bases__"):
-            return cast(type[DeleteModelT], get_args(self.__orig_bases__[0])[2])
-        raise ValueError("DeleteModel class not found")
+        return cast(type[DeleteModelT], get_args(self._get_orig("DeleteModel"))[2])
 
 
 class BaseResource[
     ModelT: ResourceModel,
     ListModelT: ListModel,
-    DeleteModelT: ListModel | ResourceModel,
+    DeleteModelT: HasDeleteModel,
 ](ModelClassMixin[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources
@@ -153,7 +160,7 @@ class BaseResource[
 class ClusterScopedResource[
     ModelT: ResourceModel,
     ListModelT: ListModel,
-    DeleteModelT: ListModel | ResourceModel,
+    DeleteModelT: HasDeleteModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are not namespaced (cluster scoped).
@@ -168,14 +175,16 @@ class ClusterScopedResource[
 
     async def get(self, name: str) -> ModelT:
         async with self._core.request(method="GET", url=self._build_url(name)) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def get_list(self, label_selector: str | None = None) -> ListModelT:
         params = {"labelSelector": label_selector} if label_selector else None
         async with self._core.request(
             method="GET", url=self._build_url_list(), params=params
         ) as resp:
-            return await self._core.deserialize_response(resp, self._list_model_class)
+            js = await resp.json()
+            return self._list_model_class.model_validate(js)
 
     @asynccontextmanager
     async def _get_watch(
@@ -212,18 +221,17 @@ class ClusterScopedResource[
                 label_selector=label_selector,
                 allow_watch_bookmarks=allow_watch_bookmarks,
             ),
-            deserialize=functools.partial(
-                self._core.deserialize, klass=self._model_class
-            ),
+            deserialize=self._model_class.model_validate,
         )
 
     async def create(self, model: ModelT) -> ModelT:
         async with self._core.request(
             method="POST",
             url=self._build_url_list(),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def delete(
         self, name: str, *, payload: JsonType | None = None
@@ -231,7 +239,8 @@ class ClusterScopedResource[
         async with self._core.request(
             method="DELETE", url=self._build_url(name), json=payload
         ) as resp:
-            return await self._core.deserialize_response(resp, self._delete_model_class)
+            js = await resp.json()
+            return self._delete_model_class.model_validate(js)
 
     async def get_or_create(self, model: ModelT) -> tuple[bool, ModelT]:
         """
@@ -249,9 +258,10 @@ class ClusterScopedResource[
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def create_or_update(self, model: ModelT) -> tuple[bool, ModelT]:
         """
@@ -266,11 +276,10 @@ class ClusterScopedResource[
                 method="PATCH",
                 headers={"Content-Type": "application/strategic-merge-patch+json"},
                 url=self._build_url(model.metadata.name),
-                json=self._core.serialize(model),
+                json=model.model_dump(mode="json"),
             ) as resp:
-                return False, await self._core.deserialize_response(
-                    resp, self._model_class
-                )
+                js = await resp.json()
+                return False, self._model_class.model_validate(js)
         except ResourceNotFound:
             return True, await self.create(model)
 
@@ -293,13 +302,14 @@ class ClusterScopedResource[
             url=self._build_url(name),
             json=cast(JsonType, js),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
 
 class NamespacedResource[
     ModelT: ResourceModel,
     ListModelT: ListModel,
-    DeleteModelT: ListModel | ResourceModel,
+    DeleteModelT: HasDeleteModel,
 ](BaseResource[ModelT, ListModelT, DeleteModelT]):
     """
     Base class for Kubernetes resources that are namespaced.
@@ -324,7 +334,8 @@ class NamespacedResource[
         async with self._core.request(
             method="GET", url=self._build_url(name, self._get_ns(namespace))
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def get_list(
         self,
@@ -345,7 +356,8 @@ class NamespacedResource[
             ),
             params=params,
         ) as resp:
-            return await self._core.deserialize_response(resp, self._list_model_class)
+            js = await resp.json()
+            return self._list_model_class.model_validate(js)
 
     @asynccontextmanager
     async def _get_watch(
@@ -390,18 +402,17 @@ class NamespacedResource[
                 namespace=namespace,
                 allow_watch_bookmarks=allow_watch_bookmarks,
             ),
-            deserialize=functools.partial(
-                self._core.deserialize, klass=self._model_class
-            ),
+            deserialize=self._model_class.model_validate,
         )
 
     async def create(self, model: ModelT, namespace: str | None = None) -> ModelT:
         async with self._core.request(
             method="POST",
             url=self._build_url_list(self._get_ns(namespace)),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def delete(
         self,
@@ -415,7 +426,8 @@ class NamespacedResource[
             url=self._build_url(name, self._get_ns(namespace)),
             json=payload,
         ) as resp:
-            return await self._core.deserialize_response(resp, self._delete_model_class)
+            js = await resp.json()
+            return self._delete_model_class.model_validate(js)
 
     async def get_or_create(
         self, model: ModelT, namespace: str | None = None
@@ -435,9 +447,10 @@ class NamespacedResource[
         async with self._core.request(
             method="PUT",
             url=self._build_url(model.metadata.name, self._get_ns(namespace)),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def create_or_update(
         self, model: ModelT, namespace: str | None = None
@@ -454,11 +467,10 @@ class NamespacedResource[
                 method="PATCH",
                 headers={"Content-Type": "application/strategic-merge-patch+json"},
                 url=self._build_url(model.metadata.name, self._get_ns(namespace)),
-                json=self._core.serialize(model),
+                json=model.model_dump(mode="json"),
             ) as resp:
-                return False, await self._core.deserialize_response(
-                    resp, self._model_class
-                )
+                js = await resp.json()
+                return False, self._model_class.model_validate(js)
         except ResourceNotFound:
             return True, await self.create(model, namespace=namespace)
 
@@ -484,7 +496,8 @@ class NamespacedResource[
             url=self._build_url(name, self._get_ns(namespace)),
             json=cast(JsonType, js),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
 
 class NestedResource[
@@ -526,7 +539,8 @@ class NestedResource[
         async with self._core.request(
             method="GET", url=self._build_url(namespace)
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
 
     async def update(
         self,
@@ -536,6 +550,7 @@ class NestedResource[
         async with self._core.request(
             method="PUT",
             url=self._build_url(namespace),
-            json=self._core.serialize(model),
+            json=model.model_dump(mode="json"),
         ) as resp:
-            return await self._core.deserialize_response(resp, self._model_class)
+            js = await resp.json()
+            return self._model_class.model_validate(js)
