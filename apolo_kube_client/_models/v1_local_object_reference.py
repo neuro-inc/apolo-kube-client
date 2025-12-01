@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1LocalObjectReference",)
 
 
-class V1LocalObjectReference(BaseModel):
+class V1LocalObjectReference(BaseConfiguredModel):
     """LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LocalObjectReference"
 

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_aws_elastic_block_store_volume_source import V1AWSElasticBlockStoreVolumeSource
 from .v1_azure_disk_volume_source import V1AzureDiskVolumeSource
@@ -40,15 +41,8 @@ from .v1_vsphere_virtual_disk_volume_source import V1VsphereVirtualDiskVolumeSou
 __all__ = ("V1Volume",)
 
 
-class V1Volume(BaseModel):
+class V1Volume(BaseConfiguredModel):
     """Volume represents a named volume in a pod that may be accessed by any container in the pod."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Volume"
 

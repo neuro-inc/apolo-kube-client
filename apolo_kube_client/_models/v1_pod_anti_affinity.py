@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_pod_affinity_term import V1PodAffinityTerm
 from .v1_weighted_pod_affinity_term import V1WeightedPodAffinityTerm
@@ -10,15 +11,8 @@ from .v1_weighted_pod_affinity_term import V1WeightedPodAffinityTerm
 __all__ = ("V1PodAntiAffinity",)
 
 
-class V1PodAntiAffinity(BaseModel):
+class V1PodAntiAffinity(BaseConfiguredModel):
     """Pod anti affinity is a group of inter pod anti affinity scheduling rules."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodAntiAffinity"
 

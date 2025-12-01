@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_failure_policy import V1PodFailurePolicy
@@ -12,15 +13,8 @@ from .v1_success_policy import V1SuccessPolicy
 __all__ = ("V1JobSpec",)
 
 
-class V1JobSpec(BaseModel):
+class V1JobSpec(BaseConfiguredModel):
     """JobSpec describes how the job execution will look like."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobSpec"
 

@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1FieldSelectorRequirement",)
 
 
-class V1FieldSelectorRequirement(BaseModel):
+class V1FieldSelectorRequirement(BaseConfiguredModel):
     """FieldSelectorRequirement is a selector that contains values, a key, and an operator that relates the key and values."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.FieldSelectorRequirement"

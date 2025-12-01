@@ -1,21 +1,16 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NodeCondition",)
 
 
-class V1NodeCondition(BaseModel):
+class V1NodeCondition(BaseConfiguredModel):
     """NodeCondition contains condition information for a node."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeCondition"
 

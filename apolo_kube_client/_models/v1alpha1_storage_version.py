@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
@@ -15,13 +15,6 @@ __all__ = ("V1alpha1StorageVersion",)
 
 class V1alpha1StorageVersion(ResourceModel):
     """Storage version of a specific resource."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.apiserverinternal.v1alpha1.StorageVersion"

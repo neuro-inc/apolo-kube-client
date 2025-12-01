@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_deployment_strategy import V1DeploymentStrategy
 from .v1_label_selector import V1LabelSelector
@@ -11,15 +12,8 @@ from .v1_pod_template_spec import V1PodTemplateSpec
 __all__ = ("V1DeploymentSpec",)
 
 
-class V1DeploymentSpec(BaseModel):
+class V1DeploymentSpec(BaseConfiguredModel):
     """DeploymentSpec is the specification of the desired behavior of the Deployment."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentSpec"
 

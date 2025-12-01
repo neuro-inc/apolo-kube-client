@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .utils import KubeMeta, _default_if_none
@@ -13,13 +13,6 @@ __all__ = ("V1CustomResourceDefinitionList",)
 
 class V1CustomResourceDefinitionList(CollectionModel[V1CustomResourceDefinition]):
     """CustomResourceDefinitionList is a list of CustomResourceDefinition objects."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionList"

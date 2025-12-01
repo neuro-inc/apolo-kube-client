@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1VolumeMount",)
 
 
-class V1VolumeMount(BaseModel):
+class V1VolumeMount(BaseConfiguredModel):
     """VolumeMount describes a mounting of a Volume within a container."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeMount"
 

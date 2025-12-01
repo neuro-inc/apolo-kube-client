@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .core_v1_event_series import CoreV1EventSeries
@@ -16,13 +16,6 @@ __all__ = ("CoreV1Event",)
 
 class CoreV1Event(ResourceModel):
     """Event is a report of an event somewhere in the cluster.  Events have a limited retention time and triggers and messages may evolve with time.  Event consumers should not rely on the timing of an event with a given Reason reflecting a consistent underlying trigger, or the continued existence of events with that Reason.  Events should be treated as informative, best-effort, supplemental data."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Event"
 

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_volume_projection import V1VolumeProjection
 
@@ -9,15 +10,8 @@ from .v1_volume_projection import V1VolumeProjection
 __all__ = ("V1ProjectedVolumeSource",)
 
 
-class V1ProjectedVolumeSource(BaseModel):
+class V1ProjectedVolumeSource(BaseConfiguredModel):
     """Represents a projected volume source"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ProjectedVolumeSource"
 

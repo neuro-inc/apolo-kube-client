@@ -1,24 +1,18 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
 
 
 __all__ = ("V1CustomResourceSubresources",)
 
 
-class V1CustomResourceSubresources(BaseModel):
+class V1CustomResourceSubresources(BaseConfiguredModel):
     """CustomResourceSubresources defines the status and scale subresources for CustomResources."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceSubresources"

@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import _default_if_none
@@ -13,13 +13,6 @@ __all__ = ("V1JobTemplateSpec",)
 
 class V1JobTemplateSpec(ResourceModel):
     """JobTemplateSpec describes the data a Job should have when created from a template"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.JobTemplateSpec"
 

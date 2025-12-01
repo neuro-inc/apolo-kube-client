@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_ingress_backend import V1IngressBackend
 from .v1_ingress_rule import V1IngressRule
@@ -11,15 +12,8 @@ from .v1_ingress_tls import V1IngressTLS
 __all__ = ("V1IngressSpec",)
 
 
-class V1IngressSpec(BaseModel):
+class V1IngressSpec(BaseConfiguredModel):
     """IngressSpec describes the Ingress the user wishes to exist."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressSpec"
 

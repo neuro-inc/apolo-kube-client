@@ -1,21 +1,16 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1CustomResourceDefinitionCondition",)
 
 
-class V1CustomResourceDefinitionCondition(BaseModel):
+class V1CustomResourceDefinitionCondition(BaseConfiguredModel):
     """CustomResourceDefinitionCondition contains details for the current condition of this pod."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionCondition"

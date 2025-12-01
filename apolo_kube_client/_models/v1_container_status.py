@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_container_state import V1ContainerState
 from .v1_container_user import V1ContainerUser
@@ -13,15 +14,8 @@ from .v1_volume_mount_status import V1VolumeMountStatus
 __all__ = ("V1ContainerStatus",)
 
 
-class V1ContainerStatus(BaseModel):
+class V1ContainerStatus(BaseConfiguredModel):
     """ContainerStatus contains details for the current status of this container."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerStatus"
 

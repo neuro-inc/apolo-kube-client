@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_volume_node_resources import V1VolumeNodeResources
 
@@ -9,15 +10,8 @@ from .v1_volume_node_resources import V1VolumeNodeResources
 __all__ = ("V1CSINodeDriver",)
 
 
-class V1CSINodeDriver(BaseModel):
+class V1CSINodeDriver(BaseConfiguredModel):
     """CSINodeDriver holds information about the specification of one CSI driver installed on a node"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.CSINodeDriver"
 

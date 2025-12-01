@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_named_rule_with_operations import V1NamedRuleWithOperations
@@ -10,15 +11,8 @@ from .v1_named_rule_with_operations import V1NamedRuleWithOperations
 __all__ = ("V1MatchResources",)
 
 
-class V1MatchResources(BaseModel):
+class V1MatchResources(BaseConfiguredModel):
     """MatchResources decides whether to run the admission control policy on an object based on whether it meets the match criteria. The exclude rules take precedence over include rules (if a resource matches both, it is excluded)"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.MatchResources"

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_pod_template_spec import V1PodTemplateSpec
 
@@ -9,15 +10,8 @@ from .v1_pod_template_spec import V1PodTemplateSpec
 __all__ = ("V1ReplicationControllerSpec",)
 
 
-class V1ReplicationControllerSpec(BaseModel):
+class V1ReplicationControllerSpec(BaseConfiguredModel):
     """ReplicationControllerSpec is the specification of a replication controller."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.ReplicationControllerSpec"

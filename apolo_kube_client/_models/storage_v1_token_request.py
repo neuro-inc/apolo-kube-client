@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("StorageV1TokenRequest",)
 
 
-class StorageV1TokenRequest(BaseModel):
+class StorageV1TokenRequest(BaseConfiguredModel):
     """TokenRequest contains parameters of a service account token."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.TokenRequest"
 

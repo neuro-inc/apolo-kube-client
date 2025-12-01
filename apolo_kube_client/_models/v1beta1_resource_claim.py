@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _default_if_none
@@ -16,13 +16,6 @@ class V1beta1ResourceClaim(ResourceModel):
     """ResourceClaim describes a request for access to resources in the cluster, for use by workloads. For example, if a workload needs an accelerator device with specific properties, this is how that request is expressed. The status stanza tracks whether this claim has been satisfied and what specific resources have been allocated.
 
     This is an alpha type and requires enabling the DynamicResourceAllocation feature gate."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.ResourceClaim"
 

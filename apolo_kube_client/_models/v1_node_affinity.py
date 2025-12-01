@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
@@ -10,15 +11,8 @@ from .v1_preferred_scheduling_term import V1PreferredSchedulingTerm
 __all__ = ("V1NodeAffinity",)
 
 
-class V1NodeAffinity(BaseModel):
+class V1NodeAffinity(BaseConfiguredModel):
     """Node affinity is a group of node affinity scheduling rules."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeAffinity"
 

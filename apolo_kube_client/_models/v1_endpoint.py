@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_endpoint_conditions import V1EndpointConditions
 from .v1_endpoint_hints import V1EndpointHints
@@ -11,15 +12,8 @@ from .v1_object_reference import V1ObjectReference
 __all__ = ("V1Endpoint",)
 
 
-class V1Endpoint(BaseModel):
+class V1Endpoint(BaseConfiguredModel):
     """Endpoint represents a single logical "backend" implementing a service."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.discovery.v1.Endpoint"
 

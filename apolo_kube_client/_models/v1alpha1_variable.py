@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1alpha1Variable",)
 
 
-class V1alpha1Variable(BaseModel):
+class V1alpha1Variable(BaseConfiguredModel):
     """Variable is the definition of a variable that is used for composition."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.Variable"

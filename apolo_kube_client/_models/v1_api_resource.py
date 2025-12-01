@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1APIResource",)
 
 
-class V1APIResource(BaseModel):
+class V1APIResource(BaseConfiguredModel):
     """APIResource specifies the name of a resource and whether it is namespaced."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.APIResource"

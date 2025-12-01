@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_lifecycle_handler import V1LifecycleHandler
 
@@ -9,15 +10,8 @@ from .v1_lifecycle_handler import V1LifecycleHandler
 __all__ = ("V1Lifecycle",)
 
 
-class V1Lifecycle(BaseModel):
+class V1Lifecycle(BaseConfiguredModel):
     """Lifecycle describes actions that the management system should take in response to container lifecycle events. For the PostStart and PreStop lifecycle handlers, management of the container blocks until the action is complete, unless the container process fails, in which case the handler is aborted."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Lifecycle"
 

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_group_subject import V1GroupSubject
 from .v1_service_account_subject import V1ServiceAccountSubject
 from .v1_user_subject import V1UserSubject
@@ -10,15 +11,8 @@ from .v1_user_subject import V1UserSubject
 __all__ = ("FlowcontrolV1Subject",)
 
 
-class FlowcontrolV1Subject(BaseModel):
+class FlowcontrolV1Subject(BaseConfiguredModel):
     """Subject matches the originator of a request, as identified by the request authentication system. There are three ways of matching an originator; by user, group, or service account."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.flowcontrol.v1.Subject"
 

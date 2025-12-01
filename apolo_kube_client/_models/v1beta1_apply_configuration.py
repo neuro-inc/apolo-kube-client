@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1ApplyConfiguration",)
 
 
-class V1beta1ApplyConfiguration(BaseModel):
+class V1beta1ApplyConfiguration(BaseConfiguredModel):
     """ApplyConfiguration defines the desired configuration values of an object."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1beta1.ApplyConfiguration"

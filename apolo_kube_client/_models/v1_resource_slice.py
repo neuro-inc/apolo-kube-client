@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _default_if_none
@@ -23,13 +23,6 @@ class V1ResourceSlice(ResourceModel):
     For resources that are not local to a node, the node name is not set. Instead, the driver may use a node selector to specify where the devices are available.
 
     This is an alpha type and requires enabling the DynamicResourceAllocation feature gate."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceSlice"
 

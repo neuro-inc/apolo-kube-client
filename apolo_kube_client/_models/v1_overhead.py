@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1Overhead",)
 
 
-class V1Overhead(BaseModel):
+class V1Overhead(BaseConfiguredModel):
     """Overhead structure represents the resource overhead associated with running a pod."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.node.v1.Overhead"
 

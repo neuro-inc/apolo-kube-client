@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
@@ -10,15 +11,8 @@ from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVer
 __all__ = ("V1CustomResourceDefinitionSpec",)
 
 
-class V1CustomResourceDefinitionSpec(BaseModel):
+class V1CustomResourceDefinitionSpec(BaseConfiguredModel):
     """CustomResourceDefinitionSpec describes how a user wants their resource to appear"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionSpec"

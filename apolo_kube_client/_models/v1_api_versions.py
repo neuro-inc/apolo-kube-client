@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 
@@ -9,15 +10,8 @@ from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 __all__ = ("V1APIVersions",)
 
 
-class V1APIVersions(BaseModel):
+class V1APIVersions(BaseConfiguredModel):
     """APIVersions lists the versions that are available, to allow clients to discover the API at /api, which is the root path of the legacy v1 API."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.APIVersions"

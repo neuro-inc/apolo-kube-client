@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ExpressionWarning",)
 
 
-class V1ExpressionWarning(BaseModel):
+class V1ExpressionWarning(BaseConfiguredModel):
     """ExpressionWarning is a warning information that targets a specific expression."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ExpressionWarning"

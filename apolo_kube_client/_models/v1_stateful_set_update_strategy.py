@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_rolling_update_stateful_set_strategy import V1RollingUpdateStatefulSetStrategy
 
@@ -9,15 +10,8 @@ from .v1_rolling_update_stateful_set_strategy import V1RollingUpdateStatefulSetS
 __all__ = ("V1StatefulSetUpdateStrategy",)
 
 
-class V1StatefulSetUpdateStrategy(BaseModel):
+class V1StatefulSetUpdateStrategy(BaseConfiguredModel):
     """StatefulSetUpdateStrategy indicates the strategy that the StatefulSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.apps.v1.StatefulSetUpdateStrategy"

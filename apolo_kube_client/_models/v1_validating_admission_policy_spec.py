@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_audit_annotation import V1AuditAnnotation
 from .v1_match_condition import V1MatchCondition
@@ -14,15 +15,8 @@ from .v1_variable import V1Variable
 __all__ = ("V1ValidatingAdmissionPolicySpec",)
 
 
-class V1ValidatingAdmissionPolicySpec(BaseModel):
+class V1ValidatingAdmissionPolicySpec(BaseConfiguredModel):
     """ValidatingAdmissionPolicySpec is the specification of the desired behavior of the AdmissionPolicy."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicySpec"

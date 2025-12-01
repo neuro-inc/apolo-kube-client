@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_device_class_configuration import V1DeviceClassConfiguration
 from .v1_device_selector import V1DeviceSelector
@@ -10,15 +11,8 @@ from .v1_device_selector import V1DeviceSelector
 __all__ = ("V1DeviceClassSpec",)
 
 
-class V1DeviceClassSpec(BaseModel):
+class V1DeviceClassSpec(BaseConfiguredModel):
     """DeviceClassSpec is used in a [DeviceClass] to define what can be allocated and how to configure it."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.DeviceClassSpec"
 

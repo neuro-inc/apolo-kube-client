@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_cluster_trust_bundle_projection import V1ClusterTrustBundleProjection
 from .v1_config_map_projection import V1ConfigMapProjection
@@ -14,15 +15,8 @@ from .v1_service_account_token_projection import V1ServiceAccountTokenProjection
 __all__ = ("V1VolumeProjection",)
 
 
-class V1VolumeProjection(BaseModel):
+class V1VolumeProjection(BaseConfiguredModel):
     """Projection that may be projected along with other supported volume types. Exactly one of these fields must be set."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeProjection"
 

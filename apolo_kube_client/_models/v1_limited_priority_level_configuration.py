@@ -1,24 +1,18 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_limit_response import V1LimitResponse
 
 
 __all__ = ("V1LimitedPriorityLevelConfiguration",)
 
 
-class V1LimitedPriorityLevelConfiguration(BaseModel):
+class V1LimitedPriorityLevelConfiguration(BaseConfiguredModel):
     """LimitedPriorityLevelConfiguration specifies how to handle requests that are subject to limits. It addresses two issues:
     - How are requests for this priority level limited?
     - What should be done with requests that exceed the limit?"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.flowcontrol.v1.LimitedPriorityLevelConfiguration"

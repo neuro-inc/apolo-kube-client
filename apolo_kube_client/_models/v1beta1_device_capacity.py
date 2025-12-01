@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1beta1_capacity_request_policy import V1beta1CapacityRequestPolicy
 
@@ -9,15 +10,8 @@ from .v1beta1_capacity_request_policy import V1beta1CapacityRequestPolicy
 __all__ = ("V1beta1DeviceCapacity",)
 
 
-class V1beta1DeviceCapacity(BaseModel):
+class V1beta1DeviceCapacity(BaseConfiguredModel):
     """DeviceCapacity describes a quantity associated with a device."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.DeviceCapacity"
 

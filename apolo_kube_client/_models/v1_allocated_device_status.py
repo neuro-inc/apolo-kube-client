@@ -1,9 +1,10 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_condition import V1Condition
 from .v1_network_device_data import V1NetworkDeviceData
@@ -12,17 +13,10 @@ from .v1_network_device_data import V1NetworkDeviceData
 __all__ = ("V1AllocatedDeviceStatus",)
 
 
-class V1AllocatedDeviceStatus(BaseModel):
+class V1AllocatedDeviceStatus(BaseConfiguredModel):
     """AllocatedDeviceStatus contains the status of an allocated device, if the driver chooses to report it. This may include driver-specific information.
 
     The combination of Driver, Pool, Device, and ShareID must match the corresponding key in Status.Allocation.Devices."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1.AllocatedDeviceStatus"

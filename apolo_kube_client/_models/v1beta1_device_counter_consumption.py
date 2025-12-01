@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1beta1_counter import V1beta1Counter
 
 
 __all__ = ("V1beta1DeviceCounterConsumption",)
 
 
-class V1beta1DeviceCounterConsumption(BaseModel):
+class V1beta1DeviceCounterConsumption(BaseConfiguredModel):
     """DeviceCounterConsumption defines a set of counters that a device will consume from a CounterSet."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta1.DeviceCounterConsumption"

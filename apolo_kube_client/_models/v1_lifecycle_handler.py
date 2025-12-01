@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_exec_action import V1ExecAction
 from .v1_http_get_action import V1HTTPGetAction
@@ -12,15 +13,8 @@ from .v1_tcp_socket_action import V1TCPSocketAction
 __all__ = ("V1LifecycleHandler",)
 
 
-class V1LifecycleHandler(BaseModel):
+class V1LifecycleHandler(BaseConfiguredModel):
     """LifecycleHandler defines a specific action that should be taken in a lifecycle hook. One and only one of the fields, except TCPSocket must be specified."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LifecycleHandler"
 

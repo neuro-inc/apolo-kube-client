@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import ResourceModel
 from .utils import KubeMeta, _default_if_none
@@ -16,13 +16,6 @@ class V1alpha1PodCertificateRequest(ResourceModel):
     """PodCertificateRequest encodes a pod requesting a certificate from a given signer.
 
     Kubelets use this API to implement podCertificate projected volumes"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.certificates.v1alpha1.PodCertificateRequest"

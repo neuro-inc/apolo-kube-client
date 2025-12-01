@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1CapacityRequestPolicyRange",)
 
 
-class V1beta1CapacityRequestPolicyRange(BaseModel):
+class V1beta1CapacityRequestPolicyRange(BaseConfiguredModel):
     """CapacityRequestPolicyRange defines a valid range for consumable capacity values.
 
     - If the requested amount is less than Min, it is rounded up to the Min value.
@@ -15,13 +17,6 @@ class V1beta1CapacityRequestPolicyRange(BaseModel):
     - If Step is not set, the requested amount is used as-is if it falls within the range Min to Max (if set).
     - If the requested or rounded amount exceeds Max (if set), the request does not satisfy the policy,
       and the device cannot be allocated."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta1.CapacityRequestPolicyRange"

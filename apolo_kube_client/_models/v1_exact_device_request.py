@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_capacity_requirements import V1CapacityRequirements
 from .v1_device_selector import V1DeviceSelector
@@ -11,15 +12,8 @@ from .v1_device_toleration import V1DeviceToleration
 __all__ = ("V1ExactDeviceRequest",)
 
 
-class V1ExactDeviceRequest(BaseModel):
+class V1ExactDeviceRequest(BaseConfiguredModel):
     """ExactDeviceRequest is a request for one or more identical devices."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ExactDeviceRequest"
 

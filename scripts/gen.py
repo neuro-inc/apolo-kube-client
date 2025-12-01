@@ -14,7 +14,7 @@ from pydantic import BaseModel
 
 MOD = """\
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 {imports}
 
 __all__ = ("{clsname}",)
@@ -22,24 +22,30 @@ __all__ = ("{clsname}",)
 class {clsname}({base}):
     '''{doc}'''
 
-    model_config = ConfigDict(extra="forbid", serialize_by_alias=True, validate_by_alias=True, validate_by_name=True)
-
     kubernetes_ref: ClassVar[Final[str]] = "{ref}"
 
 {body}
 """
 
 BASE_MOD = """\
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from .v1_object_meta import V1ObjectMeta
 from .v1_list_meta import V1ListMeta
 
+class BaseConfiguredModel(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+        serialize_by_alias=True,
+        validate_by_alias=True,
+        validate_by_name=True,
+    )
 
-class ResourceModel(BaseModel):
+
+class ResourceModel(BaseConfiguredModel):
     metadata: V1ObjectMeta = V1ObjectMeta()
 
 
-class ListModel(BaseModel):
+class ListModel(BaseConfiguredModel):
     metadata: V1ListMeta = V1ListMeta()
 
 
@@ -290,7 +296,8 @@ def generate(
 
     match cls.openapi_types.get("metadata"):
         case None:
-            base = "BaseModel"
+            base = "BaseConfiguredModel"
+            imports.add("from .base_model import BaseConfiguredModel")
         case "V1ObjectMeta":
             base = "ResourceModel"
             imports.add("from .base import ResourceModel")

@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_linux_container_user import V1LinuxContainerUser
 
 
 __all__ = ("V1ContainerUser",)
 
 
-class V1ContainerUser(BaseModel):
+class V1ContainerUser(BaseConfiguredModel):
     """ContainerUser represents user identity information"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerUser"
 

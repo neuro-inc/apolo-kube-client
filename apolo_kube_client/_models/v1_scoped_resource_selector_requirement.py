@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1ScopedResourceSelectorRequirement",)
 
 
-class V1ScopedResourceSelectorRequirement(BaseModel):
+class V1ScopedResourceSelectorRequirement(BaseConfiguredModel):
     """A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator that relates the scope name and values."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.core.v1.ScopedResourceSelectorRequirement"

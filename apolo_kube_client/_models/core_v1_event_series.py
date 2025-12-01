@@ -1,21 +1,16 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("CoreV1EventSeries",)
 
 
-class CoreV1EventSeries(BaseModel):
+class CoreV1EventSeries(BaseConfiguredModel):
     """EventSeries contain information on series of events, i.e. thing that was/is happening continuously for some time."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EventSeries"
 

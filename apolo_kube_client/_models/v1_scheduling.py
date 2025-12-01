@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_toleration import V1Toleration
 
@@ -9,15 +10,8 @@ from .v1_toleration import V1Toleration
 __all__ = ("V1Scheduling",)
 
 
-class V1Scheduling(BaseModel):
+class V1Scheduling(BaseConfiguredModel):
     """Scheduling specifies the scheduling constraints for nodes supporting a RuntimeClass."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.node.v1.Scheduling"
 

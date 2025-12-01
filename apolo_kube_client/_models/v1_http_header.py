@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1HTTPHeader",)
 
 
-class V1HTTPHeader(BaseModel):
+class V1HTTPHeader(BaseConfiguredModel):
     """HTTPHeader describes a custom header to be used in HTTP probes"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HTTPHeader"
 

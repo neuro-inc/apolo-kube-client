@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_pod_affinity_term import V1PodAffinityTerm
 
 
 __all__ = ("V1WeightedPodAffinityTerm",)
 
 
-class V1WeightedPodAffinityTerm(BaseModel):
+class V1WeightedPodAffinityTerm(BaseConfiguredModel):
     """The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.WeightedPodAffinityTerm"
 

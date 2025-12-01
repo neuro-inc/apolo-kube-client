@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v2_hpa_scaling_rules import V2HPAScalingRules
 
@@ -9,15 +10,8 @@ from .v2_hpa_scaling_rules import V2HPAScalingRules
 __all__ = ("V2HorizontalPodAutoscalerBehavior",)
 
 
-class V2HorizontalPodAutoscalerBehavior(BaseModel):
+class V2HorizontalPodAutoscalerBehavior(BaseConfiguredModel):
     """HorizontalPodAutoscalerBehavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively)."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior"

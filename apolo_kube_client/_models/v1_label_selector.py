@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_label_selector_requirement import V1LabelSelectorRequirement
 
@@ -9,15 +10,8 @@ from .v1_label_selector_requirement import V1LabelSelectorRequirement
 __all__ = ("V1LabelSelector",)
 
 
-class V1LabelSelector(BaseModel):
+class V1LabelSelector(BaseConfiguredModel):
     """A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"

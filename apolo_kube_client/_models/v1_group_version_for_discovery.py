@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1GroupVersionForDiscovery",)
 
 
-class V1GroupVersionForDiscovery(BaseModel):
+class V1GroupVersionForDiscovery(BaseConfiguredModel):
     """GroupVersion contains the "group/version" and "version" string of a version. It is made a struct to keep extensibility."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionForDiscovery"

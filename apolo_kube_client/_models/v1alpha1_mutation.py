@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1alpha1_apply_configuration import V1alpha1ApplyConfiguration
 from .v1alpha1_json_patch import V1alpha1JSONPatch
@@ -10,15 +11,8 @@ from .v1alpha1_json_patch import V1alpha1JSONPatch
 __all__ = ("V1alpha1Mutation",)
 
 
-class V1alpha1Mutation(BaseModel):
+class V1alpha1Mutation(BaseConfiguredModel):
     """Mutation specifies the CEL expression which is used to apply the Mutation."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1alpha1.Mutation"

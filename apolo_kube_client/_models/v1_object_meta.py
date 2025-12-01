@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_managed_fields_entry import V1ManagedFieldsEntry
 from .v1_owner_reference import V1OwnerReference
@@ -11,15 +12,8 @@ from .v1_owner_reference import V1OwnerReference
 __all__ = ("V1ObjectMeta",)
 
 
-class V1ObjectMeta(BaseModel):
+class V1ObjectMeta(BaseConfiguredModel):
     """ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"

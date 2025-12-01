@@ -1,24 +1,18 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1beta1_counter import V1beta1Counter
 
 
 __all__ = ("V1beta1CounterSet",)
 
 
-class V1beta1CounterSet(BaseModel):
+class V1beta1CounterSet(BaseConfiguredModel):
     """CounterSet defines a named set of counters that are available to be used by devices defined in the ResourceSlice.
 
     The counters are not allocatable by themselves, but can be referenced by devices. When a device is allocated, the portion of counters it uses will no longer be available for use by other devices."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.CounterSet"
 

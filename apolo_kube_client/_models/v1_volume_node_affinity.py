@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_node_selector import V1NodeSelector
 
 
 __all__ = ("V1VolumeNodeAffinity",)
 
 
-class V1VolumeNodeAffinity(BaseModel):
+class V1VolumeNodeAffinity(BaseConfiguredModel):
     """VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeNodeAffinity"
 

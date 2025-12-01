@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_attribute import V1beta2DeviceAttribute
@@ -13,15 +14,8 @@ from .v1beta2_device_taint import V1beta2DeviceTaint
 __all__ = ("V1beta2Device",)
 
 
-class V1beta2Device(BaseModel):
+class V1beta2Device(BaseConfiguredModel):
     """Device represents one individual hardware instance that can be selected based on its attributes. Besides the name, exactly one field must be set."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta2.Device"
 

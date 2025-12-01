@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v2_horizontal_pod_autoscaler_condition import V2HorizontalPodAutoscalerCondition
 from .v2_metric_status import V2MetricStatus
@@ -11,15 +12,8 @@ from .v2_metric_status import V2MetricStatus
 __all__ = ("V2HorizontalPodAutoscalerStatus",)
 
 
-class V2HorizontalPodAutoscalerStatus(BaseModel):
+class V2HorizontalPodAutoscalerStatus(BaseConfiguredModel):
     """HorizontalPodAutoscalerStatus describes the current status of a horizontal pod autoscaler."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerStatus"

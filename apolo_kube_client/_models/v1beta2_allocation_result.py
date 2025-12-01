@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta2_device_allocation_result import V1beta2DeviceAllocationResult
@@ -11,15 +12,8 @@ from .v1beta2_device_allocation_result import V1beta2DeviceAllocationResult
 __all__ = ("V1beta2AllocationResult",)
 
 
-class V1beta2AllocationResult(BaseModel):
+class V1beta2AllocationResult(BaseConfiguredModel):
     """AllocationResult contains attributes of an allocated resource."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.AllocationResult"

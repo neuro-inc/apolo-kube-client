@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1MatchCondition",)
 
 
-class V1beta1MatchCondition(BaseModel):
+class V1beta1MatchCondition(BaseConfiguredModel):
     """MatchCondition represents a condition which must be fulfilled for a request to be sent to a webhook."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.admissionregistration.v1beta1.MatchCondition"

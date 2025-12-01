@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_exec_action import V1ExecAction
 from .v1_grpc_action import V1GRPCAction
@@ -12,15 +13,8 @@ from .v1_tcp_socket_action import V1TCPSocketAction
 __all__ = ("V1Probe",)
 
 
-class V1Probe(BaseModel):
+class V1Probe(BaseConfiguredModel):
     """Probe describes a health check to be performed against a container to determine whether it is alive or ready to receive traffic."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Probe"
 

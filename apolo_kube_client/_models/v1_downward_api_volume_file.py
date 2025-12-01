@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_object_field_selector import V1ObjectFieldSelector
 from .v1_resource_field_selector import V1ResourceFieldSelector
 
@@ -9,15 +10,8 @@ from .v1_resource_field_selector import V1ResourceFieldSelector
 __all__ = ("V1DownwardAPIVolumeFile",)
 
 
-class V1DownwardAPIVolumeFile(BaseModel):
+class V1DownwardAPIVolumeFile(BaseConfiguredModel):
     """DownwardAPIVolumeFile represents information to create the file containing the pod field"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.DownwardAPIVolumeFile"
 

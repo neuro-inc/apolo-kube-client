@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V2MetricTarget",)
 
 
-class V2MetricTarget(BaseModel):
+class V2MetricTarget(BaseConfiguredModel):
     """MetricTarget defines the target value, average value, or average utilization of a specific metric"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricTarget"
 

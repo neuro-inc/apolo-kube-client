@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_config_map_key_selector import V1ConfigMapKeySelector
 from .v1_file_key_selector import V1FileKeySelector
 from .v1_object_field_selector import V1ObjectFieldSelector
@@ -12,15 +13,8 @@ from .v1_secret_key_selector import V1SecretKeySelector
 __all__ = ("V1EnvVarSource",)
 
 
-class V1EnvVarSource(BaseModel):
+class V1EnvVarSource(BaseConfiguredModel):
     """EnvVarSource represents a source for the value of an EnvVar."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EnvVarSource"
 

@@ -1,20 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1BoundObjectReference",)
 
 
-class V1BoundObjectReference(BaseModel):
+class V1BoundObjectReference(BaseConfiguredModel):
     """BoundObjectReference is a reference to an object that a token is bound to."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.authentication.v1.BoundObjectReference"

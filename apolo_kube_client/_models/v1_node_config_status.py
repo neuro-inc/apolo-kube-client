@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_node_config_source import V1NodeConfigSource
 
@@ -9,15 +10,8 @@ from .v1_node_config_source import V1NodeConfigSource
 __all__ = ("V1NodeConfigStatus",)
 
 
-class V1NodeConfigStatus(BaseModel):
+class V1NodeConfigStatus(BaseConfiguredModel):
     """NodeConfigStatus describes the status of the config assigned by Node.Spec.ConfigSource."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeConfigStatus"
 

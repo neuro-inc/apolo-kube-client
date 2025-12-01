@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_opaque_device_configuration import V1OpaqueDeviceConfiguration
 
 
 __all__ = ("V1DeviceClassConfiguration",)
 
 
-class V1DeviceClassConfiguration(BaseModel):
+class V1DeviceClassConfiguration(BaseConfiguredModel):
     """DeviceClassConfiguration is used in DeviceClass."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1.DeviceClassConfiguration"

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_metric_identifier import V2MetricIdentifier
 from .v2_metric_value_status import V2MetricValueStatus
@@ -10,15 +11,8 @@ from .v2_metric_value_status import V2MetricValueStatus
 __all__ = ("V2ObjectMetricStatus",)
 
 
-class V2ObjectMetricStatus(BaseModel):
+class V2ObjectMetricStatus(BaseConfiguredModel):
     """ObjectMetricStatus indicates the current value of a metric describing a kubernetes object (for example, hits-per-second on an Ingress object)."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.autoscaling.v2.ObjectMetricStatus"

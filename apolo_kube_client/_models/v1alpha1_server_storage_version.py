@@ -1,22 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1alpha1ServerStorageVersion",)
 
 
-class V1alpha1ServerStorageVersion(BaseModel):
+class V1alpha1ServerStorageVersion(BaseConfiguredModel):
     """An API server instance reports the version it can decode and the version it encodes objects to when persisting objects in the backend."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.apiserverinternal.v1alpha1.ServerStorageVersion"

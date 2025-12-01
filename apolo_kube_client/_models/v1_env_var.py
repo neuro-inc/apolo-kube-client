@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_env_var_source import V1EnvVarSource
 
@@ -9,15 +10,8 @@ from .v1_env_var_source import V1EnvVarSource
 __all__ = ("V1EnvVar",)
 
 
-class V1EnvVar(BaseModel):
+class V1EnvVar(BaseConfiguredModel):
     """EnvVar represents an environment variable present in a Container."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EnvVar"
 

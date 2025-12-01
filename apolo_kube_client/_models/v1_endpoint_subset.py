@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .core_v1_endpoint_port import CoreV1EndpointPort
 from .utils import _collection_if_none
 from .v1_endpoint_address import V1EndpointAddress
@@ -10,7 +11,7 @@ from .v1_endpoint_address import V1EndpointAddress
 __all__ = ("V1EndpointSubset",)
 
 
-class V1EndpointSubset(BaseModel):
+class V1EndpointSubset(BaseConfiguredModel):
     """EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:
 
             {
@@ -24,13 +25,6 @@ class V1EndpointSubset(BaseModel):
             b: [ 10.10.1.1:309, 10.10.2.2:309 ]
 
     Deprecated: This API is deprecated in v1.33+."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EndpointSubset"
 

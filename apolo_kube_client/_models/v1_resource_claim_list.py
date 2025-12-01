@@ -1,6 +1,6 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
 from .base import CollectionModel
 from .resource_v1_resource_claim import ResourceV1ResourceClaim
@@ -13,13 +13,6 @@ __all__ = ("V1ResourceClaimList",)
 
 class V1ResourceClaimList(CollectionModel[ResourceV1ResourceClaim]):
     """ResourceClaimList is a collection of claims."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceClaimList"
 

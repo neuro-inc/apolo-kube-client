@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1beta2_capacity_requirements import V1beta2CapacityRequirements
 from .v1beta2_device_selector import V1beta2DeviceSelector
@@ -11,17 +12,10 @@ from .v1beta2_device_toleration import V1beta2DeviceToleration
 __all__ = ("V1beta2DeviceSubRequest",)
 
 
-class V1beta2DeviceSubRequest(BaseModel):
+class V1beta2DeviceSubRequest(BaseConfiguredModel):
     """DeviceSubRequest describes a request for device provided in the claim.spec.devices.requests[].firstAvailable array. Each is typically a request for a single resource like a device, but can also ask for several identical devices.
 
     DeviceSubRequest is similar to ExactDeviceRequest, but doesn't expose the AdminAccess field as that one is only supported when requesting a specific device."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta2.DeviceSubRequest"

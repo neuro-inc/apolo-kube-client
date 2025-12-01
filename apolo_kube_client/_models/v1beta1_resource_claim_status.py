@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1beta1_allocated_device_status import V1beta1AllocatedDeviceStatus
 from .v1beta1_allocation_result import V1beta1AllocationResult
@@ -13,15 +14,8 @@ from .v1beta1_resource_claim_consumer_reference import (
 __all__ = ("V1beta1ResourceClaimStatus",)
 
 
-class V1beta1ResourceClaimStatus(BaseModel):
+class V1beta1ResourceClaimStatus(BaseConfiguredModel):
     """ResourceClaimStatus tracks whether the resource has been allocated and what the result of that was."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = (
         "io.k8s.api.resource.v1beta1.ResourceClaimStatus"

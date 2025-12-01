@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_label_selector import V1LabelSelector
 
@@ -9,15 +10,8 @@ from .v1_label_selector import V1LabelSelector
 __all__ = ("V1AggregationRule",)
 
 
-class V1AggregationRule(BaseModel):
+class V1AggregationRule(BaseConfiguredModel):
     """AggregationRule describes how to locate ClusterRoles to aggregate into the ClusterRole"""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        serialize_by_alias=True,
-        validate_by_alias=True,
-        validate_by_name=True,
-    )
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.AggregationRule"
 
