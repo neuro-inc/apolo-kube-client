@@ -8,7 +8,18 @@ from ._base_resource import (
     PatchTest,
 )
 from ._client import KubeClient
-from ._config import KubeClientAuthType, KubeConfig
+from ._config import KubeConfig
+from ._constants import (
+    DEFAULT_AUTH_TYPE,
+    DEFAULT_CLIENT_CONN_POOL_SIZE,
+    DEFAULT_CLIENT_CONN_TIMEOUT,
+    DEFAULT_CLIENT_READ_TIMEOUT,
+    DEFAULT_CLIENT_WATCH_TIMEOUT,
+    DEFAULT_TIMEOUT,
+    DEFAULT_TOKEN_UPDATE_INTERVAL,
+    DEFAULT_WAIT_INTERVAL,
+    KubeClientAuthType,
+)
 from ._core import KubeCore
 from ._crd_models import (
     V1DiskNamingCRD,
@@ -762,6 +773,14 @@ from ._watch import Watch, WatchEvent
 
 
 __all__ = [
+    "DEFAULT_TIMEOUT",
+    "DEFAULT_AUTH_TYPE",
+    "DEFAULT_TOKEN_UPDATE_INTERVAL",
+    "DEFAULT_CLIENT_CONN_TIMEOUT",
+    "DEFAULT_CLIENT_READ_TIMEOUT",
+    "DEFAULT_CLIENT_WATCH_TIMEOUT",
+    "DEFAULT_CLIENT_CONN_POOL_SIZE",
+    "DEFAULT_WAIT_INTERVAL",
     "AdmissionregistrationV1ServiceReference",
     "AdmissionregistrationV1WebhookClientConfig",
     "ApiextensionsV1ServiceReference",
