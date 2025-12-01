@@ -18,6 +18,7 @@ from ._base_resource import (
     PatchRemove,
 )
 from ._models import (
+    AuthenticationV1TokenRequest,
     CoreV1Event,
     CoreV1EventList,
     V1ConfigMap,
@@ -37,6 +38,8 @@ from ._models import (
     V1Secret,
     V1SecretList,
     V1Service,
+    V1ServiceAccount,
+    V1ServiceAccountList,
     V1ServiceList,
     V1Status,
 )
@@ -173,6 +176,30 @@ class Pod(NamespacedResource[V1Pod, V1PodList, V1Pod]):
     apolo_waiter = _Attr(ApoloPodWaiter)
 
 
+class ServiceAccountToken(NestedResource[AuthenticationV1TokenRequest]):
+    query_path = "token"
+
+    async def create(
+        self,
+        model: AuthenticationV1TokenRequest,
+        *,
+        namespace: str | None = None,
+    ) -> AuthenticationV1TokenRequest:
+        async with self._core.request(
+            method="POST",
+            url=self._build_url(namespace),
+            json=self._core.serialize(model),
+        ) as resp:
+            return await self._core.deserialize_response(resp, self._model_class)
+
+
+class ServiceAccount(
+    NamespacedResource[V1ServiceAccount, V1ServiceAccountList, V1ServiceAccount],
+):
+    query_path = "serviceaccounts"
+    token = _Attr(ServiceAccountToken)
+
+
 class Secret(NamespacedResource[V1Secret, V1SecretList, V1Status]):
     query_path = "secrets"
 
@@ -292,3 +319,4 @@ class CoreV1Api(Base):
     service = _Attr(Service, group_api_query_path)
     endpoint = _Attr(Endpoint, group_api_query_path)
     event = _Attr(Event, group_api_query_path)
+    serviceaccounts = _Attr(ServiceAccount, group_api_query_path)

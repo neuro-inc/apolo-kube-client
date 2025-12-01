@@ -67,13 +67,15 @@ class KubeClientSelector:
         self,
         *,
         config: KubeConfig,
+        transport: KubeTransport | None = None,
         vcluster_cache_size: int = DEFAULT_VCLUSTER_CACHE_SIZE,
         real_cluster_cache_size: int = DEFAULT_REAL_CLUSTER_CACHE_SIZE,
     ) -> None:
         self._config = config
         # we pre-create a dedicated kube transport,
         # since we already know that we'll work in a multi-cluster mode
-        self._transport = KubeTransport(
+        self._owns_transport = transport is None
+        self._transport = transport or KubeTransport(
             conn_pool_size=config.client_conn_pool_size,
             conn_timeout_s=config.client_conn_timeout_s,
             read_timeout_s=config.client_read_timeout_s,
@@ -104,7 +106,8 @@ class KubeClientSelector:
 
     async def __aenter__(self) -> Self:
         logger.info("%r: initializing...", self)
-        await self._transport.__aenter__()
+        if self._owns_transport:
+            await self._transport.__aenter__()
         await self._host_client.__aenter__()
         return self
 
@@ -133,8 +136,9 @@ class KubeClientSelector:
         # Close the shared default client, and a common transport
         logger.info("%r: closing default client", self)
         await self._host_client.__aexit__(None, None, None)
-        logger.info("%r: closing transport", self)
-        await self._transport.__aexit__(None, None, None)
+        if self._owns_transport:
+            logger.info("%r: closing transport", self)
+            await self._transport.__aexit__(None, None, None)
 
     @property
     def host_client(self) -> KubeClient:

@@ -1,7 +1,12 @@
 from collections.abc import Sequence
 from typing import Self, cast
 
-from .._base_resource import NamespacedResource, NestedResource, PatchOps
+from .._base_resource import (
+    ClusterScopedResource,
+    NamespacedResource,
+    NestedResource,
+    PatchOps,
+)
 from .._models import ListModel, ResourceModel
 from .._typedefs import JsonType
 from .._watch import Watch
@@ -125,6 +130,85 @@ class NamespacedResourceProxy[
         return await origin.patch_json(
             name=name, patch_json_list=patch_json_list, namespace=self._namespace
         )
+
+
+class ClusterScopedResourceProxy[
+    ModelT: ResourceModel,
+    ListModelT: ListModel,
+    DeleteModelT: ListModel | ResourceModel,
+    OriginT,
+](BaseProxy[OriginT]):
+    async def get(self, name: str) -> ModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.get(name=name)
+
+    async def get_list(self, label_selector: str | None = None) -> ListModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.get_list(label_selector=label_selector)
+
+    def watch(
+        self,
+        label_selector: str | None = None,
+        resource_version: str | None = None,
+        allow_watch_bookmarks: bool = False,
+    ) -> Watch[ModelT]:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return origin.watch(
+            label_selector=label_selector,
+            resource_version=resource_version,
+            allow_watch_bookmarks=allow_watch_bookmarks,
+        )
+
+    async def create(self, model: ModelT) -> ModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.create(model=model)
+
+    async def delete(
+        self,
+        name: str,
+        *,
+        payload: JsonType | None = None,
+    ) -> DeleteModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.delete(name=name, payload=payload)
+
+    async def get_or_create(self, model: ModelT) -> tuple[bool, ModelT]:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.get_or_create(model=model)
+
+    async def create_or_update(self, model: ModelT) -> tuple[bool, ModelT]:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.create_or_update(model=model)
+
+    async def update(self, model: ModelT) -> ModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.update(model=model)
+
+    async def patch_json(
+        self,
+        name: str,
+        patch_json_list: Sequence[PatchOps],
+    ) -> ModelT:
+        origin = cast(
+            ClusterScopedResource[ModelT, ListModelT, DeleteModelT], self._origin
+        )
+        return await origin.patch_json(name=name, patch_json_list=patch_json_list)
 
 
 class NestedResourceProxy[

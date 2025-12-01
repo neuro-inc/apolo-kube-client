@@ -7,8 +7,19 @@ from yarl import URL
 from apolo_kube_client import KubeClient, KubeClientAuthType, KubeConfig
 from apolo_kube_client._batch_v1 import BatchV1Api, Job
 from apolo_kube_client._core import KubeCore
-from apolo_kube_client._core_v1 import ConfigMap, CoreV1Api, Event, Namespace
+from apolo_kube_client._core_v1 import (
+    ConfigMap,
+    CoreV1Api,
+    Event,
+    Namespace,
+    ServiceAccount,
+)
 from apolo_kube_client._networking_k8s_io_v1 import NetworkingK8SioV1Api, NetworkPolicy
+from apolo_kube_client._rbac_authorization_k8s_io_v1 import (
+    ClusterRole,
+    ClusterRoleBinding,
+    RbacAuthorizationK8sIoV1Api,
+)
 
 
 @pytest.fixture
@@ -55,12 +66,23 @@ async def test_create_kube_client(kube_client: KubeClient) -> None:
     assert isinstance(kube_client.core_v1, CoreV1Api)
     assert isinstance(kube_client.batch_v1, BatchV1Api)
     assert isinstance(kube_client.networking_k8s_io_v1, NetworkingK8SioV1Api)
+    assert isinstance(
+        kube_client.rbac_authorization_k8s_io_v1, RbacAuthorizationK8sIoV1Api
+    )
 
     assert isinstance(kube_client.core_v1.namespace, Namespace)
     assert isinstance(kube_client.core_v1.event, Event)
     assert isinstance(kube_client.core_v1.config_map, ConfigMap)
+    assert isinstance(kube_client.core_v1.serviceaccounts, ServiceAccount)
     assert isinstance(kube_client.batch_v1.job, Job)
     assert isinstance(kube_client.networking_k8s_io_v1.network_policy, NetworkPolicy)
+    assert isinstance(
+        kube_client.rbac_authorization_k8s_io_v1.cluster_role, ClusterRole
+    )
+    assert isinstance(
+        kube_client.rbac_authorization_k8s_io_v1.cluster_role_binding,
+        ClusterRoleBinding,
+    )
 
 
 async def test_create_kube_client_token_auth(
