@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_field_selector_attributes import V1FieldSelectorAttributes
 from .v1_label_selector_attributes import V1LabelSelectorAttributes
@@ -10,7 +11,7 @@ from .v1_label_selector_attributes import V1LabelSelectorAttributes
 __all__ = ("V1ResourceAttributes",)
 
 
-class V1ResourceAttributes(BaseModel):
+class V1ResourceAttributes(BaseConfiguredModel):
     """ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

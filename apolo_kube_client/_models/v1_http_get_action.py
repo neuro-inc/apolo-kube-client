@@ -1,9 +1,10 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_http_header import V1HTTPHeader
 
@@ -11,7 +12,7 @@ from .v1_http_header import V1HTTPHeader
 __all__ = ("V1HTTPGetAction",)
 
 
-class V1HTTPGetAction(BaseModel):
+class V1HTTPGetAction(BaseConfiguredModel):
     """HTTPGetAction describes an action based on HTTP Get requests."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HTTPGetAction"

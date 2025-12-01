@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ContainerExtendedResourceRequest",)
 
 
-class V1ContainerExtendedResourceRequest(BaseModel):
+class V1ContainerExtendedResourceRequest(BaseConfiguredModel):
     """ContainerExtendedResourceRequest has the mapping of container name, extended resource name to the device request name."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

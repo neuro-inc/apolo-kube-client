@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_namespace_condition import V1NamespaceCondition
 
@@ -9,7 +10,7 @@ from .v1_namespace_condition import V1NamespaceCondition
 __all__ = ("V1NamespaceStatus",)
 
 
-class V1NamespaceStatus(BaseModel):
+class V1NamespaceStatus(BaseConfiguredModel):
     """NamespaceStatus is information about the current status of a Namespace."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NamespaceStatus"

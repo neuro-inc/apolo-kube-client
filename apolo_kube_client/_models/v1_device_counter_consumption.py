@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_counter import V1Counter
 
 
 __all__ = ("V1DeviceCounterConsumption",)
 
 
-class V1DeviceCounterConsumption(BaseModel):
+class V1DeviceCounterConsumption(BaseConfiguredModel):
     """DeviceCounterConsumption defines a set of counters that a device will consume from a CounterSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

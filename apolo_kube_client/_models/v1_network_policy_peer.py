@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_ip_block import V1IPBlock
 from .v1_label_selector import V1LabelSelector
@@ -10,7 +11,7 @@ from .v1_label_selector import V1LabelSelector
 __all__ = ("V1NetworkPolicyPeer",)
 
 
-class V1NetworkPolicyPeer(BaseModel):
+class V1NetworkPolicyPeer(BaseConfiguredModel):
     """NetworkPolicyPeer describes a peer to allow traffic to/from. Only certain combinations of fields are allowed"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicyPeer"

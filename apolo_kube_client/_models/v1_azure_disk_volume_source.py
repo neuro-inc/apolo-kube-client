@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1AzureDiskVolumeSource",)
 
 
-class V1AzureDiskVolumeSource(BaseModel):
+class V1AzureDiskVolumeSource(BaseConfiguredModel):
     """AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.AzureDiskVolumeSource"

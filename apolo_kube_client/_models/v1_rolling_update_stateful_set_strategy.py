@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1RollingUpdateStatefulSetStrategy",)
 
 
-class V1RollingUpdateStatefulSetStrategy(BaseModel):
+class V1RollingUpdateStatefulSetStrategy(BaseConfiguredModel):
     """RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

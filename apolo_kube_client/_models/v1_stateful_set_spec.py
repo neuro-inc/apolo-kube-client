@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_persistent_volume_claim import V1PersistentVolumeClaim
@@ -16,7 +17,7 @@ from .v1_stateful_set_update_strategy import V1StatefulSetUpdateStrategy
 __all__ = ("V1StatefulSetSpec",)
 
 
-class V1StatefulSetSpec(BaseModel):
+class V1StatefulSetSpec(BaseConfiguredModel):
     """A StatefulSetSpec is the specification of a StatefulSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSetSpec"

@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_secret_reference import V1SecretReference
 
 
 __all__ = ("V1ScaleIOPersistentVolumeSource",)
 
 
-class V1ScaleIOPersistentVolumeSource(BaseModel):
+class V1ScaleIOPersistentVolumeSource(BaseConfiguredModel):
     """ScaleIOPersistentVolumeSource represents a persistent ScaleIO volume"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

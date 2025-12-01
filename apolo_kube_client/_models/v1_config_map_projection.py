@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_key_to_path import V1KeyToPath
 
@@ -9,7 +10,7 @@ from .v1_key_to_path import V1KeyToPath
 __all__ = ("V1ConfigMapProjection",)
 
 
-class V1ConfigMapProjection(BaseModel):
+class V1ConfigMapProjection(BaseConfiguredModel):
     """Adapts a ConfigMap into a projected volume.
 
     The contents of the target ConfigMap's Data field will be presented in a projected volume as files using the keys in the Data field as the file names, unless the items element is populated with specific mappings of keys to paths. Note that this is identical to a configmap volume source without the default mode."""

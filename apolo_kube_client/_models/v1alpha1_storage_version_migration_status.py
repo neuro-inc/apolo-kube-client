@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1alpha1_migration_condition import V1alpha1MigrationCondition
 
@@ -9,7 +10,7 @@ from .v1alpha1_migration_condition import V1alpha1MigrationCondition
 __all__ = ("V1alpha1StorageVersionMigrationStatus",)
 
 
-class V1alpha1StorageVersionMigrationStatus(BaseModel):
+class V1alpha1StorageVersionMigrationStatus(BaseConfiguredModel):
     """Status of the storage version migration."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta2ResourcePool",)
 
 
-class V1beta2ResourcePool(BaseModel):
+class V1beta2ResourcePool(BaseConfiguredModel):
     """ResourcePool describes the pool that ResourceSlices belong to."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta2.ResourcePool"

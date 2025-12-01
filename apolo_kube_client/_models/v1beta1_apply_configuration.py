@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1ApplyConfiguration",)
 
 
-class V1beta1ApplyConfiguration(BaseModel):
+class V1beta1ApplyConfiguration(BaseConfiguredModel):
     """ApplyConfiguration defines the desired configuration values of an object."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

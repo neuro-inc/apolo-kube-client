@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1TypedObjectReference",)
 
 
-class V1TypedObjectReference(BaseModel):
+class V1TypedObjectReference(BaseConfiguredModel):
     """TypedObjectReference contains enough information to let you locate the typed referenced object"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.TypedObjectReference"

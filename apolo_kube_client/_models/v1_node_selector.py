@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_node_selector_term import V1NodeSelectorTerm
 
 
 __all__ = ("V1NodeSelector",)
 
 
-class V1NodeSelector(BaseModel):
+class V1NodeSelector(BaseConfiguredModel):
     """A node selector represents the union of the results of one or more label queries over a set of nodes; that is, it represents the OR of the selectors represented by the node selector terms."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSelector"

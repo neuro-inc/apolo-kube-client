@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1VolumeMountStatus",)
 
 
-class V1VolumeMountStatus(BaseModel):
+class V1VolumeMountStatus(BaseConfiguredModel):
     """VolumeMountStatus shows status of volume mounts."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.VolumeMountStatus"

@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_object_reference import V1ObjectReference
 
@@ -10,7 +11,7 @@ from .v1_object_reference import V1ObjectReference
 __all__ = ("V1CronJobStatus",)
 
 
-class V1CronJobStatus(BaseModel):
+class V1CronJobStatus(BaseConfiguredModel):
     """CronJobStatus represents the current state of a cron job."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.CronJobStatus"

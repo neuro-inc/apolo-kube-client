@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1beta1_capacity_requirements import V1beta1CapacityRequirements
 from .v1beta1_device_selector import V1beta1DeviceSelector
@@ -11,7 +12,7 @@ from .v1beta1_device_toleration import V1beta1DeviceToleration
 __all__ = ("V1beta1DeviceSubRequest",)
 
 
-class V1beta1DeviceSubRequest(BaseModel):
+class V1beta1DeviceSubRequest(BaseConfiguredModel):
     """DeviceSubRequest describes a request for device provided in the claim.spec.devices.requests[].firstAvailable array. Each is typically a request for a single resource like a device, but can also ask for several identical devices.
 
     DeviceSubRequest is similar to Request, but doesn't expose the AdminAccess or FirstAvailable fields, as those can only be set on the top-level request. AdminAccess is not supported for requests with a prioritized list, and recursive FirstAvailable fields are not supported."""

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_custom_resource_conversion import V1CustomResourceConversion
 from .v1_custom_resource_definition_names import V1CustomResourceDefinitionNames
 from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVersion
@@ -10,7 +11,7 @@ from .v1_custom_resource_definition_version import V1CustomResourceDefinitionVer
 __all__ = ("V1CustomResourceDefinitionSpec",)
 
 
-class V1CustomResourceDefinitionSpec(BaseModel):
+class V1CustomResourceDefinitionSpec(BaseConfiguredModel):
     """CustomResourceDefinitionSpec describes how a user wants their resource to appear"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

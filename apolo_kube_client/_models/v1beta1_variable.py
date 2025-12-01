@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1Variable",)
 
 
-class V1beta1Variable(BaseModel):
+class V1beta1Variable(BaseConfiguredModel):
     """Variable is the definition of a variable that is used for composition. A variable is defined as a named expression."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

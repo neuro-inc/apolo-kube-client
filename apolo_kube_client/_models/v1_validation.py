@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1Validation",)
 
 
-class V1Validation(BaseModel):
+class V1Validation(BaseConfiguredModel):
     """Validation specifies the CEL expression which is used to apply the validation."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

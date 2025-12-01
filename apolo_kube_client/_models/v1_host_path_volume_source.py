@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1HostPathVolumeSource",)
 
 
-class V1HostPathVolumeSource(BaseModel):
+class V1HostPathVolumeSource(BaseConfiguredModel):
     """Represents a host path mapped into a pod. Host path volumes do not support ownership management or SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HostPathVolumeSource"

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_label_selector_requirement import V1LabelSelectorRequirement
 
@@ -9,7 +10,7 @@ from .v1_label_selector_requirement import V1LabelSelectorRequirement
 __all__ = ("V1LabelSelectorAttributes",)
 
 
-class V1LabelSelectorAttributes(BaseModel):
+class V1LabelSelectorAttributes(BaseConfiguredModel):
     """LabelSelectorAttributes indicates a label limited access. Webhook authors are encouraged to * ensure rawSelector and requirements are not both set * consider the requirements field if set * not try to parse or consider the rawSelector field if set. This is to avoid another CVE-2022-2880 (i.e. getting different systems to agree on how exactly to parse a query is not something we want), see https://www.oxeye.io/resources/golang-parameter-smuggling-attack for more details. For the *SubjectAccessReview endpoints of the kube-apiserver: * If rawSelector is empty and requirements are empty, the request is not limited. * If rawSelector is present and requirements are empty, the rawSelector will be parsed and limited if the parsing succeeds. * If rawSelector is empty and requirements are present, the requirements should be honored * If rawSelector is present and requirements are present, the request is invalid."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

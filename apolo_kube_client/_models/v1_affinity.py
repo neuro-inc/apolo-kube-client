@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_node_affinity import V1NodeAffinity
 from .v1_pod_affinity import V1PodAffinity
@@ -11,7 +12,7 @@ from .v1_pod_anti_affinity import V1PodAntiAffinity
 __all__ = ("V1Affinity",)
 
 
-class V1Affinity(BaseModel):
+class V1Affinity(BaseConfiguredModel):
     """Affinity is a group of affinity scheduling rules."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Affinity"

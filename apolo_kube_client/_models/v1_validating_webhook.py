@@ -1,10 +1,11 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from .admissionregistration_v1_webhook_client_config import (
     AdmissionregistrationV1WebhookClientConfig,
 )
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_match_condition import V1MatchCondition
@@ -14,7 +15,7 @@ from .v1_rule_with_operations import V1RuleWithOperations
 __all__ = ("V1ValidatingWebhook",)
 
 
-class V1ValidatingWebhook(BaseModel):
+class V1ValidatingWebhook(BaseConfiguredModel):
     """ValidatingWebhook describes an admission webhook and the resources and operations it applies to."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_user_info import V1UserInfo
 
@@ -9,7 +10,7 @@ from .v1_user_info import V1UserInfo
 __all__ = ("V1SelfSubjectReviewStatus",)
 
 
-class V1SelfSubjectReviewStatus(BaseModel):
+class V1SelfSubjectReviewStatus(BaseConfiguredModel):
     """SelfSubjectReviewStatus is filled by the kube-apiserver and sent back to a user."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

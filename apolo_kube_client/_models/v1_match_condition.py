@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1MatchCondition",)
 
 
-class V1MatchCondition(BaseModel):
+class V1MatchCondition(BaseConfiguredModel):
     """MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

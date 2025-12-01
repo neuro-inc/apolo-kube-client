@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_service_backend_port import V1ServiceBackendPort
 
@@ -9,7 +10,7 @@ from .v1_service_backend_port import V1ServiceBackendPort
 __all__ = ("V1IngressServiceBackend",)
 
 
-class V1IngressServiceBackend(BaseModel):
+class V1IngressServiceBackend(BaseConfiguredModel):
     """IngressServiceBackend references a Kubernetes Service as a Backend."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

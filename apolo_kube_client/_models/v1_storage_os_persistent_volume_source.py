@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_object_reference import V1ObjectReference
 
@@ -9,7 +10,7 @@ from .v1_object_reference import V1ObjectReference
 __all__ = ("V1StorageOSPersistentVolumeSource",)
 
 
-class V1StorageOSPersistentVolumeSource(BaseModel):
+class V1StorageOSPersistentVolumeSource(BaseConfiguredModel):
     """Represents a StorageOS persistent volume resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

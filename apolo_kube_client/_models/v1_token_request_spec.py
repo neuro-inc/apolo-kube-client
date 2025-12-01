@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_bound_object_reference import V1BoundObjectReference
 
@@ -9,7 +10,7 @@ from .v1_bound_object_reference import V1BoundObjectReference
 __all__ = ("V1TokenRequestSpec",)
 
 
-class V1TokenRequestSpec(BaseModel):
+class V1TokenRequestSpec(BaseConfiguredModel):
     """TokenRequestSpec contains client provided parameters of a token request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

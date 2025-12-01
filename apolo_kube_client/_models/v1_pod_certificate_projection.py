@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PodCertificateProjection",)
 
 
-class V1PodCertificateProjection(BaseModel):
+class V1PodCertificateProjection(BaseConfiguredModel):
     """PodCertificateProjection provides a private key and X.509 certificate in the pod filesystem."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodCertificateProjection"

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ServerAddressByClientCIDR",)
 
 
-class V1ServerAddressByClientCIDR(BaseModel):
+class V1ServerAddressByClientCIDR(BaseConfiguredModel):
     """ServerAddressByClientCIDR helps the client to determine the server address that they should use, depending on the clientCIDR that they match."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

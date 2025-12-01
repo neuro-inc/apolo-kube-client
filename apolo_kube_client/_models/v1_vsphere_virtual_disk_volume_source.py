@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1VsphereVirtualDiskVolumeSource",)
 
 
-class V1VsphereVirtualDiskVolumeSource(BaseModel):
+class V1VsphereVirtualDiskVolumeSource(BaseConfiguredModel):
     """Represents a vSphere volume resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

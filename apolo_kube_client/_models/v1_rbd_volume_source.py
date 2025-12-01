@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_local_object_reference import V1LocalObjectReference
 
@@ -9,7 +10,7 @@ from .v1_local_object_reference import V1LocalObjectReference
 __all__ = ("V1RBDVolumeSource",)
 
 
-class V1RBDVolumeSource(BaseModel):
+class V1RBDVolumeSource(BaseConfiguredModel):
     """Represents a Rados Block Device mount that lasts the lifetime of a pod. RBD volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.RBDVolumeSource"

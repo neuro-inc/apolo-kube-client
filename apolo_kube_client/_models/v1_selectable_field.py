@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SelectableField",)
 
 
-class V1SelectableField(BaseModel):
+class V1SelectableField(BaseConfiguredModel):
     """SelectableField specifies the JSON path of a field that may be used with field selectors."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

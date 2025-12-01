@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta2DeviceToleration",)
 
 
-class V1beta2DeviceToleration(BaseModel):
+class V1beta2DeviceToleration(BaseConfiguredModel):
     """The ResourceClaim this DeviceToleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

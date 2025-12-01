@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1alpha3_cel_device_selector import V1alpha3CELDeviceSelector
 
 
 __all__ = ("V1alpha3DeviceSelector",)
 
 
-class V1alpha3DeviceSelector(BaseModel):
+class V1alpha3DeviceSelector(BaseConfiguredModel):
     """DeviceSelector must have exactly one field set."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1alpha3.DeviceSelector"

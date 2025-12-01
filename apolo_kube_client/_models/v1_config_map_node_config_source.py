@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ConfigMapNodeConfigSource",)
 
 
-class V1ConfigMapNodeConfigSource(BaseModel):
+class V1ConfigMapNodeConfigSource(BaseConfiguredModel):
     """ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1beta1_capacity_request_policy_range import V1beta1CapacityRequestPolicyRange
 
@@ -9,7 +10,7 @@ from .v1beta1_capacity_request_policy_range import V1beta1CapacityRequestPolicyR
 __all__ = ("V1beta1CapacityRequestPolicy",)
 
 
-class V1beta1CapacityRequestPolicy(BaseModel):
+class V1beta1CapacityRequestPolicy(BaseConfiguredModel):
     """CapacityRequestPolicy defines how requests consume device capacity.
 
     Must not set more than one ValidRequestValues."""

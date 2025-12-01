@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SELinuxOptions",)
 
 
-class V1SELinuxOptions(BaseModel):
+class V1SELinuxOptions(BaseConfiguredModel):
     """SELinuxOptions are the labels to be applied to the container"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.SELinuxOptions"

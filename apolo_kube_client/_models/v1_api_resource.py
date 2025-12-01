@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1APIResource",)
 
 
-class V1APIResource(BaseModel):
+class V1APIResource(BaseConfiguredModel):
     """APIResource specifies the name of a resource and whether it is namespaced."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

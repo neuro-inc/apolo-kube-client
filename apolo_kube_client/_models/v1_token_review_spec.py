@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1TokenReviewSpec",)
 
 
-class V1TokenReviewSpec(BaseModel):
+class V1TokenReviewSpec(BaseConfiguredModel):
     """TokenReviewSpec is a description of the token authentication request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

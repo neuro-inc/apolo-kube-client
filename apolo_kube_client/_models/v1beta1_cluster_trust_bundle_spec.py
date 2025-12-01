@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1ClusterTrustBundleSpec",)
 
 
-class V1beta1ClusterTrustBundleSpec(BaseModel):
+class V1beta1ClusterTrustBundleSpec(BaseConfiguredModel):
     """ClusterTrustBundleSpec contains the signer and trust anchors."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

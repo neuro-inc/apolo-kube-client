@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1VolumeError",)
 
 
-class V1VolumeError(BaseModel):
+class V1VolumeError(BaseConfiguredModel):
     """VolumeError captures an error encountered during a volume operation."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.VolumeError"

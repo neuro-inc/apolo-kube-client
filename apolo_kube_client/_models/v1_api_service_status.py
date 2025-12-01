@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_api_service_condition import V1APIServiceCondition
 
@@ -9,7 +10,7 @@ from .v1_api_service_condition import V1APIServiceCondition
 __all__ = ("V1APIServiceStatus",)
 
 
-class V1APIServiceStatus(BaseModel):
+class V1APIServiceStatus(BaseConfiguredModel):
     """APIServiceStatus contains derived information about an API server"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

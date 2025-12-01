@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1QuobyteVolumeSource",)
 
 
-class V1QuobyteVolumeSource(BaseModel):
+class V1QuobyteVolumeSource(BaseConfiguredModel):
     """Represents a Quobyte mount that lasts the lifetime of a pod. Quobyte volumes do not support ownership management or SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.QuobyteVolumeSource"

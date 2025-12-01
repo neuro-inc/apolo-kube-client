@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NonResourcePolicyRule",)
 
 
-class V1NonResourcePolicyRule(BaseModel):
+class V1NonResourcePolicyRule(BaseConfiguredModel):
     """NonResourcePolicyRule is a predicate that matches non-resource requests according to their verb and the target non-resource URL. A NonResourcePolicyRule matches a request if and only if both (a) at least one member of verbs matches the request and (b) at least one member of nonResourceURLs matches the request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_exempt_priority_level_configuration import V1ExemptPriorityLevelConfiguration
 from .v1_limited_priority_level_configuration import V1LimitedPriorityLevelConfiguration
@@ -10,7 +11,7 @@ from .v1_limited_priority_level_configuration import V1LimitedPriorityLevelConfi
 __all__ = ("V1PriorityLevelConfigurationSpec",)
 
 
-class V1PriorityLevelConfigurationSpec(BaseModel):
+class V1PriorityLevelConfigurationSpec(BaseConfiguredModel):
     """PriorityLevelConfigurationSpec specifies the configuration of a priority level."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

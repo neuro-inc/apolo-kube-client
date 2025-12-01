@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V2HorizontalPodAutoscalerCondition",)
 
 
-class V2HorizontalPodAutoscalerCondition(BaseModel):
+class V2HorizontalPodAutoscalerCondition(BaseConfiguredModel):
     """HorizontalPodAutoscalerCondition describes the state of a HorizontalPodAutoscaler at a certain point."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

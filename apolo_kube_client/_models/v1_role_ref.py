@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1RoleRef",)
 
 
-class V1RoleRef(BaseModel):
+class V1RoleRef(BaseConfiguredModel):
     """RoleRef contains information that points to the role being used"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.RoleRef"

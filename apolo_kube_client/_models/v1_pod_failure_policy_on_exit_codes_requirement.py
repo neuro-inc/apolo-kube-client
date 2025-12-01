@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PodFailurePolicyOnExitCodesRequirement",)
 
 
-class V1PodFailurePolicyOnExitCodesRequirement(BaseModel):
+class V1PodFailurePolicyOnExitCodesRequirement(BaseConfiguredModel):
     """PodFailurePolicyOnExitCodesRequirement describes the requirement for handling a failed pod based on its container exit codes. In particular, it lookups the .state.terminated.exitCode for each app container and init container status, represented by the .status.containerStatuses and .status.initContainerStatuses fields in the Pod status, respectively. Containers completed with success (exit code 0) are excluded from the requirement check."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

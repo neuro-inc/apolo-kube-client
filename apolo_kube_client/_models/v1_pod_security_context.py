@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_app_armor_profile import V1AppArmorProfile
 from .v1_se_linux_options import V1SELinuxOptions
@@ -13,7 +14,7 @@ from .v1_windows_security_context_options import V1WindowsSecurityContextOptions
 __all__ = ("V1PodSecurityContext",)
 
 
-class V1PodSecurityContext(BaseModel):
+class V1PodSecurityContext(BaseConfiguredModel):
     """PodSecurityContext holds pod-level security attributes and common container settings. Some fields are also present in container.securityContext.  Field values of container.securityContext take precedence over field values of PodSecurityContext."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodSecurityContext"

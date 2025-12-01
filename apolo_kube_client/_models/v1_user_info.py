@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1UserInfo",)
 
 
-class V1UserInfo(BaseModel):
+class V1UserInfo(BaseConfiguredModel):
     """UserInfo holds the information about the user needed to implement the user.Info interface."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.authentication.v1.UserInfo"

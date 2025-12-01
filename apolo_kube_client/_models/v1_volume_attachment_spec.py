@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_volume_attachment_source import V1VolumeAttachmentSource
 
 
 __all__ = ("V1VolumeAttachmentSpec",)
 
 
-class V1VolumeAttachmentSpec(BaseModel):
+class V1VolumeAttachmentSpec(BaseConfiguredModel):
     """VolumeAttachmentSpec is the specification of a VolumeAttachment request."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.VolumeAttachmentSpec"

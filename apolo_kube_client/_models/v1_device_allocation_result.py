@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_device_allocation_configuration import V1DeviceAllocationConfiguration
 from .v1_device_request_allocation_result import V1DeviceRequestAllocationResult
@@ -10,7 +11,7 @@ from .v1_device_request_allocation_result import V1DeviceRequestAllocationResult
 __all__ = ("V1DeviceAllocationResult",)
 
 
-class V1DeviceAllocationResult(BaseModel):
+class V1DeviceAllocationResult(BaseConfiguredModel):
     """DeviceAllocationResult is the result of allocating devices."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

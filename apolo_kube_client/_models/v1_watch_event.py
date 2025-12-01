@@ -1,16 +1,17 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta
 
 
 __all__ = ("V1WatchEvent",)
 
 
-class V1WatchEvent(BaseModel):
+class V1WatchEvent(BaseConfiguredModel):
     """Event represents a single event to a watched resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_status_cause import V1StatusCause
 
@@ -9,7 +10,7 @@ from .v1_status_cause import V1StatusCause
 __all__ = ("V1StatusDetails",)
 
 
-class V1StatusDetails(BaseModel):
+class V1StatusDetails(BaseConfiguredModel):
     """StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

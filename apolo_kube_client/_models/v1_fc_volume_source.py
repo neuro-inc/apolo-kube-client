@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1FCVolumeSource",)
 
 
-class V1FCVolumeSource(BaseModel):
+class V1FCVolumeSource(BaseConfiguredModel):
     """Represents a Fibre Channel volume. Fibre Channel volumes can only be mounted as read/write once. Fibre Channel volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.FCVolumeSource"

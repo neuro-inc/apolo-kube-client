@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_certificate_signing_request_condition import (
     V1CertificateSigningRequestCondition,
@@ -11,7 +12,7 @@ from .v1_certificate_signing_request_condition import (
 __all__ = ("V1CertificateSigningRequestStatus",)
 
 
-class V1CertificateSigningRequestStatus(BaseModel):
+class V1CertificateSigningRequestStatus(BaseConfiguredModel):
     """CertificateSigningRequestStatus contains conditions used to indicate approved/denied/failed status of the request, and the issued certificate."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

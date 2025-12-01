@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_metric_identifier import V2MetricIdentifier
 from .v2_metric_target import V2MetricTarget
@@ -10,7 +11,7 @@ from .v2_metric_target import V2MetricTarget
 __all__ = ("V2ObjectMetricSource",)
 
 
-class V2ObjectMetricSource(BaseModel):
+class V2ObjectMetricSource(BaseConfiguredModel):
     """ObjectMetricSource indicates how to scale on a metric describing a kubernetes object (for example, hits-per-second on an Ingress object)."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

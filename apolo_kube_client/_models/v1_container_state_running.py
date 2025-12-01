@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ContainerStateRunning",)
 
 
-class V1ContainerStateRunning(BaseModel):
+class V1ContainerStateRunning(BaseConfiguredModel):
     """ContainerStateRunning is a running state of a container."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ContainerStateRunning"

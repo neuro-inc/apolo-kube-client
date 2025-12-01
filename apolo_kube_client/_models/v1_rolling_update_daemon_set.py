@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1RollingUpdateDaemonSet",)
 
 
-class V1RollingUpdateDaemonSet(BaseModel):
+class V1RollingUpdateDaemonSet(BaseConfiguredModel):
     """Spec to control the desired behavior of daemon set rolling update."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.RollingUpdateDaemonSet"

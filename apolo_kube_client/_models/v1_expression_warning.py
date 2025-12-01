@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ExpressionWarning",)
 
 
-class V1ExpressionWarning(BaseModel):
+class V1ExpressionWarning(BaseConfiguredModel):
     """ExpressionWarning is a warning information that targets a specific expression."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_ingress_service_backend import V1IngressServiceBackend
 from .v1_typed_local_object_reference import V1TypedLocalObjectReference
 
@@ -9,7 +10,7 @@ from .v1_typed_local_object_reference import V1TypedLocalObjectReference
 __all__ = ("V1IngressBackend",)
 
 
-class V1IngressBackend(BaseModel):
+class V1IngressBackend(BaseConfiguredModel):
     """IngressBackend describes all endpoints for a given service and port."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressBackend"

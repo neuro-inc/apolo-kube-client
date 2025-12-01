@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ImageVolumeSource",)
 
 
-class V1ImageVolumeSource(BaseModel):
+class V1ImageVolumeSource(BaseConfiguredModel):
     """ImageVolumeSource represents a image volume resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ImageVolumeSource"

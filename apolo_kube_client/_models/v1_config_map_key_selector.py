@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ConfigMapKeySelector",)
 
 
-class V1ConfigMapKeySelector(BaseModel):
+class V1ConfigMapKeySelector(BaseConfiguredModel):
     """Selects a key from a ConfigMap."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ConfigMapKeySelector"

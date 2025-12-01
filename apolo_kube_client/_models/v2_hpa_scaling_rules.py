@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v2_hpa_scaling_policy import V2HPAScalingPolicy
 
@@ -9,7 +10,7 @@ from .v2_hpa_scaling_policy import V2HPAScalingPolicy
 __all__ = ("V2HPAScalingRules",)
 
 
-class V2HPAScalingRules(BaseModel):
+class V2HPAScalingRules(BaseConfiguredModel):
     """HPAScalingRules configures the scaling behavior for one direction via scaling Policy Rules and a configurable metric tolerance.
 
     Scaling Policy Rules are applied after calculating DesiredReplicas from metrics for the HPA. They can limit the scaling velocity by specifying scaling policies. They can prevent flapping by specifying the stabilization window, so that the number of replicas is not set instantly, instead, the safest value from the stabilization window is chosen.

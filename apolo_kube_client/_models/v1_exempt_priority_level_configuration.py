@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ExemptPriorityLevelConfiguration",)
 
 
-class V1ExemptPriorityLevelConfiguration(BaseModel):
+class V1ExemptPriorityLevelConfiguration(BaseConfiguredModel):
     """ExemptPriorityLevelConfiguration describes the configurable aspects of the handling of exempt requests. In the mandatory exempt configuration object the values in the fields here can be modified by authorized users, unlike the rest of the `spec`."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

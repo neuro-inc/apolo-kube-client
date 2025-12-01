@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v2_cross_version_object_reference import V2CrossVersionObjectReference
 from .v2_horizontal_pod_autoscaler_behavior import V2HorizontalPodAutoscalerBehavior
@@ -11,7 +12,7 @@ from .v2_metric_spec import V2MetricSpec
 __all__ = ("V2HorizontalPodAutoscalerSpec",)
 
 
-class V2HorizontalPodAutoscalerSpec(BaseModel):
+class V2HorizontalPodAutoscalerSpec(BaseConfiguredModel):
     """HorizontalPodAutoscalerSpec describes the desired functionality of the HorizontalPodAutoscaler."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

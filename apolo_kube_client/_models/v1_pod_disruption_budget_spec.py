@@ -1,9 +1,10 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 
@@ -11,7 +12,7 @@ from .v1_label_selector import V1LabelSelector
 __all__ = ("V1PodDisruptionBudgetSpec",)
 
 
-class V1PodDisruptionBudgetSpec(BaseModel):
+class V1PodDisruptionBudgetSpec(BaseConfiguredModel):
     """PodDisruptionBudgetSpec is a description of a PodDisruptionBudget."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

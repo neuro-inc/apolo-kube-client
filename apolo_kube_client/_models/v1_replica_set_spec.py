@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_pod_template_spec import V1PodTemplateSpec
@@ -10,7 +11,7 @@ from .v1_pod_template_spec import V1PodTemplateSpec
 __all__ = ("V1ReplicaSetSpec",)
 
 
-class V1ReplicaSetSpec(BaseModel):
+class V1ReplicaSetSpec(BaseConfiguredModel):
     """ReplicaSetSpec is the specification of a ReplicaSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.ReplicaSetSpec"

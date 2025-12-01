@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_flow_schema_condition import V1FlowSchemaCondition
 
@@ -9,7 +10,7 @@ from .v1_flow_schema_condition import V1FlowSchemaCondition
 __all__ = ("V1FlowSchemaStatus",)
 
 
-class V1FlowSchemaStatus(BaseModel):
+class V1FlowSchemaStatus(BaseConfiguredModel):
     """FlowSchemaStatus represents the current state of a FlowSchema."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.flowcontrol.v1.FlowSchemaStatus"

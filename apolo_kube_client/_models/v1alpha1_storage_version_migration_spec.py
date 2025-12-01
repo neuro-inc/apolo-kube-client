@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1alpha1_group_version_resource import V1alpha1GroupVersionResource
 
 
 __all__ = ("V1alpha1StorageVersionMigrationSpec",)
 
 
-class V1alpha1StorageVersionMigrationSpec(BaseModel):
+class V1alpha1StorageVersionMigrationSpec(BaseConfiguredModel):
     """Spec of the storage version migration."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

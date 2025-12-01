@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1NodeSelectorRequirement",)
 
 
-class V1NodeSelectorRequirement(BaseModel):
+class V1NodeSelectorRequirement(BaseConfiguredModel):
     """A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSelectorRequirement"

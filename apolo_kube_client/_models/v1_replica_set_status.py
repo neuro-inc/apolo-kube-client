@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_replica_set_condition import V1ReplicaSetCondition
 
@@ -9,7 +10,7 @@ from .v1_replica_set_condition import V1ReplicaSetCondition
 __all__ = ("V1ReplicaSetStatus",)
 
 
-class V1ReplicaSetStatus(BaseModel):
+class V1ReplicaSetStatus(BaseConfiguredModel):
     """ReplicaSetStatus represents the current status of a ReplicaSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.ReplicaSetStatus"

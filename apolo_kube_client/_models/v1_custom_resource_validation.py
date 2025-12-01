@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_json_schema_props import V1JSONSchemaProps
 
@@ -9,7 +10,7 @@ from .v1_json_schema_props import V1JSONSchemaProps
 __all__ = ("V1CustomResourceValidation",)
 
 
-class V1CustomResourceValidation(BaseModel):
+class V1CustomResourceValidation(BaseConfiguredModel):
     """CustomResourceValidation is a list of validation methods for CustomResources."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

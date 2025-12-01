@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NodeAddress",)
 
 
-class V1NodeAddress(BaseModel):
+class V1NodeAddress(BaseConfiguredModel):
     """NodeAddress contains information for the node's address."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeAddress"

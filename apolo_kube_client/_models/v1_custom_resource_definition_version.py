@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_custom_resource_column_definition import V1CustomResourceColumnDefinition
 from .v1_custom_resource_subresources import V1CustomResourceSubresources
@@ -12,7 +13,7 @@ from .v1_selectable_field import V1SelectableField
 __all__ = ("V1CustomResourceDefinitionVersion",)
 
 
-class V1CustomResourceDefinitionVersion(BaseModel):
+class V1CustomResourceDefinitionVersion(BaseConfiguredModel):
     """CustomResourceDefinitionVersion describes a version for CRD."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,16 +1,17 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .v1_custom_resource_subresource_scale import V1CustomResourceSubresourceScale
 
 
 __all__ = ("V1CustomResourceSubresources",)
 
 
-class V1CustomResourceSubresources(BaseModel):
+class V1CustomResourceSubresources(BaseConfiguredModel):
     """CustomResourceSubresources defines the status and scale subresources for CustomResources."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

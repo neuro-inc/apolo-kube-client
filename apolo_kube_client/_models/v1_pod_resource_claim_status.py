@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PodResourceClaimStatus",)
 
 
-class V1PodResourceClaimStatus(BaseModel):
+class V1PodResourceClaimStatus(BaseConfiguredModel):
     """PodResourceClaimStatus is stored in the PodStatus for each PodResourceClaim which references a ResourceClaimTemplate. It stores the generated name for the corresponding ResourceClaim."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodResourceClaimStatus"

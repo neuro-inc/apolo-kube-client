@@ -1,9 +1,10 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from apolo_kube_client._typedefs import JsonType
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_external_documentation import V1ExternalDocumentation
 from .v1_validation_rule import V1ValidationRule
@@ -12,7 +13,7 @@ from .v1_validation_rule import V1ValidationRule
 __all__ = ("V1JSONSchemaProps",)
 
 
-class V1JSONSchemaProps(BaseModel):
+class V1JSONSchemaProps(BaseConfiguredModel):
     """JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/)."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

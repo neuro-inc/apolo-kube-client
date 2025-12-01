@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1alpha1NamedRuleWithOperations",)
 
 
-class V1alpha1NamedRuleWithOperations(BaseModel):
+class V1alpha1NamedRuleWithOperations(BaseConfiguredModel):
     """NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

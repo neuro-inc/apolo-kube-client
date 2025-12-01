@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NonResourceAttributes",)
 
 
-class V1NonResourceAttributes(BaseModel):
+class V1NonResourceAttributes(BaseConfiguredModel):
     """NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

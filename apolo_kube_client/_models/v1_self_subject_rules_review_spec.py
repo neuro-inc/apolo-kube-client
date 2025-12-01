@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SelfSubjectRulesReviewSpec",)
 
 
-class V1SelfSubjectRulesReviewSpec(BaseModel):
+class V1SelfSubjectRulesReviewSpec(BaseConfiguredModel):
     """SelfSubjectRulesReviewSpec defines the specification for SelfSubjectRulesReview."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

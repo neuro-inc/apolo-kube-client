@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1DeviceTaint",)
 
 
-class V1beta1DeviceTaint(BaseModel):
+class V1beta1DeviceTaint(BaseConfiguredModel):
     """The device this taint is attached to has the "effect" on any claim which does not tolerate the taint and, through the claim, to pods using the claim."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.DeviceTaint"

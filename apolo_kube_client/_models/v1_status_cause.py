@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1StatusCause",)
 
 
-class V1StatusCause(BaseModel):
+class V1StatusCause(BaseConfiguredModel):
     """StatusCause provides more information about an api.Status failure, including cases when multiple errors are encountered."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

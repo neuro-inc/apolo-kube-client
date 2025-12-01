@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_secret_reference import V1SecretReference
 
@@ -9,7 +10,7 @@ from .v1_secret_reference import V1SecretReference
 __all__ = ("V1CephFSPersistentVolumeSource",)
 
 
-class V1CephFSPersistentVolumeSource(BaseModel):
+class V1CephFSPersistentVolumeSource(BaseConfiguredModel):
     """Represents a Ceph Filesystem mount that lasts the lifetime of a pod Cephfs volumes do not support ownership management or SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1Condition",)
 
 
-class V1Condition(BaseModel):
+class V1Condition(BaseConfiguredModel):
     """Condition contains details for one aspect of the current state of this API Resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

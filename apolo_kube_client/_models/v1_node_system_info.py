@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_node_swap_status import V1NodeSwapStatus
 
@@ -9,7 +10,7 @@ from .v1_node_swap_status import V1NodeSwapStatus
 __all__ = ("V1NodeSystemInfo",)
 
 
-class V1NodeSystemInfo(BaseModel):
+class V1NodeSystemInfo(BaseConfiguredModel):
     """NodeSystemInfo is a set of ids/uuids to uniquely identify the node."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSystemInfo"

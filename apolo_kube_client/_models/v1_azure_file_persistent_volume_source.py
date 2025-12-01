@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1AzureFilePersistentVolumeSource",)
 
 
-class V1AzureFilePersistentVolumeSource(BaseModel):
+class V1AzureFilePersistentVolumeSource(BaseConfiguredModel):
     """AzureFile represents an Azure File Service mount on the host and bind mount to the pod."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

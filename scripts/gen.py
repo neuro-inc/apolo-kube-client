@@ -14,7 +14,7 @@ from pydantic import BaseModel
 
 MOD = """\
 from typing import Annotated, ClassVar, Final
-from pydantic import BaseModel, Field
+from pydantic import Field
 {imports}
 
 __all__ = ("{clsname}",)
@@ -296,7 +296,8 @@ def generate(
 
     match cls.openapi_types.get("metadata"):
         case None:
-            base = "BaseModel"
+            base = "BaseConfiguredModel"
+            imports.add("from .base_model import BaseConfiguredModel")
         case "V1ObjectMeta":
             base = "ResourceModel"
             imports.add("from .base import ResourceModel")

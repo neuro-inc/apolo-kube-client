@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1IngressClassParametersReference",)
 
 
-class V1IngressClassParametersReference(BaseModel):
+class V1IngressClassParametersReference(BaseConfiguredModel):
     """IngressClassParametersReference identifies an API object. This can be used to specify a cluster or namespace-scoped resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

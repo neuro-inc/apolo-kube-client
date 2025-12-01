@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1alpha1StorageVersionCondition",)
 
 
-class V1alpha1StorageVersionCondition(BaseModel):
+class V1alpha1StorageVersionCondition(BaseConfiguredModel):
     """Describes the state of the storageVersion at a certain point."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

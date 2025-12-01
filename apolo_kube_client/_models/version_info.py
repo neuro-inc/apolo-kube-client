@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("VersionInfo",)
 
 
-class VersionInfo(BaseModel):
+class VersionInfo(BaseConfiguredModel):
     """Info contains versioning information. how we'll want to distribute that information."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.apimachinery.pkg.version.Info"

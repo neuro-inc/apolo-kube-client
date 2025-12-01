@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1JSONPatch",)
 
 
-class V1beta1JSONPatch(BaseModel):
+class V1beta1JSONPatch(BaseConfiguredModel):
     """JSONPatch defines a JSON Patch."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

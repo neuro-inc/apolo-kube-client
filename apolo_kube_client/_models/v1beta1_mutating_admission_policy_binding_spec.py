@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1beta1_match_resources import V1beta1MatchResources
 from .v1beta1_param_ref import V1beta1ParamRef
@@ -10,7 +11,7 @@ from .v1beta1_param_ref import V1beta1ParamRef
 __all__ = ("V1beta1MutatingAdmissionPolicyBindingSpec",)
 
 
-class V1beta1MutatingAdmissionPolicyBindingSpec(BaseModel):
+class V1beta1MutatingAdmissionPolicyBindingSpec(BaseConfiguredModel):
     """MutatingAdmissionPolicyBindingSpec is the specification of the MutatingAdmissionPolicyBinding."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

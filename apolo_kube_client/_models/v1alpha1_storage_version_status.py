@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1alpha1_server_storage_version import V1alpha1ServerStorageVersion
 from .v1alpha1_storage_version_condition import V1alpha1StorageVersionCondition
@@ -10,7 +11,7 @@ from .v1alpha1_storage_version_condition import V1alpha1StorageVersionCondition
 __all__ = ("V1alpha1StorageVersionStatus",)
 
 
-class V1alpha1StorageVersionStatus(BaseModel):
+class V1alpha1StorageVersionStatus(BaseConfiguredModel):
     """API server instances report the versions they can decode and the version they encode objects to when persisting objects in the backend."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

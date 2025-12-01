@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1CustomResourceSubresourceScale",)
 
 
-class V1CustomResourceSubresourceScale(BaseModel):
+class V1CustomResourceSubresourceScale(BaseConfiguredModel):
     """CustomResourceSubresourceScale defines how to serve the scale subresource for CustomResources."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

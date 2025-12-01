@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PodDNSConfigOption",)
 
 
-class V1PodDNSConfigOption(BaseModel):
+class V1PodDNSConfigOption(BaseConfiguredModel):
     """PodDNSConfigOption defines DNS resolver options of a pod."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodDNSConfigOption"

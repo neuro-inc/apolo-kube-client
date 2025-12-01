@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_secret_reference import V1SecretReference
 
@@ -9,7 +10,7 @@ from .v1_secret_reference import V1SecretReference
 __all__ = ("V1CinderPersistentVolumeSource",)
 
 
-class V1CinderPersistentVolumeSource(BaseModel):
+class V1CinderPersistentVolumeSource(BaseConfiguredModel):
     """Represents a cinder volume resource in Openstack. A Cinder volume must exist before mounting to a container. The volume must also be in the same region as the kubelet. Cinder volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_job_template_spec import V1JobTemplateSpec
 
 
 __all__ = ("V1CronJobSpec",)
 
 
-class V1CronJobSpec(BaseModel):
+class V1CronJobSpec(BaseConfiguredModel):
     """CronJobSpec describes how the job execution will look like and when it will actually run."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.CronJobSpec"

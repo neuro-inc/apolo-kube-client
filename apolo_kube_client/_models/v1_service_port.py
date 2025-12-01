@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ServicePort",)
 
 
-class V1ServicePort(BaseModel):
+class V1ServicePort(BaseConfiguredModel):
     """ServicePort contains information on service's port."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ServicePort"

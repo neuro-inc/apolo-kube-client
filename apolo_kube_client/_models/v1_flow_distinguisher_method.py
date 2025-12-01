@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1FlowDistinguisherMethod",)
 
 
-class V1FlowDistinguisherMethod(BaseModel):
+class V1FlowDistinguisherMethod(BaseConfiguredModel):
     """FlowDistinguisherMethod specifies the method of a flow distinguisher."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

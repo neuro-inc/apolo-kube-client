@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .core_v1_resource_claim import CoreV1ResourceClaim
 from .utils import _collection_if_none
 
@@ -9,7 +10,7 @@ from .utils import _collection_if_none
 __all__ = ("V1ResourceRequirements",)
 
 
-class V1ResourceRequirements(BaseModel):
+class V1ResourceRequirements(BaseConfiguredModel):
     """ResourceRequirements describes the compute resource requirements."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ResourceRequirements"

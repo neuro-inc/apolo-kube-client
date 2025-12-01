@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1IngressPortStatus",)
 
 
-class V1IngressPortStatus(BaseModel):
+class V1IngressPortStatus(BaseConfiguredModel):
     """IngressPortStatus represents the error condition of a service port"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressPortStatus"

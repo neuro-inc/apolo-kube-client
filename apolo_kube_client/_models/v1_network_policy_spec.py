@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_label_selector import V1LabelSelector
 from .v1_network_policy_egress_rule import V1NetworkPolicyEgressRule
@@ -11,7 +12,7 @@ from .v1_network_policy_ingress_rule import V1NetworkPolicyIngressRule
 __all__ = ("V1NetworkPolicySpec",)
 
 
-class V1NetworkPolicySpec(BaseModel):
+class V1NetworkPolicySpec(BaseConfiguredModel):
     """NetworkPolicySpec provides the specification of a NetworkPolicy"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicySpec"

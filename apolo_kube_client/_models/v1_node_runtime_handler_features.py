@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NodeRuntimeHandlerFeatures",)
 
 
-class V1NodeRuntimeHandlerFeatures(BaseModel):
+class V1NodeRuntimeHandlerFeatures(BaseConfiguredModel):
     """NodeRuntimeHandlerFeatures is a set of features implemented by the runtime handler."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

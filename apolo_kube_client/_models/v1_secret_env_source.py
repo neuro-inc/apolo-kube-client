@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SecretEnvSource",)
 
 
-class V1SecretEnvSource(BaseModel):
+class V1SecretEnvSource(BaseConfiguredModel):
     """SecretEnvSource selects a Secret to populate the environment variables with.
 
     The contents of the target Secret's Data field will represent the key-value pairs as environment variables."""

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("AdmissionregistrationV1ServiceReference",)
 
 
-class AdmissionregistrationV1ServiceReference(BaseModel):
+class AdmissionregistrationV1ServiceReference(BaseConfiguredModel):
     """ServiceReference holds a reference to Service.legacy.k8s.io"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

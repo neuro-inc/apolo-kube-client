@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1EmptyDirVolumeSource",)
 
 
-class V1EmptyDirVolumeSource(BaseModel):
+class V1EmptyDirVolumeSource(BaseConfiguredModel):
     """Represents an empty directory for a pod. Empty directory volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EmptyDirVolumeSource"

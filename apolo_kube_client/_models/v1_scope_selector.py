@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_scoped_resource_selector_requirement import V1ScopedResourceSelectorRequirement
 
@@ -9,7 +10,7 @@ from .v1_scoped_resource_selector_requirement import V1ScopedResourceSelectorReq
 __all__ = ("V1ScopeSelector",)
 
 
-class V1ScopeSelector(BaseModel):
+class V1ScopeSelector(BaseConfiguredModel):
     """A scope selector represents the AND of the selectors represented by the scoped-resource selector requirements."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ScopeSelector"

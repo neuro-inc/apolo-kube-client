@@ -2,7 +2,8 @@ from typing import Annotated, Any
 
 from pydantic import Field
 
-from ._models.base import BaseConfiguredModel, CollectionModel, ResourceModel
+from ._models.base import CollectionModel, ResourceModel
+from ._models.base_model import BaseConfiguredModel
 
 
 class V1DiskNamingCRDSpec(BaseConfiguredModel):

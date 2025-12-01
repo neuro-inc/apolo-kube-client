@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .flowcontrol_v1_subject import FlowcontrolV1Subject
 from .utils import _collection_if_none
 from .v1_non_resource_policy_rule import V1NonResourcePolicyRule
@@ -11,7 +12,7 @@ from .v1_resource_policy_rule import V1ResourcePolicyRule
 __all__ = ("V1PolicyRulesWithSubjects",)
 
 
-class V1PolicyRulesWithSubjects(BaseModel):
+class V1PolicyRulesWithSubjects(BaseConfiguredModel):
     """PolicyRulesWithSubjects prescribes a test that applies to a request to an apiserver. The test considers the subject making the request, the verb being requested, and the resource to be acted upon. This PolicyRulesWithSubjects matches a request if and only if both (a) at least one member of subjects matches the request and (b) at least one member of resourceRules or nonResourceRules matches the request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

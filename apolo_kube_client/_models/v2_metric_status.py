@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v2_container_resource_metric_status import V2ContainerResourceMetricStatus
 from .v2_external_metric_status import V2ExternalMetricStatus
 from .v2_object_metric_status import V2ObjectMetricStatus
@@ -12,7 +13,7 @@ from .v2_resource_metric_status import V2ResourceMetricStatus
 __all__ = ("V2MetricStatus",)
 
 
-class V2MetricStatus(BaseModel):
+class V2MetricStatus(BaseConfiguredModel):
     """MetricStatus describes the last-read state of a single metric."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricStatus"

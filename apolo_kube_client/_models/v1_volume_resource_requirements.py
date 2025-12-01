@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1VolumeResourceRequirements",)
 
 
-class V1VolumeResourceRequirements(BaseModel):
+class V1VolumeResourceRequirements(BaseConfiguredModel):
     """VolumeResourceRequirements describes the storage resource requirements for a volume."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

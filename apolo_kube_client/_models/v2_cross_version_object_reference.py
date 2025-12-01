@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V2CrossVersionObjectReference",)
 
 
-class V2CrossVersionObjectReference(BaseModel):
+class V2CrossVersionObjectReference(BaseConfiguredModel):
     """CrossVersionObjectReference contains enough information to let you identify the referred resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

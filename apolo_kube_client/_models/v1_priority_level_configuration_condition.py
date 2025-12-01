@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PriorityLevelConfigurationCondition",)
 
 
-class V1PriorityLevelConfigurationCondition(BaseModel):
+class V1PriorityLevelConfigurationCondition(BaseConfiguredModel):
     """PriorityLevelConfigurationCondition defines the condition of priority level."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

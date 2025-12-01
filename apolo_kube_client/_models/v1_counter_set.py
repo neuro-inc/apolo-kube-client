@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_counter import V1Counter
 
 
 __all__ = ("V1CounterSet",)
 
 
-class V1CounterSet(BaseModel):
+class V1CounterSet(BaseConfiguredModel):
     """CounterSet defines a named set of counters that are available to be used by devices defined in the ResourceSlice.
 
     The counters are not allocatable by themselves, but can be referenced by devices. When a device is allocated, the portion of counters it uses will no longer be available for use by other devices."""

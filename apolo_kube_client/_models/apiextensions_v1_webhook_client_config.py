@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from .apiextensions_v1_service_reference import ApiextensionsV1ServiceReference
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("ApiextensionsV1WebhookClientConfig",)
 
 
-class ApiextensionsV1WebhookClientConfig(BaseModel):
+class ApiextensionsV1WebhookClientConfig(BaseConfiguredModel):
     """WebhookClientConfig contains the information to make a TLS connection with the webhook."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

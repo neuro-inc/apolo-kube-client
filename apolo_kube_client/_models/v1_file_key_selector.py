@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1FileKeySelector",)
 
 
-class V1FileKeySelector(BaseModel):
+class V1FileKeySelector(BaseConfiguredModel):
     """FileKeySelector selects a key of the env file."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.FileKeySelector"

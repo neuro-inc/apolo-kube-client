@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1HostIP",)
 
 
-class V1HostIP(BaseModel):
+class V1HostIP(BaseConfiguredModel):
     """HostIP represents a single IP address allocated to the host."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.HostIP"

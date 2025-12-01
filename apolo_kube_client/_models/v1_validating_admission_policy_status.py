@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_condition import V1Condition
 from .v1_type_checking import V1TypeChecking
@@ -10,7 +11,7 @@ from .v1_type_checking import V1TypeChecking
 __all__ = ("V1ValidatingAdmissionPolicyStatus",)
 
 
-class V1ValidatingAdmissionPolicyStatus(BaseModel):
+class V1ValidatingAdmissionPolicyStatus(BaseConfiguredModel):
     """ValidatingAdmissionPolicyStatus represents the status of an admission validation policy."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

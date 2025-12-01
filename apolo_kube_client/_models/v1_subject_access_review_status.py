@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SubjectAccessReviewStatus",)
 
 
-class V1SubjectAccessReviewStatus(BaseModel):
+class V1SubjectAccessReviewStatus(BaseConfiguredModel):
     """SubjectAccessReviewStatus"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

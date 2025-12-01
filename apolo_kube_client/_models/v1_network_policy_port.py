@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1NetworkPolicyPort",)
 
 
-class V1NetworkPolicyPort(BaseModel):
+class V1NetworkPolicyPort(BaseConfiguredModel):
     """NetworkPolicyPort describes a port to allow traffic on"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.NetworkPolicyPort"

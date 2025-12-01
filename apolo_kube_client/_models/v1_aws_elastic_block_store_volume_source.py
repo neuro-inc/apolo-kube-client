@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1AWSElasticBlockStoreVolumeSource",)
 
 
-class V1AWSElasticBlockStoreVolumeSource(BaseModel):
+class V1AWSElasticBlockStoreVolumeSource(BaseConfiguredModel):
     """Represents a Persistent Disk resource in AWS.
 
     An AWS EBS disk must exist before mounting to a container. The disk must also be in the same AWS zone as the kubelet. An AWS EBS disk can only be mounted as read/write once. AWS EBS volumes support ownership management and SELinux relabeling."""

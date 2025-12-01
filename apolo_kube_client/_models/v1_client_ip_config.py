@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ClientIPConfig",)
 
 
-class V1ClientIPConfig(BaseModel):
+class V1ClientIPConfig(BaseConfiguredModel):
     """ClientIPConfig represents the configurations of Client IP based session affinity."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ClientIPConfig"

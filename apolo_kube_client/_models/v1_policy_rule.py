@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1PolicyRule",)
 
 
-class V1PolicyRule(BaseModel):
+class V1PolicyRule(BaseConfiguredModel):
     """PolicyRule holds information that describes a policy rule, but does not contain information about who the rule applies to or which namespace the rule applies to."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.rbac.v1.PolicyRule"

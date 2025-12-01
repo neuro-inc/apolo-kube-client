@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta
 from .v1_api_group import V1APIGroup
 
@@ -9,7 +10,7 @@ from .v1_api_group import V1APIGroup
 __all__ = ("V1APIGroupList",)
 
 
-class V1APIGroupList(BaseModel):
+class V1APIGroupList(BaseConfiguredModel):
     """APIGroupList is a list of APIGroup, to allow clients to discover the API at /apis."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1ParamKind",)
 
 
-class V1beta1ParamKind(BaseModel):
+class V1beta1ParamKind(BaseConfiguredModel):
     """ParamKind is a tuple of Group Kind and Version."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

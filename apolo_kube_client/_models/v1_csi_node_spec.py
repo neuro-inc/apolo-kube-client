@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_csi_node_driver import V1CSINodeDriver
 
 
 __all__ = ("V1CSINodeSpec",)
 
 
-class V1CSINodeSpec(BaseModel):
+class V1CSINodeSpec(BaseConfiguredModel):
     """CSINodeSpec holds information about the specification of all CSI drivers installed on a node"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.storage.v1.CSINodeSpec"

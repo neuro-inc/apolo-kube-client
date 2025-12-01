@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1GroupVersionForDiscovery",)
 
 
-class V1GroupVersionForDiscovery(BaseModel):
+class V1GroupVersionForDiscovery(BaseConfiguredModel):
     """GroupVersion contains the "group/version" and "version" string of a version. It is made a struct to keep extensibility."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

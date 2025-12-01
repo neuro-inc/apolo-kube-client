@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta2CapacityRequestPolicyRange",)
 
 
-class V1beta2CapacityRequestPolicyRange(BaseModel):
+class V1beta2CapacityRequestPolicyRange(BaseConfiguredModel):
     """CapacityRequestPolicyRange defines a valid range for consumable capacity values.
 
     - If the requested amount is less than Min, it is rounded up to the Min value.

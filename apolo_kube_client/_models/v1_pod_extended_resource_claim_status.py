@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_container_extended_resource_request import V1ContainerExtendedResourceRequest
 
 
 __all__ = ("V1PodExtendedResourceClaimStatus",)
 
 
-class V1PodExtendedResourceClaimStatus(BaseModel):
+class V1PodExtendedResourceClaimStatus(BaseConfiguredModel):
     """PodExtendedResourceClaimStatus is stored in the PodStatus for the extended resource requests backed by DRA. It stores the generated name for the corresponding special ResourceClaim created by the scheduler."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

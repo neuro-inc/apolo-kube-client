@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1Taint",)
 
 
-class V1Taint(BaseModel):
+class V1Taint(BaseConfiguredModel):
     """The node this Taint is attached to has the "effect" on any pod that does not tolerate the Taint."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.Taint"

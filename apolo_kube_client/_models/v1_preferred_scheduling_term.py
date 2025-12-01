@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_node_selector_term import V1NodeSelectorTerm
 
 
 __all__ = ("V1PreferredSchedulingTerm",)
 
 
-class V1PreferredSchedulingTerm(BaseModel):
+class V1PreferredSchedulingTerm(BaseConfiguredModel):
     """An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op)."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PreferredSchedulingTerm"

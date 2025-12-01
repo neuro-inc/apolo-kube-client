@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta, _collection_if_none
 from .v1_group_version_for_discovery import V1GroupVersionForDiscovery
 from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
@@ -10,7 +11,7 @@ from .v1_server_address_by_client_cidr import V1ServerAddressByClientCIDR
 __all__ = ("V1APIGroup",)
 
 
-class V1APIGroup(BaseModel):
+class V1APIGroup(BaseConfiguredModel):
     """APIGroup contains the name, the supported versions, and the preferred version of a group."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

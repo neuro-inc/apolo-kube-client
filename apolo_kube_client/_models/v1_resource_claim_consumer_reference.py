@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ResourceClaimConsumerReference",)
 
 
-class V1ResourceClaimConsumerReference(BaseModel):
+class V1ResourceClaimConsumerReference(BaseConfiguredModel):
     """ResourceClaimConsumerReference contains enough information to let you locate the consumer of a ResourceClaim. The user must be a resource in the same namespace as the ResourceClaim."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

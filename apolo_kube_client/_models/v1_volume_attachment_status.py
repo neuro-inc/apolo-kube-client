@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_volume_error import V1VolumeError
 
@@ -9,7 +10,7 @@ from .v1_volume_error import V1VolumeError
 __all__ = ("V1VolumeAttachmentStatus",)
 
 
-class V1VolumeAttachmentStatus(BaseModel):
+class V1VolumeAttachmentStatus(BaseConfiguredModel):
     """VolumeAttachmentStatus is the status of a VolumeAttachment request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

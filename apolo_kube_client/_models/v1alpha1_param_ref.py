@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 
@@ -9,7 +10,7 @@ from .v1_label_selector import V1LabelSelector
 __all__ = ("V1alpha1ParamRef",)
 
 
-class V1alpha1ParamRef(BaseModel):
+class V1alpha1ParamRef(BaseConfiguredModel):
     """ParamRef describes how to locate the params to be used as input to expressions of rules applied by a policy binding."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

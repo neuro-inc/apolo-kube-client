@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1beta2_device_sub_request import V1beta2DeviceSubRequest
 from .v1beta2_exact_device_request import V1beta2ExactDeviceRequest
@@ -10,7 +11,7 @@ from .v1beta2_exact_device_request import V1beta2ExactDeviceRequest
 __all__ = ("V1beta2DeviceRequest",)
 
 
-class V1beta2DeviceRequest(BaseModel):
+class V1beta2DeviceRequest(BaseConfiguredModel):
     """DeviceRequest is a request for devices required for a claim. This is typically a request for a single resource like a device, but can also ask for several identical devices. With FirstAvailable it is also possible to provide a prioritized list of requests."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta2.DeviceRequest"

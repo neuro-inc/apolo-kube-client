@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1FlowSchemaCondition",)
 
 
-class V1FlowSchemaCondition(BaseModel):
+class V1FlowSchemaCondition(BaseConfiguredModel):
     """FlowSchemaCondition describes conditions for a FlowSchema."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,15 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from .apiregistration_v1_service_reference import ApiregistrationV1ServiceReference
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 
 
 __all__ = ("V1APIServiceSpec",)
 
 
-class V1APIServiceSpec(BaseModel):
+class V1APIServiceSpec(BaseConfiguredModel):
     """APIServiceSpec contains information for locating and communicating with a server. Only https is supported, though you are able to disable certificate verification."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

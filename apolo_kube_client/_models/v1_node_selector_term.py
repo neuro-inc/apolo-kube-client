@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_node_selector_requirement import V1NodeSelectorRequirement
 
@@ -9,7 +10,7 @@ from .v1_node_selector_requirement import V1NodeSelectorRequirement
 __all__ = ("V1NodeSelectorTerm",)
 
 
-class V1NodeSelectorTerm(BaseModel):
+class V1NodeSelectorTerm(BaseConfiguredModel):
     """A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeSelectorTerm"

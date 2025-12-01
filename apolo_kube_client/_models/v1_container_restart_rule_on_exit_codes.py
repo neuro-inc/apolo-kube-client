@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1ContainerRestartRuleOnExitCodes",)
 
 
-class V1ContainerRestartRuleOnExitCodes(BaseModel):
+class V1ContainerRestartRuleOnExitCodes(BaseConfiguredModel):
     """ContainerRestartRuleOnExitCodes describes the condition for handling an exited container based on its exit codes."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

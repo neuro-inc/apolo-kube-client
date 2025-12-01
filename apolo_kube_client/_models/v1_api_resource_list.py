@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta
 from .v1_api_resource import V1APIResource
 
@@ -9,7 +10,7 @@ from .v1_api_resource import V1APIResource
 __all__ = ("V1APIResourceList",)
 
 
-class V1APIResourceList(BaseModel):
+class V1APIResourceList(BaseConfiguredModel):
     """APIResourceList is a list of APIResource, it is used to expose the name of the resources supported in a specific group and version, and if the resource is namespaced."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

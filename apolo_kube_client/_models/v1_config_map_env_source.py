@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ConfigMapEnvSource",)
 
 
-class V1ConfigMapEnvSource(BaseModel):
+class V1ConfigMapEnvSource(BaseConfiguredModel):
     """ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.
 
     The contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables."""

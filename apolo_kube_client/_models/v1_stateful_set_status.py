@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_stateful_set_condition import V1StatefulSetCondition
 
@@ -9,7 +10,7 @@ from .v1_stateful_set_condition import V1StatefulSetCondition
 __all__ = ("V1StatefulSetStatus",)
 
 
-class V1StatefulSetStatus(BaseModel):
+class V1StatefulSetStatus(BaseConfiguredModel):
     """StatefulSetStatus represents the current state of a StatefulSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSetStatus"

@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1TokenRequestStatus",)
 
 
-class V1TokenRequestStatus(BaseModel):
+class V1TokenRequestStatus(BaseConfiguredModel):
     """TokenRequestStatus is the result of a token request."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ScaleStatus",)
 
 
-class V1ScaleStatus(BaseModel):
+class V1ScaleStatus(BaseConfiguredModel):
     """ScaleStatus represents the current status of a scale subresource."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v1.ScaleStatus"

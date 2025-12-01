@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1AppArmorProfile",)
 
 
-class V1AppArmorProfile(BaseModel):
+class V1AppArmorProfile(BaseConfiguredModel):
     """AppArmorProfile defines a pod or container's AppArmor settings."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.AppArmorProfile"

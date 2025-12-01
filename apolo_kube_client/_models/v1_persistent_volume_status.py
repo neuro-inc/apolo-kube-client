@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PersistentVolumeStatus",)
 
 
-class V1PersistentVolumeStatus(BaseModel):
+class V1PersistentVolumeStatus(BaseConfiguredModel):
     """PersistentVolumeStatus is the current status of a persistent volume."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PersistentVolumeStatus"

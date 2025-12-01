@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_container_status import V1ContainerStatus
 from .v1_host_ip import V1HostIP
@@ -15,7 +16,7 @@ from .v1_pod_resource_claim_status import V1PodResourceClaimStatus
 __all__ = ("V1PodStatus",)
 
 
-class V1PodStatus(BaseModel):
+class V1PodStatus(BaseConfiguredModel):
     """PodStatus represents information about the status of a pod. Status may trail the actual state of a system, especially if the node that hosts the pod cannot contact the control plane."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.PodStatus"

@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_non_resource_rule import V1NonResourceRule
 from .v1_resource_rule import V1ResourceRule
 
@@ -9,7 +10,7 @@ from .v1_resource_rule import V1ResourceRule
 __all__ = ("V1SubjectRulesReviewStatus",)
 
 
-class V1SubjectRulesReviewStatus(BaseModel):
+class V1SubjectRulesReviewStatus(BaseConfiguredModel):
     """SubjectRulesReviewStatus contains the result of a rules check. This check can be incomplete depending on the set of authorizers the server is configured with and any errors experienced during evaluation. Because authorization rules are additive, if a rule appears in a list it's safe to assume the subject has that permission, even if that list is incomplete."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

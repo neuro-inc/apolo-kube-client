@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ObjectFieldSelector",)
 
 
-class V1ObjectFieldSelector(BaseModel):
+class V1ObjectFieldSelector(BaseConfiguredModel):
     """ObjectFieldSelector selects an APIVersioned field of an object."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ObjectFieldSelector"

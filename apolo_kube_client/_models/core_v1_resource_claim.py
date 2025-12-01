@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("CoreV1ResourceClaim",)
 
 
-class CoreV1ResourceClaim(BaseModel):
+class CoreV1ResourceClaim(BaseConfiguredModel):
     """ResourceClaim references one entry in PodSpec.ResourceClaims."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ResourceClaim"

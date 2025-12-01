@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_label_selector import V1LabelSelector
 
@@ -9,7 +10,7 @@ from .v1_label_selector import V1LabelSelector
 __all__ = ("V2MetricIdentifier",)
 
 
-class V2MetricIdentifier(BaseModel):
+class V2MetricIdentifier(BaseConfiguredModel):
     """MetricIdentifier defines the name and optionally selector for a metric"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.MetricIdentifier"

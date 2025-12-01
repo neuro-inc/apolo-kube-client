@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_downward_api_volume_file import V1DownwardAPIVolumeFile
 
@@ -9,7 +10,7 @@ from .v1_downward_api_volume_file import V1DownwardAPIVolumeFile
 __all__ = ("V1DownwardAPIVolumeSource",)
 
 
-class V1DownwardAPIVolumeSource(BaseModel):
+class V1DownwardAPIVolumeSource(BaseConfiguredModel):
     """DownwardAPIVolumeSource represents a volume containing downward API info. Downward API volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.DownwardAPIVolumeSource"

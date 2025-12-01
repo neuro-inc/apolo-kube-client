@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1GRPCAction",)
 
 
-class V1GRPCAction(BaseModel):
+class V1GRPCAction(BaseConfiguredModel):
     """GRPCAction specifies an action involving a GRPC service."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.GRPCAction"

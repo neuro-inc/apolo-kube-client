@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_persistent_volume_claim_template import V1PersistentVolumeClaimTemplate
 
 
 __all__ = ("V1EphemeralVolumeSource",)
 
 
-class V1EphemeralVolumeSource(BaseModel):
+class V1EphemeralVolumeSource(BaseConfiguredModel):
     """Represents an ephemeral volume that is handled by a normal storage driver."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EphemeralVolumeSource"

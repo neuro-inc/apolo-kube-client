@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PersistentVolumeClaimCondition",)
 
 
-class V1PersistentVolumeClaimCondition(BaseModel):
+class V1PersistentVolumeClaimCondition(BaseConfiguredModel):
     """PersistentVolumeClaimCondition contains details about state of pvc"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

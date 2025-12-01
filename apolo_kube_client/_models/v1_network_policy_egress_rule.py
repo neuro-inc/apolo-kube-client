@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_network_policy_peer import V1NetworkPolicyPeer
 from .v1_network_policy_port import V1NetworkPolicyPort
@@ -10,7 +11,7 @@ from .v1_network_policy_port import V1NetworkPolicyPort
 __all__ = ("V1NetworkPolicyEgressRule",)
 
 
-class V1NetworkPolicyEgressRule(BaseModel):
+class V1NetworkPolicyEgressRule(BaseConfiguredModel):
     """NetworkPolicyEgressRule describes a particular set of traffic that is allowed out of pods matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to. This type is beta-level in 1.8"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

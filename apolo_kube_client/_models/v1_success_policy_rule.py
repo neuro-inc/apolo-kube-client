@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1SuccessPolicyRule",)
 
 
-class V1SuccessPolicyRule(BaseModel):
+class V1SuccessPolicyRule(BaseConfiguredModel):
     """SuccessPolicyRule describes rule for declaring a Job as succeeded. Each rule must have at least one of the "succeededIndexes" or "succeededCount" specified."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.batch.v1.SuccessPolicyRule"

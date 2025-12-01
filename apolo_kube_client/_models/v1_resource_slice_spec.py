@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_counter_set import V1CounterSet
 from .v1_device import V1Device
@@ -12,7 +13,7 @@ from .v1_resource_pool import V1ResourcePool
 __all__ = ("V1ResourceSliceSpec",)
 
 
-class V1ResourceSliceSpec(BaseModel):
+class V1ResourceSliceSpec(BaseConfiguredModel):
     """ResourceSliceSpec contains the information published by the driver in one ResourceSlice."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.ResourceSliceSpec"

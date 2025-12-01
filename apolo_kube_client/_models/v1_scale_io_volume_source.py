@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_local_object_reference import V1LocalObjectReference
 
 
 __all__ = ("V1ScaleIOVolumeSource",)
 
 
-class V1ScaleIOVolumeSource(BaseModel):
+class V1ScaleIOVolumeSource(BaseConfiguredModel):
     """ScaleIOVolumeSource represents a persistent ScaleIO volume"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ScaleIOVolumeSource"

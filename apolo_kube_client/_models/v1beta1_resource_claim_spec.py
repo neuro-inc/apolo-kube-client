@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1beta1_device_claim import V1beta1DeviceClaim
 
@@ -9,7 +10,7 @@ from .v1beta1_device_claim import V1beta1DeviceClaim
 __all__ = ("V1beta1ResourceClaimSpec",)
 
 
-class V1beta1ResourceClaimSpec(BaseModel):
+class V1beta1ResourceClaimSpec(BaseConfiguredModel):
     """ResourceClaimSpec defines what is being requested in a ResourceClaim and how to configure it."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

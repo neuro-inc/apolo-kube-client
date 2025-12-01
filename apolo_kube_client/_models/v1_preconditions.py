@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1Preconditions",)
 
 
-class V1Preconditions(BaseModel):
+class V1Preconditions(BaseConfiguredModel):
     """Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

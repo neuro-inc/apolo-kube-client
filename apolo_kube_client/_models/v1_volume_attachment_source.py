@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 
@@ -9,7 +10,7 @@ from .v1_persistent_volume_spec import V1PersistentVolumeSpec
 __all__ = ("V1VolumeAttachmentSource",)
 
 
-class V1VolumeAttachmentSource(BaseModel):
+class V1VolumeAttachmentSource(BaseConfiguredModel):
     """VolumeAttachmentSource represents a volume that should be attached. Right now only PersistentVolumes can be attached via external attacher, in the future we may allow also inline volumes in pods. Exactly one member can be set."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

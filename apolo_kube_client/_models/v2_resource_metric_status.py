@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v2_metric_value_status import V2MetricValueStatus
 
 
 __all__ = ("V2ResourceMetricStatus",)
 
 
-class V2ResourceMetricStatus(BaseModel):
+class V2ResourceMetricStatus(BaseConfiguredModel):
     """ResourceMetricStatus indicates the current value of a resource metric known to Kubernetes, as specified in requests and limits, describing each pod in the current scale target (e.g. CPU or memory).  Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the "pods" source."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

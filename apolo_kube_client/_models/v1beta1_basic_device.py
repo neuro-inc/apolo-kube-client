@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_node_selector import V1NodeSelector
 from .v1beta1_device_attribute import V1beta1DeviceAttribute
@@ -13,7 +14,7 @@ from .v1beta1_device_taint import V1beta1DeviceTaint
 __all__ = ("V1beta1BasicDevice",)
 
 
-class V1beta1BasicDevice(BaseModel):
+class V1beta1BasicDevice(BaseConfiguredModel):
     """BasicDevice defines one device instance."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1beta1.BasicDevice"

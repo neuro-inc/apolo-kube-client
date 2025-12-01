@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_rolling_update_daemon_set import V1RollingUpdateDaemonSet
 
@@ -9,7 +10,7 @@ from .v1_rolling_update_daemon_set import V1RollingUpdateDaemonSet
 __all__ = ("V1DaemonSetUpdateStrategy",)
 
 
-class V1DaemonSetUpdateStrategy(BaseModel):
+class V1DaemonSetUpdateStrategy(BaseConfiguredModel):
     """DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DaemonSetUpdateStrategy"

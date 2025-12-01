@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import KubeMeta, _collection_if_none, _default_if_none
 from .v1_preconditions import V1Preconditions
 
@@ -9,7 +10,7 @@ from .v1_preconditions import V1Preconditions
 __all__ = ("V1DeleteOptions",)
 
 
-class V1DeleteOptions(BaseModel):
+class V1DeleteOptions(BaseConfiguredModel):
     """DeleteOptions may be provided when deleting an API object."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_daemon_endpoint import V1DaemonEndpoint
 
 
 __all__ = ("V1NodeDaemonEndpoints",)
 
 
-class V1NodeDaemonEndpoints(BaseModel):
+class V1NodeDaemonEndpoints(BaseConfiguredModel):
     """NodeDaemonEndpoints lists ports opened by daemons running on the Node."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.NodeDaemonEndpoints"

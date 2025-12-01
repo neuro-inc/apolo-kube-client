@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_service_port import V1ServicePort
 from .v1_session_affinity_config import V1SessionAffinityConfig
@@ -10,7 +11,7 @@ from .v1_session_affinity_config import V1SessionAffinityConfig
 __all__ = ("V1ServiceSpec",)
 
 
-class V1ServiceSpec(BaseModel):
+class V1ServiceSpec(BaseConfiguredModel):
     """ServiceSpec describes the attributes that a user creates on a service."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ServiceSpec"

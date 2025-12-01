@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ListMeta",)
 
 
-class V1ListMeta(BaseModel):
+class V1ListMeta(BaseConfiguredModel):
     """ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

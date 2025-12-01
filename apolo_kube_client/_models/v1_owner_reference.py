@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1OwnerReference",)
 
 
-class V1OwnerReference(BaseModel):
+class V1OwnerReference(BaseConfiguredModel):
     """OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

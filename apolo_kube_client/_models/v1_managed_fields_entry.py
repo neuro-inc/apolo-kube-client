@@ -1,15 +1,17 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ManagedFieldsEntry",)
 
 
-class V1ManagedFieldsEntry(BaseModel):
+class V1ManagedFieldsEntry(BaseConfiguredModel):
     """ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1LeaseSpec",)
 
 
-class V1LeaseSpec(BaseModel):
+class V1LeaseSpec(BaseConfiguredModel):
     """LeaseSpec is a specification of a Lease."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.coordination.v1.LeaseSpec"

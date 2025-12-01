@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1EventSource",)
 
 
-class V1EventSource(BaseModel):
+class V1EventSource(BaseConfiguredModel):
     """EventSource contains information for an event."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.EventSource"

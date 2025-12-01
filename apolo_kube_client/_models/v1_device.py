@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_device_attribute import V1DeviceAttribute
 from .v1_device_capacity import V1DeviceCapacity
@@ -13,7 +14,7 @@ from .v1_node_selector import V1NodeSelector
 __all__ = ("V1Device",)
 
 
-class V1Device(BaseModel):
+class V1Device(BaseConfiguredModel):
     """Device represents one individual hardware instance that can be selected based on its attributes. Besides the name, exactly one field must be set."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.Device"

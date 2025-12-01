@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1TCPSocketAction",)
 
 
-class V1TCPSocketAction(BaseModel):
+class V1TCPSocketAction(BaseConfiguredModel):
     """TCPSocketAction describes an action based on opening a socket"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.TCPSocketAction"

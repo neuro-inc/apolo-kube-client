@@ -1,15 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
 from .apiextensions_v1_webhook_client_config import ApiextensionsV1WebhookClientConfig
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 
 
 __all__ = ("V1WebhookConversion",)
 
 
-class V1WebhookConversion(BaseModel):
+class V1WebhookConversion(BaseConfiguredModel):
     """WebhookConversion describes how to call a conversion webhook"""
 
     kubernetes_ref: ClassVar[Final[str]] = (

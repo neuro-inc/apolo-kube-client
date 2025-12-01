@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_ingress_port_status import V1IngressPortStatus
 
@@ -9,7 +10,7 @@ from .v1_ingress_port_status import V1IngressPortStatus
 __all__ = ("V1IngressLoadBalancerIngress",)
 
 
-class V1IngressLoadBalancerIngress(BaseModel):
+class V1IngressLoadBalancerIngress(BaseConfiguredModel):
     """IngressLoadBalancerIngress represents the status of a load-balancer ingress point."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

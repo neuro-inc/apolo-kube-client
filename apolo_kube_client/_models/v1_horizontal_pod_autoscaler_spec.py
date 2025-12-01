@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_cross_version_object_reference import V1CrossVersionObjectReference
 
 
 __all__ = ("V1HorizontalPodAutoscalerSpec",)
 
 
-class V1HorizontalPodAutoscalerSpec(BaseModel):
+class V1HorizontalPodAutoscalerSpec(BaseConfiguredModel):
     """specification of a horizontal pod autoscaler."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

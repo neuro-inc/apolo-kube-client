@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_secret_reference import V1SecretReference
 
@@ -9,7 +10,7 @@ from .v1_secret_reference import V1SecretReference
 __all__ = ("V1ISCSIPersistentVolumeSource",)
 
 
-class V1ISCSIPersistentVolumeSource(BaseModel):
+class V1ISCSIPersistentVolumeSource(BaseConfiguredModel):
     """ISCSIPersistentVolumeSource represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

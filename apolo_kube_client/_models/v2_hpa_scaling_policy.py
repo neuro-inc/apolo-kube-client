@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V2HPAScalingPolicy",)
 
 
-class V2HPAScalingPolicy(BaseModel):
+class V2HPAScalingPolicy(BaseConfiguredModel):
     """HPAScalingPolicy is a single policy which must hold true for a specified past interval."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.autoscaling.v2.HPAScalingPolicy"

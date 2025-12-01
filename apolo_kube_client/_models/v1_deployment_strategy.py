@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _default_if_none
 from .v1_rolling_update_deployment import V1RollingUpdateDeployment
 
@@ -9,7 +10,7 @@ from .v1_rolling_update_deployment import V1RollingUpdateDeployment
 __all__ = ("V1DeploymentStrategy",)
 
 
-class V1DeploymentStrategy(BaseModel):
+class V1DeploymentStrategy(BaseConfiguredModel):
     """DeploymentStrategy describes how to replace existing pods with new ones."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentStrategy"

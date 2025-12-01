@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_http_ingress_path import V1HTTPIngressPath
 
 
 __all__ = ("V1HTTPIngressRuleValue",)
 
 
-class V1HTTPIngressRuleValue(BaseModel):
+class V1HTTPIngressRuleValue(BaseConfiguredModel):
     """HTTPIngressRuleValue is a list of http selectors pointing to backends. In the example: http://<host>/<path>?<searchpart> -> backend where where parts of the url correspond to RFC 3986, this resource will be used to match against everything after the last '/' and before the first '?' or '#'."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

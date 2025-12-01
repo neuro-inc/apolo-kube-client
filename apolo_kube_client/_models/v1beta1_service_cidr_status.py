@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_condition import V1Condition
 
@@ -9,7 +10,7 @@ from .v1_condition import V1Condition
 __all__ = ("V1beta1ServiceCIDRStatus",)
 
 
-class V1beta1ServiceCIDRStatus(BaseModel):
+class V1beta1ServiceCIDRStatus(BaseConfiguredModel):
     """ServiceCIDRStatus describes the current state of the ServiceCIDR."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

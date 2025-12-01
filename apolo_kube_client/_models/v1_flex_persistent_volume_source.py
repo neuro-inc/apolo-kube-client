@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_secret_reference import V1SecretReference
 
@@ -9,7 +10,7 @@ from .v1_secret_reference import V1SecretReference
 __all__ = ("V1FlexPersistentVolumeSource",)
 
 
-class V1FlexPersistentVolumeSource(BaseModel):
+class V1FlexPersistentVolumeSource(BaseConfiguredModel):
     """FlexPersistentVolumeSource represents a generic persistent volume resource that is provisioned/attached using an exec based plugin."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

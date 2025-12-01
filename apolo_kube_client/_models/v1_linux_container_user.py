@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 
 
 __all__ = ("V1LinuxContainerUser",)
 
 
-class V1LinuxContainerUser(BaseModel):
+class V1LinuxContainerUser(BaseConfiguredModel):
     """LinuxContainerUser represents user identity information in Linux containers"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LinuxContainerUser"

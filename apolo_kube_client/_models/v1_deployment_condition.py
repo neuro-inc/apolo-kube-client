@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1DeploymentCondition",)
 
 
-class V1DeploymentCondition(BaseModel):
+class V1DeploymentCondition(BaseConfiguredModel):
     """DeploymentCondition describes the state of a deployment at a certain point."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.DeploymentCondition"

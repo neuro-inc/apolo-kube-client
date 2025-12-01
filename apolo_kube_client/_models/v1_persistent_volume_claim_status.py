@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_modify_volume_status import V1ModifyVolumeStatus
 from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimCondition
@@ -10,7 +11,7 @@ from .v1_persistent_volume_claim_condition import V1PersistentVolumeClaimConditi
 __all__ = ("V1PersistentVolumeClaimStatus",)
 
 
-class V1PersistentVolumeClaimStatus(BaseModel):
+class V1PersistentVolumeClaimStatus(BaseConfiguredModel):
     """PersistentVolumeClaimStatus is the current status of a persistent volume claim."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

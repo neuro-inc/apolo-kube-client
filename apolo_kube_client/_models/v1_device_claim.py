@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1_device_claim_configuration import V1DeviceClaimConfiguration
 from .v1_device_constraint import V1DeviceConstraint
@@ -11,7 +12,7 @@ from .v1_device_request import V1DeviceRequest
 __all__ = ("V1DeviceClaim",)
 
 
-class V1DeviceClaim(BaseModel):
+class V1DeviceClaim(BaseConfiguredModel):
     """DeviceClaim defines how to request devices with a ResourceClaim."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.DeviceClaim"

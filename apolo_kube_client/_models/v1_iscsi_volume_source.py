@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none, _default_if_none
 from .v1_local_object_reference import V1LocalObjectReference
 
@@ -9,7 +10,7 @@ from .v1_local_object_reference import V1LocalObjectReference
 __all__ = ("V1ISCSIVolumeSource",)
 
 
-class V1ISCSIVolumeSource(BaseModel):
+class V1ISCSIVolumeSource(BaseConfiguredModel):
     """Represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.ISCSIVolumeSource"

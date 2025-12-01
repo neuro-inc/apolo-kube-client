@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1StatefulSetOrdinals",)
 
 
-class V1StatefulSetOrdinals(BaseModel):
+class V1StatefulSetOrdinals(BaseConfiguredModel):
     """StatefulSetOrdinals describes the policy used for replica ordinal assignment in this StatefulSet."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.apps.v1.StatefulSetOrdinals"

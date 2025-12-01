@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1beta1_parent_reference import V1beta1ParentReference
 
 
 __all__ = ("V1beta1IPAddressSpec",)
 
 
-class V1beta1IPAddressSpec(BaseModel):
+class V1beta1IPAddressSpec(BaseConfiguredModel):
     """IPAddressSpec describe the attributes in an IP Address."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1beta1.IPAddressSpec"

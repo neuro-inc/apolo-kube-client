@@ -1,7 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BeforeValidator, Field
 
+from .base_model import BaseConfiguredModel
 from .utils import _collection_if_none
 from .v1beta1_opaque_device_configuration import V1beta1OpaqueDeviceConfiguration
 
@@ -9,7 +10,7 @@ from .v1beta1_opaque_device_configuration import V1beta1OpaqueDeviceConfiguratio
 __all__ = ("V1beta1DeviceClaimConfiguration",)
 
 
-class V1beta1DeviceClaimConfiguration(BaseModel):
+class V1beta1DeviceClaimConfiguration(BaseConfiguredModel):
     """DeviceClaimConfiguration is used for configuration parameters in DeviceClaim."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

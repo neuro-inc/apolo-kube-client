@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1ServiceAccountTokenProjection",)
 
 
-class V1ServiceAccountTokenProjection(BaseModel):
+class V1ServiceAccountTokenProjection(BaseConfiguredModel):
     """ServiceAccountTokenProjection represents a projected service account token volume. This projection can be used to insert a service account token into the pods runtime filesystem for use against APIs (Kubernetes API Server or otherwise)."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

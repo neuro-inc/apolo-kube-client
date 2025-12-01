@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1LocalVolumeSource",)
 
 
-class V1LocalVolumeSource(BaseModel):
+class V1LocalVolumeSource(BaseConfiguredModel):
     """Local represents directly-attached storage with node affinity"""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.core.v1.LocalVolumeSource"

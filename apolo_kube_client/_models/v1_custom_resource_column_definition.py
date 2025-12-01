@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1CustomResourceColumnDefinition",)
 
 
-class V1CustomResourceColumnDefinition(BaseModel):
+class V1CustomResourceColumnDefinition(BaseConfiguredModel):
     """CustomResourceColumnDefinition specifies a column for server side printing."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

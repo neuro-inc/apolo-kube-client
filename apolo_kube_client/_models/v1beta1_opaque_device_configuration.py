@@ -1,14 +1,16 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from apolo_kube_client._typedefs import JsonType
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1beta1OpaqueDeviceConfiguration",)
 
 
-class V1beta1OpaqueDeviceConfiguration(BaseModel):
+class V1beta1OpaqueDeviceConfiguration(BaseConfiguredModel):
     """OpaqueDeviceConfiguration contains configuration parameters for a driver in a format defined by the driver vendor."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1PhotonPersistentDiskVolumeSource",)
 
 
-class V1PhotonPersistentDiskVolumeSource(BaseModel):
+class V1PhotonPersistentDiskVolumeSource(BaseConfiguredModel):
     """Represents a Photon Controller persistent disk resource."""
 
     kubernetes_ref: ClassVar[Final[str]] = (

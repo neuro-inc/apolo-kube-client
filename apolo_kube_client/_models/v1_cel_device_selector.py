@@ -1,12 +1,14 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from .base_model import BaseConfiguredModel
 
 
 __all__ = ("V1CELDeviceSelector",)
 
 
-class V1CELDeviceSelector(BaseModel):
+class V1CELDeviceSelector(BaseConfiguredModel):
     """CELDeviceSelector contains a CEL expression for selecting a device."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.resource.v1.CELDeviceSelector"

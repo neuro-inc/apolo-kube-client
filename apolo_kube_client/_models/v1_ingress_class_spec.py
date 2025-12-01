@@ -1,14 +1,15 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from .base_model import BaseConfiguredModel
 from .v1_ingress_class_parameters_reference import V1IngressClassParametersReference
 
 
 __all__ = ("V1IngressClassSpec",)
 
 
-class V1IngressClassSpec(BaseModel):
+class V1IngressClassSpec(BaseConfiguredModel):
     """IngressClassSpec provides information about the class of an Ingress."""
 
     kubernetes_ref: ClassVar[Final[str]] = "io.k8s.api.networking.v1.IngressClassSpec"
