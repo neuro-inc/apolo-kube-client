@@ -13,7 +13,8 @@ from aiohttp.hdrs import METH_DELETE, METH_GET, METH_PATCH, METH_POST, METH_PUT
 from pydantic import BaseModel
 from yarl import URL, Query
 
-from ._config import KubeClientAuthType, KubeConfig
+from ._config import KubeConfig
+from ._constants import KubeClientAuthType
 from ._transport import KubeTransport
 from ._typedefs import JsonType
 

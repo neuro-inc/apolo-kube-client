@@ -8,7 +8,8 @@ from pathlib import Path
 import yaml
 
 from apolo_kube_client._client import KubeClient
-from apolo_kube_client._config import KubeClientAuthType, KubeConfig
+from apolo_kube_client._config import KubeConfig
+from apolo_kube_client._constants import KubeClientAuthType
 from apolo_kube_client._transport import KubeTransport
 from apolo_kube_client._utils import base64_decode
 
