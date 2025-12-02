@@ -482,7 +482,11 @@ def main() -> None:
     all_names: set[str] = set()
     with (here.parent / "swagger.json").open() as swagger_file:
         swagger = json.load(swagger_file)
-    has_required_fields: dict[str, int] = {"V1ContainerStateRunning": -1}
+    has_required_fields: dict[str, int] = {
+        "V1ContainerStateRunning": -1,
+        "V1ContainerStateTerminated": -1,
+        "V1ContainerStateWaiting": -1,
+    }
     for name in dir(models):
         obj = getattr(models, name)
         if isinstance(obj, type):
