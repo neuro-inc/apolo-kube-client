@@ -107,7 +107,7 @@ async def test_apolo_waiter_wait_not_waiting() -> None:
     )
     waiter = ApoloPodWaiter(parent)  # type: ignore[arg-type]
     pod = await waiter.wait_not_waiting(timeout_s=1.0, interval_s=0.01)
-    assert not pod.status.container_statuses[0].state.waiting.__pydantic_fields_set__
+    assert pod.status.container_statuses[0].state.waiting is None
 
 
 @pytest.mark.asyncio

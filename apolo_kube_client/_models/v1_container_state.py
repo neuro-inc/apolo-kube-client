@@ -1,9 +1,8 @@
 from typing import Annotated, ClassVar, Final
 
-from pydantic import BeforeValidator, Field
+from pydantic import Field
 
 from .base_model import BaseConfiguredModel
-from .utils import _default_if_none
 from .v1_container_state_running import V1ContainerStateRunning
 from .v1_container_state_terminated import V1ContainerStateTerminated
 from .v1_container_state_waiting import V1ContainerStateWaiting
@@ -34,10 +33,9 @@ class V1ContainerState(BaseConfiguredModel):
     ] = None
 
     waiting: Annotated[
-        V1ContainerStateWaiting,
+        V1ContainerStateWaiting | None,
         Field(
             description="""Details about a waiting container""",
-            exclude_if=lambda v: not v.__pydantic_fields_set__,
+            exclude_if=lambda v: v is None,
         ),
-        BeforeValidator(_default_if_none(V1ContainerStateWaiting)),
-    ] = V1ContainerStateWaiting()
+    ] = None

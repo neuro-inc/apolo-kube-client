@@ -115,10 +115,10 @@ class ApoloPodWaiter(NestedResource[V1Pod]):
     ) -> V1Pod:
         async def _all_not_waiting(pod: V1Pod) -> bool:
             for s in pod.status.container_statuses:
-                if s.state.waiting.__pydantic_fields_set__:
+                if s.state.waiting is not None:
                     return False
             for s in pod.status.init_container_statuses:
-                if s.state.waiting.__pydantic_fields_set__:
+                if s.state.waiting is not None:
                     return False
             return True
 
