@@ -29,7 +29,7 @@ async def test_events_poller_calls_handler_for_vcluster_ready() -> None:
     poller = EventsPoller(events_client=events_client, on_vcluster_ready=on_ready)
 
     event = RecvEvent(
-        tag="t1",
+        tag="t1",  # type: ignore[arg-type]
         timestamp=datetime.now(UTC),
         sender="test",
         stream=StreamType("platform-vcluster"),
@@ -50,7 +50,7 @@ async def test_events_poller_ignores_unrelated_events() -> None:
     poller = EventsPoller(events_client=events_client, on_vcluster_ready=on_ready)
 
     event = RecvEvent(
-        tag="t1",
+        tag="t1",  # type: ignore[arg-type]
         timestamp=datetime.now(UTC),
         sender="test",
         stream=StreamType("platform-vcluster"),

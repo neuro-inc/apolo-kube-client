@@ -310,5 +310,7 @@ class KubeClientSelector:
             self._vcluster_zombies[key] = entry
 
     async def _on_vcluster_ready(self, ev: RecvEvent) -> None:
+        assert ev.org
+        assert ev.project
         cache_key = generate_namespace_name(ev.org, ev.project)
         await self._vcluster_cache.pop(cache_key)

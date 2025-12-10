@@ -65,7 +65,7 @@ async def test_vcluster_ready_event_triggers_cache_pop(
         org = "org"
         project = "proj"
         event = RecvEvent(
-            tag="t1",
+            tag="t1",  # type: ignore[arg-type]
             timestamp=datetime.now(UTC),
             sender="test",
             stream=StreamType("platform-vcluster"),
@@ -74,7 +74,7 @@ async def test_vcluster_ready_event_triggers_cache_pop(
             project=project,
         )
 
-        await handler(event)
+        await handler(event)  # type: ignore[misc]
 
         expected_key = generate_namespace_name(org, project)
         selector._vcluster_cache.pop.assert_awaited_once_with(expected_key)

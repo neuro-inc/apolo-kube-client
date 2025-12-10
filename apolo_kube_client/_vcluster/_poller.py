@@ -36,10 +36,10 @@ class EventsPoller:
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
-    ) -> None:
+    ) -> bool:
         return exc_type is None
 
-    async def _handler(self, ev: RecvEvent):
+    async def _handler(self, ev: RecvEvent) -> None:
         logger.info("got event: %s", ev)
         match ev.event_type:
             case self.EVENT_VCLUSTER_READY:

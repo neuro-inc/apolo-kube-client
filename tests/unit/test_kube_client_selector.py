@@ -260,11 +260,11 @@ async def test_vcluster_ready_event_pops_cache_entry(
     org = "org"
     project = "proj"
     ev = RecvEvent(
-        tag="t1",
+        tag="t1",  # type: ignore[arg-type]
         timestamp=datetime.now(UTC),
         sender="test",
-        stream="platform-vcluster",
-        event_type="vcluster-ready",
+        stream="platform-vcluster",  # type: ignore[arg-type]
+        event_type="vcluster-ready",  # type: ignore[arg-type]
         org=org,
         project=project,
     )
