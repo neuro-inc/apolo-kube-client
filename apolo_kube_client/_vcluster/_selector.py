@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from types import TracebackType
 from typing import Self
 
+from apolo_events_client import EventsClient, RecvEvent
 from cachetools import LRUCache
 
 from apolo_kube_client._client import KubeClient
@@ -23,6 +24,7 @@ from apolo_kube_client._vcluster._client_proxy import KubeClientProxy
 from apolo_kube_client.apolo import create_namespace, generate_namespace_name
 
 from .._models import V1Secret
+from ._poller import EventsPoller
 
 
 logger = logging.getLogger(__name__)
@@ -68,6 +70,7 @@ class KubeClientSelector:
         *,
         config: KubeConfig,
         transport: KubeTransport | None = None,
+        events_client: EventsClient | None = None,
         vcluster_cache_size: int = DEFAULT_VCLUSTER_CACHE_SIZE,
         real_cluster_cache_size: int = DEFAULT_REAL_CLUSTER_CACHE_SIZE,
     ) -> None:
@@ -80,6 +83,12 @@ class KubeClientSelector:
             conn_timeout_s=config.client_conn_timeout_s,
             read_timeout_s=config.client_read_timeout_s,
         )
+        self._events_poller: EventsPoller | None = None
+        if events_client:
+            self._events_poller = EventsPoller(
+                events_client=events_client,
+                on_vcluster_ready=self._on_vcluster_ready,
+            )
         # create a host client that'll be used to access to a host kube cluster
         self._host_client = KubeClient(config=config, transport=self._transport)
         self._vcluster_client_factory = VclusterClientFactory(
@@ -109,6 +118,8 @@ class KubeClientSelector:
         if self._owns_transport:
             await self._transport.__aenter__()
         await self._host_client.__aenter__()
+        if self._events_poller:
+            await self._events_poller.__aenter__()
         return self
 
     async def __aexit__(
@@ -124,6 +135,9 @@ class KubeClientSelector:
         if self._closing:
             return
         self._closing = True
+
+        if self._events_poller:
+            await self._events_poller.__aexit__(None, None, None)
 
         logger.info("%r: evicting all vcluster cached entries", self)
         await self._vcluster_cache.close()
@@ -294,3 +308,7 @@ class KubeClientSelector:
         else:
             # some concurrent request is still using it. let's mark as zombie
             self._vcluster_zombies[key] = entry
+
+    async def _on_vcluster_ready(self, ev: RecvEvent) -> None:
+        cache_key = generate_namespace_name(ev.org, ev.project)
+        await self._vcluster_cache.pop(cache_key)
