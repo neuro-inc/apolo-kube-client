@@ -25,7 +25,7 @@ jobs:
       with:
         python-version: ${{ matrix.py_version }}
     - name: Cache packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-py-${{ matrix.py_version }}-${{ hashFiles('pyproject.toml') }}
@@ -60,7 +60,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Cache packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-py-3.13-${{ hashFiles('pyproject.toml') }}
