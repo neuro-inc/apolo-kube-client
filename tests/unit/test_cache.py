@@ -4,7 +4,7 @@ from apolo_kube_client._vcluster._cache import AsyncLRUCache
 
 
 async def test_async_lru_evicts_in_lru_order_and_awaits_hook() -> None:
-    evicted = []
+    evicted: list[tuple[str, int]] = []
     on_evict = AsyncMock(side_effect=lambda k, v: evicted.append((k, v)))
     cache = AsyncLRUCache[str, int](maxsize=2, on_evict=on_evict)
 
@@ -104,3 +104,30 @@ async def test_set_over_capacity_triggers_sequential_evictions() -> None:
     await cache.set("c", 3)  # evict b
 
     assert evicted_keys == ["a", "b"]
+
+
+async def test_pop_existing_calls_evict_and_returns_value() -> None:
+    evicted: list[tuple[str, int]] = []
+    on_evict = AsyncMock(side_effect=lambda k, v: evicted.append((k, v)))
+    cache = AsyncLRUCache[str, int](maxsize=3, on_evict=on_evict)
+
+    await cache.set("a", 1)
+    await cache.set("b", 2)
+
+    value = await cache.pop("a")
+    assert value == 1
+    assert len(cache) == 1
+    assert evicted == [("a", 1)]
+
+
+async def test_pop_missing_returns_none_without_eviction() -> None:
+    evicted: list[tuple[str, int]] = []
+    on_evict = AsyncMock(side_effect=lambda k, v: evicted.append((k, v)))
+    cache = AsyncLRUCache[str, int](maxsize=2, on_evict=on_evict)
+
+    await cache.set("a", 1)
+
+    value = await cache.pop("missing")
+    assert value is None
+    assert len(cache) == 1
+    assert evicted == []
