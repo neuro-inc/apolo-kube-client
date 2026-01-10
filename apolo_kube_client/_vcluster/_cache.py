@@ -31,6 +31,13 @@ class AsyncLRUCache[K, V]:
         self._data.move_to_end(key, last=True)
         return v
 
+    async def pop(self, key: K) -> V | None:
+        if key not in self._data:
+            return None
+        value = self._data.pop(key)
+        await self._on_evict(key, value)
+        return value
+
     async def set(self, key: K, value: V) -> None:
         # Insert/update and move to MRU
         self._data[key] = value
