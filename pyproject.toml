@@ -12,7 +12,7 @@ dependencies = [
     "yarl (>=1.20)",
     "multidict (>=6)",
     "pydantic (>=2.12.3,<3.0.0)",
-    "cachetools (>=5.3.3)",
+    "cachetools (>=7.0.6)",
     "pyyaml (>=6.0.3,<7.0.0)",
 ]
 dynamic = ["version"]
