@@ -11,8 +11,7 @@ venv:
 
 .PHONY: poetry-plugins
 poetry-plugins:
-	poetry self add "poetry-dynamic-versioning[plugin]"; \
-    poetry self add "poetry-plugin-export";
+	poetry self add "poetry-dynamic-versioning[plugin]";
 
 .PHONY: setup
 setup: venv poetry-plugins
