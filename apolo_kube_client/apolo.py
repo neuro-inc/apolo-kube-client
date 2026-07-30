@@ -180,7 +180,7 @@ async def create_namespace(
                 V1NetworkPolicyEgressRule(
                     to=[
                         V1NetworkPolicyPeer(
-                            namespace_selector=V1LabelSelector(),
+                            namespace_selector=V1LabelSelector(match_labels={}),
                             pod_selector=V1LabelSelector(
                                 match_labels={COMPONENT_LABEL: "ingress-gateway"}
                             ),
