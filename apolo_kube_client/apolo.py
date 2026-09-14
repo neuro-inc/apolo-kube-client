@@ -119,8 +119,6 @@ async def create_namespace(
     }
 
     namespace = V1Namespace(
-        api_version="v1",
-        kind="Namespace",
         metadata=V1ObjectMeta(name=namespace_name, labels=labels),
     )
     _, namespace = await kube_client.core_v1.namespace.get_or_create(model=namespace)
@@ -132,8 +130,6 @@ async def create_namespace(
     # now let's create a network policy, which will allow a namespace-only access
     # update if it already exists
     network_policy = V1NetworkPolicy(
-        api_version="networking.k8s.io/v1",
-        kind="NetworkPolicy",
         metadata=V1ObjectMeta(name=namespace_name, namespace=namespace_name),
         spec=V1NetworkPolicySpec(
             pod_selector=V1LabelSelector(),  # all POD's in the namespace

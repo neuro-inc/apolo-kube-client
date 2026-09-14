@@ -14,6 +14,7 @@ dependencies = [
     "pydantic (>=2.12.3,<3.0.0)",
     "cachetools (>=5.3.3)",
     "pyyaml (>=6.0.3,<7.0.0)",
+    "apolo-events-client (>=25.10.0,<26.0.0)",
 ]
 dynamic = ["version"]
 
@@ -47,6 +48,7 @@ types-pyyaml = "^6.0.12.20250915"
 types-cachetools = "^6.2.0.20250827"
 kubernetes = "^34.1.0"
 libcst = "^1.8.5"
+pytest-aiohttp = "^1.1.0"
 
 [tool.ruff]
 target-version = "py313"

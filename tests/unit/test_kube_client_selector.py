@@ -1,12 +1,15 @@
 import asyncio
 import base64
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 
 import pytest
 import yaml
+from apolo_events_client import RecvEvent
 
 from apolo_kube_client import KubeClientSelector, KubeConfig, V1ObjectMeta, V1Secret
 from apolo_kube_client._errors import ResourceNotFound
+from apolo_kube_client.apolo import generate_namespace_name
 
 
 def build_vcluster_secret(server: str) -> V1Secret:
@@ -243,3 +246,30 @@ async def test_aclose_waits_for_leases_then_closes(
         await closer
 
         assert not selector._vcluster_cache
+
+
+async def test_vcluster_ready_event_pops_cache_entry(
+    default_kube_config: KubeConfig,
+) -> None:
+    """
+    _on_vcluster_ready must compute cache key and pop from cache.
+    """
+    selector = KubeClientSelector(config=default_kube_config)
+    selector._vcluster_cache.pop = AsyncMock(return_value=None)  # type: ignore[method-assign]
+
+    org = "org"
+    project = "proj"
+    ev = RecvEvent(
+        tag="t1",  # type: ignore[arg-type]
+        timestamp=datetime.now(UTC),
+        sender="test",
+        stream="platform-vcluster",  # type: ignore[arg-type]
+        event_type="vcluster-ready",  # type: ignore[arg-type]
+        org=org,
+        project=project,
+    )
+
+    await selector._on_vcluster_ready(ev)
+
+    expected_key = generate_namespace_name(org, project)
+    selector._vcluster_cache.pop.assert_awaited_once_with(expected_key)
