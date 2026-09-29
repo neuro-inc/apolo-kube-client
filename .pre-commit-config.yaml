@@ -17,7 +17,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.16.8
+  rev: v0.16.9
   hooks:
   - id: ruff-format
   - id: ruff
@@ -35,7 +35,7 @@ repos:
     - -ignore
     - 'SC1004:'
 - repo: https://github.com/sirosen/check-jsonschema
-  rev: 0.38.0
+  rev: 0.38.2
   hooks:
   - id: check-github-actions
 - repo: https://github.com/python-poetry/poetry
