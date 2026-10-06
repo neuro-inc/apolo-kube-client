@@ -42,7 +42,7 @@ jobs:
     - name: Run unit tests
       run: make test_unit
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         files: .coverage.xml
         flags: py${{ matrix.py_version }}
