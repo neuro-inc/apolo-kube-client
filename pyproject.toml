@@ -46,7 +46,7 @@ cryptography = "^50.0.2"
 types-pyyaml = "^6.0.12.20250915"
 types-cachetools = "^6.2.0.20250827"
 kubernetes = "^37.0.2"
-libcst = "^1.8.5"
+libcst = "^1.9.0"
 
 [tool.ruff]
 target-version = "py313"
