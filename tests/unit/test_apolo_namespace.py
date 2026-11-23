@@ -15,7 +15,8 @@ from apolo_kube_client.apolo import (
 
 class TestGenerateNamespaceName:
     @pytest.fixture(scope="class")
-    def hexdigest_mock(self) -> Iterator[str]:
+    @staticmethod
+    def hexdigest_mock() -> Iterator[str]:
         hexdigest_value = "h" * 32
         hexdigest_mock = Mock()
         hexdigest_mock.hexdigest.return_value = hexdigest_value
