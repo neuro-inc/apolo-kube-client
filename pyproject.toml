@@ -45,7 +45,7 @@ pytest-cov = "^6.0.0"
 cryptography = "^50.0.2"
 types-pyyaml = "^6.0.12.20261113"
 types-cachetools = "^7.0.0.20260713"
-kubernetes = "^37.0.2"
+kubernetes = "^37.0.3"
 libcst = "^1.9.0"
 
 [tool.ruff]
