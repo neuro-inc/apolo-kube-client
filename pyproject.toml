@@ -37,7 +37,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.18.2"
+mypy = "^2.4.1"
 pre-commit = "^4.7.0"
 pytest = "^9.2.0"
 pytest-asyncio = "^1.5.0"
